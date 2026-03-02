@@ -1,0 +1,30 @@
+export const fundamentalResearchStaff = [
+    {
+        id: 'marsagishvili',
+        name: 'თამაზ მარსაგიშვილი',
+        nameEn: 'Tamaz Marsagishvili',
+        role: 'განყოფილების ხელმძღვანელი, მთავარი მეცნიერი თანამშრომელი',
+        roleEn: 'Head of Dept., Chief Researcher',
+        department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება',
+        departmentId: 'fundamental-research',
+        imageUrl: '/images/staff/Tamaz Marsagishvili.png',
+        placeholderUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80',
+        bioLink: '',
+        emails: ['t.marsagishvili@iice.ge'],
+        links: [],
+        isHead: true
+    },
+    { id: 'f_ananiashvili', name: 'ნათელა ანანიაშვილი', nameEn: 'Natela Ananiashvili', role: 'მთავარი მეცნიერ-თანამშრომელი', roleEn: 'Chief Researcher', department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება', departmentId: 'fundamental-research', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80', emails: ['info@iice.ge'] },
+    { id: 'f_gachechiladze', name: 'მანანა გაჩეჩილაძე', nameEn: 'Manana Gachechiladze', role: 'უფროსი მეცნიერ-თანამშრომელი', roleEn: 'Senior Researcher', department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება', departmentId: 'fundamental-research', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80', emails: ['info@iice.ge'] },
+    { id: 'f_machavariani', name: 'მარინე მაჭავარიანი', nameEn: 'Marine Machavariani', role: 'უფროსი მეცნიერ-თანამშრომელი', roleEn: 'Senior Researcher', department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება', departmentId: 'fundamental-research', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80', emails: ['info@iice.ge'] },
+    { id: 'f_ghurchumelia', name: 'ლალი ღურჭუმელია', nameEn: 'Lali Ghurchumelia', role: 'უფროსი მეცნიერ-თანამშრომელი', roleEn: 'Senior Researcher', department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება', departmentId: 'fundamental-research', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=400&q=80', emails: ['info@iice.ge'] },
+    { id: 'f_tsagareli', name: 'გიორგი ცაგარელი', nameEn: 'Giorgi Tsagareli', role: 'უფროსი მეცნიერ-თანამშრომელი', roleEn: 'Senior Researcher', department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება', departmentId: 'fundamental-research', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80', emails: ['info@iice.ge'] },
+    { id: 'f_khutsishvili', name: 'მარინე ხუციშვილი', nameEn: 'Marine Khutsishvili', role: 'უფროსი მეცნიერ-თანამშრომელი', roleEn: 'Senior Researcher', department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება', departmentId: 'fundamental-research', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=400&q=80', emails: ['info@iice.ge'] },
+    { id: 'f_kipiani', name: 'გულნარა ყიფიანი', nameEn: 'Gulnara Kipiani', role: 'უფროსი მეცნიერ-თანამშრომელი', roleEn: 'Senior Researcher', department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება', departmentId: 'fundamental-research', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1548142813-c348350df52b?w=400&q=80', emails: ['info@iice.ge'] },
+    { id: 'f_samkharadze', name: 'ზურაბი სამხარაძე', nameEn: 'Zurabi Samkharadze', role: 'მეცნიერ-თანამშრომელი', roleEn: 'Researcher', department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება', departmentId: 'fundamental-research', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80', emails: ['info@iice.ge'] },
+    { id: 'f_tskitishvili', name: 'სოფიო ცქიტიშვილი', nameEn: 'Sophio Tskitishvili', role: 'მეცნიერ-თანამშრომელი', roleEn: 'Researcher', department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება', departmentId: 'fundamental-research', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80', emails: ['info@iice.ge'] },
+    { id: 'f_giorgadze', name: 'ნინო გიორგაძე', nameEn: 'Nino Giorgadze', role: 'მეცნიერ-თანამშრომელი', roleEn: 'Researcher', department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება', departmentId: 'fundamental-research', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80', emails: ['info@iice.ge'] },
+    { id: 'f_maisuradze', name: 'ნინო მაისურაძე', nameEn: 'Nino Maisuradze', role: 'მეცნიერ-თანამშრომელი', roleEn: 'Researcher', department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება', departmentId: 'fundamental-research', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80', emails: ['info@iice.ge'] },
+    { id: 'f_abazadze', name: 'ლია აბაზაძე', nameEn: 'Lia Abazadze', role: 'მეცნიერ-თანამშრომელი', roleEn: 'Researcher', department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება', departmentId: 'fundamental-research', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80', emails: ['info@iice.ge'] },
+    { id: 'f_suramelashvili', name: 'ელიზბარ სურამელაშვილი', nameEn: 'Elizbar Suramelashvili', role: 'მეცნიერ-თანამშრომელი', roleEn: 'Researcher', department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება', departmentId: 'fundamental-research', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80', emails: ['info@iice.ge'] }
+];

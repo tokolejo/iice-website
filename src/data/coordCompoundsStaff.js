@@ -1,0 +1,27 @@
+export const coordCompoundsStaff = [
+    {
+        id: 'tskhakaia',
+        name: 'ელიზავეტა ცხაკაია',
+        nameEn: 'Elizaveta Tskhakaia',
+        role: 'განყოფილების ხელმძღვანელი, მთავარი მეცნიერი თანამშრომელი',
+        roleEn: 'Head of Dept., Chief Researcher',
+        department: 'კოორდინაციული ნაერთებისა და სორბციულ-კატალიზური პროცესების განყოფილება',
+        departmentId: 'coordination-compounds',
+        imageUrl: '/images/staff/Elizaveta Tskhakaia.png',
+        placeholderUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80',
+        bioLink: '',
+        emails: [],
+        links: [],
+        isHead: true
+    },
+    { id: 'c_bakhtadze', name: 'ვიტალი ბახტაძე', nameEn: 'Vitali Bakhtadze', role: 'მთავარი მეცნიერ-თანამშრომელი', roleEn: 'Chief Researcher', department: 'კოორდინაციული ნაერთებისა და სორბციულ-კატალიზური პროცესების განყოფილება', departmentId: 'coordination-compounds', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80' },
+    { id: 'c_tsintsadze_m', name: 'მაია ცინცაძე', nameEn: 'Maia Tsintsadze', role: 'მთავარი მეცნიერ-თანამშრომელი', roleEn: 'Chief Researcher', department: 'კოორდინაციული ნაერთებისა და სორბციულ-კატალიზური პროცესების განყოფილება', departmentId: 'coordination-compounds', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80' },
+    { id: 'c_lochoshvili', name: 'დიმიტრი ლოჩოშვილი', nameEn: 'Dimitri Lochoshvili', role: 'უფროსი მეცნიერ-თანამშრომელი', roleEn: 'Senior Researcher', department: 'კოორდინაციული ნაერთებისა და სორბციულ-კატალიზური პროცესების განყოფილება', departmentId: 'coordination-compounds', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80' },
+    { id: 'c_tsintsadze_t', name: 'თამარი ცინცაძე', nameEn: 'Tamari Tsintsadze', role: 'უფროსი მეცნიერ-თანამშრომელი', roleEn: 'Senior Researcher', department: 'კოორდინაციული ნაერთებისა და სორბციულ-კატალიზური პროცესების განყოფილება', departmentId: 'coordination-compounds', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80' },
+    { id: 'c_mosidze', name: 'ვაჟა მოსიძე', nameEn: 'Vazha Mosidze', role: 'უფროსი მეცნიერ-თანამშრომელი', roleEn: 'Senior Researcher', department: 'კოორდინაციული ნაერთებისა და სორბციულ-კატალიზური პროცესების განყოფილება', departmentId: 'coordination-compounds', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80' },
+    { id: 'c_baghaturia', name: 'ლამზირა ბაღათურია', nameEn: 'Lamzira Baghaturia', role: 'უფროსი მეცნიერ-თანამშრომელი', roleEn: 'Senior Researcher', department: 'კოორდინაციული ნაერთებისა და სორბციულ-კატალიზური პროცესების განყოფილება', departmentId: 'coordination-compounds', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1548142813-c348350df52b?w=400&q=80' },
+    { id: 'c_pajishvili', name: 'მარინე ფაჯიშვილი', nameEn: 'Marine Pajishvili', role: 'მეცნიერ-თანამშრომელი', roleEn: 'Researcher', department: 'კოორდინაციული ნაერთებისა და სორბციულ-კატალიზური პროცესების განყოფილება', departmentId: 'coordination-compounds', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=400&q=80' },
+    { id: 'c_kilasonia', name: 'ნინო კილასონია', nameEn: 'Nino Kilasonia', role: 'მეცნიერ-თანამშრომელი', roleEn: 'Researcher', department: 'კოორდინაციული ნაერთებისა და სორბციულ-კატალიზური პროცესების განყოფილება', departmentId: 'coordination-compounds', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=400&q=80' },
+    { id: 'c_gegeshidze', name: 'ნანა გეგეშიძე', nameEn: 'Nana Gegeshidze', role: 'მეცნიერ-თანამშრომელი', roleEn: 'Researcher', department: 'კოორდინაციული ნაერთებისა და სორბციულ-კატალიზური პროცესების განყოფილება', departmentId: 'coordination-compounds', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80' },
+    { id: 'c_nasuashvili', name: 'თამარი ნასუაშვილი', nameEn: 'Tamari Nasuashvili', role: 'მეცნიერ-თანამშრომელი', roleEn: 'Researcher', department: 'კოორდინაციული ნაერთებისა და სორბციულ-კატალიზური პროცესების განყოფილება', departmentId: 'coordination-compounds', imageUrl: '', placeholderUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80' }
+];
