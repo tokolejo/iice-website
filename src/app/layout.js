@@ -20,11 +20,17 @@ export const metadata = {
   description: "Official Website for R. Agladze Institute of Inorganic Chemistry and Electrochemistry, TSU",
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-x-hidden">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-slate-50`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-slate-50 overflow-x-hidden`}
       >
         <LanguageProvider>
           <Header />

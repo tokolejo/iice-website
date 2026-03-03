@@ -78,11 +78,11 @@ export default function Home() {
                 ყველა განყოფილება &rarr;
               </Link>
               <div className="flex gap-2">
-                <button onClick={() => scrollSlider(deptSliderRef, 'left')} className="p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center shrink-0">
-                  <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+                <button onClick={() => scrollSlider(deptSliderRef, 'left')} className="p-1.5 sm:p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center shrink-0">
+                  <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
                 </button>
-                <button onClick={() => scrollSlider(deptSliderRef, 'right')} className="p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center shrink-0">
-                  <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                <button onClick={() => scrollSlider(deptSliderRef, 'right')} className="p-1.5 sm:p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center shrink-0">
+                  <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
                 </button>
               </div>
             </div>
@@ -90,7 +90,7 @@ export default function Home() {
 
           <div
             ref={deptSliderRef}
-            className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory hide-scrollbar style-hide-scrollbar"
+            className="flex overflow-x-auto gap-4 sm:gap-6 pb-8 snap-x snap-mandatory hide-scrollbar style-hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0"
             style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
           >
             {departmentsData.map((dept) => {
@@ -135,11 +135,11 @@ export default function Home() {
                   {language === 'en' ? 'See All News' : 'ყველა სიახლე'} &rarr;
                 </Link>
                 <div className="flex gap-2">
-                  <button onClick={() => scrollSlider(newsSliderRef, 'left')} className="p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+                  <button onClick={() => scrollSlider(newsSliderRef, 'left')} className="p-1.5 sm:p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center">
+                    <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
                   </button>
-                  <button onClick={() => scrollSlider(newsSliderRef, 'right')} className="p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                  <button onClick={() => scrollSlider(newsSliderRef, 'right')} className="p-1.5 sm:p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center">
+                    <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
                   </button>
                 </div>
               </div>
@@ -147,7 +147,7 @@ export default function Home() {
 
             <div
               ref={newsSliderRef}
-              className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory hide-scrollbar style-hide-scrollbar"
+              className="flex overflow-x-auto gap-4 sm:gap-6 pb-8 snap-x snap-mandatory hide-scrollbar style-hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0"
               style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
             >
               {latestNews.map(news => (
@@ -185,11 +185,11 @@ export default function Home() {
                   {language === 'en' ? 'See All Seminars' : 'ყველა სემინარი'} &rarr;
                 </Link>
                 <div className="flex gap-2">
-                  <button onClick={() => scrollSlider(announcementsSliderRef, 'left')} className="p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+                  <button onClick={() => scrollSlider(announcementsSliderRef, 'left')} className="p-1.5 sm:p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center">
+                    <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
                   </button>
-                  <button onClick={() => scrollSlider(announcementsSliderRef, 'right')} className="p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                  <button onClick={() => scrollSlider(announcementsSliderRef, 'right')} className="p-1.5 sm:p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center">
+                    <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
                   </button>
                 </div>
               </div>
@@ -197,7 +197,7 @@ export default function Home() {
 
             <div
               ref={announcementsSliderRef}
-              className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory hide-scrollbar style-hide-scrollbar"
+              className="flex overflow-x-auto gap-4 sm:gap-6 pb-8 snap-x snap-mandatory hide-scrollbar style-hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0"
               style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
             >
               {latestSeminars.map(news => (

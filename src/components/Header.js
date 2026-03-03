@@ -21,9 +21,9 @@ export default function Header() {
 
     return (
         /* 
-           ფერის შეცვლა: bg-[#0f172a] (აქ შეგიძლიათ ჩაწეროთ სხვა ფერი, მაგ: bg-blue-900)
+           ფერის შეცვლა: bg-[#2e0d42] (უფრო მუქი იასამნისფერი)
         */
-        <header className="bg-[#5d2373] shadow-lg sticky top-0 z-50 mb-3 transition-all duration-300">
+        <header className="bg-[#2e0d42] shadow-lg sticky top-0 z-50 mb-3 transition-all duration-300">
             <div className="max-w-[96%] xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
                 {/* 
                    ზომის აწევა/დაწევა (სიმაღლე): h-20 
@@ -38,8 +38,8 @@ export default function Header() {
                                 IICE
                             </div>
                             <div className="hidden sm:block transition-all duration-300 transform group-hover:translate-x-1">
-                                <h1 className="font-bold text-sm lg:text-base xl:text-lg text-white leading-tight" style={{ color: '#ffffff' }}>TSU R.Agladze Institute</h1>
-                                <p className="text-[10px] xl:text-xs text-white truncate whitespace-normal" style={{ color: '#ffffff', opacity: 0.9 }}>of Inorganic Chemistry and Electrochemistry</p>
+                                <h1 className="font-bold text-xs lg:text-sm xl:text-lg text-white leading-tight" style={{ color: '#ffffff' }}>TSU R.Agladze Institute</h1>
+                                <p className="text-[9px] lg:text-[10px] xl:text-xs text-white truncate whitespace-normal" style={{ color: '#ffffff', opacity: 0.9 }}>of Inorganic Chemistry and Electrochemistry</p>
                             </div>
                         </Link>
                     </div>

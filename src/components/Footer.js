@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Footer() {
     return (
-        <footer className="bg-[#5d2373] border-t border-white/4 pt-5 pb-10 text-white transition-all duration-300 relative overflow-hidden">
+        <footer className="bg-[#2e0d42] border-t border-white/4 pt-5 pb-10 text-white transition-all duration-300 relative overflow-hidden">
             {/* Decorative background elements */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#AD49E1] via-[#EBD3F8] to-[#AD49E1]"></div>
             <div className="absolute -top-40 -right-40 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
@@ -13,16 +13,16 @@ export default function Footer() {
 
                     {/* Brand & Info Section (Spans 4 columns) */}
                     <div className="lg:col-span-4 animate-fade-in-up">
-                        <div className="flex items-center gap-4 mb-8">
-                            <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center text-[#60318e] font-black text-xl shadow-xl transform hover:scale-105 transition-transform duration-300">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="w-10 h-10 md:w-14 md:h-14 bg-white rounded-xl flex items-center justify-center text-[#2e0d42] font-black text-lg md:text-xl shadow-xl transform hover:scale-105 transition-transform duration-300">
                                 IICE
                             </div>
                             <div>
-                                <h2 className="text-2xl font-black tracking-tight text-white mb-1">TSU R. Agladze</h2>
-                                <h3 className="text-sm font-medium text-[#EBD3F8]">Institute of Inorganic Chemistry</h3>
+                                <h2 className="text-xl md:text-2xl font-black tracking-tight text-white mb-0.5 md:mb-1">TSU R. Agladze</h2>
+                                <h3 className="text-xs md:text-sm font-medium text-[#EBD3F8]">Institute of Inorganic Chemistry</h3>
                             </div>
                         </div>
-                        <p className="text-white/70 text-sm leading-relaxed mb-8 pr-4">
+                        <p className="text-white/70 text-xs md:text-sm leading-relaxed mb-6 pr-4">
                             ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტის რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი. ვემსახურებით მეცნიერების განვითარებას 1956 წლიდან. ჩვენი მიზანია ინოვაციური კვლევები და ახალი ტექნოლოგიების დანერგვა.
                         </p>
                         <div className="flex gap-4">
@@ -38,10 +38,10 @@ export default function Footer() {
 
                     {/* About Us (Spans 2 columns) */}
                     <div className="lg:col-span-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                        <h3 className="text-sm font-black uppercase tracking-widest mb-6 text-white border-b-2 border-[#AD49E1] inline-block pb-2 hover:border-white transition-colors duration-300">
+                        <h3 className="text-xs md:text-sm font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-[#AD49E1] inline-block pb-2 hover:border-white transition-colors duration-300">
                             ინსტიტუტი
                         </h3>
-                        <ul className="space-y-4 text-sm font-medium">
+                        <ul className="space-y-3 md:space-y-4 text-xs md:text-sm font-medium">
                             <li><Link href="/history" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>ისტორია</Link></li>
                             <li><Link href="/mission" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>მისია და ხედვა</Link></li>
                             <li><Link href="/structure" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>სტრუქტურა</Link></li>
@@ -51,10 +51,10 @@ export default function Footer() {
 
                     {/* Academic & Research (Spans 3 columns) */}
                     <div className="lg:col-span-3 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                        <h3 className="text-sm font-black uppercase tracking-widest mb-6 text-white border-b-2 border-[#AD49E1] inline-block pb-2 hover:border-white transition-colors duration-300">
+                        <h3 className="text-xs md:text-sm font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-[#AD49E1] inline-block pb-2 hover:border-white transition-colors duration-300">
                             აკადემიური
                         </h3>
-                        <ul className="space-y-4 text-sm font-medium">
+                        <ul className="space-y-3 md:space-y-4 text-xs md:text-sm font-medium">
                             <li><Link href="/departments" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>სამეცნიერო განყოფილებები</Link></li>
                             <li><Link href="/scientific-council" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>სამეცნიერო საბჭო</Link></li>
                             <li><Link href="/reports" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>სამეცნიერო ანგარიშები</Link></li>
@@ -65,20 +65,20 @@ export default function Footer() {
 
                     {/* Contact (Spans 3 columns) */}
                     <div className="lg:col-span-3 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                        <h3 className="text-sm font-black uppercase tracking-widest mb-6 text-white border-b-2 border-[#AD49E1] inline-block pb-2 hover:border-white transition-colors duration-300">
+                        <h3 className="text-xs md:text-sm font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-[#AD49E1] inline-block pb-2 hover:border-white transition-colors duration-300">
                             კონტაქტი
                         </h3>
-                        <ul className="space-y-4 mb-8">
-                            <li className="flex items-start gap-4 text-sm text-white/70 group">
-                                <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white">📍</span>
-                                <div className="pt-1 leading-relaxed">თბილისი 0186, საქართველო<br />ქავთარაძის ქ. ილია ვეკუას #11</div>
+                        <ul className="space-y-3 md:space-y-4 mb-6 md:mb-8">
+                            <li className="flex items-start gap-3 md:gap-4 text-xs md:text-sm text-white/70 group">
+                                <span className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white text-[10px] md:text-sm">📍</span>
+                                <div className="pt-0.5 md:pt-1 leading-relaxed">თბილისი 0186, საქართველო<br />ქავთარაძის ქ. ილია ვეკუას #11</div>
                             </li>
-                            <li className="flex items-center gap-4 text-sm text-white/70 group">
-                                <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white">📞</span>
+                            <li className="flex items-center gap-3 md:gap-4 text-xs md:text-sm text-white/70 group">
+                                <span className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white text-[10px] md:text-sm">📞</span>
                                 <a href="tel:+995322123456" className="hover:text-white transition-colors font-medium">+(995 32) 212 34 56</a>
                             </li>
-                            <li className="flex items-center gap-4 text-sm text-white/70 group">
-                                <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white">📧</span>
+                            <li className="flex items-center gap-3 md:gap-4 text-xs md:text-sm text-white/70 group">
+                                <span className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white text-[10px] md:text-sm">📧</span>
                                 <a href="mailto:info@iice.ge" className="hover:text-white transition-colors font-medium">info@iice.ge</a>
                             </li>
                         </ul>

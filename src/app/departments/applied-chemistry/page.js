@@ -47,8 +47,8 @@ export default function AppliedChemistry() {
 
             {/* Compact Header */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
-                <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-center gap-4 text-center">
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] leading-tight uppercase tracking-wider">
+                <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-center">
+                    <h1 className="text-xl md:text-3xl font-extrabold text-[#60318e] leading-tight uppercase tracking-wider">
                         {displayName}
                     </h1>
                 </div>
@@ -66,7 +66,7 @@ export default function AppliedChemistry() {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
-                            <div className="text-base md:text-lg text-gray-700 leading-relaxed font-medium text-justify w-full">
+                            <div className="text-sm md:text-base lg:text-lg text-gray-700 leading-relaxed font-medium text-left md:text-justify w-full break-words hyphens-auto">
                                 {language === 'en' ? department.descriptionEn : (
                                     <>
                                         <p className="font-bold mb-4 text-center">განყოფილების შესახებ: კონცეფცია, სამეცნიერო მიმართულება</p>
@@ -111,7 +111,7 @@ export default function AppliedChemistry() {
                     <section className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                         <div className="mb-8 flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <h3 className="text-2xl font-bold text-gray-900">
+                                <h3 className="text-lg md:text-2xl font-bold text-gray-900">
                                     {t.departments.staffCount}
                                 </h3>
                                 <div className="bg-purple-100 text-primary px-3 py-1 rounded-full text-sm font-bold">
@@ -129,7 +129,7 @@ export default function AppliedChemistry() {
                                     >
                                         <ChevronLeft size={20} />
                                     </button>
-                                    <span className="text-sm font-medium text-gray-500 px-2 flex items-center gap-1">
+                                    <span className="text-xs md:text-sm font-medium text-gray-500 px-1 md:px-2 flex items-center gap-1">
                                         <span className="text-gray-900">{currentPage + 1}</span>
                                         <span>/</span>
                                         <span>{totalPages}</span>
