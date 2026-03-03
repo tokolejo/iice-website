@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { LanguageProvider } from "../context/LanguageContext";
 import ScrollToTop from "../components/ScrollToTop";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({ children }) {
           <Footer />
           <ScrollToTop />
         </LanguageProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
