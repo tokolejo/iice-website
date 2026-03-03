@@ -11,7 +11,7 @@ export default function StructurePage() {
         <div className="bg-slate-50 min-h-screen pb-20">
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#2E073F] leading-tight">
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] leading-tight">
                         {language === 'en' ? 'Structure' : 'სტრუქტურა'}
                     </h1>
                 </div>
@@ -38,7 +38,7 @@ export default function StructurePage() {
                                 <p>{language === 'en' ? 'Testing card-based content block within the page to visualize structured data.' : 'ბარათის ტიპის კონტენტის ბლოკის ტესტირება გვერდის შიგნით სტრუქტურირებული მონაცემებისთვის.'}</p>
                             </div>
                             <div className="bg-[#EBD3F8]/30 p-6 rounded-2xl border border-purple-100 hover:-translate-y-1 transition-transform">
-                                <h4 className="text-xl font-bold text-[#2E073F] mb-3">{language === 'en' ? 'Test Highlight Block 2' : 'გამორჩეული ტესტ-ბლოკი 2'}</h4>
+                                <h4 className="text-xl font-bold text-[#60318e] mb-3">{language === 'en' ? 'Test Highlight Block 2' : 'გამორჩეული ტესტ-ბლოკი 2'}</h4>
                                 <p>{language === 'en' ? 'Testing highlight block with primary branding colors for important announcements.' : 'გამოყოფილი ბლოკის ტესტირება ბრენდის ძირითადი ფერებით მნიშვნელოვანი განცხადებებისთვის.'}</p>
                             </div>
                         </div>

@@ -20,14 +20,21 @@ export default function Header() {
     };
 
     return (
-        <header className="bg-[#2E073F] shadow-lg sticky top-0 z-50 mb-3 transition-all duration-300">
+        /* 
+           ფერის შეცვლა: bg-[#0f172a] (აქ შეგიძლიათ ჩაწეროთ სხვა ფერი, მაგ: bg-blue-900)
+        */
+        <header className="bg-[#5d2373] shadow-lg sticky top-0 z-50 mb-3 transition-all duration-300">
             <div className="max-w-[96%] xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-20">
+                {/* 
+                   ზომის აწევა/დაწევა (სიმაღლე): h-20 
+                   თუ გსურთ უფრო ვიწრო, ჩაწერეთ h-16, თუ განიერი - h-24  
+                */}
+                <div className="flex justify-between items-center h-22">
                     {/* Logo Segment */}
                     <div className="flex-shrink-0 flex items-center animate-fade-in-up w-auto lg:w-[35%] xl:w-[30%]">
                         <Link href="/" className="flex items-center gap-2 xl:gap-3 group">
                             {/* Logo Placeholder */}
-                            <div className="w-10 h-10 xl:w-12 xl:h-12 bg-white rounded-lg flex items-center justify-center text-[#2E073F] font-bold xl:text-xl transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg flex-shrink-0">
+                            <div className="w-10 h-10 xl:w-12 xl:h-12 bg-white rounded-lg flex items-center justify-center text-[#0f172a] font-bold xl:text-xl transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg flex-shrink-0">
                                 IICE
                             </div>
                             <div className="hidden sm:block transition-all duration-300 transform group-hover:translate-x-1">
@@ -101,13 +108,13 @@ export default function Header() {
                         <div className="hidden sm:flex items-center border border-white/10 bg-white/5 rounded-full p-1 shadow-inner w-[64px] xl:w-[72px] justify-between flex-shrink-0">
                             <button
                                 onClick={() => toggleLanguage('ka')}
-                                className={`w-7 h-7 xl:w-8 xl:h-8 flex items-center justify-center rounded-full text-[10px] xl:text-xs font-bold transition-all duration-300 ${language === 'ka' ? 'bg-white text-[#2E073F] shadow-md' : 'text-white/60 hover:text-white'}`}
+                                className={`w-7 h-7 xl:w-8 xl:h-8 flex items-center justify-center rounded-full text-[10px] xl:text-xs font-bold transition-all duration-300 ${language === 'ka' ? 'bg-white text-[#60318e] shadow-md' : 'text-white/60 hover:text-white'}`}
                             >
                                 GE
                             </button>
                             <button
                                 onClick={() => toggleLanguage('en')}
-                                className={`w-7 h-7 xl:w-8 xl:h-8 flex items-center justify-center rounded-full text-[10px] xl:text-xs font-bold transition-all duration-300 ${language === 'en' ? 'bg-white text-[#2E073F] shadow-md' : 'text-white/60 hover:text-white'}`}
+                                className={`w-7 h-7 xl:w-8 xl:h-8 flex items-center justify-center rounded-full text-[10px] xl:text-xs font-bold transition-all duration-300 ${language === 'en' ? 'bg-white text-[#60318e] shadow-md' : 'text-white/60 hover:text-white'}`}
                             >
                                 EN
                             </button>

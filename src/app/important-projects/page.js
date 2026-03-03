@@ -20,7 +20,7 @@ export default function ImportantProjectsPage() {
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#2E073F] leading-tight">
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] leading-tight">
                         მნიშვნელოვანი პროექტები
                     </h1>
                 </div>
@@ -36,10 +36,10 @@ export default function ImportantProjectsPage() {
                             className="w-full flex items-center justify-between p-6 md:p-8 bg-white hover:bg-slate-50 transition-colors"
                             onClick={() => toggleAccordion(0)}
                         >
-                            <h4 className="text-[#2E073F] font-bold text-lg md:text-xl uppercase text-left pr-4">
+                            <h4 className="text-[#60318e] font-bold text-lg md:text-xl uppercase text-left pr-4">
                                 მიმდინარე პროექტები
                             </h4>
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-transform duration-300 flex-shrink-0 ${openIndex === 0 ? 'bg-[#AD49E1] text-white rotate-180' : 'bg-slate-100 text-[#2E073F]'}`}>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-transform duration-300 flex-shrink-0 ${openIndex === 0 ? 'bg-[#AD49E1] text-white rotate-180' : 'bg-slate-100 text-[#60318e]'}`}>
                                 <ChevronDown size={20} />
                             </div>
                         </button>
@@ -61,7 +61,7 @@ export default function ImportantProjectsPage() {
                             <h4 className="text-[#663191] font-bold text-lg md:text-xl uppercase text-left pr-4">
                                 ინდუსტრიულ პარტნიორებთან კოლაბორაციაში განხორციელებული პროექტები
                             </h4>
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-transform duration-300 flex-shrink-0 ${openIndex === 1 ? 'bg-[#AD49E1] text-white rotate-180' : 'bg-slate-100 text-[#2E073F]'}`}>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-transform duration-300 flex-shrink-0 ${openIndex === 1 ? 'bg-[#AD49E1] text-white rotate-180' : 'bg-slate-100 text-[#60318e]'}`}>
                                 <ChevronDown size={20} />
                             </div>
                         </button>

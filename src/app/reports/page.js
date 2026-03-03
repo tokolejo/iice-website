@@ -22,7 +22,7 @@ export default function ReportsPage() {
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#2E073F] leading-tight">
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] leading-tight">
                         სამეცნიერო ანგარიშები
                     </h1>
                 </div>
@@ -38,7 +38,7 @@ export default function ReportsPage() {
                         return (
                             <div
                                 key={idx}
-                                className={`bg-white rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-300 border animate-fade-in-up ${isActive ? 'shadow-sm hover:shadow-md hover:-translate-y-1 hover:border-[#AD49E1]/40 border-slate-100 border-l-4 border-l-[#2E073F]' : 'opacity-70 bg-slate-50 border-slate-200'}`}
+                                className={`bg-white rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-300 border animate-fade-in-up ${isActive ? 'shadow-sm hover:shadow-md hover:-translate-y-1 hover:border-[#AD49E1]/40 border-slate-100 border-l-4 border-l-[#60318e]' : 'opacity-70 bg-slate-50 border-slate-200'}`}
                                 style={{ animationDelay: `${idx * 0.05}s` }}
                             >
                                 <div className="flex items-center gap-6 w-full md:w-auto">

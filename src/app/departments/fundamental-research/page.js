@@ -48,7 +48,7 @@ export default function FundamentalResearch() {
             {/* Compact Header */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-center gap-4 text-center">
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#2E073F] leading-tight uppercase tracking-wider">
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] leading-tight uppercase tracking-wider">
                         {displayName}
                     </h1>
                 </div>

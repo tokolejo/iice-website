@@ -6,6 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 import en from '../locales/en';
 import ka from '../locales/ka';
 import { departmentsData, staffData } from '../data';
+import { newsData } from '../data/newsData';
 
 // Specific icons setup for the 5 grid
 const getIconForDepartment = (id) => {
@@ -34,6 +35,10 @@ export default function Home() {
     }
   };
 
+  // Filter latest news and seminars (6 of each)
+  const latestNews = newsData.filter(item => item.category === 'news').slice(0, 6);
+  const latestSeminars = newsData.filter(item => item.category === 'seminars').slice(0, 6);
+
   return (
     <div className="flex flex-col min-h-screen overflow-x-hidden">
 
@@ -42,8 +47,8 @@ export default function Home() {
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row items-center justify-between gap-8 w-full">
           {/* Text Content */}
           <div className="w-full md:w-1/2 text-center md:text-left relative z-10">
-            <h1 className="text-2xl tracking-tight font-extrabold text-[#2E073F] sm:text-3xl lg:text-4xl drop-shadow-sm">
-              <span className="block xl:inline leading-tight text-[#2E073F]">{t.home.heroTitle}</span>{' '}
+            <h1 className="text-2xl tracking-tight font-extrabold text-[#60318e] sm:text-3xl lg:text-4xl drop-shadow-sm">
+              <span className="block xl:inline leading-tight text-[#60318e]">{t.home.heroTitle}</span>{' '}
               <span className="block text-[#7A1CAC] xl:inline leading-tight mt-1">{t.home.heroTitleHighlight}</span>
             </h1>
             <p className="mt-4 text-sm text-text-body md:text-base font-medium leading-relaxed max-w-lg mx-auto md:mx-0">
@@ -67,9 +72,9 @@ export default function Home() {
       <section className="py-16 bg-white shrink-0 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4 sm:gap-0">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#2E073F] tracking-tight uppercase">{t.nav?.departments || 'განყოფილებები'}</h2>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#60318e] tracking-tight uppercase">{t.nav?.departments || 'განყოფილებები'}</h2>
             <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
-              <Link href="/departments" className="text-[#2E073F] font-bold hover:text-[#7A1CAC] transition-colors uppercase text-xs sm:text-sm tracking-wide">
+              <Link href="/departments" className="text-[#60318e] font-bold hover:text-[#7A1CAC] transition-colors uppercase text-xs sm:text-sm tracking-wide">
                 ყველა განყოფილება &rarr;
               </Link>
               <div className="flex gap-2">
@@ -97,7 +102,7 @@ export default function Home() {
                 <Link href={`/departments/${dept.id}`} key={dept.id} className="w-full min-w-full sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] block group snap-start shrink-0">
                   <div className="h-full bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover-scale flex flex-col p-6 transition-all duration-300 hover:shadow-xl hover:border-[#AD49E1] relative">
                     <div className="flex items-start gap-4 mb-4">
-                      <div className="flex-shrink-0 w-16 h-16 bg-slate-50 text-[#AD49E1] rounded-xl flex items-center justify-center shadow-sm group-hover:bg-[#2E073F] group-hover:text-white transition-colors duration-300 border border-slate-100">
+                      <div className="flex-shrink-0 w-16 h-16 bg-slate-50 text-[#AD49E1] rounded-xl flex items-center justify-center shadow-sm group-hover:bg-[#60318e] group-hover:text-white transition-colors duration-300 border border-slate-100">
                         {getIconForDepartment(dept.id)}
                       </div>
                       <div className="flex-grow pt-1">
@@ -107,16 +112,6 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="mt-auto pt-5 border-t border-slate-100 flex items-center gap-4">
-                      <div className="relative flex-shrink-0">
-                        <img src={head?.imageUrl || head?.placeholderUrl || '/placeholder-user.png'} alt={headName} className="w-12 h-12 rounded-full object-cover shadow-sm ring-2 ring-white" />
-                        <div className="absolute inset-0 rounded-full border border-slate-200"></div>
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-0.5">{t.departments?.headOfDepartment || 'ხელმძღვანელი'}</p>
-                        <span className="font-bold text-sm text-slate-800 truncate block">{headName}</span>
-                      </div>
-                    </div>
                   </div>
                 </Link>
               );
@@ -131,15 +126,22 @@ export default function Home() {
 
           {/* სიახლეები (News) */}
           <div className="mb-16">
-            <div className="flex justify-between items-end mb-8">
-              <h2 className="text-3xl font-extrabold text-[#663191] tracking-tight uppercase">სიახლეები</h2>
-              <div className="flex gap-2">
-                <button onClick={() => scrollSlider(newsSliderRef, 'left')} className="p-2 border-2 border-primary text-primary rounded-full hover:bg-primary hover:text-white transition-colors flex items-center justify-center">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
-                </button>
-                <button onClick={() => scrollSlider(newsSliderRef, 'right')} className="p-2 border-2 border-primary text-primary rounded-full hover:bg-primary hover:text-white transition-colors flex items-center justify-center">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-                </button>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4 sm:gap-0">
+              <h2 className="text-3xl font-extrabold text-[#663191] tracking-tight uppercase">
+                {language === 'en' ? 'Latest News' : 'სიახლეები'}
+              </h2>
+              <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
+                <Link href="/news" className="text-[#663191] font-bold hover:text-[#AD49E1] transition-colors uppercase text-xs sm:text-sm tracking-wide">
+                  {language === 'en' ? 'See All News' : 'ყველა სიახლე'} &rarr;
+                </Link>
+                <div className="flex gap-2">
+                  <button onClick={() => scrollSlider(newsSliderRef, 'left')} className="p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+                  </button>
+                  <button onClick={() => scrollSlider(newsSliderRef, 'right')} className="p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -148,38 +150,21 @@ export default function Home() {
               className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory hide-scrollbar style-hide-scrollbar"
               style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
             >
-              {[
-                {
-                  id: 11, date: "1 მარტი, 2026", title: "ახალი აღმოჩენა პოლიმერებში",
-                  desc: "ჩვენმა ინსტიტუტმა დაასრულა მრავალწლიანი კვლევა, რომელიც ახალ პერსპექტივებს ხსნის ეკოლოგიურად სუფთა პოლიმერების წარმოებაში.",
-                  img: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=600&q=80"
-                },
-                {
-                  id: 12, date: "20 თებერვალი, 2026", title: "საერთაშორისო გრანტი",
-                  desc: "ინსტიტუტმა მოიპოვა ევროკავშირის უმსხვილესი სამეცნიერო გრანტი ინოვაციური მასალების შესაქმნელად.",
-                  img: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&q=80"
-                },
-                {
-                  id: 13, date: "12 იანვარი, 2026", title: "წლის საუკეთესო მეცნიერი",
-                  desc: "ჩვენი ინსტიტუტის თანამშრომელი დასახელდა წლის საუკეთესო ახალგაზრდა მეცნიერად ქიმიის დარგში.",
-                  img: "https://images.unsplash.com/photo-1554475901-4538ddfbccc2?w=600&q=80"
-                },
-                {
-                  id: 14, date: "15 დეკემბერი, 2025", title: "მემორანდუმი უნივერსიტეტთან",
-                  desc: "გაფორმდა ახალი თანამშრომლობის მემორანდუმი მიუნხენის ტექნიკურ უნივერსიტეტთან, გაცვლითი პროგრამების დასაწყებად.",
-                  img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=600&q=80"
-                }
-              ].map(news => (
+              {latestNews.map(news => (
                 <div key={news.id} className="w-full min-w-full sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-1 bg-white rounded-[20px] shadow-sm border border-slate-200 overflow-hidden hover:-translate-y-2 hover:shadow-lg hover:shadow-purple-900/10 hover:border-[#663191] transition-all duration-300 group flex flex-col snap-start shrink-0">
                   <div className="h-[220px] bg-gray-200 w-full relative overflow-hidden border-b border-slate-100">
-                    <img src={news.img} alt="სიახლე" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <img src={news.imageUrl} alt="სიახლე" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   </div>
                   <div className="p-6 flex flex-col flex-grow">
                     <div className="text-[11px] text-[#663191] font-extrabold uppercase mb-3 tracking-widest">{news.date}</div>
-                    <h3 className="font-extrabold text-[18px] text-slate-900 mb-4 leading-snug">{news.title}</h3>
-                    <p className="text-[14px] text-slate-600 leading-relaxed mb-6 flex-grow">{news.desc}</p>
-                    <Link href={`/news/${news.id}`} className="self-start text-[#663191] border-2 border-[#663191] px-6 py-2.5 rounded-full text-xs font-bold uppercase transition-colors hover:bg-[#663191] hover:text-white">
-                      ვრცლად
+                    <h3 className="font-extrabold text-[18px] text-slate-900 mb-4 leading-snug line-clamp-2">
+                      {language === 'en' ? news.titleEn : news.title}
+                    </h3>
+                    <p className="text-[14px] text-slate-600 leading-relaxed mb-6 flex-grow line-clamp-3">
+                      {language === 'en' ? news.descriptionEn : news.description}
+                    </p>
+                    <Link href="/news" className="self-start text-[#663191] border-2 border-[#663191] px-6 py-2.5 rounded-full text-xs font-bold uppercase transition-colors hover:bg-[#663191] hover:text-white">
+                      {language === 'en' ? 'Read More' : 'ვრცლად'}
                     </Link>
                   </div>
                 </div>
@@ -189,17 +174,24 @@ export default function Home() {
 
           <div className="w-full h-px bg-slate-200 mb-16"></div>
 
-          {/* ანონსები (Announcements) */}
+          {/* ანონსები (Announcements/Seminars) */}
           <div>
-            <div className="flex justify-between items-end mb-8">
-              <h2 className="text-3xl font-extrabold text-[#663191] tracking-tight uppercase">ანონსები</h2>
-              <div className="flex gap-2">
-                <button onClick={() => scrollSlider(announcementsSliderRef, 'left')} className="p-2 border-2 border-primary text-primary rounded-full hover:bg-primary hover:text-white transition-colors flex items-center justify-center">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
-                </button>
-                <button onClick={() => scrollSlider(announcementsSliderRef, 'right')} className="p-2 border-2 border-primary text-primary rounded-full hover:bg-primary hover:text-white transition-colors flex items-center justify-center">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-                </button>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4 sm:gap-0">
+              <h2 className="text-3xl font-extrabold text-[#663191] tracking-tight uppercase">
+                {language === 'en' ? 'Academic Seminars' : 'სემინარები'}
+              </h2>
+              <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
+                <Link href="/news" className="text-[#663191] font-bold hover:text-[#AD49E1] transition-colors uppercase text-xs sm:text-sm tracking-wide">
+                  {language === 'en' ? 'See All Seminars' : 'ყველა სემინარი'} &rarr;
+                </Link>
+                <div className="flex gap-2">
+                  <button onClick={() => scrollSlider(announcementsSliderRef, 'left')} className="p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+                  </button>
+                  <button onClick={() => scrollSlider(announcementsSliderRef, 'right')} className="p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -208,38 +200,21 @@ export default function Home() {
               className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory hide-scrollbar style-hide-scrollbar"
               style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
             >
-              {[
-                {
-                  id: 1, date: "25 თებერვალი, 2026", title: "საერთაშორისო კონფერენცია ქიმიაში",
-                  desc: "ინსტიტუტი აცხადებს რეგისტრაციას ყოველწლიურ საერთაშორისო კონფერენციაზე. მონაწილეობის მიღება შეუძლიათ დოქტორანტებსა და მეცნიერებს.",
-                  img: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80"
-                },
-                {
-                  id: 2, date: "10 მარტი, 2026", title: "ახალი საგრანტო კონკურსი",
-                  desc: "გამოცხადდა შიდა საგრანტო კონკურსი ახალგაზრდა მეცნიერებისთვის. პროექტების წარდგენის ბოლო ვადაა 1 აპრილი.",
-                  img: "https://images.unsplash.com/photo-1561489422-45de3d015e3e?w=600&q=80"
-                },
-                {
-                  id: 3, date: "15 აპრილი, 2026", title: "საჯარო ლექციების ციკლი",
-                  desc: "გეპატიჟებით საჯარო ლექციების ციკლზე, რომელსაც ჩაატარებენ მოწვეული პროფესორები ევროპის წამყვანი უნივერსიტეტებიდან.",
-                  img: "https://images.unsplash.com/photo-1577412647305-991150c7d163?w=600&q=80"
-                },
-                {
-                  id: 4, date: "18 მაისი, 2026", title: "თანამედროვე ლაბორატორია",
-                  desc: "გაიხსნა ახალი, ულტრათანამედროვე ლაბორატორია რომელიც საშუალებას მოგვცემს ჩავატაროთ ბევრად ზუსტი და ღრმა კვლევები ფიზიკურ-ქიმიურ ანალიზში.",
-                  img: "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?w=600&q=80"
-                }
-              ].map(news => (
+              {latestSeminars.map(news => (
                 <div key={news.id} className="w-full min-w-full sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-1 bg-white rounded-[20px] shadow-sm border border-slate-200 overflow-hidden hover:-translate-y-2 hover:shadow-lg hover:shadow-purple-900/10 hover:border-[#663191] transition-all duration-300 group flex flex-col snap-start shrink-0">
                   <div className="h-[220px] bg-gray-200 w-full relative overflow-hidden border-b border-slate-100">
-                    <img src={news.img} alt="სიახლე" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <img src={news.imageUrl} alt="სემინარი" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   </div>
                   <div className="p-6 flex flex-col flex-grow">
                     <div className="text-[11px] text-[#663191] font-extrabold uppercase mb-3 tracking-widest">{news.date}</div>
-                    <h3 className="font-extrabold text-[18px] text-slate-900 mb-4 leading-snug">{news.title}</h3>
-                    <p className="text-[14px] text-slate-600 leading-relaxed mb-6 flex-grow">{news.desc}</p>
-                    <Link href={`/news/${news.id}`} className="self-start text-[#663191] border-2 border-[#663191] px-6 py-2.5 rounded-full text-xs font-bold uppercase transition-colors hover:bg-[#663191] hover:text-white">
-                      ვრცლად
+                    <h3 className="font-extrabold text-[18px] text-slate-900 mb-4 leading-snug line-clamp-2">
+                      {language === 'en' ? news.titleEn : news.title}
+                    </h3>
+                    <p className="text-[14px] text-slate-600 leading-relaxed mb-6 flex-grow line-clamp-3">
+                      {language === 'en' ? news.descriptionEn : news.description}
+                    </p>
+                    <Link href="/news" className="self-start text-[#663191] border-2 border-[#663191] px-6 py-2.5 rounded-full text-xs font-bold uppercase transition-colors hover:bg-[#663191] hover:text-white">
+                      {language === 'en' ? 'Read More' : 'ვრცლად'}
                     </Link>
                   </div>
                 </div>

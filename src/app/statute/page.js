@@ -14,7 +14,7 @@ export default function StatutePage() {
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#2E073F] leading-tight">
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] leading-tight">
                         ინსტიტუტის დებულება
                     </h1>
                 </div>
@@ -24,7 +24,7 @@ export default function StatutePage() {
             <section className="py-20">
                 <div className="container mx-auto px-6 max-w-3xl">
                     <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow border border-slate-100 p-10 md:p-14 border-t-4 border-t-[#AD49E1] text-center animate-fade-in-up">
-                        <div className="w-20 h-20 bg-[#EBD3F8]/30 rounded-full flex items-center justify-center text-[#2E073F] mx-auto mb-8 border border-purple-100">
+                        <div className="w-20 h-20 bg-[#EBD3F8]/30 rounded-full flex items-center justify-center text-[#60318e] mx-auto mb-8 border border-purple-100">
                             <FileText size={36} strokeWidth={1.5} />
                         </div>
 

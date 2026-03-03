@@ -13,7 +13,7 @@ export default function CollaborationPage() {
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#2E073F] leading-tight">
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] leading-tight">
                         კოლაბორაცია
                     </h1>
                 </div>
@@ -24,12 +24,12 @@ export default function CollaborationPage() {
                 <div className="container mx-auto px-6 max-w-4xl space-y-8">
 
                     {/* Item 1 */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 flex flex-col md:flex-row gap-8 items-start hover:shadow-md transition-shadow hover:border-[#AD49E1]/30 border-l-4 border-l-[#2E073F] animate-fade-in-up">
-                        <div className="min-w-[70px] h-[70px] bg-[#EBD3F8]/30 rounded-2xl flex items-center justify-center text-[#2E073F] border border-purple-100 shrink-0">
+                    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 flex flex-col md:flex-row gap-8 items-start hover:shadow-md transition-shadow hover:border-[#AD49E1]/30 border-l-4 border-l-[#60318e] animate-fade-in-up">
+                        <div className="min-w-[70px] h-[70px] bg-[#EBD3F8]/30 rounded-2xl flex items-center justify-center text-[#60318e] border border-purple-100 shrink-0">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
                         </div>
                         <div className="flex-1">
-                            <h3 className="text-xl font-extrabold text-[#2E073F] uppercase mb-4 leading-snug">
+                            <h3 className="text-xl font-extrabold text-[#60318e] uppercase mb-4 leading-snug">
                                 საერთაშორისო მწვანე წყალბადის ლაბორატორია
                             </h3>
                             <p className="text-slate-600 text-lg leading-relaxed mb-6 text-justify">
@@ -47,7 +47,7 @@ export default function CollaborationPage() {
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         </div>
                         <div className="flex-1">
-                            <h3 className="text-xl font-extrabold text-[#2E073F] uppercase mb-4 leading-snug">
+                            <h3 className="text-xl font-extrabold text-[#60318e] uppercase mb-4 leading-snug">
                                 სამეცნიერო და ტექნიკური თანამშრომლობის შესახებ<br />(აზერბაიჯანი)
                             </h3>
                             <p className="text-slate-600 text-lg leading-relaxed mb-6 text-justify">
@@ -65,7 +65,7 @@ export default function CollaborationPage() {
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         </div>
                         <div className="flex-1">
-                            <h3 className="text-xl font-extrabold text-[#2E073F] uppercase mb-4 leading-snug">
+                            <h3 className="text-xl font-extrabold text-[#60318e] uppercase mb-4 leading-snug">
                                 სამეცნიერო და ტექნიკური თანამშრომლობის შესახებ<br />(ყაზახეთი)
                             </h3>
                             <p className="text-slate-600 text-lg leading-relaxed mb-6 text-justify">

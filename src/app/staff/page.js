@@ -33,7 +33,7 @@ export default function StaffDirectory() {
     return (
         <div className="bg-white min-h-screen flex flex-col">
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up text-center">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-[#2E073F] uppercase tracking-wider">
+                <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] uppercase tracking-wider">
                     თანამშრომლები
                 </h1>
             </div>

@@ -23,7 +23,7 @@ export default function HistoryPage() {
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#2E073F] leading-tight">
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] leading-tight">
                         ინსტიტუტის ისტორია
                     </h1>
                 </div>
@@ -36,45 +36,45 @@ export default function HistoryPage() {
                     {/* Main Content */}
                     <div className="lg:col-span-3 space-y-8">
 
-                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-10 border-l-4 border-l-[#2E073F] animate-fade-in-up" id="section-1">
+                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-10 border-l-4 border-l-[#60318e] animate-fade-in-up" id="section-1">
                             <p className="text-lg text-slate-700 leading-relaxed text-justify">
                                 ინსტიტუტი დაარსებულია 1956 წელს, გამოეყო რა 1946 წელს დაფუძნებულ ლითონისა და სამთო საქმის ინსტიტუტს და თავდაპირველად ეწოდა საქართველოს მეცნიერებათა აკადემიის გამოყენებითი ქიმიისა და ელექტროქიმიის ინსტიტუტი, შემდგომში კი - საქართველოს მეცნიერებათა აკადემიის რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი. დაარსების მიზანი იყო ქვეყნის სასარგებლო წიაღისეულიდან კონკურენტუნარიანი პროდუქტების მიღების ტექნოლოგიების შემუშავების ამოცანების გადაწყვეტისთვის.
                             </p>
                         </div>
 
                         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-10 animate-fade-in-up">
-                            <h3 className="text-xl font-bold text-[#2E073F] mb-6 uppercase">ინსტიტუტში შექმნილი ტექნოლოგიები განხორციელდა მსხვილი წარმოებების სახით:</h3>
+                            <h3 className="text-xl font-bold text-[#60318e] mb-6 uppercase">ინსტიტუტში შექმნილი ტექნოლოგიები განხორციელდა მსხვილი წარმოებების სახით:</h3>
                             <ul className="space-y-4">
                                 <li className="flex items-start">
-                                    <span className="text-[#2E073F] font-bold mr-3 mt-1">•</span>
+                                    <span className="text-[#60318e] font-bold mr-3 mt-1">•</span>
                                     <span className="text-slate-700 text-lg">პირველად ევროპაში გაშვებულ იქნა ზესტაფონის ელექტროლიზური ლითონური მანგანუმის საამქრო, რომელიც მთლიანად უზრუნველყოფდა ამ პროდუქტზე სსრკ-ს და აღმოსავლეთ ევროპის მოთხოვნილებას;</span>
                                 </li>
                                 <li className="flex items-start">
-                                    <span className="text-[#2E073F] font-bold mr-3 mt-1">•</span>
+                                    <span className="text-[#60318e] font-bold mr-3 mt-1">•</span>
                                     <span className="text-slate-700 text-lg">რუსთავის ს/გ "აზოტში" ამუშავდა კალიუმის პერმანგანატის ელექტროქიმიური მიღების საამქრო (ფარავდა სსრკ მოთხოვნილების 1/3);</span>
                                 </li>
                                 <li className="flex items-start">
-                                    <span className="text-[#2E073F] font-bold mr-3 mt-1">•</span>
+                                    <span className="text-[#60318e] font-bold mr-3 mt-1">•</span>
                                     <span className="text-slate-700 text-lg">რუსთავის ს/გ “აზოტში” გაეშვა ელექტროლიზური მანგანუმის დიოქსიდის საცდელ-სამრეწველო საამქრო.</span>
                                 </li>
                             </ul>
                         </div>
 
-                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-10 border-l-4 border-l-[#2E073F] animate-fade-in-up">
+                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-10 border-l-4 border-l-[#60318e] animate-fade-in-up">
                             <p className="text-lg text-slate-700 leading-relaxed text-justify">
                                 1984 -დან 2006 წლის ჩათვლით (ანუ საქართველოში განათლების და მეცნიერების მოწყობის მოდელის ძირეულად შეცვლამდე) ინსტიტუტში ფუნქციონირებდა სამეცნიერო ხარისხების მიმნიჭებელი საკვალიფიკაციო საბჭო, რომელიც იყო ერთადერთი კავკასიის რეგიონში ელექტროქიმიის, ელექტროქიმიური ტექნოლოგიისა და არაორგანული ნივთიერებების ტექნოლოგიის დარგებში. მასზე დაცულია 85 საკანდიდატო, 12 სადოქტორო დისერტაცია.
                             </p>
                         </div>
 
                         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-10 animate-fade-in-up">
-                            <h3 className="text-xl font-bold text-[#2E073F] mb-6 uppercase">განვითარების შესაბამისად კვლევები გამრავალფეროვნდა:</h3>
+                            <h3 className="text-xl font-bold text-[#60318e] mb-6 uppercase">განვითარების შესაბამისად კვლევები გამრავალფეროვნდა:</h3>
                             <p className="text-lg text-slate-700 leading-relaxed text-justify">
                                 ქიმიურ და ელექტროქიმიურ სისტემებში მუხტის გადატანის კვანტურ-მექანიკური თეორია და ექსპერიმენტი, ლითონ-ხსნარის აღნაგობა, ორგანულ და არაორგანულ ნაერთთა ადსორბცია, ელექტროქიმიური კინეტიკა, ელექტროკრისტალიზაცია, თერმოქიმია, რადიაციულ-ქიმიური გარდაქმნები, ბიოლოგიურად აქტიური კოორდინაციული ნაერთების სინთეზი და მათი ფიზიკურ - ქიმიური თვისებები, საქართველოს სასარგებლო წიაღისეულიდან ძვირადღირებული ნაერთების მიღების მეცნიერული წინაპირობების შექმნა, ქიმიური წარმოებების ჩამდინარი წყლების გაწმენდა და ტოქსიკური ნარჩენების უტილიზაცია და სხვა.
                             </p>
                         </div>
 
-                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-10 border-l-4 border-l-[#2E073F] animate-fade-in-up">
-                            <h3 className="text-xl font-bold text-[#2E073F] mb-6 uppercase">საერთაშორისო პროექტები და თანამშრომლობა:</h3>
+                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-10 border-l-4 border-l-[#60318e] animate-fade-in-up">
+                            <h3 className="text-xl font-bold text-[#60318e] mb-6 uppercase">საერთაშორისო პროექტები და თანამშრომლობა:</h3>
                             <p className="text-lg text-slate-700 leading-relaxed text-justify mb-4">
                                 დამოუკიდებელი საქართველოს პირობებში ინსტიტუტი ფართოდ მონაწილეობდა და ამჟამადაც ახორციელებს თანამშრომლობას საერთაშორისო პროექტების ფარგლებში. მათ შორისაა ევროკავშირის მეშვიდე ჩარჩო პროგრამის (FP7), ბრიტანული დახურული ბირთვული ქალაქების პროგრამის (CNCP), შვეიცარიის სამეცნიერო ფონდის დაფინანსებით განხორციელებული პროექტები. ასევე საპარტნიორო პროექტები აშშ ენერგეტიკის დეპარტამენტის, ნაციონალური ლაბორატორიების (ლივერმორის, ლოს ალამოსის) და კერძო ინვესტორების (Long Arc Technology, G3C Technology, Planetary Technology In) დაფინანსებით.
                             </p>
@@ -89,8 +89,8 @@ export default function HistoryPage() {
                             </p>
                         </div>
 
-                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-10 border-l-4 border-l-[#2E073F] animate-fade-in-up">
-                            <h3 className="text-xl font-bold text-[#2E073F] mb-6 uppercase">2015 - 2024 წლების სამეცნიერო პროგრამა:</h3>
+                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-10 border-l-4 border-l-[#60318e] animate-fade-in-up">
+                            <h3 className="text-xl font-bold text-[#60318e] mb-6 uppercase">2015 - 2024 წლების სამეცნიერო პროგრამა:</h3>
                             <p className="text-lg text-slate-700 leading-relaxed text-justify mb-4">
                                 ინსტიტუტმა განხორციელა სახელმწიფო სამეცნიერო კვლევების ათწლიანი პროგრამა, რომლის ფარგლებშიც 3.3-ჯერ გაიზარდა საბიუჯეტო დაფინანსება. პროგრამამ მოიცვა: მეტალების ნანოფხვნილების მიღება; ნანომასალების მიღება აფეთქებით; ახალი თაობის ლითიუმ-იონური აკუმულატორებისათვის საკათოდე მასალების შემუშავება; სუპერკონდენსატორები; სათბობის ტიპის დენის წყაროები; კოორდინაციული და კომპიუტერული ქიმია; კატალიზი; არაწყალხსნართა ელექტროქიმია; ადგილობრივი წიაღისეულის გადამუშავება და სხვა.
                             </p>
@@ -100,7 +100,7 @@ export default function HistoryPage() {
                         </div>
 
                         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-10 animate-fade-in-up" id="directors">
-                            <h3 className="text-xl font-bold text-[#2E073F] mb-6 uppercase">დირექტორები სხვადასხვა დროს იყვნენ:</h3>
+                            <h3 className="text-xl font-bold text-[#60318e] mb-6 uppercase">დირექტორები სხვადასხვა დროს იყვნენ:</h3>
                             <div className="flex flex-col gap-4">
                                 {directors.map((dir, idx) => (
                                     <div key={idx} className="flex flex-col sm:flex-row justify-between sm:items-center py-4 border-b border-slate-100 last:border-0 hover:bg-slate-50 rounded-lg px-4 transition-colors">
@@ -125,7 +125,7 @@ export default function HistoryPage() {
                         <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-6">
                             <h4 className="text-sm font-extrabold text-slate-800 uppercase tracking-widest mb-6">სარჩევი</h4>
                             <div className="flex flex-col gap-4">
-                                <a href="https://iice.ge/wp-content/uploads/2026/documents/eleqtrochemistry-skola.docx" target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 p-3 bg-[#EBD3F8]/30 text-[#2E073F] rounded-lg hover:bg-[#EBD3F8]/50 transition-colors text-sm font-semibold">
+                                <a href="https://iice.ge/wp-content/uploads/2026/documents/eleqtrochemistry-skola.docx" target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 p-3 bg-[#EBD3F8]/30 text-[#60318e] rounded-lg hover:bg-[#EBD3F8]/50 transition-colors text-sm font-semibold">
                                     <span className="text-lg">📥</span>
                                     <span>საქართველოში ელექტროქიმიური სამეცნიერო სკოლის განვითარების ეტაპები (DOCX)</span>
                                 </a>

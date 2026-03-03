@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
-import Head from 'next/head';
+import React, { useState, useEffect } from 'react';
+// import Head from 'next/head'; // Should not be used in App Router client components for metadata.
 import { useLanguage } from '../../context/LanguageContext';
 import { newsData } from '../../data/newsData';
 import NewsCard from '../../components/NewsCard';
+import NewsModal from '../../components/NewsModal';
 import en from '../../locales/en';
 import ka from '../../locales/ka';
 
@@ -13,10 +14,23 @@ export default function NewsPage() {
     const t = language === 'en' ? en : ka;
     const [filter, setFilter] = useState('all');
     const [selectedNews, setSelectedNews] = useState(null);
+    const [visibleCount, setVisibleCount] = useState(8);
 
     const filteredNews = filter === 'all'
         ? newsData
         : newsData.filter(item => item.category === filter);
+
+    const visibleNews = filteredNews.slice(0, visibleCount);
+    const hasMore = visibleCount < filteredNews.length;
+
+    const handleLoadMore = () => {
+        setVisibleCount(prev => prev + 8);
+    };
+
+    // Reset visible count when filter changes
+    useEffect(() => {
+        setVisibleCount(8);
+    }, [filter]);
 
     const categories = [
         { id: 'all', label: language === 'en' ? 'All' : 'ყველა' },
@@ -25,40 +39,56 @@ export default function NewsPage() {
     ];
 
     return (
-        <div className="bg-slate-50 min-h-screen pb-20">
-            <Head>
-                <title>{t.nav.news} | IICE</title>
-            </Head>
+        <div className="bg-[#FAF9FF] min-h-screen pb-32">
+            {/* Head should be handled by metadata API or layout in App Router */}
 
-            {/* Header */}
-            <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-8 animate-fade-in-up">
-                <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#2E073F] leading-tight">
-                        {t.nav.news}
-                    </h1>
+            {/* Refined Light Header */}
+            <div className="relative bg-gradient-to-b from-[#F8F6FF] to-[#FAF9FF] pt-32 pb-24 overflow-hidden border-b border-[#EBD3F8]/30">
+                {/* Subtle Decorative Elements */}
+                <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#AD49E1]/5 to-transparent"></div>
+                <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#AD49E1]/5 rounded-full blur-3xl opacity-50"></div>
+
+                <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div className="max-w-4xl">
+                        <div className="flex items-center gap-4 mb-6 animate-fade-in-up">
+                            <span className="w-12 h-1 bg-[#AD49E1] rounded-full"></span>
+                            <span className="text-[#AD49E1] text-xs font-black uppercase tracking-[0.3em]">{t.nav.news}</span>
+                        </div>
+                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#60318e] leading-[1.1] mb-6 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                            {language === 'en' ? 'Latest Updates & Scientific Events' : 'უახლესი ამბები და სამეცნიერო ღონისძიებები'}
+                        </h1>
+                        <p className="text-slate-500 text-lg animate-fade-in-up max-w-2xl font-medium leading-relaxed" style={{ animationDelay: '0.2s' }}>
+                            {language === 'en'
+                                ? 'Stay informed about our latest research discoveries, international collaborations, and upcoming scientific seminars.'
+                                : 'გაეცანით ჩვენს უახლეს სამეცნიერო აღმოჩენებს, საერთაშორისო თანამშრომლობასა და მომავალ სემინარებს.'
+                            }
+                        </p>
+                    </div>
                 </div>
             </div>
 
-            <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-8">
                 {/* Filters */}
-                <div className="flex flex-wrap justify-center gap-2 mb-12 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                    {categories.map(cat => (
-                        <button
-                            key={cat.id}
-                            onClick={() => setFilter(cat.id)}
-                            className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 border ${filter === cat.id
-                                    ? 'bg-[#AD49E1] text-white border-[#AD49E1] shadow-md scale-105'
-                                    : 'bg-white text-slate-500 border-slate-100 hover:border-[#AD49E1] hover:text-[#AD49E1]'
-                                }`}
-                        >
-                            {cat.label}
-                        </button>
-                    ))}
+                <div className="flex justify-center mb-16 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                    <div className="bg-white/70 backdrop-blur-xl p-2 rounded-[2rem] shadow-xl border border-white inline-flex">
+                        {categories.map(cat => (
+                            <button
+                                key={cat.id}
+                                onClick={() => setFilter(cat.id)}
+                                className={`px-8 py-3 rounded-[1.5rem] text-[11px] font-black uppercase tracking-wider transition-all duration-500 ${filter === cat.id
+                                    ? 'bg-[#AD49E1] text-white shadow-[0_8px_20px_-4px_rgba(173,73,225,0.4)] scale-105'
+                                    : 'text-slate-500 hover:text-[#AD49E1] hover:bg-white'
+                                    }`}
+                            >
+                                {cat.label}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                    {filteredNews.map((item, index) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                    {visibleNews.map((item, index) => (
                         <NewsCard
                             key={item.id}
                             item={item}
@@ -67,75 +97,40 @@ export default function NewsPage() {
                     ))}
                 </div>
 
+                {/* Load More Button */}
+                {hasMore && (
+                    <div className="mt-20 text-center animate-fade-in">
+                        <button
+                            onClick={handleLoadMore}
+                            className="bg-white text-[#60318e] border-2 border-[#EBD3F8] px-12 py-4 rounded-full font-black uppercase tracking-widest text-xs hover:bg-[#AD49E1] hover:text-white hover:border-[#AD49E1] hover:shadow-[0_20px_40px_-10px_rgba(173,73,225,0.3)] transition-all duration-500 active:scale-95"
+                        >
+                            {language === 'en' ? 'Load More Articles' : 'მეტის ჩამოტვირთვა'}
+                        </button>
+                    </div>
+                )}
+
                 {filteredNews.length === 0 && (
-                    <div className="text-center py-20 text-slate-400">
-                        {language === 'en' ? 'No news found in this category.' : 'ამ კატეგორიაში სიახლეები არ მოიძებნა.'}
+                    <div className="text-center py-32">
+                        <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg className="w-10 h-10 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <p className="text-slate-400 font-bold uppercase tracking-widest text-sm">
+                            {language === 'en' ? 'No matches found.' : 'შედეგი არ მოიძებნა.'}
+                        </p>
                     </div>
                 )}
             </div>
 
-            {/* News Modal */}
+            {/* New Modal Component */}
             {selectedNews && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#2E073F]/60 backdrop-blur-sm animate-fade-in">
-                    <div
-                        className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col relative animate-scale-in"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        {/* Close button */}
-                        <button
-                            onClick={() => setSelectedNews(null)}
-                            className="absolute top-4 right-4 z-10 p-2 bg-white/80 backdrop-blur-md rounded-full text-slate-600 hover:text-[#AD49E1] transition-colors shadow-lg"
-                        >
-                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-
-                        {/* Modal Content */}
-                        <div className="overflow-y-auto">
-                            <div className="h-64 md:h-80 w-full relative">
-                                <img
-                                    src={selectedNews.imageUrl}
-                                    alt={language === 'en' ? selectedNews.titleEn : selectedNews.title}
-                                    className="w-full h-full object-cover"
-                                />
-                                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent"></div>
-                            </div>
-
-                            <div className="p-8 md:p-12 -mt-12 relative z-10">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${selectedNews.category === 'news' ? 'bg-[#AD49E1] text-white' : 'bg-[#2E073F] text-white'
-                                        }`}>
-                                        {selectedNews.category === 'news'
-                                            ? (language === 'en' ? 'News' : 'სიახლეები')
-                                            : (language === 'en' ? 'Seminar' : 'სემინარი')}
-                                    </span>
-                                    <span className="text-xs text-slate-400 font-medium">{selectedNews.date}</span>
-                                </div>
-
-                                <h2 className="text-2xl md:text-3xl font-extrabold text-[#2E073F] mb-6 leading-tight">
-                                    {language === 'en' ? selectedNews.titleEn : selectedNews.title}
-                                </h2>
-
-                                <div className="prose prose-slate max-w-none">
-                                    <p className="text-slate-600 text-lg leading-relaxed whitespace-pre-line">
-                                        {language === 'en' ? selectedNews.contentEn : selectedNews.content}
-                                    </p>
-                                </div>
-
-                                <div className="mt-12 pt-8 border-t border-slate-100 flex justify-end">
-                                    <button
-                                        onClick={() => setSelectedNews(null)}
-                                        className="bg-[#2E073F] text-white px-8 py-3 rounded-full font-bold hover:bg-[#AD49E1] transition-all shadow-lg hover:shadow-purple-200"
-                                    >
-                                        {language === 'en' ? 'Close' : 'დახურვა'}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <NewsModal
+                    item={selectedNews}
+                    onClose={() => setSelectedNews(null)}
+                />
             )}
         </div>
     );
 }
+
