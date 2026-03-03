@@ -11,6 +11,8 @@ export default {
         scientificReports: 'Scientific Reports',
         studiesInternships: 'Studies/Internships',
         importantProjects: 'Important Projects',
+        collaboration: 'Collaboration',
+        departments: 'Departments',
         conference: 'Conference',
         news: 'News',
         seminars: 'Seminars',
@@ -45,5 +47,16 @@ export default {
         close: 'Close',
         viewProfile: 'View Profile',
         viewBio: 'View Full BIO Document'
+    },
+    footer: {
+        tsuAgladze: 'TSU R. Agladze',
+        instituteTitleHead: 'Institute of Inorganic Chemistry',
+        instituteDescription: 'Ivane Javakhishvili Tbilisi State University R. Agladze Institute of Inorganic Chemistry and Electrochemistry. Serving the advancement of science since 1956. Our goal is innovative research and the implementation of new technologies.',
+        instituteMenuTitle: 'Institute',
+        academicMenuTitle: 'Academic',
+        contactMenuTitle: 'Contact',
+        address: 'Tbilisi 0186, Georgia\nKavtaradze St. Ilia Vekua #11',
+        sendMessage: 'Send Message',
+        copyright: 'TSU IICE. All rights reserved.'
     }
 };

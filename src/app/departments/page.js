@@ -53,10 +53,16 @@ export default function DepartmentsPage() {
     const t = language === 'en' ? en : ka;
 
     return (
-        <div className="bg-slate-50 min-h-screen pb-20">
+        /*
+            შენიშვნა დეველოპერისთვის (Note):
+            აქ იყო `min-h-screen pb-20`, რაც განყოფილებების ქვევით ფუტერამდე ტოვებდა დიდ სიცარიელეს.
+            ამოღებულია `min-h-screen` და შეცვლილია `pb-10`-ით. თუ ქვედა დაშორების შემცირება/გაზრდა
+            დაგჭირდებათ, შეცვალეთ `pb-10` სხვა მნიშვნელობით (მაგ. pb-4, pb-16).
+        */
+        < div className="bg-slate-50 pb-10" >
 
             {/* Page Header */}
-            <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
+            < div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up" >
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
                     <h1 className="text-xl md:text-3xl font-extrabold text-[#60318e] leading-tight mb-2">
                         {t.nav.departments}
@@ -65,7 +71,7 @@ export default function DepartmentsPage() {
                         {language === 'en' ? 'Explore our dedicated research departments driving scientific excellence.' : 'გაეცანით ჩვენს კვლევით განყოფილებებს, რომლებიც განაპირობებენ სამეცნიერო სრულყოფილებას.'}
                     </p>
                 </div>
-            </div>
+            </div >
 
             <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up mt-3" style={{ animationDelay: '0.1s' }}>
                 {/* Horizontal Grid for 5 departments */}
@@ -121,6 +127,6 @@ export default function DepartmentsPage() {
                     })}
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

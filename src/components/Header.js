@@ -46,13 +46,13 @@ export default function Header() {
 
                     {/* Navigation */}
                     <nav className="hidden lg:flex flex-1 justify-center space-x-1 xl:space-x-4 items-center whitespace-nowrap px-2">
-                        <Link href="/" className="text-[#EBD3F8] hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
+                        <Link href="/" className="text-white/90 hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
                             {t.nav.home}
                         </Link>
 
                         {/* About Us Menu */}
                         <div className="relative group">
-                            <button className="text-[#EBD3F8] hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5 inline-flex items-center">
+                            <button className="text-white/90 hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5 inline-flex items-center">
                                 {t.nav.about}
                                 <svg className="ml-1 h-3 w-3 xl:h-4 xl:w-4 transition-transform group-hover:rotate-180 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -72,13 +72,13 @@ export default function Header() {
                             </div>
                         </div>
 
-                        <Link href="/departments" className="text-[#EBD3F8] hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
+                        <Link href="/departments" className="text-white/90 hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
                             {t.nav.departments}
                         </Link>
 
                         {/* Events Menu */}
                         <div className="relative group">
-                            <button className="text-[#EBD3F8] hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5 inline-flex items-center">
+                            <button className="text-white/90 hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5 inline-flex items-center">
                                 {t.nav.events}
                                 <svg className="ml-1 h-3 w-3 xl:h-4 xl:w-4 transition-transform group-hover:rotate-180 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -90,15 +90,15 @@ export default function Header() {
                             </div>
                         </div>
 
-                        <Link href="/infrastructure" className="text-[#EBD3F8] hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
+                        <Link href="/infrastructure" className="text-white/90 hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
                             {t.nav.infrastructure}
                         </Link>
 
-                        <Link href="/news" className="text-[#EBD3F8] hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
+                        <Link href="/news" className="text-white/90 hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
                             {t.nav.news}
                         </Link>
 
-                        <Link href="/contact" className="text-[#EBD3F8] hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
+                        <Link href="/contact" className="text-white/90 hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
                             {t.nav.contact}
                         </Link>
                     </nav>
