@@ -21,7 +21,11 @@ export default function HistoryPage() {
     return (
         <div className="bg-slate-50 min-h-screen">
             <Head>
-                <title>{isEn ? 'History | IICE' : 'ისტორია | IICE'}</title>
+                <title>{isEn ? 'History | TSU IICE' : 'ისტორია | TSU IICE'}</title>
+                <meta name="description" content={isEn ? "History of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry, established in 1956." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის ისტორია, დაარსებული 1956 წელს."} />
+                <meta property="og:title" content={isEn ? 'History | TSU IICE' : 'ისტორია | TSU IICE'} />
+                <meta property="og:description" content={isEn ? "History of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry, established in 1956." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის ისტორია, დაარსებული 1956 წელს."} />
+                <link rel="canonical" href="https://iice.ge/history" />
             </Head>
 
             {/* Hero Section */}

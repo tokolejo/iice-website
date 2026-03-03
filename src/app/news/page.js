@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-// import Head from 'next/head'; // Should not be used in App Router client components for metadata.
+import Head from 'next/head';
 import { useLanguage } from '../../context/LanguageContext';
 import { newsData } from '../../data/newsData';
 import NewsCard from '../../components/NewsCard';
@@ -40,6 +40,13 @@ export default function NewsPage() {
 
     return (
         <div className="bg-[#FAF9FF] min-h-screen pb-16">
+            <Head>
+                <title>{language === 'en' ? 'News & Seminars | TSU IICE' : 'სიახლეები და სემინარები | TSU IICE'}</title>
+                <meta name="description" content={language === 'en' ? "Latest news, academic seminars, and announcements from the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის უახლესი ამბები, აკადემიური სემინარები და ანონსები."} />
+                <meta property="og:title" content={language === 'en' ? 'News & Seminars | TSU IICE' : 'სიახლეები და სემინარები | TSU IICE'} />
+                <meta property="og:description" content={language === 'en' ? "Latest news, academic seminars, and announcements from the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის უახლესი ამბები, აკადემიური სემინარები და ანონსები."} />
+                <link rel="canonical" href="https://iice.ge/news" />
+            </Head>
             {/* აქედან რეგულირდება ფუტერსა და კონტენტს შორის დაშორება (მაგ: pb-12, pb-20, pb-32) */}
             {/* Head should be handled by metadata API or layout in App Router */}
 
@@ -101,7 +108,7 @@ export default function NewsPage() {
                     <div className="mt-20 text-center animate-fade-in">
                         <button
                             onClick={handleLoadMore}
-                            className="bg-white text-[#60318e] border-2 border-[#EBD3F8] px-12 py-4 rounded-full font-black uppercase tracking-widest text-xs hover:bg-[#AD49E1] hover:text-white hover:border-[#AD49E1] hover:shadow-[0_20px_40px_-10px_rgba(173,73,225,0.3)] transition-all duration-500 active:scale-95"
+                            className="bg-white border-2 border-slate-200 text-gray-700 hover:border-[#AD49E1] hover:text-[#AD49E1] font-bold py-3 px-8 rounded-full transition-all duration-300 shadow-sm hover:shadow-md active:scale-95"
                         >
                             {language === 'en' ? 'View More' : 'მეტის ნახვა'}
                         </button>

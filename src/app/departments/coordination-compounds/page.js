@@ -1,5 +1,6 @@
 'use client';
 
+import Head from 'next/head';
 import { useState } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Users } from 'lucide-react';
@@ -42,8 +43,15 @@ export default function CoordinationCompounds() {
 
     if (!department) return <div>Department not found</div>;
 
+    const isEn = language === 'en';
+
     return (
         <div className="bg-slate-50 min-h-screen pb-16">
+            <Head>
+                <title>{isEn ? `${department?.nameEn} | TSU IICE` : `${department?.name} | TSU IICE`}</title>
+                <meta name="description" content={isEn ? `Discover the ${department?.nameEn} department at the R. Agladze Institute of Inorganic Chemistry and Electrochemistry.` : `გაეცანით ${department?.name}ს განყოფილებას რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტში.`} />
+                <link rel="canonical" href={`https://iice.ge/departments/${departmentId}`} />
+            </Head>
 
             {/* Compact Header */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">

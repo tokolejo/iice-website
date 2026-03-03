@@ -48,9 +48,12 @@ const getIconForDepartment = (id) => {
     }
 };
 
+import Head from 'next/head';
+
 export default function DepartmentsPage() {
     const { language } = useLanguage();
     const t = language === 'en' ? en : ka;
+    const isEn = language === 'en';
 
     return (
         /*
@@ -60,6 +63,13 @@ export default function DepartmentsPage() {
             დაგჭირდებათ, შეცვალეთ `pb-10` სხვა მნიშვნელობით (მაგ. pb-4, pb-16).
         */
         < div className="bg-slate-50 pb-10" >
+            <Head>
+                <title>{isEn ? 'Departments | TSU IICE' : 'განყოფილებები | TSU IICE'}</title>
+                <meta name="description" content={isEn ? "Explore the scientific and research departments of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "გაეცანით რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის სამეცნიერო და კვლევით განყოფილებებს."} />
+                <meta property="og:title" content={isEn ? 'Departments | TSU IICE' : 'განყოფილებები | TSU IICE'} />
+                <meta property="og:description" content={isEn ? "Explore the scientific and research departments of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "გაეცანით რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის სამეცნიერო და კვლევით განყოფილებებს."} />
+                <link rel="canonical" href="https://iice.ge/departments" />
+            </Head>
 
             {/* Page Header */}
             < div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up" >

@@ -11,7 +11,11 @@ export default function MissionPage() {
     return (
         <div className="bg-slate-50 min-h-screen">
             <Head>
-                <title>{isEn ? 'Mission | IICE' : 'მისია | IICE'}</title>
+                <title>{isEn ? 'Mission | TSU IICE' : 'მისია | TSU IICE'}</title>
+                <meta name="description" content={isEn ? "The mission and strategic goals of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის მისია და სტრატეგიული გეგმები."} />
+                <meta property="og:title" content={isEn ? 'Mission | TSU IICE' : 'მისია | TSU IICE'} />
+                <meta property="og:description" content={isEn ? "The mission and strategic goals of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის მისია და სტრატეგიული გეგმები."} />
+                <link rel="canonical" href="https://iice.ge/mission" />
             </Head>
 
             {/* Hero Section */}

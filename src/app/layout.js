@@ -20,8 +20,43 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "TSU IICE | Institute of Inorganic Chemistry and Electrochemistry",
-  description: "Official Website for R. Agladze Institute of Inorganic Chemistry and Electrochemistry, TSU",
+  metadataBase: new URL('https://iice.ge'),
+  title: {
+    default: "TSU IICE | Institute of Inorganic Chemistry and Electrochemistry",
+    template: "%s | TSU IICE"
+  },
+  description: "Official Website for R. Agladze Institute of Inorganic Chemistry and Electrochemistry, TSU. Research, innovation, and education in chemistry since 1956.",
+  keywords: ["TSU", "IICE", "Chemistry", "Electrochemistry", "Inorganic Chemistry", "Georgia Science", "Tbilisi State University", "რაფიელ აგლაძე", "არაორგანული ქიმია", "ელექტროქიმია"],
+  authors: [{ name: "TSU IICE" }],
+  creator: "Institute of Inorganic Chemistry and Electrochemistry",
+  publisher: "Tbilisi State University",
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: "TSU IICE | Institute of Inorganic Chemistry and Electrochemistry",
+    description: "Official Website for R. Agladze Institute of Inorganic Chemistry and Electrochemistry, TSU. Discover our research, history, and scientific departments.",
+    url: "https://iice.ge",
+    siteName: "TSU IICE",
+    locale: "ka_GE",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TSU IICE | Institute of Inorganic Chemistry and Electrochemistry",
+    description: "Discover our research, history, and scientific departments at TSU IICE.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export const viewport = {
