@@ -11,37 +11,37 @@ const getIconForDepartment = (id) => {
     switch (id) {
         case 'applied-chemistry':
             return (
-                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-7 h-7 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                 </svg>
             );
         case 'fundamental-research':
             return (
-                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-7 h-7 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
                 </svg>
             );
         case 'coordination-compounds':
             return (
-                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-7 h-7 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
             );
         case 'high-energy-chemistry':
             return (
-                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-7 h-7 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 21V11l-8-6m14 6l-8 6m0 0v10" />
                 </svg>
             );
         case 'phys-chem-analysis':
             return (
-                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-7 h-7 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
                 </svg>
             );
         default:
             return (
-                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-7 h-7 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                 </svg>
             );
@@ -58,7 +58,7 @@ export default function DepartmentsPage() {
             {/* Page Header */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] leading-tight mb-2">
+                    <h1 className="text-xl md:text-3xl font-extrabold text-[#60318e] leading-tight mb-2">
                         {t.nav.departments}
                     </h1>
                     <p className="text-sm md:text-base text-[#60318e]/70 max-w-2xl mx-auto font-medium">
@@ -77,18 +77,18 @@ export default function DepartmentsPage() {
 
                         return (
                             <Link href={`/departments/${dept.id}`} key={dept.id} className="block group">
-                                <div className={`h-full bg-white rounded-3xl shadow-sm border border-purple-100 overflow-hidden hover-scale flex flex-col items-center text-center p-6 transition-all duration-300 hover:shadow-xl hover:border-[#AD49E1] relative`}>
+                                <div className={`h-full bg-white rounded-3xl shadow-sm border border-purple-100 overflow-hidden hover-scale flex flex-col items-center text-center p-4 md:p-6 transition-all duration-300 hover:shadow-xl hover:border-[#AD49E1] relative`}>
 
                                     {/* Decorative background circle */}
                                     <div className="absolute -top-6 -right-6 w-24 h-24 bg-purple-50 rounded-full z-0 opacity-50 transition-transform group-hover:scale-150 duration-500"></div>
 
                                     {/* Icon Area */}
-                                    <div className={`relative z-10 w-20 h-20 bg-purple-50 text-[#AD49E1] rounded-2xl flex items-center justify-center mb-6 shadow-sm group-hover:-translate-y-2 transition-transform duration-300 border border-purple-100`}>
+                                    <div className={`relative z-10 w-14 h-14 md:w-20 md:h-20 bg-purple-50 text-[#AD49E1] rounded-xl md:rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-sm group-hover:-translate-y-2 transition-transform duration-300 border border-purple-100`}>
                                         {getIconForDepartment(dept.id)}
                                     </div>
 
                                     {/* Dept Name - Reduced font size */}
-                                    <h3 className="relative z-10 text-sm lg:text-base font-extrabold text-gray-900 mb-6 leading-snug group-hover:text-[#AD49E1] transition-colors min-h-[3rem]">
+                                    <h3 className="relative z-10 text-xs md:text-sm lg:text-base font-extrabold text-gray-900 mb-4 md:mb-6 leading-snug group-hover:text-[#AD49E1] transition-colors min-h-[3rem]">
                                         {deptName}
                                     </h3>
 

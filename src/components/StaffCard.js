@@ -43,13 +43,13 @@ export default function StaffCard({ member }) {
                 </div>
             )}
 
-            <div className="p-5 flex-grow flex flex-col bg-white z-10">
-                <h3 className="text-lg font-bold text-[#60318e] mb-1 group-hover:text-[#AD49E1] transition-colors">{displayName}</h3>
-                <p className="text-sm font-medium text-gray-800 mb-2">{displayRole}</p>
+            <div className="p-3 md:p-5 flex-grow flex flex-col bg-white z-10">
+                <h3 className="text-base md:text-lg font-bold text-[#60318e] mb-1 group-hover:text-[#AD49E1] transition-colors line-clamp-2">{displayName}</h3>
+                <p className="text-xs md:text-sm font-medium text-gray-800 mb-2 line-clamp-2">{displayRole}</p>
 
-                <div className={`mt-auto pt-4 flex items-center text-xs font-extrabold text-[#AD49E1] transition-all duration-300 ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`}>
+                <div className={`mt-auto pt-3 md:pt-4 flex items-center text-[10px] md:text-xs font-extrabold text-[#AD49E1] transition-all duration-300 ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`}>
                     <span>{t.common.viewProfile}</span>
-                    <svg className={`w-4 h-4 ml-1 transition-transform duration-300 ${isHovered ? 'translate-x-1' : 'translate-x-0'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className={`w-3 h-3 md:w-4 md:h-4 ml-1 transition-transform duration-300 ${isHovered ? 'translate-x-1' : 'translate-x-0'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
                 </div>

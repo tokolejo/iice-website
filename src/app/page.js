@@ -11,12 +11,12 @@ import { newsData } from '../data/newsData';
 // Specific icons setup for the 5 grid
 const getIconForDepartment = (id) => {
   switch (id) {
-    case 'applied-chemistry': return <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>;
-    case 'fundamental-research': return <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" /></svg>;
-    case 'coordination-compounds': return <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>;
-    case 'high-energy-chemistry': return <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 21V11l-8-6m14 6l-8 6m0 0v10" /></svg>;
-    case 'phys-chem-analysis': return <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>;
-    default: return <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>;
+    case 'applied-chemistry': return <svg className="w-6 h-6 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>;
+    case 'fundamental-research': return <svg className="w-6 h-6 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" /></svg>;
+    case 'coordination-compounds': return <svg className="w-6 h-6 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>;
+    case 'high-energy-chemistry': return <svg className="w-6 h-6 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 21V11l-8-6m14 6l-8 6m0 0v10" /></svg>;
+    case 'phys-chem-analysis': return <svg className="w-6 h-6 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>;
+    default: return <svg className="w-6 h-6 md:w-10 md:h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>;
   }
 };
 
@@ -47,11 +47,11 @@ export default function Home() {
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row items-center justify-between gap-8 w-full">
           {/* Text Content */}
           <div className="w-full md:w-1/2 text-center md:text-left relative z-10">
-            <h1 className="text-2xl tracking-tight font-extrabold text-[#60318e] sm:text-3xl lg:text-4xl drop-shadow-sm">
+            <h1 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl tracking-tight font-extrabold text-[#60318e] drop-shadow-sm">
               <span className="block xl:inline leading-tight text-[#60318e]">{t.home.heroTitle}</span>{' '}
               <span className="block text-[#7A1CAC] xl:inline leading-tight mt-1">{t.home.heroTitleHighlight}</span>
             </h1>
-            <p className="mt-4 text-sm text-text-body md:text-base font-medium leading-relaxed max-w-lg mx-auto md:mx-0">
+            <p className="mt-4 text-xs md:text-sm lg:text-base text-text-body font-medium leading-relaxed max-w-lg mx-auto md:mx-0">
               {t.home.heroSubtitle}
             </p>
           </div>
@@ -72,7 +72,7 @@ export default function Home() {
       <section className="py-16 bg-white shrink-0 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4 sm:gap-0">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#60318e] tracking-tight uppercase">{t.nav?.departments || 'განყოფილებები'}</h2>
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-[#60318e] tracking-tight uppercase">{t.nav?.departments || 'განყოფილებები'}</h2>
             <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
               <Link href="/departments" className="text-[#60318e] font-bold hover:text-[#7A1CAC] transition-colors uppercase text-xs sm:text-sm tracking-wide">
                 ყველა განყოფილება &rarr;
@@ -102,11 +102,11 @@ export default function Home() {
                 <Link href={`/departments/${dept.id}`} key={dept.id} className="w-full min-w-full sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] block group snap-start shrink-0">
                   <div className="h-full bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover-scale flex flex-col p-6 transition-all duration-300 hover:shadow-xl hover:border-[#AD49E1] relative">
                     <div className="flex items-start gap-4 mb-4">
-                      <div className="flex-shrink-0 w-16 h-16 bg-slate-50 text-[#AD49E1] rounded-xl flex items-center justify-center shadow-sm group-hover:bg-[#60318e] group-hover:text-white transition-colors duration-300 border border-slate-100">
+                      <div className="flex-shrink-0 w-12 h-12 md:w-16 md:h-16 bg-slate-50 text-[#AD49E1] rounded-xl flex items-center justify-center shadow-sm group-hover:bg-[#60318e] group-hover:text-white transition-colors duration-300 border border-slate-100">
                         {getIconForDepartment(dept.id)}
                       </div>
                       <div className="flex-grow pt-1">
-                        <h3 className="text-lg font-extrabold text-slate-900 leading-tight group-hover:text-[#663191] transition-colors line-clamp-3">
+                        <h3 className="text-base md:text-lg font-extrabold text-slate-900 leading-tight group-hover:text-[#663191] transition-colors line-clamp-3">
                           {deptName}
                         </h3>
                       </div>
@@ -127,7 +127,7 @@ export default function Home() {
           {/* სიახლეები (News) */}
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4 sm:gap-0">
-              <h2 className="text-3xl font-extrabold text-[#663191] tracking-tight uppercase">
+              <h2 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-[#663191] tracking-tight uppercase">
                 {language === 'en' ? 'Latest News' : 'სიახლეები'}
               </h2>
               <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
@@ -156,11 +156,11 @@ export default function Home() {
                     <img src={news.imageUrl} alt="სიახლე" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   </div>
                   <div className="p-6 flex flex-col flex-grow">
-                    <div className="text-[11px] text-[#663191] font-extrabold uppercase mb-3 tracking-widest">{news.date}</div>
-                    <h3 className="font-extrabold text-[18px] text-slate-900 mb-4 leading-snug line-clamp-2">
+                    <div className="text-[10px] md:text-[11px] text-[#663191] font-extrabold uppercase mb-2 md:mb-3 tracking-widest">{news.date}</div>
+                    <h3 className="font-extrabold text-base md:text-[18px] text-slate-900 mb-2 md:mb-4 leading-snug line-clamp-2">
                       {language === 'en' ? news.titleEn : news.title}
                     </h3>
-                    <p className="text-[14px] text-slate-600 leading-relaxed mb-6 flex-grow line-clamp-3">
+                    <p className="text-xs md:text-[14px] text-slate-600 leading-relaxed mb-4 md:mb-6 flex-grow line-clamp-3">
                       {language === 'en' ? news.descriptionEn : news.description}
                     </p>
                     <Link href="/news" className="self-start text-[#663191] border-2 border-[#663191] px-6 py-2.5 rounded-full text-xs font-bold uppercase transition-colors hover:bg-[#663191] hover:text-white">
@@ -206,11 +206,11 @@ export default function Home() {
                     <img src={news.imageUrl} alt="სემინარი" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   </div>
                   <div className="p-6 flex flex-col flex-grow">
-                    <div className="text-[11px] text-[#663191] font-extrabold uppercase mb-3 tracking-widest">{news.date}</div>
-                    <h3 className="font-extrabold text-[18px] text-slate-900 mb-4 leading-snug line-clamp-2">
+                    <div className="text-[10px] md:text-[11px] text-[#663191] font-extrabold uppercase mb-2 md:mb-3 tracking-widest">{news.date}</div>
+                    <h3 className="font-extrabold text-base md:text-[18px] text-slate-900 mb-2 md:mb-4 leading-snug line-clamp-2">
                       {language === 'en' ? news.titleEn : news.title}
                     </h3>
-                    <p className="text-[14px] text-slate-600 leading-relaxed mb-6 flex-grow line-clamp-3">
+                    <p className="text-xs md:text-[14px] text-slate-600 leading-relaxed mb-4 md:mb-6 flex-grow line-clamp-3">
                       {language === 'en' ? news.descriptionEn : news.description}
                     </p>
                     <Link href="/news" className="self-start text-[#663191] border-2 border-[#663191] px-6 py-2.5 rounded-full text-xs font-bold uppercase transition-colors hover:bg-[#663191] hover:text-white">
