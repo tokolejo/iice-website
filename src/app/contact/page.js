@@ -1,25 +1,25 @@
 'use client';
 
+import { useLanguage } from '../../context/LanguageContext';
+
 export default function Contact() {
+    const { language } = useLanguage();
     return (
         <div className="bg-slate-50 min-h-screen">
-            {/* Elegant Header Section */}
-            <div className="bg-gradient-to-b from-[#5d2373] to-[#2E073F] pt-24 pb-32 text-center relative overflow-hidden shadow-xl">
-                {/* Decorative background elements */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#AD49E1] via-[#EBD3F8] to-[#AD49E1]"></div>
-                <div className="absolute -top-40 -right-40 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-                <div className="absolute top-20 -left-20 w-72 h-72 bg-[#AD49E1]/20 rounded-full blur-3xl"></div>
-
-                <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-wider relative z-10 animate-fade-in-up drop-shadow-md">
-                    კონტაქტი
-                </h1>
-                <p className="text-[#EBD3F8] mt-4 text-sm md:text-base max-w-xl mx-auto relative z-10 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                    დაგვიკავშირდით ნებისმიერ დროს. ჩვენ მზად ვართ ვუპასუხოთ თქვენს კითხვებს და განვიხილოთ თანამშრომლობის დეტალები.
-                </p>
+            {/* Page Header */}
+            <div className="bg-white border-b border-slate-100 py-8 md:py-16 mb-8 animate-fade-in-up">
+                <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
+                    <h1 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-[#60318e] leading-tight mb-4">
+                        {language === 'en' ? 'Contact' : 'კონტაქტი'}
+                    </h1>
+                    <p className="text-sm md:text-sm text-[#60318e]/70 max-w-2xl mx-auto font-medium">
+                        {language === 'en' ? 'Contact us anytime. We are ready to answer your questions and discuss collaboration details.' : 'დაგვიკავშირდით ნებისმიერ დროს. ჩვენ მზად ვართ ვუპასუხოთ თქვენს კითხვებს და განვიხილოთ თანამშრომლობის დეტალები.'}
+                    </p>
+                </div>
             </div>
 
             {/* Main Content Area */}
-            <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20 pb-20">
+            <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pb-20">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 xl:gap-8">
 
                     {/* Column 1: Contact Info Cards */}
@@ -32,7 +32,7 @@ export default function Contact() {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
                             </div>
-                            <h3 className="text-base font-extrabold text-[#5d2373] mb-2">მისამართი</h3>
+                            <h3 className="text-sm font-extrabold text-[#5d2373] mb-2">მისამართი</h3>
                             <p className="text-slate-600 text-sm font-medium leading-relaxed">
                                 თბილისი 0186, საქართველო<br />
                                 ივ. ჯავახიშვილის თბილისის სახელმწიფო უნივერსიტეტი<br />
@@ -47,7 +47,7 @@ export default function Contact() {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
                             </div>
-                            <h3 className="text-base font-extrabold text-[#5d2373] mb-2">დაკავშირება</h3>
+                            <h3 className="text-sm font-extrabold text-[#5d2373] mb-2">დაკავშირება</h3>
                             <div className="space-y-2 mt-3">
                                 <div className="flex items-center gap-2 text-slate-600 text-sm font-medium">
                                     <span className="font-bold text-[#AD49E1]">ელ-ფოსტა:</span>
@@ -63,7 +63,7 @@ export default function Contact() {
 
                     {/* Column 2: Contact Form Panel */}
                     <div className="bg-white p-6 md:p-8 rounded-3xl shadow-xl shadow-purple-900/5 border border-purple-50 h-full flex flex-col">
-                        <h2 className="text-xl font-extrabold text-[#5d2373] mb-5">მოგვწერეთ წერილი</h2>
+                        <h2 className="text-lg font-extrabold text-[#5d2373] mb-5">მოგვწერეთ წერილი</h2>
                         <form className="space-y-4 flex-grow flex flex-col">
                             <div className="space-y-1.5">
                                 <label htmlFor="name" className="block text-xs font-bold text-slate-700 ml-1">სახელი და გვარი</label>

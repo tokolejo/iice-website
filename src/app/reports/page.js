@@ -22,7 +22,7 @@ export default function ReportsPage() {
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] leading-tight">
+                    <h1 className="text-xl md:text-2xl font-extrabold text-[#60318e] leading-tight">
                         სამეცნიერო ანგარიშები
                     </h1>
                 </div>
@@ -45,7 +45,7 @@ export default function ReportsPage() {
                                     <div className="w-14 h-14 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center text-[#AD49E1] shrink-0">
                                         {isActive ? <FileText size={24} /> : <Clock size={24} className="text-slate-400" />}
                                     </div>
-                                    <h3 className={`text-2xl font-extrabold ${isActive ? 'text-slate-800' : 'text-slate-500'}`}>
+                                    <h3 className={`text-xl font-extrabold ${isActive ? 'text-slate-800' : 'text-slate-500'}`}>
                                         {report.year} წლის ანგარიში
                                     </h3>
                                 </div>

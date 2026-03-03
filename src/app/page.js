@@ -47,11 +47,11 @@ export default function Home() {
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row items-center justify-between gap-8 w-full">
           {/* Text Content */}
           <div className="w-full md:w-1/2 text-center md:text-left relative z-10">
-            <h1 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl tracking-tight font-extrabold text-[#60318e] drop-shadow-sm">
+            <h1 className="text-lg md:text-xl lg:text-2xl xl:text-3xl tracking-tight font-extrabold text-[#60318e] drop-shadow-sm">
               <span className="block xl:inline leading-tight text-[#60318e]">{t.home.heroTitle}</span>{' '}
               <span className="block text-[#7A1CAC] xl:inline leading-tight mt-1">{t.home.heroTitleHighlight}</span>
             </h1>
-            <p className="mt-4 text-xs md:text-sm lg:text-base text-text-body font-medium leading-relaxed max-w-lg mx-auto md:mx-0">
+            <p className="mt-4 text-xs md:text-sm lg:text-sm text-text-body font-medium leading-relaxed max-w-lg mx-auto md:mx-0">
               {t.home.heroSubtitle}
             </p>
           </div>
@@ -72,7 +72,7 @@ export default function Home() {
       <section className="py-16 bg-white shrink-0 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4 sm:gap-0">
-            <h2 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-[#60318e] tracking-tight uppercase">{t.nav?.departments || 'განყოფილებები'}</h2>
+            <h2 className="text-lg md:text-xl lg:text-2xl font-extrabold text-[#60318e] tracking-tight uppercase">{t.nav?.departments || 'განყოფილებები'}</h2>
             <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
               <Link href="/departments" className="text-[#60318e] font-bold hover:text-[#7A1CAC] transition-colors uppercase text-xs sm:text-sm tracking-wide">
                 ყველა განყოფილება &rarr;
@@ -106,7 +106,7 @@ export default function Home() {
                         {getIconForDepartment(dept.id)}
                       </div>
                       <div className="flex-grow pt-1">
-                        <h3 className="text-base md:text-lg font-extrabold text-slate-900 leading-tight group-hover:text-[#663191] transition-colors line-clamp-3">
+                        <h3 className="text-sm md:text-base font-extrabold text-slate-900 leading-tight group-hover:text-[#663191] transition-colors line-clamp-3">
                           {deptName}
                         </h3>
                       </div>
@@ -127,7 +127,7 @@ export default function Home() {
           {/* სიახლეები (News) */}
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4 sm:gap-0">
-              <h2 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-[#663191] tracking-tight uppercase">
+              <h2 className="text-lg md:text-xl lg:text-2xl font-extrabold text-[#663191] tracking-tight uppercase">
                 {language === 'en' ? 'Latest News' : 'სიახლეები'}
               </h2>
               <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
@@ -157,7 +157,7 @@ export default function Home() {
                   </div>
                   <div className="p-6 flex flex-col flex-grow">
                     <div className="text-[10px] md:text-[11px] text-[#663191] font-extrabold uppercase mb-2 md:mb-3 tracking-widest">{news.date}</div>
-                    <h3 className="font-extrabold text-base md:text-[18px] text-slate-900 mb-2 md:mb-4 leading-snug line-clamp-2">
+                    <h3 className="font-extrabold text-sm md:text-[18px] text-slate-900 mb-2 md:mb-4 leading-snug line-clamp-2">
                       {language === 'en' ? news.titleEn : news.title}
                     </h3>
                     <p className="text-xs md:text-[14px] text-slate-600 leading-relaxed mb-4 md:mb-6 flex-grow line-clamp-3">
@@ -177,7 +177,7 @@ export default function Home() {
           {/* ანონსები (Announcements/Seminars) */}
           <div>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4 sm:gap-0">
-              <h2 className="text-3xl font-extrabold text-[#663191] tracking-tight uppercase">
+              <h2 className="text-2xl font-extrabold text-[#663191] tracking-tight uppercase">
                 {language === 'en' ? 'Academic Seminars' : 'სემინარები'}
               </h2>
               <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
@@ -207,7 +207,7 @@ export default function Home() {
                   </div>
                   <div className="p-6 flex flex-col flex-grow">
                     <div className="text-[10px] md:text-[11px] text-[#663191] font-extrabold uppercase mb-2 md:mb-3 tracking-widest">{news.date}</div>
-                    <h3 className="font-extrabold text-base md:text-[18px] text-slate-900 mb-2 md:mb-4 leading-snug line-clamp-2">
+                    <h3 className="font-extrabold text-sm md:text-[18px] text-slate-900 mb-2 md:mb-4 leading-snug line-clamp-2">
                       {language === 'en' ? news.titleEn : news.title}
                     </h3>
                     <p className="text-xs md:text-[14px] text-slate-600 leading-relaxed mb-4 md:mb-6 flex-grow line-clamp-3">

@@ -45,15 +45,15 @@ export default function NewsModal({ item, onClose }) {
             onClick={onClose}
         >
             <div
-                className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col relative animate-scale-in"
+                className="bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col relative animate-scale-in"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Close button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-6 right-6 z-50 p-3 bg-white/90 hover:bg-white rounded-full text-[#60318e] hover:text-[#AD49E1] transition-all shadow-xl hover:scale-110 active:scale-95 group"
+                    className="absolute top-4 right-4 md:top-6 md:right-6 z-50 p-2 md:p-3 bg-white/50 hover:bg-white rounded-full text-[#60318e] hover:text-[#AD49E1] transition-all shadow-xl hover:scale-110 active:scale-95 group"
                 >
-                    <svg className="w-6 h-6 transition-transform group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5 md:w-6 md:h-6 transition-transform group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
@@ -105,8 +105,8 @@ export default function NewsModal({ item, onClose }) {
                     )}
 
                     {/* Content Section */}
-                    <div className={`p-8 md:p-12 bg-white flex flex-col ${!hasImages ? 'pt-20' : ''}`}>
-                        <div className="flex items-center gap-3 mb-8">
+                    <div className={`p-6 md:p-10 bg-white flex flex-col ${!hasImages ? 'pt-12 md:pt-16' : ''}`}>
+                        <div className="flex items-center gap-3 mb-6">
                             <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em] shadow-sm ${item.category === 'news' ? 'bg-[#AD49E1] text-white' : 'bg-[#60318e] text-white'
                                 }`}>
                                 {item.category === 'news'
@@ -117,12 +117,12 @@ export default function NewsModal({ item, onClose }) {
                             <span className="text-[11px] text-slate-400 font-bold tracking-wider">{item.date}</span>
                         </div>
 
-                        <h2 className="text-3xl md:text-4xl font-black text-[#60318e] mb-8 leading-[1.1] tracking-tight max-w-3xl">
+                        <h2 className="text-lg md:text-xl font-black text-[#60318e] mb-6 leading-snug tracking-tight max-w-3xl">
                             {title}
                         </h2>
 
                         <div className="prose prose-slate max-w-3xl overflow-hidden">
-                            <p className="text-slate-600 text-lg md:text-xl leading-relaxed whitespace-pre-line font-medium">
+                            <p className="text-slate-600 text-sm md:text-sm leading-relaxed whitespace-pre-line font-medium text-justify">
                                 {displayContent}
                             </p>
                         </div>

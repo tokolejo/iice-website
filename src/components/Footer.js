@@ -22,15 +22,15 @@ export default function Footer() {
                     {/* Brand & Info Section (Spans 4 columns) */}
                     <div className="lg:col-span-4 animate-fade-in-up">
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 md:w-14 md:h-14 bg-white rounded-xl flex items-center justify-center text-[#2e0d42] font-black text-lg md:text-xl shadow-xl transform hover:scale-105 transition-transform duration-300">
+                            <div className="w-10 h-10 md:w-14 md:h-14 bg-white rounded-xl flex items-center justify-center text-[#2e0d42] font-black text-base md:text-lg shadow-xl transform hover:scale-105 transition-transform duration-300">
                                 IICE
                             </div>
                             <div>
-                                <h2 className="text-xl md:text-2xl font-black tracking-tight text-white mb-0.5 md:mb-1">{t.footer.tsuAgladze}</h2>
+                                <h2 className="text-lg md:text-xl font-black tracking-tight text-white mb-0.5 md:mb-1">{t.footer.tsuAgladze}</h2>
                                 <h3 className="text-xs md:text-sm font-medium text-white/80">{t.footer.instituteTitleHead}</h3>
                             </div>
                         </div>
-                        <p className="text-white/70 text-xs md:text-sm leading-relaxed mb-6 pr-4">
+                        <p className="text-white text-sm md:text-base font-bold leading-relaxed mb-6 pr-4">
                             {t.footer.instituteDescription}
                         </p>
                         <div className="flex gap-4">
@@ -46,48 +46,48 @@ export default function Footer() {
 
                     {/* About Us (Spans 2 columns) */}
                     <div className="lg:col-span-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                        <h3 className="text-xs md:text-sm font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-white/30 inline-block pb-2 hover:border-white transition-colors duration-300">
+                        <h3 className="text-sm md:text-base font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-white/30 inline-block pb-2 hover:border-white transition-colors duration-300">
                             {t.footer.instituteMenuTitle}
                         </h3>
-                        <ul className="space-y-3 md:space-y-4 text-xs md:text-sm font-medium">
-                            <li><Link href="/history" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.history}</Link></li>
-                            <li><Link href="/mission" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.mission}</Link></li>
-                            <li><Link href="/structure" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.structure}</Link></li>
-                            <li><Link href="/statute" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.statute}</Link></li>
+                        <ul className="space-y-3 md:space-y-4 text-sm md:text-base font-bold text-white">
+                            <li><Link href="/history" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.history}</Link></li>
+                            <li><Link href="/mission" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.mission}</Link></li>
+                            <li><Link href="/structure" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.structure}</Link></li>
+                            <li><Link href="/statute" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.statute}</Link></li>
                         </ul>
                     </div>
 
                     {/* Academic & Research (Spans 3 columns) */}
                     <div className="lg:col-span-3 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                        <h3 className="text-xs md:text-sm font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-white/30 inline-block pb-2 hover:border-white transition-colors duration-300">
+                        <h3 className="text-sm md:text-base font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-white/30 inline-block pb-2 hover:border-white transition-colors duration-300">
                             {t.footer.academicMenuTitle}
                         </h3>
-                        <ul className="space-y-3 md:space-y-4 text-xs md:text-sm font-medium">
-                            <li><Link href="/departments" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.departments}</Link></li>
-                            <li><Link href="/scientific-council" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.scientificCouncil}</Link></li>
-                            <li><Link href="/reports" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.scientificReports}</Link></li>
-                            <li><Link href="/important-projects" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.importantProjects}</Link></li>
-                            <li><Link href="/events/seminars" className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.seminars}</Link></li>
+                        <ul className="space-y-3 md:space-y-4 text-sm md:text-base font-bold text-white">
+                            <li><Link href="/departments" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.departments}</Link></li>
+                            <li><Link href="/scientific-council" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.scientificCouncil}</Link></li>
+                            <li><Link href="/reports" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.scientificReports}</Link></li>
+                            <li><Link href="/important-projects" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.importantProjects}</Link></li>
+                            <li><Link href="/events/seminars" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.seminars}</Link></li>
                         </ul>
                     </div>
 
                     {/* Contact (Spans 3 columns) */}
                     <div className="lg:col-span-3 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                        <h3 className="text-xs md:text-sm font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-white/30 inline-block pb-2 hover:border-white transition-colors duration-300">
+                        <h3 className="text-sm md:text-base font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-white/30 inline-block pb-2 hover:border-white transition-colors duration-300">
                             {t.footer.contactMenuTitle}
                         </h3>
-                        <ul className="space-y-3 md:space-y-4 mb-6 md:mb-8">
-                            <li className="flex items-start gap-3 md:gap-4 text-xs md:text-sm text-white/70 group">
+                        <ul className="space-y-3 md:space-y-4 mb-6 md:mb-8 text-white font-bold">
+                            <li className="flex items-start gap-3 md:gap-4 text-sm md:text-base hover:text-white/80 group">
                                 <span className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white text-[10px] md:text-sm">📍</span>
                                 <div className="pt-0.5 md:pt-1 leading-relaxed whitespace-pre-line">{t.footer.address}</div>
                             </li>
-                            <li className="flex items-center gap-3 md:gap-4 text-xs md:text-sm text-white/70 group">
+                            <li className="flex items-center gap-3 md:gap-4 text-sm md:text-base hover:text-white/80 group">
                                 <span className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white text-[10px] md:text-sm">📞</span>
-                                <a href="tel:+995322123456" className="hover:text-white transition-colors font-medium">+(995 32) 212 34 56</a>
+                                <a href="tel:+995322123456" className="hover:text-white transition-colors font-bold">+(995 32) 212 34 56</a>
                             </li>
-                            <li className="flex items-center gap-3 md:gap-4 text-xs md:text-sm text-white/70 group">
+                            <li className="flex items-center gap-3 md:gap-4 text-sm md:text-base hover:text-white/80 group">
                                 <span className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white text-[10px] md:text-sm">📧</span>
-                                <a href="mailto:info@iice.ge" className="hover:text-white transition-colors font-medium">info@iice.ge</a>
+                                <a href="mailto:info@iice.ge" className="hover:text-white transition-colors font-bold">info@iice.ge</a>
                             </li>
                         </ul>
 

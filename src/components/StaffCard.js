@@ -44,7 +44,7 @@ export default function StaffCard({ member }) {
             )}
 
             <div className="p-3 md:p-5 flex-grow flex flex-col bg-white z-10">
-                <h3 className="text-base md:text-lg font-bold text-[#60318e] mb-1 group-hover:text-[#AD49E1] transition-colors line-clamp-2">{displayName}</h3>
+                <h3 className="text-sm md:text-base font-bold text-[#60318e] mb-1 group-hover:text-[#AD49E1] transition-colors line-clamp-2">{displayName}</h3>
                 <p className="text-xs md:text-sm font-medium text-gray-800 mb-2 line-clamp-2">{displayRole}</p>
 
                 <div className={`mt-auto pt-3 md:pt-4 flex items-center text-[10px] md:text-xs font-extrabold text-[#AD49E1] transition-all duration-300 ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`}>

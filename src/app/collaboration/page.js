@@ -13,7 +13,7 @@ export default function CollaborationPage() {
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] leading-tight">
+                    <h1 className="text-xl md:text-2xl font-extrabold text-[#60318e] leading-tight">
                         კოლაბორაცია
                     </h1>
                 </div>
@@ -29,10 +29,10 @@ export default function CollaborationPage() {
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
                         </div>
                         <div className="flex-1">
-                            <h3 className="text-xl font-extrabold text-[#60318e] uppercase mb-4 leading-snug">
+                            <h3 className="text-lg font-extrabold text-[#60318e] uppercase mb-4 leading-snug">
                                 საერთაშორისო მწვანე წყალბადის ლაბორატორია
                             </h3>
-                            <p className="text-slate-600 text-lg leading-relaxed mb-6 text-justify">
+                            <p className="text-slate-600 text-base leading-relaxed mb-6 text-justify">
                                 ბაქოში გაფორმებული ორმხრივი ხელშეკრულების ფარგლებში (IICE), ინსტიტუტი იწყებს მუშაობას საერთაშორისო მწვანე წყალბადის ლაბორატორიის განვითარებაზე. პროექტი მიზნად ისახავს სამეცნიერო თანამშრომლობის გაღრმავებას და ენერგეტიკული ტექნოლოგიების სფეროში ინოვაციების დანერგვას.
                             </p>
                             <a href="https://iice.ge/ka/welcome-to-our-clinic-3/" className="inline-block bg-[#663191] hover:bg-purple-800 text-white font-bold px-6 py-3 rounded-lg text-sm uppercase transition-colors shadow-sm">
@@ -47,10 +47,10 @@ export default function CollaborationPage() {
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         </div>
                         <div className="flex-1">
-                            <h3 className="text-xl font-extrabold text-[#60318e] uppercase mb-4 leading-snug">
+                            <h3 className="text-lg font-extrabold text-[#60318e] uppercase mb-4 leading-snug">
                                 სამეცნიერო და ტექნიკური თანამშრომლობის შესახებ<br />(აზერბაიჯანი)
                             </h3>
-                            <p className="text-slate-600 text-lg leading-relaxed mb-6 text-justify">
+                            <p className="text-slate-600 text-base leading-relaxed mb-6 text-justify">
                                 აზერბაიჯანის რესპუბლიკის მეცნიერებისა და განათლების სამინისტროს რადიაციული პრობლემების ინსტიტუტსა და თბილისის სახელმწიფო უნივერსიტეტის რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტს შორის სამეცნიერო და ტექნიკური კოლაბორაციის განვითარება.
                             </p>
                             <span className="inline-block bg-slate-100 text-slate-500 font-extrabold px-4 py-2 rounded-md text-xs uppercase border border-slate-200">
@@ -65,10 +65,10 @@ export default function CollaborationPage() {
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         </div>
                         <div className="flex-1">
-                            <h3 className="text-xl font-extrabold text-[#60318e] uppercase mb-4 leading-snug">
+                            <h3 className="text-lg font-extrabold text-[#60318e] uppercase mb-4 leading-snug">
                                 სამეცნიერო და ტექნიკური თანამშრომლობის შესახებ<br />(ყაზახეთი)
                             </h3>
-                            <p className="text-slate-600 text-lg leading-relaxed mb-6 text-justify">
+                            <p className="text-slate-600 text-base leading-relaxed mb-6 text-justify">
                                 სამეცნიერო და ტექნიკური თანამშრომლობის შესახებ საერთაშორისო სამეცნიერო კომპლექსი „ასტანა“ (ყაზახეთი) და თბილისის სახელმწიფო უნივერსიტეტის რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტს შორის სამეცნიერო და ტექნიკური კოლაბორაციის განვითარება.
                             </p>
                             <span className="inline-block bg-slate-100 text-slate-500 font-extrabold px-4 py-2 rounded-md text-xs uppercase border border-slate-200">

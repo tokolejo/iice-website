@@ -52,8 +52,8 @@ export default function StaffModal({ isOpen, onClose, member }) {
 
                 {/* Info Section */}
                 <div className="sm:w-2/3 p-6 sm:p-8 flex flex-col">
-                    <h2 className="text-2xl font-bold text-primary mb-1">{member.name}</h2>
-                    <p className="text-lg font-medium text-gray-800 mb-2">{member.role}</p>
+                    <h2 className="text-xl font-bold text-primary mb-1">{member.name}</h2>
+                    <p className="text-base font-medium text-gray-800 mb-2">{member.role}</p>
                     <p className="text-sm text-text-body mb-6 border-b border-gray-100 pb-4">
                         {member.department}
                     </p>

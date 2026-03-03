@@ -42,22 +42,20 @@ export default function NewsPage() {
         <div className="bg-[#FAF9FF] min-h-screen pb-32">
             {/* Head should be handled by metadata API or layout in App Router */}
 
-            {/* Refined Light Header */}
-            <div className="relative bg-gradient-to-b from-[#F8F6FF] to-[#FAF9FF] pt-32 pb-24 overflow-hidden border-b border-[#EBD3F8]/30">
-                {/* Subtle Decorative Elements */}
+            <div className="relative bg-gradient-to-b from-[#F8F6FF] to-[#FAF9FF] pt-4 pb-12 overflow-hidden border-b border-[#EBD3F8]/30">
                 <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#AD49E1]/5 to-transparent"></div>
                 <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#AD49E1]/5 rounded-full blur-3xl opacity-50"></div>
 
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="max-w-4xl">
-                        <div className="flex items-center gap-4 mb-6 animate-fade-in-up">
+                        <div className="flex items-center gap-4 mb-4 animate-fade-in-up">
                             <span className="w-12 h-1 bg-[#AD49E1] rounded-full"></span>
-                            <span className="text-[#AD49E1] text-xs font-black uppercase tracking-[0.3em]">{t.nav.news}</span>
+                            <span className="text-[#AD49E1] text-[10px] font-black uppercase tracking-[0.3em]">{t.nav.news}</span>
                         </div>
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#60318e] leading-[1.1] mb-6 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                        <h1 className="text-lg md:text-xl lg:text-2xl font-black text-[#60318e] leading-tight mb-4 animate-fade-in-up uppercase tracking-wider" style={{ animationDelay: '0.1s' }}>
                             {language === 'en' ? 'Latest Updates & Scientific Events' : 'უახლესი ამბები და სამეცნიერო ღონისძიებები'}
                         </h1>
-                        <p className="text-slate-500 text-lg animate-fade-in-up max-w-2xl font-medium leading-relaxed" style={{ animationDelay: '0.2s' }}>
+                        <p className="text-slate-500 text-sm md:text-sm animate-fade-in-up max-w-2xl font-medium leading-relaxed" style={{ animationDelay: '0.2s' }}>
                             {language === 'en'
                                 ? 'Stay informed about our latest research discoveries, international collaborations, and upcoming scientific seminars.'
                                 : 'გაეცანით ჩვენს უახლეს სამეცნიერო აღმოჩენებს, საერთაშორისო თანამშრომლობასა და მომავალ სემინარებს.'
@@ -69,7 +67,7 @@ export default function NewsPage() {
 
             <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-8">
                 {/* Filters */}
-                <div className="flex justify-center mb-16 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                <div className="flex justify-center mb-8 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                     <div className="bg-white/70 backdrop-blur-xl p-2 rounded-[2rem] shadow-xl border border-white inline-flex">
                         {categories.map(cat => (
                             <button

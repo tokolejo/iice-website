@@ -29,30 +29,30 @@ export default function Header() {
                    ზომის აწევა/დაწევა (სიმაღლე): h-20 
                    თუ გსურთ უფრო ვიწრო, ჩაწერეთ h-16, თუ განიერი - h-24  
                 */}
-                <div className="flex justify-between items-center h-22">
+                <div className="flex justify-between lg:grid lg:grid-cols-[240px_1fr_100px] xl:grid-cols-[280px_1fr_120px] items-center h-22 gap-2 xl:gap-4">
                     {/* Logo Segment */}
-                    <div className="flex-shrink-0 flex items-center animate-fade-in-up w-auto lg:w-[35%] xl:w-[30%]">
+                    <div className="flex items-center animate-fade-in-up">
                         <Link href="/" className="flex items-center gap-2 xl:gap-3 group">
                             {/* Logo Placeholder */}
-                            <div className="w-10 h-10 xl:w-12 xl:h-12 bg-white rounded-lg flex items-center justify-center text-[#0f172a] font-bold xl:text-xl transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg flex-shrink-0">
+                            <div className="w-10 h-10 xl:w-12 xl:h-12 bg-white rounded-lg flex items-center justify-center text-[#0f172a] font-bold xl:text-lg transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg flex-shrink-0">
                                 IICE
                             </div>
                             <div className="hidden sm:block transition-all duration-300 transform group-hover:translate-x-1">
-                                <h1 className="font-bold text-xs lg:text-sm xl:text-lg text-white leading-tight" style={{ color: '#ffffff' }}>TSU R.Agladze Institute</h1>
+                                <h1 className="font-bold text-xs lg:text-sm xl:text-base text-white leading-tight" style={{ color: '#ffffff' }}>TSU R.Agladze Institute</h1>
                                 <p className="text-[9px] lg:text-[10px] xl:text-xs text-white truncate whitespace-normal" style={{ color: '#ffffff', opacity: 0.9 }}>of Inorganic Chemistry and Electrochemistry</p>
                             </div>
                         </Link>
                     </div>
 
                     {/* Navigation */}
-                    <nav className="hidden lg:flex flex-1 justify-center space-x-1 xl:space-x-4 items-center whitespace-nowrap px-2">
-                        <Link href="/" className="text-white/90 hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
+                    <nav className="hidden lg:flex justify-center space-x-1 xl:space-x-3 items-center whitespace-nowrap px-1">
+                        <Link href="/" className="text-white hover:text-white/80 px-2 py-2 rounded-md text-sm xl:text-base font-bold transition-colors hover:bg-white/10">
                             {t.nav.home}
                         </Link>
 
                         {/* About Us Menu */}
                         <div className="relative group">
-                            <button className="text-white/90 hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5 inline-flex items-center">
+                            <button className="text-white hover:text-white/80 px-2 py-2 rounded-md text-sm xl:text-base font-bold transition-colors hover:bg-white/10 inline-flex items-center">
                                 {t.nav.about}
                                 <svg className="ml-1 h-3 w-3 xl:h-4 xl:w-4 transition-transform group-hover:rotate-180 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -72,13 +72,13 @@ export default function Header() {
                             </div>
                         </div>
 
-                        <Link href="/departments" className="text-white/90 hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
+                        <Link href="/departments" className="text-white hover:text-white/80 px-2 py-2 rounded-md text-sm xl:text-base font-bold transition-colors hover:bg-white/10">
                             {t.nav.departments}
                         </Link>
 
                         {/* Events Menu */}
                         <div className="relative group">
-                            <button className="text-white/90 hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5 inline-flex items-center">
+                            <button className="text-white hover:text-white/80 px-2 py-2 rounded-md text-sm xl:text-base font-bold transition-colors hover:bg-white/10 inline-flex items-center">
                                 {t.nav.events}
                                 <svg className="ml-1 h-3 w-3 xl:h-4 xl:w-4 transition-transform group-hover:rotate-180 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -90,22 +90,23 @@ export default function Header() {
                             </div>
                         </div>
 
-                        <Link href="/infrastructure" className="text-white/90 hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
+                        <Link href="/infrastructure" className="text-white hover:text-white/80 px-2 py-2 rounded-md text-sm xl:text-base font-bold transition-colors hover:bg-white/10">
                             {t.nav.infrastructure}
                         </Link>
 
-                        <Link href="/news" className="text-white/90 hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
+                        <Link href="/news" className="text-white hover:text-white/80 px-2 py-2 rounded-md text-sm xl:text-base font-bold transition-colors hover:bg-white/10">
                             {t.nav.news}
                         </Link>
 
-                        <Link href="/contact" className="text-white/90 hover:text-white px-2 py-2 rounded-md text-[13px] xl:text-sm font-medium transition-colors hover:bg-white/5">
+                        <Link href="/contact" className="text-white hover:text-white/80 px-2 py-2 rounded-md text-sm xl:text-base font-bold transition-colors hover:bg-white/10">
                             {t.nav.contact}
                         </Link>
                     </nav>
 
                     {/* Utils (Lang Switcher & Mobile Menu Toggle) */}
-                    <div className="flex justify-end items-center space-x-2 xl:space-x-4 animate-fade-in-up w-auto lg:w-[15%] xl:w-[20%]">
-                        <div className="hidden sm:flex items-center border border-white/10 bg-white/5 rounded-full p-1 shadow-inner w-[64px] xl:w-[72px] justify-between flex-shrink-0">
+                    <div className="flex justify-end items-center space-x-1 xl:space-x-2 animate-fade-in-up">
+                        {/* Language Switcher - visible on both mobile and desktop inline with the header */}
+                        <div className="flex items-center border border-white/20 bg-white/10 rounded-full p-1 shadow-inner w-[60px] xl:w-[68px] justify-between flex-shrink-0 mr-1 lg:mr-0 lg:ml-1">
                             <button
                                 onClick={() => toggleLanguage('ka')}
                                 className={`w-7 h-7 xl:w-8 xl:h-8 flex items-center justify-center rounded-full text-[10px] xl:text-xs font-bold transition-all duration-300 ${language === 'ka' ? 'bg-white text-[#60318e] shadow-md' : 'text-white/60 hover:text-white'}`}
@@ -143,7 +144,7 @@ export default function Header() {
             {isMobileMenuOpen && (
                 <div className="lg:hidden bg-white border-t border-purple-100 px-4 pt-2 pb-6 shadow-inner animate-fade-in-up overflow-y-auto max-h-[75vh]">
                     <div className="space-y-1">
-                        <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-base font-medium text-text-body hover:text-primary hover:bg-slate-50">
+                        <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-sm font-medium text-text-body hover:text-primary hover:bg-slate-50">
                             {t.nav.home}
                         </Link>
                     </div>
@@ -184,7 +185,7 @@ export default function Header() {
                     </div>
 
                     <div className="space-y-1 mt-2 pt-2 border-t border-gray-100">
-                        <Link href="/departments" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-base font-medium text-text-body hover:text-primary hover:bg-slate-50">
+                        <Link href="/departments" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-sm font-medium text-text-body hover:text-primary hover:bg-slate-50">
                             {t.nav.departments}
                         </Link>
                     </div>
@@ -205,13 +206,13 @@ export default function Header() {
                     </div>
 
                     <div className="space-y-1 mt-2 pt-2 border-t border-gray-100">
-                        <Link href="/infrastructure" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-base font-medium text-text-body hover:text-primary hover:bg-slate-50">
+                        <Link href="/infrastructure" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-sm font-medium text-text-body hover:text-primary hover:bg-slate-50">
                             {t.nav.infrastructure}
                         </Link>
-                        <Link href="/news" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-base font-medium text-text-body hover:text-primary hover:bg-slate-50">
+                        <Link href="/news" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-sm font-medium text-text-body hover:text-primary hover:bg-slate-50">
                             {t.nav.news}
                         </Link>
-                        <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-base font-medium text-text-body hover:text-primary hover:bg-slate-50">
+                        <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-sm font-medium text-text-body hover:text-primary hover:bg-slate-50">
                             {t.nav.contact}
                         </Link>
                     </div>

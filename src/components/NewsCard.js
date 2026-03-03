@@ -53,7 +53,7 @@ export default function NewsCard({ item, onClick }) {
                     {item.date}
                 </div>
 
-                <h3 className="text-xl font-black text-[#60318e] mb-4 leading-[1.25] group-hover:text-[#AD49E1] transition-colors duration-300">
+                <h3 className="text-lg font-black text-[#60318e] mb-4 leading-[1.25] group-hover:text-[#AD49E1] transition-colors duration-300">
                     {title}
                 </h3>
 

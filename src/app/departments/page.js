@@ -64,10 +64,10 @@ export default function DepartmentsPage() {
             {/* Page Header */}
             < div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up" >
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
-                    <h1 className="text-xl md:text-3xl font-extrabold text-[#60318e] leading-tight mb-2">
+                    <h1 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-[#60318e] leading-tight mb-4">
                         {t.nav.departments}
                     </h1>
-                    <p className="text-sm md:text-base text-[#60318e]/70 max-w-2xl mx-auto font-medium">
+                    <p className="text-sm md:text-sm text-[#60318e]/70 max-w-2xl mx-auto font-medium">
                         {language === 'en' ? 'Explore our dedicated research departments driving scientific excellence.' : 'გაეცანით ჩვენს კვლევით განყოფილებებს, რომლებიც განაპირობებენ სამეცნიერო სრულყოფილებას.'}
                     </p>
                 </div>
@@ -94,7 +94,7 @@ export default function DepartmentsPage() {
                                     </div>
 
                                     {/* Dept Name - Reduced font size */}
-                                    <h3 className="relative z-10 text-xs md:text-sm lg:text-base font-extrabold text-gray-900 mb-4 md:mb-6 leading-snug group-hover:text-[#AD49E1] transition-colors min-h-[3rem]">
+                                    <h3 className="relative z-10 text-xs md:text-sm lg:text-sm font-extrabold text-gray-900 mb-4 md:mb-6 leading-snug group-hover:text-[#AD49E1] transition-colors min-h-[3rem]">
                                         {deptName}
                                     </h3>
 

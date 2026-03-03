@@ -48,7 +48,7 @@ export default function FundamentalResearch() {
             {/* Compact Header */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-center">
-                    <h1 className="text-xl md:text-3xl font-extrabold text-[#60318e] leading-tight uppercase tracking-wider">
+                    <h1 className="text-lg md:text-2xl font-extrabold text-[#60318e] leading-tight uppercase tracking-wider">
                         {displayName}
                     </h1>
                 </div>
@@ -58,15 +58,10 @@ export default function FundamentalResearch() {
 
                 <div className="flex flex-col lg:flex-row gap-8 mb-12">
                     {/* Description Section */}
-                    <section className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 lg:w-2/3 flex flex-col justify-center relative overflow-hidden">
+                    <section className="bg-white p-4 md:p-8 rounded-2xl shadow-sm border border-gray-100 lg:w-2/3 flex flex-col justify-center relative overflow-hidden">
                         <div className="absolute -right-10 -bottom-10 opacity-5 w-48 h-48 bg-[#AD49E1] rounded-full z-0"></div>
-                        <div className="relative z-10 flex gap-4 items-start">
-                            <div className="w-12 h-12 bg-[#EBD3F8]/30 text-[#AD49E1] rounded-xl flex items-center justify-center shrink-0 border border-purple-100 mt-1">
-                                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                                </svg>
-                            </div>
-                            <div className="text-sm md:text-base lg:text-lg text-gray-700 leading-relaxed font-medium text-left md:text-justify w-full break-words hyphens-auto">
+                        <div className="relative z-10 items-start">
+                            <div className="text-sm md:text-sm lg:text-base text-gray-700 leading-relaxed font-medium text-left md:text-justify w-full break-words hyphens-auto">
                                 {language === 'en' ? department.descriptionEn : (
                                     <>
                                         <p className="mb-4">
@@ -110,7 +105,7 @@ export default function FundamentalResearch() {
                     <section className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                         <div className="mb-8 flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <h3 className="text-lg md:text-2xl font-bold text-gray-900">
+                                <h3 className="text-base md:text-xl font-bold text-gray-900">
                                     {t.departments.staffCount}
                                 </h3>
                                 <div className="bg-purple-100 text-primary px-3 py-1 rounded-full text-sm font-bold">

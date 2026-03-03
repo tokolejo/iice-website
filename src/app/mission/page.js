@@ -13,7 +13,7 @@ export default function MissionPage() {
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] leading-tight">
+                    <h1 className="text-xl md:text-2xl font-extrabold text-[#60318e] leading-tight">
                         ინსტიტუტის მისია
                     </h1>
                 </div>
@@ -23,20 +23,20 @@ export default function MissionPage() {
             <section className="py-20">
                 <div className="container mx-auto px-6 max-w-4xl">
                     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-12 mb-8 border-l-4 border-l-[#60318e] animate-fade-in-up">
-                        <p className="text-lg text-slate-700 leading-relaxed text-justify">
+                        <p className="text-base text-slate-700 leading-relaxed text-justify">
                             ინსტიტუტის მისიაა არაორგანული ქიმიის და ელექტროქიმიის დარგში ახალი ტექნოლოგიებისთვის სამეცნიერო ფუნდამენტის უზრუნველყოფა. კვლევების სტრატეგიული ფოკუსი მიმართულია არაორგანულ ქიმიაში და ელექტროქიმიაში კვლევებისკენ მდგრადი ენერგეტიკის, სოფლის მეურნეობის, ჯანმრთელობის და ეკოლოგიისთვის. ინსტიტუტი წარმოადგენს საკვანძო კვლევით ცენტრს მდგრად, დეკარბონიზებულ ეკონომიკაზე გადასასვლელად, რომელიც ამუშავებს ამოცანებს განახლებადი ენერგიის ეფექტური წარმოება - შენახვიდან ახალ ეკოლოგიურ ქიმიურ წარმოებებამდე.
                         </p>
                     </div>
 
                     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 md:p-12 mb-8 animate-fade-in-up">
-                        <p className="text-lg text-slate-700 leading-relaxed text-justify">
+                        <p className="text-base text-slate-700 leading-relaxed text-justify">
                             ინსტიტუტის პრიორიტეტული მიმართულებები დაბალანსებულია გლობალურ ტრენდებს, ეროვნულ ინტერესებს და საკუთარ გამოცდილებას (ექპერტიზას) შორის. პრიორიტეტების არჩევის კრიტერიუმებია: უნიკალური კომპეტენციის სპეციალისტების კრიტიკულად აუცილებელი რაოდენობის არსებობა; ინფრასტრუქტურული უზრუნველყოფა (უნიკალური კვლევითი ხელსაწყოების, დანადგარების, მოწყობილობების და ლაბორატორიების არსებობა და ახლის შექმნის შესაძლებლობა).
                         </p>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-8">
                         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 border-t-4 border-t-[#60318e] animate-fade-in-up">
-                            <h3 className="text-2xl font-bold text-[#60318e] mb-6">ინსტიტუტის მთავარი პრიორიტეტებია:</h3>
+                            <h3 className="text-xl font-bold text-[#60318e] mb-6">ინსტიტუტის მთავარი პრიორიტეტებია:</h3>
                             <ul className="space-y-4">
                                 <li className="flex items-start">
                                     <span className="text-[#60318e] font-bold mr-3 mt-1">•</span>
@@ -54,7 +54,7 @@ export default function MissionPage() {
                         </div>
 
                         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 border-t-4 border-t-[#AD49E1] animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                            <h3 className="text-2xl font-bold text-[#60318e] mb-6">მთავარი გამჭოლი ამოცანები:</h3>
+                            <h3 className="text-xl font-bold text-[#60318e] mb-6">მთავარი გამჭოლი ამოცანები:</h3>
                             <ul className="space-y-4">
                                 <li className="flex items-start">
                                     <span className="text-[#60318e] font-bold mr-3 mt-1">•</span>

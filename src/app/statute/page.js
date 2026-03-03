@@ -14,7 +14,7 @@ export default function StatutePage() {
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] leading-tight">
+                    <h1 className="text-xl md:text-2xl font-extrabold text-[#60318e] leading-tight">
                         ინსტიტუტის დებულება
                     </h1>
                 </div>
@@ -28,11 +28,11 @@ export default function StatutePage() {
                             <FileText size={36} strokeWidth={1.5} />
                         </div>
 
-                        <h2 className="text-2xl font-extrabold text-slate-800 mb-6 uppercase">
+                        <h2 className="text-xl font-extrabold text-slate-800 mb-6 uppercase">
                             რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი
                         </h2>
 
-                        <p className="text-lg text-slate-600 leading-relaxed mb-10 max-w-2xl mx-auto">
+                        <p className="text-base text-slate-600 leading-relaxed mb-10 max-w-2xl mx-auto">
                             გაეცანით ინსტიტუტის დებულებას, რომელიც განსაზღვრავს ორგანიზაციულ სტრუქტურას, მართვის პრინციპებსა და სამეცნიერო-კვლევითი საქმიანობის სამართლებრივ საფუძვლებს.
                         </p>
 

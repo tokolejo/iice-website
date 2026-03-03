@@ -33,7 +33,7 @@ export default function StaffDirectory() {
     return (
         <div className="bg-white min-h-screen flex flex-col">
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up text-center">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-[#60318e] uppercase tracking-wider">
+                <h1 className="text-xl md:text-2xl font-extrabold text-[#60318e] uppercase tracking-wider">
                     თანამშრომლები
                 </h1>
             </div>
@@ -60,7 +60,7 @@ export default function StaffDirectory() {
 
                     <div className="md:w-64">
                         <select
-                            className="mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md border"
+                            className="mt-1 block w-full pl-3 pr-10 py-3 text-sm border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md border"
                             value={filterDepartment}
                             onChange={(e) => setFilterDepartment(e.target.value)}
                         >
