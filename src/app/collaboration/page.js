@@ -2,19 +2,23 @@
 
 import React from 'react';
 import Head from 'next/head';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function CollaborationPage() {
+    const { language } = useLanguage();
+    const isEn = language === 'en';
+
     return (
         <div className="bg-slate-50 min-h-screen">
             <Head>
-                <title>Collaboration | IICE</title>
+                <title>{isEn ? 'Collaboration | IICE' : 'კოლაბორაცია | IICE'}</title>
             </Head>
 
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
                     <h1 className="text-xl md:text-2xl font-extrabold text-[#60318e] leading-tight">
-                        კოლაბორაცია
+                        {isEn ? 'Collaboration' : 'კოლაბორაცია'}
                     </h1>
                 </div>
             </div>
@@ -30,13 +34,16 @@ export default function CollaborationPage() {
                         </div>
                         <div className="flex-1">
                             <h3 className="text-lg font-extrabold text-[#60318e] uppercase mb-4 leading-snug">
-                                საერთაშორისო მწვანე წყალბადის ლაბორატორია
+                                {isEn ? 'International Green Hydrogen Laboratory' : 'საერთაშორისო მწვანე წყალბადის ლაბორატორია'}
                             </h3>
                             <p className="text-slate-600 text-base leading-relaxed mb-6 text-justify">
-                                ბაქოში გაფორმებული ორმხრივი ხელშეკრულების ფარგლებში (IICE), ინსტიტუტი იწყებს მუშაობას საერთაშორისო მწვანე წყალბადის ლაბორატორიის განვითარებაზე. პროექტი მიზნად ისახავს სამეცნიერო თანამშრომლობის გაღრმავებას და ენერგეტიკული ტექნოლოგიების სფეროში ინოვაციების დანერგვას.
+                                {isEn ?
+                                    "Within the framework of the bilateral agreement signed in Baku (IICE), the institute begins working on the development of an international green hydrogen laboratory. The project aims to deepen scientific collaboration and introduce innovations in the field of energy technologies." :
+                                    "ბაქოში გაფორმებული ორმხრივი ხელშეკრულების ფარგლებში (IICE), ინსტიტუტი იწყებს მუშაობას საერთაშორისო მწვანე წყალბადის ლაბორატორიის განვითარებაზე. პროექტი მიზნად ისახავს სამეცნიერო თანამშრომლობის გაღრმავებას და ენერგეტიკული ტექნოლოგიების სფეროში ინოვაციების დანერგვას."
+                                }
                             </p>
-                            <a href="https://iice.ge/ka/welcome-to-our-clinic-3/" className="inline-block bg-[#663191] hover:bg-purple-800 text-white font-bold px-6 py-3 rounded-lg text-sm uppercase transition-colors shadow-sm">
-                                ვრცლად ნახვა
+                            <a href={`https://iice.ge/${isEn ? 'en/welcome-to-our-clinic-3' : 'ka/welcome-to-our-clinic-3/'}`} className="inline-block bg-[#663191] hover:bg-purple-800 text-white font-bold px-6 py-3 rounded-lg text-sm uppercase transition-colors shadow-sm">
+                                {isEn ? 'Read More' : 'ვრცლად ნახვა'}
                             </a>
                         </div>
                     </div>
@@ -48,13 +55,16 @@ export default function CollaborationPage() {
                         </div>
                         <div className="flex-1">
                             <h3 className="text-lg font-extrabold text-[#60318e] uppercase mb-4 leading-snug">
-                                სამეცნიერო და ტექნიკური თანამშრომლობის შესახებ<br />(აზერბაიჯანი)
+                                {isEn ? 'About Scientific and Technical Collaboration' : 'სამეცნიერო და ტექნიკური თანამშრომლობის შესახებ'}<br />{isEn ? '(Azerbaijan)' : '(აზერბაიჯანი)'}
                             </h3>
                             <p className="text-slate-600 text-base leading-relaxed mb-6 text-justify">
-                                აზერბაიჯანის რესპუბლიკის მეცნიერებისა და განათლების სამინისტროს რადიაციული პრობლემების ინსტიტუტსა და თბილისის სახელმწიფო უნივერსიტეტის რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტს შორის სამეცნიერო და ტექნიკური კოლაბორაციის განვითარება.
+                                {isEn ?
+                                    "Development of scientific and technical collaboration between the Institute of Radiation Problems of the Ministry of Science and Education of the Republic of Azerbaijan and the R. Agladze Institute of Inorganic Chemistry and Electrochemistry of Tbilisi State University." :
+                                    "აზერბაიჯანის რესპუბლიკის მეცნიერებისა და განათლების სამინისტროს რადიაციული პრობლემების ინსტიტუტსა და თბილისის სახელმწიფო უნივერსიტეტის რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტს შორის სამეცნიერო და ტექნიკური კოლაბორაციის განვითარება."
+                                }
                             </p>
                             <span className="inline-block bg-slate-100 text-slate-500 font-extrabold px-4 py-2 rounded-md text-xs uppercase border border-slate-200">
-                                ინფორმაცია მუშავდება
+                                {isEn ? 'Information is being processed' : 'ინფორმაცია მუშავდება'}
                             </span>
                         </div>
                     </div>
@@ -66,13 +76,16 @@ export default function CollaborationPage() {
                         </div>
                         <div className="flex-1">
                             <h3 className="text-lg font-extrabold text-[#60318e] uppercase mb-4 leading-snug">
-                                სამეცნიერო და ტექნიკური თანამშრომლობის შესახებ<br />(ყაზახეთი)
+                                {isEn ? 'About Scientific and Technical Collaboration' : 'სამეცნიერო და ტექნიკური თანამშრომლობის შესახებ'}<br />{isEn ? '(Kazakhstan)' : '(ყაზახეთი)'}
                             </h3>
                             <p className="text-slate-600 text-base leading-relaxed mb-6 text-justify">
-                                სამეცნიერო და ტექნიკური თანამშრომლობის შესახებ საერთაშორისო სამეცნიერო კომპლექსი „ასტანა“ (ყაზახეთი) და თბილისის სახელმწიფო უნივერსიტეტის რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტს შორის სამეცნიერო და ტექნიკური კოლაბორაციის განვითარება.
+                                {isEn ?
+                                    "Development of scientific and technical collaboration between the International Scientific Complex 'Astana' (Kazakhstan) and the R. Agladze Institute of Inorganic Chemistry and Electrochemistry of Tbilisi State University." :
+                                    "სამეცნიერო და ტექნიკური თანამშრომლობის შესახებ საერთაშორისო სამეცნიერო კომპლექსი „ასტანა“ (ყაზახეთი) და თბილისის სახელმწიფო უნივერსიტეტის რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტს შორის სამეცნიერო და ტექნიკური კოლაბორაციის განვითარება."
+                                }
                             </p>
                             <span className="inline-block bg-slate-100 text-slate-500 font-extrabold px-4 py-2 rounded-md text-xs uppercase border border-slate-200">
-                                ინფორმაცია მუშავდება
+                                {isEn ? 'Information is being processed' : 'ინფორმაცია მუშავდება'}
                             </span>
                         </div>
                     </div>

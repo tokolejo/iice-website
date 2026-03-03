@@ -1,6 +1,14 @@
 import { useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
+import en from '../locales/en';
+import ka from '../locales/ka';
 
 export default function StaffModal({ isOpen, onClose, member }) {
+    const { language } = useLanguage();
+    const t = language === 'en' ? en : ka;
+    const displayName = member ? (language === 'en' && member.nameEn ? member.nameEn : member.name) : '';
+    const displayRole = member ? (language === 'en' && member.roleEn ? member.roleEn : member.role) : '';
+
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -52,17 +60,19 @@ export default function StaffModal({ isOpen, onClose, member }) {
 
                 {/* Info Section */}
                 <div className="sm:w-2/3 p-6 sm:p-8 flex flex-col">
-                    <h2 className="text-xl font-bold text-primary mb-1">{member.name}</h2>
-                    <p className="text-base font-medium text-gray-800 mb-2">{member.role}</p>
+                    <h2 className="text-xl font-bold text-primary mb-1">{displayName}</h2>
+                    <p className="text-base font-medium text-gray-800 mb-2">{displayRole}</p>
                     <p className="text-sm text-text-body mb-6 border-b border-gray-100 pb-4">
-                        {member.department}
+                        {language === 'en' && member.departmentEn ? member.departmentEn : member.department}
                     </p>
 
                     <div className="flex-grow space-y-4">
                         {/* Contact Details */}
                         {member.emails && member.emails.length > 0 && (
                             <div>
-                                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Contact</h4>
+                                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+                                    {language === 'en' ? 'Contact' : 'კონტაქტი'}
+                                </h4>
                                 <ul className="space-y-1">
                                     {member.emails.map((email, idx) => (
                                         <li key={idx}>
@@ -78,7 +88,9 @@ export default function StaffModal({ isOpen, onClose, member }) {
                         {/* Scientific Links */}
                         {member.links && member.links.length > 0 && (
                             <div>
-                                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Scientific Profiles</h4>
+                                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+                                    {language === 'en' ? 'Scientific Profiles' : 'სამეცნიერო პროფილები'}
+                                </h4>
                                 <div className="flex flex-wrap gap-2">
                                     {member.links.map((link, idx) => (
                                         <a
@@ -98,23 +110,36 @@ export default function StaffModal({ isOpen, onClose, member }) {
                             </div>
                         )}
 
-                        {/* BIO Link if present */}
-                        {member.bioLink && (
-                            <div className="mt-6 pt-6 border-t border-gray-100">
+                        {/* CV / BIO Links */}
+                        <div className="mt-6 pt-6 border-t border-gray-100 flex flex-col gap-3">
+                            {(language === 'en' ? member.bioLinkEn || member.bioLink : member.bioLink) && (
                                 <a
-                                    href={member.bioLink}
+                                    href={language === 'en' ? member.bioLinkEn || member.bioLink : member.bioLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex justify-center items-center w-full px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
                                     style={{ backgroundColor: 'var(--color-primary)' }}
                                 >
-                                    View Full BIO Document
+                                    {t.staff?.viewBio || (language === 'en' ? 'View Biography' : 'ბიოგრაფიის ნახვა')}
                                     <svg className="ml-2 -mr-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
                                 </a>
-                            </div>
-                        )}
+                            )}
+                            {(language === 'en' ? member.cvLinkEn || member.cvLink : member.cvLink) && (
+                                <a
+                                    href={language === 'en' ? member.cvLinkEn || member.cvLink : member.cvLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex justify-center items-center w-full px-4 py-2 border border-purple-200 text-sm font-medium rounded-full shadow-sm text-primary hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
+                                >
+                                    {t.staff?.viewCv || (language === 'en' ? 'View Curriculum Vitae' : 'CV-ს ნახვა')}
+                                    <svg className="ml-2 -mr-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </a>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

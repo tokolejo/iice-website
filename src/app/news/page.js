@@ -39,7 +39,8 @@ export default function NewsPage() {
     ];
 
     return (
-        <div className="bg-[#FAF9FF] min-h-screen pb-32">
+        <div className="bg-[#FAF9FF] min-h-screen pb-16">
+            {/* აქედან რეგულირდება ფუტერსა და კონტენტს შორის დაშორება (მაგ: pb-12, pb-20, pb-32) */}
             {/* Head should be handled by metadata API or layout in App Router */}
 
             <div className="relative bg-gradient-to-b from-[#F8F6FF] to-[#FAF9FF] pt-4 pb-12 overflow-hidden border-b border-[#EBD3F8]/30">
@@ -63,7 +64,7 @@ export default function NewsPage() {
                         </p>
                     </div>
                 </div>
-            </div>
+            </div >
 
             <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-8">
                 {/* Filters */}
@@ -102,7 +103,7 @@ export default function NewsPage() {
                             onClick={handleLoadMore}
                             className="bg-white text-[#60318e] border-2 border-[#EBD3F8] px-12 py-4 rounded-full font-black uppercase tracking-widest text-xs hover:bg-[#AD49E1] hover:text-white hover:border-[#AD49E1] hover:shadow-[0_20px_40px_-10px_rgba(173,73,225,0.3)] transition-all duration-500 active:scale-95"
                         >
-                            {language === 'en' ? 'Load More Articles' : 'მეტის ჩამოტვირთვა'}
+                            {language === 'en' ? 'View More' : 'მეტის ნახვა'}
                         </button>
                     </div>
                 )}
@@ -122,13 +123,15 @@ export default function NewsPage() {
             </div>
 
             {/* New Modal Component */}
-            {selectedNews && (
-                <NewsModal
-                    item={selectedNews}
-                    onClose={() => setSelectedNews(null)}
-                />
-            )}
-        </div>
+            {
+                selectedNews && (
+                    <NewsModal
+                        item={selectedNews}
+                        onClose={() => setSelectedNews(null)}
+                    />
+                )
+            }
+        </div >
     );
 }
 

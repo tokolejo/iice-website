@@ -3,8 +3,11 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import { ChevronDown } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function ImportantProjectsPage() {
+    const { language } = useLanguage();
+    const isEn = language === 'en';
     const [openIndex, setOpenIndex] = useState(1); // 1 is default open based on mock
 
     const toggleAccordion = (index) => {
@@ -14,14 +17,14 @@ export default function ImportantProjectsPage() {
     return (
         <div className="bg-slate-50 min-h-screen">
             <Head>
-                <title>Important Projects | IICE</title>
+                <title>{isEn ? 'Important Projects | IICE' : 'მნიშვნელოვანი პროექტები | IICE'}</title>
             </Head>
 
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
                     <h1 className="text-xl md:text-2xl font-extrabold text-[#60318e] leading-tight">
-                        მნიშვნელოვანი პროექტები
+                        {isEn ? 'Important Projects' : 'მნიშვნელოვანი პროექტები'}
                     </h1>
                 </div>
             </div>
@@ -37,7 +40,7 @@ export default function ImportantProjectsPage() {
                             onClick={() => toggleAccordion(0)}
                         >
                             <h4 className="text-[#60318e] font-bold text-base md:text-lg uppercase text-left pr-4">
-                                მიმდინარე პროექტები
+                                {isEn ? 'Ongoing Projects' : 'მიმდინარე პროექტები'}
                             </h4>
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-transform duration-300 flex-shrink-0 ${openIndex === 0 ? 'bg-[#AD49E1] text-white rotate-180' : 'bg-slate-100 text-[#60318e]'}`}>
                                 <ChevronDown size={20} />
@@ -46,7 +49,7 @@ export default function ImportantProjectsPage() {
                         {openIndex === 0 && (
                             <div className="overflow-hidden">
                                 <div className="p-6 md:p-8 pt-0 border-t border-slate-100">
-                                    <p className="text-slate-600 text-base">ინფორმაცია მალე განახლდება.</p>
+                                    <p className="text-slate-600 text-base">{isEn ? 'Information will be updated soon.' : 'ინფორმაცია მალე განახლდება.'}</p>
                                 </div>
                             </div>
                         )}
@@ -59,7 +62,7 @@ export default function ImportantProjectsPage() {
                             onClick={() => toggleAccordion(1)}
                         >
                             <h4 className="text-[#663191] font-bold text-base md:text-lg uppercase text-left pr-4">
-                                ინდუსტრიულ პარტნიორებთან კოლაბორაციაში განხორციელებული პროექტები
+                                {isEn ? 'Projects Implemented in Collaboration With Industrial Partners' : 'ინდუსტრიულ პარტნიორებთან კოლაბორაციაში განხორციელებული პროექტები'}
                             </h4>
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-transform duration-300 flex-shrink-0 ${openIndex === 1 ? 'bg-[#AD49E1] text-white rotate-180' : 'bg-slate-100 text-[#60318e]'}`}>
                                 <ChevronDown size={20} />
@@ -71,36 +74,56 @@ export default function ImportantProjectsPage() {
 
                                     <div className="space-y-8">
                                         <p className="text-base font-bold text-slate-900 border-l-4 border-l-[#663191] pl-4">
-                                            გარემოსდაცვითი და აგრარული მიმართულების პროექტების შესახებ თსუ რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტში
+                                            {isEn ?
+                                                "About environmental and agricultural projects at TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry" :
+                                                "გარემოსდაცვითი და აგრარული მიმართულების პროექტების შესახებ თსუ რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტში"
+                                            }
                                         </p>
 
                                         <div>
-                                            <h5 className="text-[#663191] font-bold uppercase mb-4 border-b-2 border-b-[#663191] inline-block pb-1">საბიუჯეტო დაფინანსების ფარგლებში:</h5>
+                                            <h5 className="text-[#663191] font-bold uppercase mb-4 border-b-2 border-b-[#663191] inline-block pb-1">{isEn ? 'Within Budget Funding:' : 'საბიუჯეტო დაფინანსების ფარგლებში:'}</h5>
                                             <div className="space-y-4 text-slate-700 text-base leading-relaxed text-justify">
                                                 <p>
-                                                    უკანასკნელი ხუთი წლის განმავლობაში ინსტიტუტში მიმდინარეობს სამუშაოთა ციკლი:
-                                                    „პლასტმასებისა და ცელულოზის შემცველი ნარჩენების (თხილისა და კაკლის ნაჭუჭი, ნექტარინისა და ატმის კურკები, ხის ნახერხი და ა.შ.) თერმოქიმიური კონვერსიით განვითარებული ზედაპირის მქონე სორბენტების მიღება ნახშირბადოვანი ფხვნილოვანი მასალების სახით და მათი აპლიკაციები: ა) სორბენტებად - სასმელი და ჩამდინარე წყლების მძიმე მეტალების იონებისა და ფარმაცევტული ნარჩენებისაგან გასასუფთავებლად; ბ) დოპინგებად - კომპოზიციური ელექტროქიმიური დანაფარების მიღებისთვის“.
+                                                    {isEn ?
+                                                        "Over the last five years, the institute has been conducting a cycle of work: 'Obtaining sorbents with developed surfaces in the form of carbonaceous powder materials by thermochemical conversion of plastic and cellulose-containing waste (hazelnut and walnut shells, nectarine and peach pits, sawdust, etc.) and their applications: a) as sorbents - to purify drinking and wastewater from heavy metal ions and pharmaceutical waste; b) as dopants - to obtain composite electrochemical coatings'." :
+                                                        "უკანასკნელი ხუთი წლის განმავლობაში ინსტიტუტში მიმდინარეობს სამუშაოთა ციკლი: „პლასტმასებისა და ცელულოზის შემცველი ნარჩენების (თხილისა და კაკლის ნაჭუჭი, ნექტარინისა და ატმის კურკები, ხის ნახერხი და ა.შ.) თერმოქიმიური კონვერსიით განვითარებული ზედაპირის მქონე სორბენტების მიღება ნახშირბადოვანი ფხვნილოვანი მასალების სახით და მათი აპლიკაციები: ა) სორბენტებად - სასმელი და ჩამდინარე წყლების მძიმე მეტალების იონებისა და ფარმაცევტული ნარჩენებისაგან გასასუფთავებლად; ბ) დოპინგებად - კომპოზიციური ელექტროქიმიური დანაფარების მიღებისთვის“."
+                                                    }
                                                 </p>
                                                 <p>
-                                                    2022-2023 წლებში დადგენილი იქნა ზემოთ აღნიშნული ნახშირბადოვანი მასალების სელექტურობა მძიმე ლითონების, კერძოდ, Pb++, Cu++, Fe++, Co++, Cd++ - იონებისა და წყალში ხსნადი ანტიბიოტიკების მიმართ.
+                                                    {isEn ?
+                                                        "In 2022-2023, the selectivity of the above-mentioned carbonaceous materials towards heavy metals, in particular, Pb++, Cu++, Fe++, Co++, Cd++ ions and water-soluble antibiotics, was established." :
+                                                        "2022-2023 წლებში დადგენილი იქნა ზემოთ აღნიშნული ნახშირბადოვანი მასალების სელექტურობა მძიმე ლითონების, კერძოდ, Pb++, Cu++, Fe++, Co++, Cd++ - იონებისა და წყალში ხსნადი ანტიბიოტიკების მიმართ."
+                                                    }
                                                 </p>
                                                 <p>
-                                                    ამ მიმართულებით საქართველოს მეცნიერებათა ეროვნული აკადემიის მიერ გამოცხადებულ კონკურსში 2024 წლის საუკეთესო პროექტის სტატუსის მოსაპოვებლად წარდგენილია პროექტი: #GE0009: „Development of sorbents for capturing carbon dioxide and catalysts for its utilization by methane into syngas“.
+                                                    {isEn ?
+                                                        "In this direction, a project submitted to the competition announced by the Georgian National Academy of Sciences to win the status of the best project of 2024 is: #GE0009: 'Development of sorbents for capturing carbon dioxide and catalysts for its utilization by methane into syngas'." :
+                                                        "ამ მიმართულებით საქართველოს მეცნიერებათა ეროვნული აკადემიის მიერ გამოცხადებულ კონკურსში 2024 წლის საუკეთესო პროექტის სტატუსის მოსაპოვებლად წარდგენილია პროექტი: #GE0009: „Development of sorbents for capturing carbon dioxide and catalysts for its utilization by methane into syngas“."
+                                                    }
                                                 </p>
                                             </div>
                                         </div>
 
                                         <div>
-                                            <h5 className="text-[#663191] font-bold uppercase mb-4 border-b-2 border-b-[#663191] inline-block pb-1">საერთაშორისო კერძო დაკვეთები:</h5>
+                                            <h5 className="text-[#663191] font-bold uppercase mb-4 border-b-2 border-b-[#663191] inline-block pb-1">{isEn ? 'International Private Orders:' : 'საერთაშორისო კერძო დაკვეთები:'}</h5>
                                             <div className="space-y-4 text-slate-700 text-base leading-relaxed text-justify">
                                                 <p>
-                                                    2021–2022 წლებში ინსტიტუტში განხორციელდა სამუშაო საერთაშორისო ორგანიზაცია <strong>Neos Group, Inc.</strong> - EMEA located at Loft Offices Building 2, Suite 204, Dubai Media City, Dubai, United Arab Emirates -ის დაკვეთით, მათი პროექტის: Research and development project in areas of utilizing green hydrogen technology for electricity generation, storage, transportation and distribution („მწვანე წყალბადის ტექნოლოგიის გამოყენება ელექტროენერგიის წარმოების, შენახვის, ტრანსპორტირების და განაწილების სფეროში“), [კონტრაქტების ნომრები: NS-HYDR-2107, NS-HYDR-2108, NS-HYDR-2109].
+                                                    {isEn ?
+                                                        "In 2021-2022, work was carried out at the institute commissioned by the international organization Neos Group, Inc. - EMEA located at Loft Offices Building 2, Suite 204, Dubai Media City, Dubai, United Arab Emirates, for their project: 'Research and development project in areas of utilizing green hydrogen technology for electricity generation, storage, transportation and distribution' [Contract numbers: NS-HYDR-2107, NS-HYDR-2108, NS-HYDR-2109]." :
+                                                        "2021–2022 წლებში ინსტიტუტში განხორციელდა სამუშაო საერთაშორისო ორგანიზაცია Neos Group, Inc. - EMEA located at Loft Offices Building 2, Suite 204, Dubai Media City, Dubai, United Arab Emirates -ის დაკვეთით, მათი პროექტის: Research and development project in areas of utilizing green hydrogen technology for electricity generation, storage, transportation and distribution („მწვანე წყალბადის ტექნოლოგიის გამოყენება ელექტროენერგიის წარმოების, შენახვის, ტრანსპორტირების და განაწილების სფეროში“), [კონტრაქტების ნომრები: NS-HYDR-2107, NS-HYDR-2108, NS-HYDR-2109]."
+                                                    }
                                                 </p>
                                                 <p>
-                                                    2023 წელს ამ სამუშაოს გაგრძელება მოხდა ინსტიტუტის წლიურ გეგმაში მისი შეტანით და იგი გაგრძელდება 2024 წელსაც. მიზანია შემუშავებული ტექნოლოგიის პატენტუნარიანობის მიღწევა.
+                                                    {isEn ?
+                                                        "In 2023, the continuation of this work was included in the institute's annual plan, and it will continue in 2024. The goal is to achieve patentability of the developed technology." :
+                                                        "2023 წელს ამ სამუშაოს გაგრძელება მოხდა ინსტიტუტის წლიურ გეგმაში მისი შეტანით და იგი გაგრძელდება 2024 წელსაც. მიზანია შემუშავებული ტექნოლოგიის პატენტუნარიანობის მიღწევა."
+                                                    }
                                                 </p>
                                                 <p>
-                                                    კლიმატის ცვლილებების შემსუბუქებასთან დაკავშირებულ გადაწყვეტილებების მიღებასა და სუფთა ენერგიის გამომუშავებაში ოპერირებადი კანადური კომპანიის <strong>Planetary Technology Inc.</strong>-ის დაკვეთით დაფინანსდა პროექტი: „ზღვის წყალში ტუტიანობის განსაზღვრის მეთოდოლოგიის შემუშავება ეკოლოგიურად უსაფრთხო ელექტროქიმიური ტექნოლოგიის გამოყენებით“ (ხელშეკრულება № 2023-01, 01.05.2023).
+                                                    {isEn ?
+                                                        "Commissioned by the Canadian company Planetary Technology Inc., which operates in generating clean energy and making decisions mitigating climate change, a project was funded: 'Development of methodology for determining alkalinity in seawater using ecologically safe electrochemical technology' (Contract № 2023-01, 01.05.2023)." :
+                                                        "კლიმატის ცვლილებების შემსუბუქებასთან დაკავშირებულ გადაწყვეტილებების მიღებასა და სუფთა ენერგიის გამომუშავებაში ოპერირებადი კანადური კომპანიის Planetary Technology Inc.-ის დაკვეთით დაფინანსდა პროექტი: „ზღვის წყალში ტუტიანობის განსაზღვრის მეთოდოლოგიის შემუშავება ეკოლოგიურად უსაფრთხო ელექტროქიმიური ტექნოლოგიის გამოყენებით“ (ხელშეკრულება № 2023-01, 01.05.2023)."
+                                                    }
                                                 </p>
                                             </div>
                                         </div>

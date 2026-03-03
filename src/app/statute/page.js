@@ -3,19 +3,23 @@
 import React from 'react';
 import Head from 'next/head';
 import { FileText, Download } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function StatutePage() {
+    const { language } = useLanguage();
+    const isEn = language === 'en';
+
     return (
         <div className="bg-slate-50 min-h-screen">
             <Head>
-                <title>Statute | IICE</title>
+                <title>{isEn ? 'Statute | IICE' : 'დებულება | IICE'}</title>
             </Head>
 
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
                     <h1 className="text-xl md:text-2xl font-extrabold text-[#60318e] leading-tight">
-                        ინსტიტუტის დებულება
+                        {isEn ? 'Statute of the Institute' : 'ინსტიტუტის დებულება'}
                     </h1>
                 </div>
             </div>
@@ -29,11 +33,13 @@ export default function StatutePage() {
                         </div>
 
                         <h2 className="text-xl font-extrabold text-slate-800 mb-6 uppercase">
-                            რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი
+                            {isEn ? 'Rafael Agladze Institute of Inorganic Chemistry and Electrochemistry' : 'რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი'}
                         </h2>
 
                         <p className="text-base text-slate-600 leading-relaxed mb-10 max-w-2xl mx-auto">
-                            გაეცანით ინსტიტუტის დებულებას, რომელიც განსაზღვრავს ორგანიზაციულ სტრუქტურას, მართვის პრინციპებსა და სამეცნიერო-კვლევითი საქმიანობის სამართლებრივ საფუძვლებს.
+                            {isEn ?
+                                'Get acquainted with the statute of the institute, which defines the organizational structure, management principles, and legal bases of scientific research activities.' :
+                                'გაეცანით ინსტიტუტის დებულებას, რომელიც განსაზღვრავს ორგანიზაციულ სტრუქტურას, მართვის პრინციპებსა და სამეცნიერო-კვლევითი საქმიანობის სამართლებრივ საფუძვლებს.'}
                         </p>
 
                         <a
@@ -43,7 +49,7 @@ export default function StatutePage() {
                             className="inline-flex items-center gap-3 bg-[#AD49E1] hover:bg-[#7A1CAC] text-white px-8 py-4 rounded-xl font-bold uppercase tracking-wide transition-all transform hover:-translate-y-1 shadow-md hover:shadow-purple-900/30"
                         >
                             <Download size={20} />
-                            დებულების ჩამოტვირთვა (PDF)
+                            {isEn ? 'Download Statute (PDF)' : 'დებულების ჩამოტვირთვა (PDF)'}
                         </a>
                     </div>
                 </div>

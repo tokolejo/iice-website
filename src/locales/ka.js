@@ -42,6 +42,10 @@ export default {
         headOfDepartment: 'განყოფილების ხელმძღვანელი',
         staffCount: 'თანამშრომელი'
     },
+    staff: {
+        viewBio: 'ბიოგრაფიის ნახვა',
+        viewCv: 'CV-ს ნახვა'
+    },
     common: {
         searchPlaceholder: 'ძიება...',
         close: 'დახურვა',

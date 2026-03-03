@@ -61,7 +61,7 @@ export default function Header() {
                             <div className="absolute left-0 mt-2 w-64 rounded-xl shadow-2xl bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top border-t-4 border-[#7A1CAC] flex flex-col pt-2 pb-2 z-50">
                                 <Link href="/history" className="px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors">{t.nav.history}</Link>
                                 <Link href="/mission" className="px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors">{t.nav.mission}</Link>
-                                <Link href="/structure" className="px-4 py-2 text-sm font-bold text-gray-800 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors mt-1">{t.nav.structure}</Link>
+                                <div className="px-4 py-2 text-sm font-bold text-gray-800 mt-1 cursor-default">{t.nav.structure}</div>
                                 <Link href="/administration" className="px-4 py-1.5 text-xs text-gray-600 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors ml-4 border-l-2 border-purple-100">{t.nav.administration}</Link>
                                 <Link href="/scientific-council" className="px-4 py-1.5 text-xs text-gray-600 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors ml-4 border-l-2 border-purple-100 mb-1">{t.nav.scientificCouncil}</Link>
                                 <Link href="/statute" className="px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors">{t.nav.statute}</Link>
@@ -169,7 +169,6 @@ export default function Header() {
                                 </button>
                                 <div className={`overflow-hidden transition-all duration-300 ${openMobileDropdowns['structure'] ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
                                     <div className="pl-4 space-y-1 border-l-2 border-purple-100 ml-3 mb-2 mt-1">
-                                        <Link href="/structure" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm font-medium text-text-body hover:text-primary hover:bg-slate-50">{t.nav.structure} ველზე გადასვლა</Link>
                                         <Link href="/administration" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.administration}</Link>
                                         <Link href="/scientific-council" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.scientificCouncil}</Link>
                                     </div>

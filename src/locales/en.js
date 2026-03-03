@@ -42,6 +42,10 @@ export default {
         headOfDepartment: 'Head of Department',
         staffCount: 'Staff'
     },
+    staff: {
+        viewBio: 'View Biography',
+        viewCv: 'View Curriculum Vitae'
+    },
     common: {
         searchPlaceholder: 'Search...',
         close: 'Close',

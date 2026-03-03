@@ -75,7 +75,7 @@ export default function Home() {
             <h2 className="text-lg md:text-xl lg:text-2xl font-extrabold text-[#60318e] tracking-tight uppercase">{t.nav?.departments || 'განყოფილებები'}</h2>
             <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
               <Link href="/departments" className="text-[#60318e] font-bold hover:text-[#7A1CAC] transition-colors uppercase text-xs sm:text-sm tracking-wide">
-                ყველა განყოფილება &rarr;
+                {language === 'en' ? 'All Departments' : 'ყველა განყოფილება'} &rarr;
               </Link>
               <div className="flex gap-2">
                 <button aria-label="Previous Slide" onClick={() => scrollSlider(deptSliderRef, 'left')} className="p-1.5 sm:p-2 border-2 border-[#AD49E1] text-[#AD49E1] rounded-full hover:bg-[#AD49E1] hover:text-white transition-colors flex items-center justify-center shrink-0">

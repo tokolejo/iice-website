@@ -26,13 +26,10 @@ export default function Footer() {
                                 IICE
                             </div>
                             <div>
-                                <h2 className="text-lg md:text-xl font-black tracking-tight text-white mb-0.5 md:mb-1">{t.footer.tsuAgladze}</h2>
-                                <h3 className="text-xs md:text-sm font-medium text-white/80">{t.footer.instituteTitleHead}</h3>
+                                <h2 className="text-lg md:text-xl font-black tracking-tight text-white mb-0.5 md:mb-1" style={{ color: 'white' }}>{t.footer.tsuAgladze}</h2>
+                                <h3 className="text-xs md:text-sm font-medium text-white/80" style={{ color: 'white' }}>{t.footer.instituteTitleHead}</h3>
                             </div>
                         </div>
-                        <p className="text-white text-sm md:text-base font-bold leading-relaxed mb-6 pr-4">
-                            {t.footer.instituteDescription}
-                        </p>
                         <div className="flex gap-4">
                             {/* Social or Interaction buttons */}
                             <a href="#" aria-label="Facebook" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#AD49E1] hover:text-white transition-all duration-300 transform hover:-translate-y-1">
@@ -46,7 +43,7 @@ export default function Footer() {
 
                     {/* About Us (Spans 2 columns) */}
                     <div className="lg:col-span-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                        <h3 className="text-sm md:text-base font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-white/30 inline-block pb-2 hover:border-white transition-colors duration-300">
+                        <h3 className="text-sm md:text-base font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-white/30 inline-block pb-2 hover:border-white transition-colors duration-300" style={{ color: 'white' }}>
                             {t.footer.instituteMenuTitle}
                         </h3>
                         <ul className="space-y-3 md:space-y-4 text-sm md:text-base font-bold text-white">
@@ -59,7 +56,7 @@ export default function Footer() {
 
                     {/* Academic & Research (Spans 3 columns) */}
                     <div className="lg:col-span-3 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                        <h3 className="text-sm md:text-base font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-white/30 inline-block pb-2 hover:border-white transition-colors duration-300">
+                        <h3 className="text-sm md:text-base font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-white/30 inline-block pb-2 hover:border-white transition-colors duration-300" style={{ color: 'white' }}>
                             {t.footer.academicMenuTitle}
                         </h3>
                         <ul className="space-y-3 md:space-y-4 text-sm md:text-base font-bold text-white">
@@ -73,7 +70,7 @@ export default function Footer() {
 
                     {/* Contact (Spans 3 columns) */}
                     <div className="lg:col-span-3 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                        <h3 className="text-sm md:text-base font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-white/30 inline-block pb-2 hover:border-white transition-colors duration-300">
+                        <h3 className="text-sm md:text-base font-black uppercase tracking-widest mb-4 md:mb-6 text-white border-b-2 border-white/30 inline-block pb-2 hover:border-white transition-colors duration-300" style={{ color: 'white' }}>
                             {t.footer.contactMenuTitle}
                         </h3>
                         <ul className="space-y-3 md:space-y-4 mb-6 md:mb-8 text-white font-bold">
@@ -101,11 +98,7 @@ export default function Footer() {
                 </div>
 
                 <div className="border-t border-white/10 pt-8 pb-4 flex flex-col justify-center items-center gap-4 text-xs font-medium text-white/70 text-center">
-                    <p>&copy; {new Date().getFullYear()} {t.footer.copyright}</p>
-                    <div className="flex justify-center gap-6">
-                        <Link href="/contact" className="hover:text-white transition-colors font-bold">{t.nav.contact}</Link>
-                        <Link href="/news" className="hover:text-white transition-colors font-bold">{t.nav.news}</Link>
-                    </div>
+                    <p style={{ color: 'white' }}>&copy; {new Date().getFullYear()} {t.footer.copyright}</p>
                 </div>
             </div>
         </footer>

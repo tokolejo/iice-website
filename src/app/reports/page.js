@@ -3,6 +3,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { FileText, Download, Clock } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 const reports = [
     { year: '2025', url: 'https://iice.ge/wp-content/uploads/2026/02/angarishi-2025.pdf', status: 'active' },
@@ -13,17 +14,20 @@ const reports = [
 ];
 
 export default function ReportsPage() {
+    const { language } = useLanguage();
+    const isEn = language === 'en';
+
     return (
         <div className="bg-slate-50 min-h-screen">
             <Head>
-                <title>Scientific Reports | IICE</title>
+                <title>{isEn ? 'Scientific Reports | IICE' : 'სამეცნიერო ანგარიშები | IICE'}</title>
             </Head>
 
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">
                     <h1 className="text-xl md:text-2xl font-extrabold text-[#60318e] leading-tight">
-                        სამეცნიერო ანგარიშები
+                        {isEn ? 'Scientific Reports' : 'სამეცნიერო ანგარიშები'}
                     </h1>
                 </div>
             </div>
@@ -46,7 +50,7 @@ export default function ReportsPage() {
                                         {isActive ? <FileText size={24} /> : <Clock size={24} className="text-slate-400" />}
                                     </div>
                                     <h3 className={`text-xl font-extrabold ${isActive ? 'text-slate-800' : 'text-slate-500'}`}>
-                                        {report.year} წლის ანგარიში
+                                        {isEn ? `${report.year} Report` : `${report.year} წლის ანგარიში`}
                                     </h3>
                                 </div>
 
@@ -59,11 +63,11 @@ export default function ReportsPage() {
                                             className="w-full md:w-auto flex items-center justify-center gap-2 bg-[#AD49E1] hover:bg-[#7A1CAC] text-white px-6 py-3 rounded-xl font-bold uppercase text-sm transition-colors shadow-sm whitespace-nowrap"
                                         >
                                             <Download size={18} />
-                                            ჩამოტვირთვა
+                                            {isEn ? 'Download' : 'ჩამოტვირთვა'}
                                         </a>
                                     ) : (
                                         <span className="w-full md:w-auto inline-flex items-center justify-center bg-slate-200 text-slate-500 font-extrabold px-6 py-3 rounded-xl text-xs uppercase tracking-wider">
-                                            მალე დაემატება
+                                            {isEn ? 'Coming Soon' : 'მალე დაემატება'}
                                         </span>
                                     )}
                                 </div>
