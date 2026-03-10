@@ -20,7 +20,7 @@ export default function NewsCard({ item, onClick }) {
             {/* Image Container */}
             <div className="relative h-56 overflow-hidden">
                 <img
-                    src={item.imageUrl}
+                    src={item.imageUrl?.startsWith('/') ? `/iice-website${item.imageUrl}` : item.imageUrl}
                     alt={title}
                     className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:rotate-1"
                 />
@@ -31,8 +31,8 @@ export default function NewsCard({ item, onClick }) {
                 {/* Category Badge - Glassmorphism */}
                 <div className="absolute top-5 left-5">
                     <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em] backdrop-blur-md shadow-lg border border-white/20 ${item.category === 'news'
-                            ? 'bg-[#AD49E1]/90 text-white'
-                            : 'bg-[#60318e]/90 text-white'
+                        ? 'bg-[#AD49E1]/90 text-white'
+                        : 'bg-[#60318e]/90 text-white'
                         }`}>
                         {categoryLabel}
                     </span>

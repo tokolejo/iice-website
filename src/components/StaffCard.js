@@ -32,7 +32,7 @@ export default function StaffCard({ member }) {
                         </div>
                     )}
                     <img
-                        src={member.imageUrl}
+                        src={member.imageUrl?.startsWith('/') ? `/iice-website${member.imageUrl}` : member.imageUrl}
                         alt={displayName}
                         className={`w-full h-full object-contain transition-transform duration-500 ease-out ${isHovered ? 'scale-105' : 'scale-100'}`}
                         onError={(e) => {

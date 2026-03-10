@@ -121,7 +121,7 @@ export default function DepartmentsPage() {
                                                 */
                                                 <div className="w-16 h-24 rounded-xl overflow-hidden shadow-md border-2 border-white ring-2 ring-purple-100/50 mb-1">
                                                     <img
-                                                        src={head.imageUrl}
+                                                        src={head.imageUrl?.startsWith('/') ? `/iice-website${head.imageUrl}` : head.imageUrl}
                                                         alt={headName}
                                                         className="w-full h-full object-cover object-top"
                                                     />

@@ -1,3 +1,4 @@
+export const dynamic = 'force-static';
 import { departmentsData } from '../data';
 import { newsData } from '../data/newsData';
 

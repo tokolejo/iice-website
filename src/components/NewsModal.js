@@ -64,7 +64,7 @@ export default function NewsModal({ item, onClose }) {
                         <div className="w-full bg-slate-950 relative group/gallery flex items-center justify-center h-[300px] md:h-[450px]">
                             <img
                                 key={activeImageIndex}
-                                src={images[activeImageIndex]}
+                                src={images[activeImageIndex]?.startsWith('/') ? `/iice-website${images[activeImageIndex]}` : images[activeImageIndex]}
                                 alt={title}
                                 className="w-full h-full object-contain animate-fade-in"
                             />
@@ -153,7 +153,7 @@ export default function NewsModal({ item, onClose }) {
                                             onClick={() => setActiveImageIndex(idx)}
                                             className={`w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all duration-300 ${idx === activeImageIndex ? 'border-[#AD49E1] scale-105 shadow-xl ring-4 ring-[#AD49E1]/10' : 'border-transparent opacity-50 hover:opacity-100 hover:scale-105'}`}
                                         >
-                                            <img src={img} className="w-full h-full object-cover" alt="" />
+                                            <img src={img?.startsWith('/') ? `/iice-website${img}` : img} className="w-full h-full object-cover" alt="" />
                                         </button>
                                     ))}
                                 </div>

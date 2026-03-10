@@ -153,7 +153,7 @@ export default function Home() {
               {latestNews.map(news => (
                 <div key={news.id} className="w-full min-w-full sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-1 bg-white rounded-[20px] shadow-sm border border-slate-200 overflow-hidden hover:-translate-y-2 hover:shadow-lg hover:shadow-purple-900/10 hover:border-[#663191] transition-all duration-300 group flex flex-col snap-start shrink-0">
                   <div className="h-[220px] bg-gray-200 w-full relative overflow-hidden border-b border-slate-100">
-                    <img src={news.imageUrl} alt="სიახლე" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <img src={news.imageUrl?.startsWith('/') ? `/iice-website${news.imageUrl}` : news.imageUrl} alt="სიახლე" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   </div>
                   <div className="p-6 flex flex-col flex-grow">
                     <div className="text-[10px] md:text-[11px] text-[#663191] font-extrabold uppercase mb-2 md:mb-3 tracking-widest">{news.date}</div>
@@ -203,7 +203,7 @@ export default function Home() {
               {latestSeminars.map(news => (
                 <div key={news.id} className="w-full min-w-full sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-1 bg-white rounded-[20px] shadow-sm border border-slate-200 overflow-hidden hover:-translate-y-2 hover:shadow-lg hover:shadow-purple-900/10 hover:border-[#663191] transition-all duration-300 group flex flex-col snap-start shrink-0">
                   <div className="h-[220px] bg-gray-200 w-full relative overflow-hidden border-b border-slate-100">
-                    <img src={news.imageUrl} alt="სემინარი" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <img src={news.imageUrl?.startsWith('/') ? `/iice-website${news.imageUrl}` : news.imageUrl} alt="სემინარი" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   </div>
                   <div className="p-6 flex flex-col flex-grow">
                     <div className="text-[10px] md:text-[11px] text-[#663191] font-extrabold uppercase mb-2 md:mb-3 tracking-widest">{news.date}</div>

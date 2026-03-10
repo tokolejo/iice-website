@@ -195,7 +195,7 @@ export default function InfrastructurePage() {
                                 <div className="relative h-56 overflow-hidden bg-slate-50 flex items-center justify-center">
                                     {item.images && item.images.length > 0 ? (
                                         <img
-                                            src={item.images[0]}
+                                            src={item.images[0]?.startsWith('/') ? `/iice-website${item.images[0]}` : item.images[0]}
                                             alt={isEn ? item.nameEn : item.name}
                                             className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:rotate-1"
                                         />
@@ -296,7 +296,7 @@ export default function InfrastructurePage() {
                             {selectedItem.images && selectedItem.images.length > 0 && (
                                 <div className="w-full bg-slate-950 relative group/gallery flex items-center justify-center h-[300px] md:h-[450px]">
                                     <img
-                                        src={selectedItem.images[0]}
+                                        src={selectedItem.images[0]?.startsWith('/') ? `/iice-website${selectedItem.images[0]}` : selectedItem.images[0]}
                                         alt={isEn ? selectedItem.nameEn : selectedItem.name}
                                         className="w-full h-full object-contain animate-fade-in"
                                     />

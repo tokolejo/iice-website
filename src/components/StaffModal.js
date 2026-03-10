@@ -48,12 +48,12 @@ export default function StaffModal({ isOpen, onClose, member }) {
                 {/* Image Section */}
                 <div className="sm:w-1/3 bg-gray-50 flex items-center justify-center p-6 border-b sm:border-b-0 sm:border-r border-gray-100 rounded-t-2xl sm:rounded-l-2xl sm:rounded-tr-none min-h-[300px]">
                     <img
-                        src={member.imageUrl || '/placeholder-user.png'}
+                        src={member.imageUrl?.startsWith('/') ? `/iice-website${member.imageUrl}` : member.imageUrl || '/iice-website/placeholder-user.png'}
                         alt={member.name}
                         className="max-h-64 max-w-full object-contain drop-shadow-md"
                         onError={(e) => {
                             e.target.onerror = null;
-                            e.target.src = '/placeholder-user.png';
+                            e.target.src = '/iice-website/placeholder-user.png';
                         }}
                     />
                 </div>
@@ -112,33 +112,41 @@ export default function StaffModal({ isOpen, onClose, member }) {
 
                         {/* CV / BIO Links */}
                         <div className="mt-6 pt-6 border-t border-gray-100 flex flex-col gap-3">
-                            {(language === 'en' ? member.bioLinkEn || member.bioLink : member.bioLink) && (
-                                <a
-                                    href={language === 'en' ? member.bioLinkEn || member.bioLink : member.bioLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex justify-center items-center w-full px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
-                                    style={{ backgroundColor: 'var(--color-primary)' }}
-                                >
-                                    {t.staff?.viewBio || (language === 'en' ? 'View Biography' : 'ბიოგრაფიის ნახვა')}
-                                    <svg className="ml-2 -mr-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                </a>
-                            )}
-                            {(language === 'en' ? member.cvLinkEn || member.cvLink : member.cvLink) && (
-                                <a
-                                    href={language === 'en' ? member.cvLinkEn || member.cvLink : member.cvLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex justify-center items-center w-full px-4 py-2 border border-purple-200 text-sm font-medium rounded-full shadow-sm text-primary hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
-                                >
-                                    {t.staff?.viewCv || (language === 'en' ? 'View Curriculum Vitae' : 'CV-ს ნახვა')}
-                                    <svg className="ml-2 -mr-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                </a>
-                            )}
+                            {(() => {
+                                const activeBioLink = language === 'en' ? member.bioLinkEn || member.bioLink : member.bioLink;
+                                const finalBioLink = activeBioLink?.startsWith('/') ? `/iice-website${activeBioLink}` : activeBioLink;
+                                return finalBioLink ? (
+                                    <a
+                                        href={finalBioLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex justify-center items-center w-full px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
+                                        style={{ backgroundColor: 'var(--color-primary)' }}
+                                    >
+                                        {t.staff?.viewBio || (language === 'en' ? 'View Biography' : 'ბიოგრაფიის ნახვა')}
+                                        <svg className="ml-2 -mr-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </a>
+                                ) : null;
+                            })()}
+                            {(() => {
+                                const activeCvLink = language === 'en' ? member.cvLinkEn || member.cvLink : member.cvLink;
+                                const finalCvLink = activeCvLink?.startsWith('/') ? `/iice-website${activeCvLink}` : activeCvLink;
+                                return finalCvLink ? (
+                                    <a
+                                        href={finalCvLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex justify-center items-center w-full px-4 py-2 border border-purple-200 text-sm font-medium rounded-full shadow-sm text-primary hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
+                                    >
+                                        {t.staff?.viewCv || (language === 'en' ? 'View Curriculum Vitae' : 'CV-ს ნახვა')}
+                                        <svg className="ml-2 -mr-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </a>
+                                ) : null;
+                            })()}
                         </div>
                     </div>
                 </div>

@@ -84,7 +84,7 @@ export default function AdministrationPage() {
                                 {/* Future Avatar Placeholder */}
                                 <div className="w-24 h-24 mb-6 rounded-full bg-slate-100 border-4 border-white shadow-md relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
                                     {admin.image ? (
-                                        <img src={admin.image} alt={name} className="w-full h-full object-cover" />
+                                        <img src={admin.image?.startsWith('/') ? `/iice-website${admin.image}` : admin.image} alt={name} className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="w-full h-full bg-purple-50 flex items-center justify-center text-[#AD49E1]">
                                             {/* Generic user icon */}
