@@ -121,17 +121,24 @@ export default function NewsModal({ item, onClose }) {
                             {title}
                         </h2>
 
-                        <div className="prose prose-slate max-w-3xl overflow-hidden">
-                            <p className="text-slate-600 text-sm md:text-sm leading-relaxed whitespace-pre-line font-medium text-justify">
-                                {displayContent}
-                            </p>
+                        <div className="prose prose-slate max-w-3xl overflow-hidden mb-8">
+                            {showFullContent || !isLongContent ? (
+                                <div 
+                                    className="text-slate-600 text-sm md:text-sm leading-relaxed font-medium text-justify wp-content"
+                                    dangerouslySetInnerHTML={{ __html: content }}
+                                />
+                            ) : (
+                                <p className="text-slate-600 text-sm md:text-sm leading-relaxed font-medium text-justify">
+                                    {language === 'en' ? item.descriptionEn : item.description}
+                                </p>
+                            )}
                         </div>
 
                         {/* Read More Toggle */}
                         {isLongContent && (
                             <button
                                 onClick={() => setShowFullContent(!showFullContent)}
-                                className="mt-8 text-[#AD49E1] font-black uppercase tracking-widest text-xs flex items-center gap-2 hover:gap-4 transition-all w-fit"
+                                className="text-[#AD49E1] font-black uppercase tracking-widest text-xs flex items-center gap-2 hover:gap-4 transition-all w-fit"
                             >
                                 {showFullContent
                                     ? (language === 'en' ? 'Show Less' : 'ნაკლების ჩვენება')

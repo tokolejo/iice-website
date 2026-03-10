@@ -33,9 +33,9 @@ export default function Header() {
                     {/* Logo Segment */}
                     <div className="flex items-center animate-fade-in-up">
                         <Link href="/" className="flex items-center gap-2 xl:gap-3 group">
-                            {/* Logo Placeholder */}
-                            <div className="w-10 h-10 xl:w-12 xl:h-12 bg-white rounded-lg flex items-center justify-center text-[#0f172a] font-bold xl:text-lg transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg flex-shrink-0">
-                                IICE
+                            {/* Site Logo */}
+                            <div className="w-10 h-10 xl:w-14 xl:h-14 flex items-center justify-center transition-all duration-300 transform group-hover:scale-105 flex-shrink-0">
+                                <img src="/iice-website/logo.png" alt="IICE Logo" className="w-full h-full object-contain" />
                             </div>
                             <div className="hidden sm:block transition-all duration-300 transform group-hover:translate-x-1">
                                 <h1 className="font-bold text-xs lg:text-sm xl:text-base text-white leading-tight" style={{ color: '#ffffff' }}>TSU R.Agladze Institute</h1>

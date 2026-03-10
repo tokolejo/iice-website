@@ -77,3 +77,50 @@
   transform: scale(1.05);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
+
+/* WordPress Content Styles */
+.wp-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  margin: 1.5rem auto;
+  display: block;
+}
+
+.wp-content figure {
+  margin: 1.5rem 0;
+  display: block;
+}
+
+.wp-content p {
+  margin-bottom: 1.25rem;
+}
+
+.wp-content a {
+  color: #AD49E1;
+  text-decoration: underline;
+  transition: opacity 0.3s;
+}
+
+.wp-content a:hover {
+  opacity: 0.8;
+}
+
+.wp-content ul {
+  margin: 1rem 0 1.5rem 1.5rem;
+  list-style-type: disc;
+}
+
+.wp-content li {
+  margin-bottom: 0.5rem;
+}
+
+.wp-content b, .wp-content strong {
+  color: #60318e;
+  font-weight: 800;
+}
+
+/* Hide WordPress block comments and styles that might leak */
+.wp-content style {
+  display: none;
+}

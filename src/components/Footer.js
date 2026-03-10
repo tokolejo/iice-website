@@ -22,8 +22,8 @@ export default function Footer() {
                     {/* Brand & Info Section (Spans 4 columns) */}
                     <div className="lg:col-span-4 animate-fade-in-up">
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 md:w-14 md:h-14 bg-white rounded-xl flex items-center justify-center text-[#2e0d42] font-black text-base md:text-lg shadow-xl transform hover:scale-105 transition-transform duration-300">
-                                IICE
+                            <div className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center transition-all duration-300 transform hover:scale-110 flex-shrink-0">
+                                <img src="/iice-website/logo.png" alt="IICE Logo" className="w-full h-full object-contain" />
                             </div>
                             <div>
                                 <h2 className="text-lg md:text-xl font-black tracking-tight text-white mb-0.5 md:mb-1" style={{ color: 'white' }}>{t.footer.tsuAgladze}</h2>

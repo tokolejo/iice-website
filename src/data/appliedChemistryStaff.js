@@ -9,12 +9,12 @@ export const appliedChemistryStaff = [
         departmentId: 'applied-chemistry',
         imageUrl: '/staff/applied-chemistry/nioradze-pic.jpg',
         placeholderUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80',
-        bioLink: '',
-        bioLinkEn: '',
-        cvLink: '/documents/applied-chemistry-dep/Nikoloz-Nioradze_Bio_GEO.pdf',
+        bioLink: '/staff/applied-chemistry/Nikoloz Nioradze_Bio_GEO.pdf',
+        bioLinkEn: '/staff/applied-chemistry/Nikoloz Nioradze_Bio_ENG.pdf',
+        cvLink: '',
         cvLinkEn: '',
         emails: ['nikoloz.nioradze@tsu.ge'],
-        links: [{ title: "Google Scholar", url: "https://scholar.google.com/citations?user=jKgIBQkAAAAJ&hl=en&oi=ao" }],
+        links: [{ title: "Google Scholar", url: "https://scholar.google.com/citations?user=jKgIBQkAAAAJ&hl=en&oi=ao" }, { title: "Latest Publication (DOI)", url: "https://doi.org/10.1007/s10008-025-06263-8" }],
         isHead: true
     },
     {
