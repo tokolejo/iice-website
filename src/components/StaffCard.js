@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import en from '../locales/en';
 import ka from '../locales/ka';
+import { User } from 'lucide-react';
 
 export default function StaffCard({ member }) {
     const [isHovered, setIsHovered] = useState(false);
+    const [imgError, setImgError] = useState(false);
     const { language } = useLanguage();
     const t = language === 'en' ? en : ka;
 
@@ -20,28 +22,33 @@ export default function StaffCard({ member }) {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            {member.imageUrl && (
-                /* 
-                   თუ გინდათ სურათის ფორმატის/ზომის შეცვლა (If you want to change card image size): 
-                   შეცვალეთ aspect-[3/4]. მაგ: aspect-square (კვადრატისთვის).
-                */
-                <div className="aspect-square relative bg-slate-50 flex items-center justify-center overflow-hidden">
-                    {member.isHead && (
-                        <div className="absolute top-3 left-3 bg-[#AD49E1] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm z-10 animate-fade-in-up uppercase tracking-wider">
-                            {t.departments.headOfDepartment}
-                        </div>
-                    )}
+            {/* Card Image Container (ALWAYS exists to maintain exact grid height/style) */}
+            <div className="aspect-square relative bg-gradient-to-br from-slate-50 to-purple-50/40 flex items-center justify-center overflow-hidden flex-shrink-0">
+                {member.isHead && (
+                    <div className="absolute top-3 left-3 bg-[#AD49E1] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm z-20 animate-fade-in-up uppercase tracking-wider">
+                        {t.departments.headOfDepartment}
+                    </div>
+                )}
+                
+                {member.imageUrl && member.imageUrl !== '' && !imgError ? (
                     <img
                         src={member.imageUrl?.startsWith('/') ? `/iice-website${member.imageUrl}` : member.imageUrl}
                         alt={displayName}
-                        className={`w-full h-full object-contain transition-transform duration-500 ease-out ${isHovered ? 'scale-105' : 'scale-100'}`}
+                        className={`w-full h-full object-cover transition-transform duration-500 ease-out z-0 ${isHovered ? 'scale-105' : 'scale-100'}`}
                         onError={(e) => {
-                            e.target.style.display = 'none';
+                            setImgError(true);
                         }}
                     />
-                    <div className={`absolute inset-0 bg-[#AD49E1] transition-opacity duration-300 ${isHovered ? 'opacity-5' : 'opacity-0'}`}></div>
-                </div>
-            )}
+                ) : (
+                    <div className={`flex flex-col items-center justify-center w-full h-full transition-transform duration-500 ease-out z-0 ${isHovered ? 'scale-110' : 'scale-100'}`}>
+                        <div className="bg-white p-4 rounded-full shadow-sm border border-purple-100/50">
+                            <User size={48} className="text-[#60318e] opacity-30" strokeWidth={1.5} />
+                        </div>
+                    </div>
+                )}
+                
+                <div className={`absolute inset-0 bg-[#AD49E1] transition-opacity duration-300 z-10 pointer-events-none ${isHovered ? 'opacity-10' : 'opacity-0'}`}></div>
+            </div>
 
             <div className="p-3 md:p-5 flex-grow flex flex-col bg-white z-10">
                 <h3 className="text-sm md:text-base font-bold text-[#60318e] mb-1 group-hover:text-[#AD49E1] transition-colors line-clamp-2">{displayName}</h3>

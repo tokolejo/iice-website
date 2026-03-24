@@ -59,7 +59,7 @@ export default {
         instituteMenuTitle: 'ინსტიტუტი',
         academicMenuTitle: 'აკადემიური',
         contactMenuTitle: 'კონტაქტი',
-        address: 'თბილისი 0186, საქართველო\nქავთარაძის ქ. ილია ვეკუას #11',
+        address: 'თბილისი 0186, საქართველო\nმინდელის ქუჩა #11',
         sendMessage: 'მოგვწერეთ',
         copyright: 'TSU IICE. ყველა უფლება დაცულია.'
     }

@@ -70,31 +70,33 @@ export default function AppliedChemistry() {
                         <div className="absolute -right-10 -bottom-10 opacity-5 w-48 h-48 bg-[#AD49E1] rounded-full z-0"></div>
                         <div className="relative z-10 items-start">
                             <div className="text-sm md:text-sm lg:text-base text-gray-700 leading-relaxed font-medium text-left md:text-justify w-full break-words hyphens-auto">
-                                {language === 'en' ? department.descriptionEn : (
-                                    <>
-                                        <p className="font-bold mb-4 text-center">განყოფილების შესახებ: კონცეფცია, სამეცნიერო მიმართულება</p>
-                                        <p className="mb-4">
-                                            დღეს, მსოფლიო განიცდის სწრაფ და დინამიურ ცვლილებებს, რომლებიც გამოწვეულია გარემოსდაცვითი საკითხებით, ენერგეტიკული გამოწვევებით, ინფორმაციული ტექნოლოგიების მიღწევებით და ხელოვნური ინტელექტის სწრაფი პროგრესით. ამის ფონზე, უაღრესად მნიშვნელოვანია ახალი მასალების შექმნა და მათი გამოყენება პრაქტიკულ, თანამედროვე ტექნოლოგიებში. ჩვენს განყოფილებაში ვითარდება კვლევები მაღალი სისუფთავისა და სასურველი ფიზიკო-ქიმიური მახასიათებლების მქონე ახალი ნაერთების სინთეზისა და მათი ენერგეტიკისა და ეკოლოგიის მიმართულებით გამოყენების შესაძლებლობის შესწავლის მიზნით.
-                                        </p>
-                                        {isDescExpanded && (
-                                            <div className="animate-fade-in-up mt-4 space-y-4">
-                                                <p>ცირკულარული ეკონომიკის კონცეფცია რომელიც წარმოადგენს რევოლუციურ გადახვევას ტრადიციული „ამოიღე-აწარმოე-მოიშორე“ მოდელიდან მიზნად ისახავს პროდუქტების, კომპონენტებისა და მასალების სარგებლიანობისა და ღირებულების ოპტიმიზაციას მათი მიმოქცევაში რაც შეიძლება დიდხანს შენარჩუნების უზრუნველყოფით. სწორედ ასეთი მიდგომებით ხელმძღვანელობს ჩვენი განყოფილება და ავითარებს ისეთ პროექტებს რომლებიც ემსახურება გარემოზე ზემოქმედებისა და რესურსებზე დამოკიდებულების შემცირებას მეორადი ნედლეულის, ნამუშევარი კომპონენტების და ნარჩენი მასალების გამოყენების ხელშეწყობის გზით.</p>
-                                                <p>ჩვენს განყოფილებაში, მანგანუმის შემცველი მეორადი ნედლეულის სხვადასხვა მეთოდით გადამუშავებით ვახორციელებთ მაღალი სისუფთავის მანგანუმის სულფატის მონოჰიდრატის მიღებას რომელიც გამოიყენება ლითიუმ იონური ბატარეების საკათოდე მასალის მწარმოებელ კომპონენტად. ჩვენთან ხდება ნამუშევარი ბატარეების უტილიზაციისა და საწარმოო მნიშვნელობის მქონე პროდუქტების (ლითიუმი, მანგანუმის დიოქსიდი) ამოღების ტექნოლოგიების დამუშავება. ასევე პრიორიტეტულია ჩამდინარე საწარმოო წყლების გაწმენდა და მათგან ლითონების ამოღების მეთოდების შემუშავება.</p>
-                                                <p>გამოსარჩევია არაორგანული პოლიმერების და ცვეთამედეგი მასალების სინთეზის მიმართულებით გაწეული სამუშაოები. წყალბადის წყალხსნარებიდან გენერირების (წყალბადის ენერგეტიკა) სამუშაოები ასევე არის მოქცეული ჩვენი განყოფიელბის სამეცნიერო ინტერესის სფეროში.</p>
-                                                <p>გამოყენებითი ქიმიის განყოფილების პრიორიტეტებში შედის საგანმანათლებო პროცესში აქტიური ჩართულობა. ჩვენთან სისტემატურად გადიან სტაჟირებას და ასრულებენ საბაკალავრო სამეცნიერო კვლევებს თსუ-ს და საქართველოს აგრარული უნივერსიტეტების სტუდენტები. ჩვენთან პრაქტიკა გავლილი სტუდენტები დასაქმებული არიან სპეციალობით ან აგრძელებენ სწავლას როგორც საქართველოში ისე ქვეყნის ფარგლებს გარეთ ევროპის მაღალ რეიტინგულ პროგრამებზე.</p>
-                                                <p>განყოფილებაში მუშაობს 26 კვალიფიციური თანამშრომელი. აქედან 6 მთავარი, 12 უფროსი და 8 მეცნიერ თანამშრომელი.</p>
+                                {(() => {
+                                    const descArray = language === 'en' ? department.descriptionEn : department.descriptionKa;
+                                    const isArray = Array.isArray(descArray);
+                                    if (!isArray || descArray.length === 0) return null;
+                                    return (
+                                        <>
+                                            <p className="mb-4 font-normal text-gray-700">{descArray[0]}</p>
+                                            <div className={`transition-all duration-500 overflow-hidden ${isDescExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                                <div className="space-y-4 pb-2">
+                                                    {descArray.slice(1).map((p, idx) => (
+                                                        <p key={idx} className="font-normal text-gray-700">{p}</p>
+                                                    ))}
+                                                </div>
                                             </div>
-                                        )}
-                                        <div className="flex justify-center mt-6">
-                                            <button
-                                                onClick={() => setIsDescExpanded(!isDescExpanded)}
-                                                className="border-2 border-[#AD49E1] text-[#AD49E1] px-6 py-2 rounded-full text-sm font-bold uppercase transition-colors hover:bg-[#AD49E1] hover:text-white"
-                                            >
-                                                {isDescExpanded ? 'აკეცვა ↑' : 'მეტის წაკითხვა ↓'}
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
+                                            {descArray.length > 1 && (
+                                                <div className="flex justify-center mt-6 relative z-20">
+                                                    <button
+                                                        onClick={() => setIsDescExpanded(!isDescExpanded)}
+                                                        className="border-2 border-primary text-primary px-6 py-2 rounded-full text-sm font-bold uppercase transition-colors hover:bg-primary hover:text-white"
+                                                    >
+                                                        {isDescExpanded ? (language === 'en' ? 'Collapse ↑' : 'აკეცვა ↑') : (language === 'en' ? 'Read More ↓' : 'მეტის წაკითხვა ↓')}
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </>
+                                    );
+                                })()}
                             </div>
                         </div>
                     </section>

@@ -70,30 +70,33 @@ export default function FundamentalResearch() {
                         <div className="absolute -right-10 -bottom-10 opacity-5 w-48 h-48 bg-[#AD49E1] rounded-full z-0"></div>
                         <div className="relative z-10 items-start">
                             <div className="text-sm md:text-sm lg:text-base text-gray-700 leading-relaxed font-medium text-left md:text-justify w-full break-words hyphens-auto">
-                                {language === 'en' ? department.descriptionEn : (
-                                    <>
-                                        <p className="mb-4">
-                                            მიმდინარეობს სამუშაოები განვითარებული ზედაპირის მქონე რთულ ჰეტეროგენულ სისტემებში წყალბადის გამოყოფის პროცესების საფუძვლების შესწავლაზე. ასევე, რთულ არაპოლარულ სისტემებში მუხტის გადატანის პროცესების თეორიული საფუძვლების შემუშავება გარემოს სიხშირული და სივრცითი დისპერსიის ეფექტების გათვალისწინებით. წყალბადის ენერგეტიკის განვითარებისათვის საჭირო მასალების: ინტერმეტალიდების და კომპოზიციური მასალების, ორ და სამ კომპონენტიანი ფხვნილების სინთეზი, მიღებული მასალების ჰიდრირება და პროცესების თერმოდინამიკური და კინეტიკური პარამეტრების განსაზღვრა.
-                                        </p>
-                                        {isDescExpanded && (
-                                            <div className="animate-fade-in-up mt-4 space-y-4">
-                                                <p>განყოფილების კვლევების მიზანია, საქართველოში მწვანე წყალბდის და შესაბამისად, მწვანე ეკონომიკის განვითარებისთვის მნიშვნელოვანი – წყალბადის აკუმულირების და ტრანსპორტირებისათვის საჭირო – პერიოდული სისტემის IV და V თანაური ჯგუფის ლითონების ბაზაზე ინტერმეტალიდების ელექტროქიმიური სინთეზი და მათი შემდგომი ჰიდრირება. მიღებული იქნება ანალიზური გამოსახულებები არაპოლარულ სისტემებში წყალბადის გამოყოფით მიმდინარე მუხტის გადატანის პროცესების კინეტიკური პარამეტრებისათვის გარემოს სიხშირული და სივრცითი დისპერსიის ეფექტების გათვალისწინებით.</p>
-                                                <p>ჰეტეროგენული და ჰომოგენური არაპოლარული სისტემები, განხილული იქნება, როგორც შემთხვევითი ძალების ან იმპულსების ველი, რომელიც მოქმედებს მორეაგირე ნაწილაკებზე. გარემო აღწერილი იქნება სიხშირული და სივრცითი დისპერსიის ეფექტების გათვალისწინებით, რეაგენტების გარემოსთან ურთიერთქმედება აღწერილი იქნება გარემოს ნაწილაკის იმპულსის ფლუქტუაციისა და რეაგენტის სიჩქარის ფუნქციის საშუალებით. ასეთი სისტემის კინეტიკური პარამეტრების გათვლისას გამოყენებული იქნება მუხტის გადატანის პროცესების კვანტური თეორია კონდენსირებული გარემოს იმპულსების სიმკვრივის ოპერატორების გრინის ტემპერატურული ფუნქციების გამოყენებით. მიღებული იქნება ანალიზური გამოსახულებები პროცესის კინეტიკური პარამეტრებისათვის.</p>
-                                                <p>განყოფილება აგრძელებს მრავალწლიან კვლევებს შემდეგი 2 მიმართულებით:<br />
-                                                    1. ცელულოზაშემცველი სასოფლო-სამეურნეო ნარჩენების გადამუშავება და მიღებული პროდუქტის გამოყენება ადსორბენტებად სასმელი და ჩამდინარე წყლების მძიმე ლითონებისაგან, ანტიბიოტიკებისაგან გასაწმენდად; მიმდინარეობს იგივე მასალის გამოცდა გამონაბოლქვი მავნე აირების ჩასაჭერად.<br />
-                                                    2. წყლიდან წყალბადის ელექტროქიმიური მეთოდით მიღებისათვის საელექტროდე მასალების შემუშავება.</p>
+                                {(() => {
+                                    const descArray = language === 'en' ? department.descriptionEn : department.descriptionKa;
+                                    const isArray = Array.isArray(descArray);
+                                    if (!isArray || descArray.length === 0) return null;
+                                    return (
+                                        <>
+                                            <p className="mb-4 font-normal text-gray-700">{descArray[0]}</p>
+                                            <div className={`transition-all duration-500 overflow-hidden ${isDescExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                                <div className="space-y-4 pb-2">
+                                                    {descArray.slice(1).map((p, idx) => (
+                                                        <p key={idx} className="font-normal text-gray-700">{p}</p>
+                                                    ))}
+                                                </div>
                                             </div>
-                                        )}
-                                        <div className="flex justify-center mt-6">
-                                            <button
-                                                onClick={() => setIsDescExpanded(!isDescExpanded)}
-                                                className="border-2 border-[#AD49E1] text-[#AD49E1] px-6 py-2 rounded-full text-sm font-bold uppercase transition-colors hover:bg-[#AD49E1] hover:text-white"
-                                            >
-                                                {isDescExpanded ? 'აკეცვა ↑' : 'მეტის წაკითხვა ↓'}
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
+                                            {descArray.length > 1 && (
+                                                <div className="flex justify-center mt-6 relative z-20">
+                                                    <button
+                                                        onClick={() => setIsDescExpanded(!isDescExpanded)}
+                                                        className="border-2 border-primary text-primary px-6 py-2 rounded-full text-sm font-bold uppercase transition-colors hover:bg-primary hover:text-white"
+                                                    >
+                                                        {isDescExpanded ? (language === 'en' ? 'Collapse ↑' : 'აკეცვა ↑') : (language === 'en' ? 'Read More ↓' : 'მეტის წაკითხვა ↓')}
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </>
+                                    );
+                                })()}
                             </div>
                         </div>
                     </section>

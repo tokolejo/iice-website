@@ -19,14 +19,33 @@ export default function NewsCard({ item, onClick }) {
         >
             {/* Image Container */}
             <div className="relative h-56 overflow-hidden">
-                <img
-                    src={item.imageUrl?.startsWith('/') ? `/iice-website${item.imageUrl}` : item.imageUrl}
-                    alt={title}
-                    className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:rotate-1"
-                />
+                {(!item.imageUrl || item.imageUrl.includes('placeholder.jpg')) ? (
+                    <div className="w-full h-full bg-gradient-to-br from-[#60318e] to-[#8c3ab8] transition-all duration-700 ease-out group-hover:scale-110 group-hover:rotate-1 flex items-center justify-center relative overflow-hidden">
+                        {/* Elegant Background Elements */}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-[#AD49E1] rounded-full mix-blend-screen filter blur-3xl opacity-70 animate-pulse"></div>
+                        <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-pink-500 rounded-full mix-blend-screen filter blur-3xl opacity-50"></div>
+                        
+                        {/* Elegant Icon */}
+                        <div className="relative z-10 p-5 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl group-hover:scale-110 transition-transform duration-500">
+                            <svg className="w-10 h-10 text-white/90 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                {item.category === 'news' ? (
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                                ) : (
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                )}
+                            </svg>
+                        </div>
+                    </div>
+                ) : (
+                    <img
+                        src={item.imageUrl?.startsWith('/') ? `/iice-website${item.imageUrl}` : item.imageUrl}
+                        alt={title}
+                        className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:rotate-1"
+                    />
+                )}
 
                 {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#60318e]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#60318e]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                 {/* Category Badge - Glassmorphism */}
                 <div className="absolute top-5 left-5">

@@ -19,10 +19,17 @@ export default function NewsModal({ item, onClose }) {
     if (!item) return null;
 
     const title = language === 'en' ? item.titleEn : item.title;
-    const content = language === 'en' ? item.contentEn : item.content;
+    const rawContent = language === 'en' ? item.contentEn : item.content;
+
+    // Strip WordPress gallery HTML, images, and empty paragraphs from the content
+    const content = rawContent ? rawContent
+        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+        .replace(/<figure[^>]*>[\s\S]*?<\/figure>/gi, '')
+        .replace(/<img[^>]*>/gi, '')
+        .replace(/<p>(?:\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, '') : '';
 
     // Only include valid images
-    const images = (item.images || [item.imageUrl]).filter(img => img && img !== '');
+    const images = (item.images || [item.imageUrl]).filter(img => img && img !== '' && !img.includes('placeholder.jpg'));
     const hasImages = images.length > 0;
 
     const handleNextImage = (e) => {
@@ -61,12 +68,20 @@ export default function NewsModal({ item, onClose }) {
                 <div className="overflow-y-auto w-full">
                     {/* Top Section: Media Gallery (Conditional) */}
                     {hasImages && (
-                        <div className="w-full bg-slate-950 relative group/gallery flex items-center justify-center h-[300px] md:h-[450px]">
+                        <div className="w-full bg-slate-950 relative group/gallery flex items-center justify-center h-[300px] md:h-[450px] overflow-hidden">
+                            {/* Blurred Backdrop for better quality of small images */}
+                            <img
+                                key={`bg-${activeImageIndex}`}
+                                src={images[activeImageIndex]?.startsWith('/') ? `/iice-website${images[activeImageIndex]}` : images[activeImageIndex]}
+                                alt=""
+                                className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110 animate-fade-in"
+                            />
+                            {/* Main Foreground Image */}
                             <img
                                 key={activeImageIndex}
                                 src={images[activeImageIndex]?.startsWith('/') ? `/iice-website${images[activeImageIndex]}` : images[activeImageIndex]}
                                 alt={title}
-                                className="w-full h-full object-contain animate-fade-in"
+                                className="w-full h-full object-contain relative z-10 drop-shadow-2xl animate-fade-in"
                             />
 
                             {/* Gallery Navigation */}
@@ -74,7 +89,7 @@ export default function NewsModal({ item, onClose }) {
                                 <>
                                     <button
                                         onClick={handlePrevImage}
-                                        className="absolute left-6 p-4 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all opacity-0 group-hover/gallery:opacity-100 -translate-x-4 group-hover/gallery:translate-x-0"
+                                        className="absolute left-6 z-20 p-4 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all opacity-0 group-hover/gallery:opacity-100 -translate-x-4 group-hover/gallery:translate-x-0"
                                     >
                                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
@@ -82,7 +97,7 @@ export default function NewsModal({ item, onClose }) {
                                     </button>
                                     <button
                                         onClick={handleNextImage}
-                                        className="absolute right-6 p-4 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all opacity-0 group-hover/gallery:opacity-100 translate-x-4 group-hover/gallery:translate-x-0"
+                                        className="absolute right-6 z-20 p-4 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all opacity-0 group-hover/gallery:opacity-100 translate-x-4 group-hover/gallery:translate-x-0"
                                     >
                                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
@@ -90,7 +105,7 @@ export default function NewsModal({ item, onClose }) {
                                     </button>
 
                                     {/* Indicators */}
-                                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+                                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                                         {images.map((_, idx) => (
                                             <button
                                                 key={idx}
@@ -149,23 +164,6 @@ export default function NewsModal({ item, onClose }) {
                             </button>
                         )}
 
-                        {/* Gallery Thumbnails (Conditional) */}
-                        {hasImages && images.length > 1 && (
-                            <div className="mt-16 pt-10 border-t border-slate-100">
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Explore Gallery</p>
-                                <div className="flex flex-wrap gap-3">
-                                    {images.map((img, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={() => setActiveImageIndex(idx)}
-                                            className={`w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all duration-300 ${idx === activeImageIndex ? 'border-[#AD49E1] scale-105 shadow-xl ring-4 ring-[#AD49E1]/10' : 'border-transparent opacity-50 hover:opacity-100 hover:scale-105'}`}
-                                        >
-                                            <img src={img?.startsWith('/') ? `/iice-website${img}` : img} className="w-full h-full object-cover" alt="" />
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>

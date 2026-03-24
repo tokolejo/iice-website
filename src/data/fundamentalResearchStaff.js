@@ -7,7 +7,7 @@ export const fundamentalResearchStaff = [
         roleEn: 'Head of Dept., Chief Researcher',
         department: 'ფუნდამენტური კვლევებისა და კომპოზიციური მასალების სინთეზის განყოფილება',
         departmentId: 'fundamental-research',
-        imageUrl: '/images/staff/Tamaz Marsagishvili.png',
+        imageUrl: '/staff/fundamental-research/marsagishvili-pic.png',
         placeholderUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80',
         bioLink: '',
         bioLinkEn: '',

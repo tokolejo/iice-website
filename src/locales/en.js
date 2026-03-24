@@ -59,7 +59,7 @@ export default {
         instituteMenuTitle: 'Institute',
         academicMenuTitle: 'Academic',
         contactMenuTitle: 'Contact',
-        address: 'Tbilisi 0186, Georgia\nKavtaradze St. Ilia Vekua #11',
+        address: 'Tbilisi 0186, Georgia\nMindeli St. #11',
         sendMessage: 'Send Message',
         copyright: 'TSU IICE. All rights reserved.'
     }

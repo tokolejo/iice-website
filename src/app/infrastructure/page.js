@@ -148,10 +148,10 @@ export default function InfrastructurePage() {
         {
             name: 'Micromeritics Gemini VII 2390T',
             nameEn: 'Micromeritics Gemini VII 2390T',
-            desc: 'არის მაღალგანვითარებული ზედაპირის ფართობის ანალიზატორი, რომელიც ცნობილია თავისი სიჩქარით, სიზუსტითა და საიმედოობით. Gemini VII 2390T მოდელის საშუალებით შესაძლებელია მყარი მასალების ფიზიკურ-ქიმიური მახასიათებლების, კერძდ BET და Langmuir ზედაპირების, მიკროფორების ფართობებისა და მოცულობების განსაზღვრა, ასევე, ადსორბცია-დესორბციის იზოთერმისა და ფორების ზომის განაწილების სრული გაზომვები, აზოტის კაპილარული კონდენსაციის მეთოდით.',
-            descEn: 'Is a highly advanced surface area analyzer known for its speed, accuracy, and reliability.',
-            loc: '....',
-            locEn: '....',
+            desc: 'Micromeritics Gemini VII 2390T არის მაღალგანვითარებული ზედაპირის ფართობის ანალიზატორი, რომელიც ცნობილია თავისი სიჩქარით, სიზუსტითა და საიმედოობით. Gemini VII 2390T მოდელის საშუალებით შესაძლებელია მყარი მასალების ფიზიკურ-ქიმიური მახასიათებლების, კერძოდ BET და Langmuir ზედაპირების, მიკროფორების ფართობებისა და მოცულობების განსაზღვრა, ასევე, ადსორბცია-დესორბციის იზოთერმისა და ფორების ზომის განაწილების სრული გაზომვები, აზოტის კაპილარული კონდენსაციის მეთოდით.',
+            descEn: 'The Micromeritics Gemini VII 2390T is a highly advanced surface area analyzer known for its speed, accuracy, and reliability. The Gemini VII 2390T model allows the determination of physicochemical properties of solid materials, including BET and Langmuir surface areas, micropore areas and volumes, as well as complete measurements of adsorption-desorption isotherms and pore size distributions using the nitrogen capillary condensation method.',
+            loc: 'ტექნოპარკი',
+            locEn: 'Techno Park',
             images: []
         }
     ];
@@ -191,32 +191,7 @@ export default function InfrastructurePage() {
                                 className="bg-white rounded-3xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100/80 overflow-hidden hover:shadow-[0_20px_50px_-12px_rgba(173,73,225,0.15)] transition-all duration-500 flex flex-col group h-full cursor-pointer"
                                 onClick={() => setSelectedItem(item)}
                             >
-                                {/* Image Container */}
-                                <div className="relative h-56 overflow-hidden bg-slate-50 flex items-center justify-center">
-                                    {item.images && item.images.length > 0 ? (
-                                        <img
-                                            src={item.images[0]?.startsWith('/') ? `/iice-website${item.images[0]}` : item.images[0]}
-                                            alt={isEn ? item.nameEn : item.name}
-                                            className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:rotate-1"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full bg-gradient-to-br from-purple-50 to-slate-100 flex items-center justify-center transition-all duration-700 ease-out group-hover:scale-110 group-hover:rotate-1">
-                                            <svg className="w-16 h-16 text-purple-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                                            </svg>
-                                        </div>
-                                    )}
-
-                                    {/* Overlay Gradient */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[#60318e]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                                    {/* Badge */}
-                                    <div className="absolute top-5 left-5">
-                                        <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em] backdrop-blur-md shadow-lg border border-white/20 bg-[#AD49E1]/90 text-white`}>
-                                            #{index + 1}
-                                        </span>
-                                    </div>
-                                </div>
+                                {/* No Image Container - Removed as per user request */}
 
                                 {/* Content */}
                                 <div className="p-7 flex flex-col flex-grow bg-white relative z-10">
@@ -292,19 +267,10 @@ export default function InfrastructurePage() {
                         </button>
 
                         <div className="overflow-y-auto w-full">
-                            {/* Images Gallery */}
-                            {selectedItem.images && selectedItem.images.length > 0 && (
-                                <div className="w-full bg-slate-950 relative group/gallery flex items-center justify-center h-[300px] md:h-[450px]">
-                                    <img
-                                        src={selectedItem.images[0]?.startsWith('/') ? `/iice-website${selectedItem.images[0]}` : selectedItem.images[0]}
-                                        alt={isEn ? selectedItem.nameEn : selectedItem.name}
-                                        className="w-full h-full object-contain animate-fade-in"
-                                    />
-                                </div>
-                            )}
+                            {/* Images Gallery - Removed as per user request */}
 
                             {/* Content Section */}
-                            <div className={`p-6 md:p-10 bg-white flex flex-col ${!(selectedItem.images && selectedItem.images.length > 0) ? 'pt-12 md:pt-16' : ''}`}>
+                            <div className="p-6 md:p-10 pt-12 md:pt-16 bg-white flex flex-col">
                                 <div className="flex items-center gap-3 mb-6">
                                     <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em] shadow-sm bg-[#AD49E1] text-white`}>
                                         {isEn ? 'Equipment' : 'მოწყობილობა'}

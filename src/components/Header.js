@@ -86,7 +86,12 @@ export default function Header() {
                             </button>
                             <div className="absolute left-0 mt-2 w-48 rounded-xl shadow-2xl bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top flex flex-col pt-2 pb-2 border-t-4 border-[#7A1CAC] z-50">
                                 <Link href="/events/seminars" className="px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors">{t.nav.seminars}</Link>
-                                <Link href="/events/conference" className="px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors">{t.nav.conference}</Link>
+                                <div className="px-4 py-2 text-sm font-bold text-gray-800 border-t border-purple-50 mt-1">{t.nav.conference}</div>
+                                <a href="https://conference23iice.ge/" target="_blank" rel="noopener noreferrer" className="px-4 py-1.5 text-xs text-gray-600 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors ml-4 border-l-2 border-purple-100 flex items-center justify-between">
+                                    <span>2023</span>
+                                    <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                                </a>
+                                <Link href="/events/conference-2016" className="px-4 py-1.5 text-xs text-gray-600 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors ml-4 border-l-2 border-purple-100 mb-1">2016</Link>
                             </div>
                         </div>
 
@@ -199,7 +204,14 @@ export default function Header() {
                         <div className={`overflow-hidden transition-all duration-300 ${openMobileDropdowns['events'] ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
                             <div className="pl-6 space-y-1 pb-2 mt-1">
                                 <Link href="/events/seminars" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.seminars}</Link>
-                                <Link href="/events/conference" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.conference}</Link>
+                                <div className="px-3 py-2 text-sm font-bold text-text-body border-t border-gray-100 mt-1">{t.nav.conference}</div>
+                                <div className="pl-4 border-l-2 border-purple-100 ml-3 mb-2 space-y-1">
+                                    <a href="https://conference23iice.ge/" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-between px-3 py-1.5 text-sm text-text-body hover:text-primary hover:bg-slate-50">
+                                        <span>2023</span>
+                                        <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                                    </a>
+                                    <Link href="/events/conference-2016" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-1.5 text-sm text-text-body hover:text-primary hover:bg-slate-50">2016</Link>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -45,8 +45,7 @@ export default function Contact() {
                             <h3 className="text-sm font-extrabold text-[#5d2373] mb-2">მისამართი</h3>
                             <p className="text-slate-600 text-sm font-medium leading-relaxed">
                                 თბილისი 0186, საქართველო<br />
-                                ივ. ჯავახიშვილის თბილისის სახელმწიფო უნივერსიტეტი<br />
-                                ქავთარაძის ქ. ილია ვეკუას #11
+                                მინდელის ქუჩა #11
                             </p>
                         </div>
 

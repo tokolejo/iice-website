@@ -8,9 +8,6 @@ const nextConfig = {
     unoptimized: true,
   },
   reactCompiler: true,
-  turbopack: {
-    root: '.',
-  },
 };
 
 export default nextConfig;

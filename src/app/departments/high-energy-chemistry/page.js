@@ -1,6 +1,5 @@
 'use client';
 
-import Head from 'next/head';
 import { useState } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Users } from 'lucide-react';
@@ -47,12 +46,6 @@ export default function HighEnergyChemistry() {
 
     return (
         <div className="bg-slate-50 min-h-screen pb-16">
-            <Head>
-                <title>{isEn ? `${department?.nameEn} | TSU IICE` : `${department?.name} | TSU IICE`}</title>
-                <meta name="description" content={isEn ? `Discover the ${department?.nameEn} department at the R. Agladze Institute of Inorganic Chemistry and Electrochemistry.` : `გაეცანით ${department?.name}ს განყოფილებას რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტში.`} />
-                <link rel="canonical" href={`https://iice.ge/departments/${departmentId}`} />
-            </Head>
-
             {/* Compact Header */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-center">
@@ -70,28 +63,33 @@ export default function HighEnergyChemistry() {
                         <div className="absolute -right-10 -bottom-10 opacity-5 w-48 h-48 bg-[#AD49E1] rounded-full z-0"></div>
                         <div className="relative z-10 items-start">
                             <div className="text-sm md:text-sm lg:text-base text-gray-700 leading-relaxed font-medium text-left md:text-justify w-full break-words hyphens-auto">
-                                {language === 'en' ? department.descriptionEn : (
-                                    <>
-                                        <p className="mb-4">
-                                            განყოფილებაში გაერთიანებულია რადიაციული ქიმიის და თერმოქიმიური კვლევების ლაბორატორიები. რადიაციული ქიმიის მიმართულებით (პასუხისმგებელი - გ.ტატიშვილი) შეისწავლება მაიონიზებელი და მომიჯნავე პროცესების ზეგავლენა ქიმიურ და ბიოლოგიურ ობიექტებზე და მუშავდება კომბინირებული ტექნოლოგიური მეთოდები სხვადასხვა ეკოსისტემების დასაცავად მომწამლავი ნივთიერებებისგან, მავნე მიკროორგანიზმების.
-                                        </p>
-                                        {isDescExpanded && (
-                                            <div className="animate-fade-in-up mt-4 space-y-4">
-                                                <p>ასევე წარმოებს კვლევები ეკოსისტემების რადიაციული უსაფრთხოების ხელშესაწყობად, რაც ითვალისწინებს რადიაციული და მომიჯნავე ტექნოლოგიების აპლიკაციების შექმნა/მოდიფიცირებას და შესაბამისი თეორიული გათვლების უზრუნველყოფას.</p>
-                                                <p>თერმოქიმიის მიმართულებით (პასუხისმგებელი - მ.ხუნდაძე) კვლევები ითვალისწინებს ეფექტური თვისებების მქონე მრავალკომპონენტიანი ოქსიდური მასალების მიზანმიმართულ ძიებას და მათი მიღებისთვის ოპტიმალური ტექნოლოგიური პროცესების შემუშავებას, საბაზისო ოქსიდური სისტემების თერმოდინამიკური და თერმოფიზიკური თვისებების შესწავლით. ლაბორატორიაში, საკუთარი გაზომვებით მიღებული და, აგრეთვე, ლიტერატურული მონაცემების საფუძველზე, შექმნილია რთული ოქსიდების საბაზისო თერმოდინამიკური პარამეტრების ელექტრონული, უწყვეტად განახლებადი ბანკი.</p>
-                                                <p>ლაბორატორიაში მნიშვნელოვანი ადგილი ეთმობა საკვლევი კომპოზიციებისათვის დამახასიათებელ სტრუქტურულ, მაგნიტურ, ელექტრულ და სხვა სახის ფაზური გარდაქმნების და ანომალიების გამოვლენას და მათ ენერგეტიკულ დახასიათებას, აგრეთვე თერმულ მახასიათებლებზე ნანოსტრუქტურული მდგომარეობის გავლენის ასახვას. მიღებული მონაცემების ერთობლიობა ქმნის შესაძლებლობას, რომ მიზანმიმართულად შევარჩიოთ კომპოზიციური ცვლილებები და ენერგოდამზოგავი ტექნილოგიური პროცესები.</p>
+                                {(() => {
+                                    const descArray = language === 'en' ? department.descriptionEn : department.descriptionKa;
+                                    const isArray = Array.isArray(descArray);
+                                    if (!isArray || descArray.length === 0) return null;
+                                    return (
+                                        <>
+                                            <p className="mb-4 font-normal text-gray-700">{descArray[0]}</p>
+                                            <div className={`transition-all duration-500 overflow-hidden ${isDescExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                                <div className="space-y-4 pb-2">
+                                                    {descArray.slice(1).map((p, idx) => (
+                                                        <p key={idx} className="font-normal text-gray-700">{p}</p>
+                                                    ))}
+                                                </div>
                                             </div>
-                                        )}
-                                        <div className="flex justify-center mt-6">
-                                            <button
-                                                onClick={() => setIsDescExpanded(!isDescExpanded)}
-                                                className="border-2 border-primary text-primary px-6 py-2 rounded-full text-sm font-bold uppercase transition-colors hover:bg-primary hover:text-white"
-                                            >
-                                                {isDescExpanded ? 'აკეცვა ↑' : 'მეტის წაკითხვა ↓'}
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
+                                            {descArray.length > 1 && (
+                                                <div className="flex justify-center mt-6 relative z-20">
+                                                    <button
+                                                        onClick={() => setIsDescExpanded(!isDescExpanded)}
+                                                        className="border-2 border-primary text-primary px-6 py-2 rounded-full text-sm font-bold uppercase transition-colors hover:bg-primary hover:text-white"
+                                                    >
+                                                        {isDescExpanded ? (language === 'en' ? 'Collapse ↑' : 'აკეცვა ↑') : (language === 'en' ? 'Read More ↓' : 'მეტის წაკითხვა ↓')}
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </>
+                                    );
+                                })()}
                             </div>
                         </div>
                     </section>

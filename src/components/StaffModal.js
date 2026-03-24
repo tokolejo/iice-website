@@ -1,10 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import en from '../locales/en';
 import ka from '../locales/ka';
+import { User } from 'lucide-react';
 
 export default function StaffModal({ isOpen, onClose, member }) {
     const { language } = useLanguage();
+    const [imgError, setImgError] = useState(false);
     const t = language === 'en' ? en : ka;
     const displayName = member ? (language === 'en' && member.nameEn ? member.nameEn : member.name) : '';
     const displayRole = member ? (language === 'en' && member.roleEn ? member.roleEn : member.role) : '';
@@ -46,16 +48,21 @@ export default function StaffModal({ isOpen, onClose, member }) {
                 </button>
 
                 {/* Image Section */}
-                <div className="sm:w-1/3 bg-gray-50 flex items-center justify-center p-6 border-b sm:border-b-0 sm:border-r border-gray-100 rounded-t-2xl sm:rounded-l-2xl sm:rounded-tr-none min-h-[300px]">
-                    <img
-                        src={member.imageUrl?.startsWith('/') ? `/iice-website${member.imageUrl}` : member.imageUrl || '/iice-website/placeholder-user.png'}
-                        alt={member.name}
-                        className="max-h-64 max-w-full object-contain drop-shadow-md"
-                        onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = '/iice-website/placeholder-user.png';
-                        }}
-                    />
+                <div className="sm:w-1/3 bg-slate-50 flex items-center justify-center p-6 border-b sm:border-b-0 sm:border-r border-gray-100 rounded-t-2xl sm:rounded-l-2xl sm:rounded-tr-none min-h-[250px] relative">
+                    {member.imageUrl && member.imageUrl !== '' && !imgError ? (
+                        <img
+                            src={member.imageUrl?.startsWith('/') ? `/iice-website${member.imageUrl}` : member.imageUrl}
+                            alt={member.name}
+                            className="max-h-64 max-w-full object-contain drop-shadow-md z-10"
+                            onError={(e) => {
+                                setImgError(true);
+                            }}
+                        />
+                    ) : (
+                        <div className="bg-white p-6 rounded-full shadow-sm border border-purple-100/50">
+                            <User size={64} className="text-[#60318e] opacity-30" strokeWidth={1.5} />
+                        </div>
+                    )}
                 </div>
 
                 {/* Info Section */}
