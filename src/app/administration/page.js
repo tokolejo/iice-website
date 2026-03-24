@@ -16,8 +16,8 @@ export default function AdministrationPage() {
             nameEn: 'Grigor Tatishvili',
             degreeKa: 'საქართველოს მეცნიერებათა ეროვნული აკადემიის წევრ-კორესპონდენტი',
             degreeEn: 'Corresponding Member of the Georgian National Academy of Sciences',
-            email: 'tati@iice.ge',
-            image: null // Placeholder for future use
+            email: 'g.tatishvili@iice.ge',
+            image: '/staff/high-energy-chemistry/tatishvili-pic.jpg'
         },
         {
             roleKa: 'დირექტორის მოადგილე',
@@ -27,7 +27,7 @@ export default function AdministrationPage() {
             degreeKa: 'ტექნიკურ მეცნიერებათა კანდიდატი / აკადემიური დოქტორი',
             degreeEn: 'Candidate of Technical Sciences / Academic Doctor',
             email: 'tinatin.lezhava@tsu.ge',
-            image: null
+            image: '/staff/applied-chemistry/lezhava-pic.png'
         },
         {
             roleKa: 'სწავლული მდივანი',
@@ -47,7 +47,7 @@ export default function AdministrationPage() {
             degreeKa: 'ქიმიის მეცნიერებათა კანდიდატი / აკადემიური დოქტორი',
             degreeEn: 'Candidate of Chemical Sciences / Academic Doctor',
             email: 'lela.kvinikadze@tsu.ge',
-            image: null
+            image: '/staff/phys-chem-analysis/kvinikadze-pic.jpg'
         }
     ];
 

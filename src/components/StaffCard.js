@@ -34,7 +34,7 @@ export default function StaffCard({ member }) {
                     <img
                         src={member.imageUrl?.startsWith('/') ? `/iice-website${member.imageUrl}` : member.imageUrl}
                         alt={displayName}
-                        className={`w-full h-full object-cover transition-transform duration-500 ease-out z-0 ${isHovered ? 'scale-105' : 'scale-100'}`}
+                        className={`w-full h-full object-contain scale-[0.85] transition-transform duration-500 ease-out z-0 ${isHovered ? 'scale-[0.9]' : 'scale-[0.85]'}`}
                         onError={(e) => {
                             setImgError(true);
                         }}

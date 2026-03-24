@@ -23,7 +23,7 @@ export default function Header() {
         /* 
            ფერის შეცვლა: bg-[#2e0d42] (უფრო მუქი იასამნისფერი)
         */
-        <header className="bg-[#2e0d42] shadow-lg sticky top-0 z-50 mb-3 transition-all duration-300">
+        <header className="bg-[#2e0d42] shadow-lg sticky top-0 z-50 transition-all duration-300">
             <div className="max-w-[96%] xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
                 {/* 
                    ზომის აწევა/დაწევა (სიმაღლე): h-20 
