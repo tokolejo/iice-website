@@ -22,9 +22,7 @@ export default function sitemap() {
         '/staff',
         '/departments',
         '/news',
-        '/studies-internships',
-        '/events/seminars',
-        '/events/conference'
+        '/events/conference-2016'
     ].map((route) => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),
@@ -40,13 +38,5 @@ export default function sitemap() {
         priority: 0.7,
     }));
 
-    // Dynamic News/Seminars Routes
-    const dynamicNewsRoutes = newsData.map((item) => ({
-        url: `${baseUrl}/news/${item.id}`,
-        lastModified: new Date(item.date),
-        changeFrequency: 'yearly',
-        priority: 0.6,
-    }));
-
-    return [...staticRoutes, ...departmentRoutes, ...dynamicNewsRoutes];
+    return [...staticRoutes, ...departmentRoutes];
 }

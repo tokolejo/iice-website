@@ -23,7 +23,7 @@ export default function Footer() {
                     <div className="lg:col-span-4 animate-fade-in-up">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center transition-all duration-300 transform hover:scale-110 flex-shrink-0">
-                                <img src="/iice-website/logo.png" alt="IICE Logo" className="w-full h-full object-contain" />
+                                <img src="/logo.png" alt="IICE Logo" className="w-full h-full object-contain" />
                             </div>
                             <div>
                                 <h2 className="text-lg md:text-xl font-black tracking-tight text-white mb-0.5 md:mb-1" style={{ color: 'white' }}>{t.footer.tsuAgladze}</h2>
@@ -64,7 +64,7 @@ export default function Footer() {
                             <li><Link href="/scientific-council" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.scientificCouncil}</Link></li>
                             <li><Link href="/reports" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.scientificReports}</Link></li>
                             <li><Link href="/important-projects" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.importantProjects}</Link></li>
-                            <li><Link href="/events/seminars" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.seminars}</Link></li>
+                            <li><Link href="/news" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.seminars}</Link></li>
                         </ul>
                     </div>
 

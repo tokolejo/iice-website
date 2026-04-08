@@ -72,14 +72,14 @@ export default function NewsModal({ item, onClose }) {
                             {/* Blurred Backdrop for better quality of small images */}
                             <img
                                 key={`bg-${activeImageIndex}`}
-                                src={images[activeImageIndex]?.startsWith('/') ? `/iice-website${images[activeImageIndex]}` : images[activeImageIndex]}
+                                src={images[activeImageIndex]?.startsWith('/') ? `${images[activeImageIndex]}` : images[activeImageIndex]}
                                 alt=""
                                 className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110 animate-fade-in"
                             />
                             {/* Main Foreground Image */}
                             <img
                                 key={activeImageIndex}
-                                src={images[activeImageIndex]?.startsWith('/') ? `/iice-website${images[activeImageIndex]}` : images[activeImageIndex]}
+                                src={images[activeImageIndex]?.startsWith('/') ? `${images[activeImageIndex]}` : images[activeImageIndex]}
                                 alt={title}
                                 className="w-full h-full object-contain relative z-10 drop-shadow-2xl animate-fade-in"
                             />

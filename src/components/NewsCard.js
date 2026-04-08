@@ -38,7 +38,7 @@ export default function NewsCard({ item, onClick }) {
                     </div>
                 ) : (
                     <img
-                        src={item.imageUrl?.startsWith('/') ? `/iice-website${item.imageUrl}` : item.imageUrl}
+                        src={item.imageUrl?.startsWith('/') ? `${item.imageUrl}` : item.imageUrl}
                         alt={title}
                         className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:rotate-1"
                     />

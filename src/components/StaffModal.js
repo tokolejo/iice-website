@@ -51,7 +51,7 @@ export default function StaffModal({ isOpen, onClose, member }) {
                 <div className="sm:w-1/3 bg-slate-50 flex items-center justify-center p-6 border-b sm:border-b-0 sm:border-r border-gray-100 rounded-t-2xl sm:rounded-l-2xl sm:rounded-tr-none min-h-[250px] relative">
                     {member.imageUrl && member.imageUrl !== '' && !imgError ? (
                         <img
-                            src={member.imageUrl?.startsWith('/') ? `/iice-website${member.imageUrl}` : member.imageUrl}
+                            src={member.imageUrl?.startsWith('/') ? `${member.imageUrl}` : member.imageUrl}
                             alt={member.name}
                             className="max-h-64 max-w-full object-contain drop-shadow-md z-10"
                             onError={(e) => {
@@ -121,7 +121,7 @@ export default function StaffModal({ isOpen, onClose, member }) {
                         <div className="mt-6 pt-6 border-t border-gray-100 flex flex-col gap-3">
                             {(() => {
                                 const activeBioLink = language === 'en' ? member.bioLinkEn || member.bioLink : member.bioLink;
-                                const finalBioLink = activeBioLink?.startsWith('/') ? `/iice-website${activeBioLink}` : activeBioLink;
+                                const finalBioLink = activeBioLink?.startsWith('/') ? `${activeBioLink}` : activeBioLink;
                                 return finalBioLink ? (
                                     <a
                                         href={finalBioLink}
@@ -139,7 +139,7 @@ export default function StaffModal({ isOpen, onClose, member }) {
                             })()}
                             {(() => {
                                 const activeCvLink = language === 'en' ? member.cvLinkEn || member.cvLink : member.cvLink;
-                                const finalCvLink = activeCvLink?.startsWith('/') ? `/iice-website${activeCvLink}` : activeCvLink;
+                                const finalCvLink = activeCvLink?.startsWith('/') ? `${activeCvLink}` : activeCvLink;
                                 return finalCvLink ? (
                                     <a
                                         href={finalCvLink}

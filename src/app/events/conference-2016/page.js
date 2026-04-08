@@ -85,14 +85,14 @@ export default function Conference2016() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
                             {/* Book 1 */}
                             <a 
-                                href="/iice-website/conference-2016/chemical-series-volume-42-3.pdf" 
+                                href="/conference-2016/chemical-series-volume-42-3.pdf" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="group flex flex-col items-center bg-slate-50 p-6 rounded-2xl border border-gray-100 hover:shadow-xl hover:border-purple-200 transition-all duration-300 transform hover:-translate-y-2"
                             >
                                 <div className="w-full max-w-[280px] aspect-[1/1.4] rounded-lg overflow-hidden shadow-md mb-6 relative">
                                     <img 
-                                        src="/iice-website/conference-2016/chemical-series-volume-42-3.jpg" 
+                                        src="/conference-2016/chemical-series-volume-42-3.jpg" 
                                         alt="Chemical Series Volume 42-3"
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     />
@@ -111,14 +111,14 @@ export default function Conference2016() {
 
                             {/* Book 2 */}
                             <a 
-                                href="/iice-website/conference-2016/chemical-series-volume-42-4.pdf" 
+                                href="/conference-2016/chemical-series-volume-42-4.pdf" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="group flex flex-col items-center bg-slate-50 p-6 rounded-2xl border border-gray-100 hover:shadow-xl hover:border-purple-200 transition-all duration-300 transform hover:-translate-y-2"
                             >
                                 <div className="w-full max-w-[280px] aspect-[1/1.4] rounded-lg overflow-hidden shadow-md mb-6 relative">
                                     <img 
-                                        src="/iice-website/conference-2016/chemical-series-volume-42-4.jpg" 
+                                        src="/conference-2016/chemical-series-volume-42-4.jpg" 
                                         alt="Chemical Series Volume 42-4"
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     />
@@ -155,7 +155,7 @@ export default function Conference2016() {
                             ].map((doc, idx) => (
                                 <a 
                                     key={idx}
-                                    href={`/iice-website/conference-2016/${doc.file}`}
+                                    href={`/conference-2016/${doc.file}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="flex items-center gap-4 p-5 bg-slate-50 rounded-xl border border-gray-100 hover:border-purple-200 hover:bg-purple-50 hover:shadow-md transition-all group relative overflow-hidden"

@@ -1,0 +1,21 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # 1. ძველი /news/[id] დინამიური ბმულების გადამისამართება 
+  # ვინაიდან გუგლში ძველი ბმულებია დაინდექსებული, მომხმარებელს ერორზე არ ვაგდებთ
+  RewriteRule ^news/([0-9a-zA-Z-]+)/?$ /news/ [R=301,L]
+  # იგივე ღონისძიებებისთვის (თუ იყო მსგავსი ლინკები)
+  RewriteRule ^events/seminars/?$ /news/ [R=301,L]
+  
+  # 2. სტანდარტული Next.js ფაილების რეზოლუცია
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 3. .html გაფართოების გარეშე ლინკების დამუშავება
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(.*)$ $1.html [L]
+
+  # 4. თუ ფაილი არ მოიძებნა არსად, ამოვაგდოთ Next.js-ის გენერირებული 404.html
+  ErrorDocument 404 /404.html
+</IfModule>

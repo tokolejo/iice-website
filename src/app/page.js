@@ -162,7 +162,7 @@ export default function Home() {
                   <div className="h-[220px] w-full relative overflow-hidden flex items-center justify-center">
                     {news.imageUrl && !news.imageUrl.includes('placeholder.jpg') ? (
                       <img 
-                        src={news.imageUrl?.startsWith('/') ? `/iice-website${news.imageUrl}` : news.imageUrl} 
+                        src={news.imageUrl?.startsWith('/') ? `${news.imageUrl}` : news.imageUrl} 
                         alt={language === 'en' ? news.titleEn : news.title} 
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                       />
@@ -233,7 +233,7 @@ export default function Home() {
                   <div className="h-[220px] w-full relative overflow-hidden flex items-center justify-center">
                     {news.imageUrl && !news.imageUrl.includes('placeholder.jpg') ? (
                       <img 
-                        src={news.imageUrl?.startsWith('/') ? `/iice-website${news.imageUrl}` : news.imageUrl} 
+                        src={news.imageUrl?.startsWith('/') ? `${news.imageUrl}` : news.imageUrl} 
                         alt={language === 'en' ? news.titleEn : news.title} 
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                       />
@@ -276,7 +276,7 @@ export default function Home() {
                     <p className="text-xs md:text-sm text-slate-600 leading-relaxed mb-6 flex-grow line-clamp-3">
                       {language === 'en' ? news.descriptionEn : news.description}
                     </p>
-                    <Link href={`/news/${news.id}`} className="flex items-center gap-2 text-[#663191] font-bold text-xs uppercase group/btn">
+                    <Link href="/news" className="flex items-center gap-2 text-[#663191] font-bold text-xs uppercase group/btn">
                       <span>{language === 'en' ? 'Read Details' : 'დეტალურად'}</span>
                       <svg className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
