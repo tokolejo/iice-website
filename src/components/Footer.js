@@ -86,6 +86,12 @@ export default function Footer() {
                                 <span className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white text-[10px] md:text-sm">📧</span>
                                 <a href="mailto:info@iice.ge" className="hover:text-white transition-colors font-bold">info@iice.ge</a>
                             </li>
+                            <li className="flex items-center gap-3 md:gap-4 text-sm md:text-base hover:text-white/80 group">
+                                <span className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white text-[10px] md:text-sm">🔒</span>
+                                <a href="https://iice.ge/webmail" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors font-bold">
+                                    {language === 'en' ? 'Staff Webmail' : 'კორპორატიული ფოსტა'}
+                                </a>
+                            </li>
                         </ul>
 
                         <div className="mt-8">
