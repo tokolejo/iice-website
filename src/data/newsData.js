@@ -1,5 +1,21 @@
 export const newsData = [
     {
+        "id": 999,
+        "category": "seminar",
+        "date": "2026-05-25",
+        "title": "სემინარი თემაზე: „ინფრაწითელი სპექტროსკოპია - მეთოდის პრინციპები და სპექტრული ინტერპრეტაციის ძირითადი საფუძვლები“",
+        "titleEn": "Seminar on: \"Infrared Spectroscopy - Principles of the Method and Basic Fundamentals of Spectral Interpretation\"",
+        "description": "2026 წლის 25 მაისს ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტის რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტში გაიმართა მეცნიერი თანამშრომლის სპარტაკ ხუციშვილის სემინარი თემაზე...",
+        "descriptionEn": "On May 25, 2026, a seminar by researcher Spartak Khutsishvili on \"Infrared Spectroscopy - Principles of the Method and Basic Fundamentals of Spectral Interpretation\" was held at the R. Agladze Institute...",
+        "content": "<p>2026 წლის 25 მაისს ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტის რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტში გაიმართა მეცნიერი თანამშრომლის სპარტაკ ხუციშვილის სემინარი თემაზე ,, „ინფრაწითელი სპექტროსკოპია - მეთოდის პრინციპები და სპექტრული ინტერპრეტაციის ძირითადი საფუძვლები“.</p><p>სემინარი მიეძღვნა ინფრაწითელი სპექტროსკოპიის საფუძვლებს, როგორც ნივთიერებების მოლეკულური სტრუქტურის ანალიზის მეთოდს. განხილული იქნა ინფრაწითელი გამოსხივების შთანთქმის პრინციპები, რომლებიც დაკავშირებულია მოლეკულებში ვიბრაციულ გადასვლებთან, ასევე ის პირობები, რომლებიც აუცილებელია ინფრაწითელი სპექტროსკოპიის განხორციელებისთვის. სემინარზე მოკლედ იქნა წარმოდგენილი მოლეკულური ვიბრაციების ძირითადი ტიპები (გაჭიმვითი და მოხრითი ვიბრაციები) და მათი კავშირი ფუნქციურ ჯგუფებთან. განსაკუთრებული ყურადღება დაეთმო სპექტრის ინტერპრეტაციის ძირითად მიდგომებს, მათ შორის დამახასიათებელი შთანთქმის ზოლების იდენტიფიკაციას და მათ კორელაციას მოლეკულების სტრუქტურულ ფრაგმენტებთან.</p>",
+        "contentEn": "<p>On May 25, 2026, a seminar by researcher Spartak Khutsishvili on \"Infrared Spectroscopy - Principles of the Method and Basic Fundamentals of Spectral Interpretation\" was held at the R. Agladze Institute of Inorganic Chemistry and Electrochemistry of Ivane Javakhishvili Tbilisi State University.</p><p>The seminar was dedicated to the basics of infrared spectroscopy as a method for analyzing the molecular structure of substances. The principles of infrared radiation absorption associated with vibrational transitions in molecules were discussed, as well as the conditions necessary for infrared spectroscopy. The main types of molecular vibrations (stretching and bending vibrations) and their relationship with functional groups were briefly presented. Special attention was paid to the main approaches to spectral interpretation, including the identification of characteristic absorption bands and their correlation with structural fragments of molecules.</p>",
+        "imageUrl": "/images/news/seminar-khutsishvili-1.jpg",
+        "images": [
+            "/images/news/seminar-khutsishvili-1.jpg",
+            "/images/news/seminar-khutsishvili-2.jpg"
+        ]
+    },
+    {
         "id": 1,
         "category": "news",
         "date": "2026-02-10",

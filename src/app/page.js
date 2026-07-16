@@ -7,6 +7,7 @@ import en from '../locales/en';
 import ka from '../locales/ka';
 import { departmentsData, staffData } from '../data';
 import { newsData } from '../data/newsData';
+import ScrollReveal from '../components/ScrollReveal';
 
 // Specific icons setup for the 5 grid
 const getIconForDepartment = (id) => {
@@ -50,10 +51,15 @@ export default function Home() {
     <div className="flex flex-col min-h-screen overflow-x-hidden">
 
       {/* Improved and Compact Hero Section */}
-      <section className="relative bg-white overflow-hidden animate-fade-in-up border-b border-slate-100 flex items-center min-h-[40vh]">
-        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row items-center justify-between gap-8 w-full">
+      <section className="relative animated-gradient-bg overflow-hidden border-b border-slate-100 flex items-center min-h-[40vh]">
+        {/* Floating decorative blobs */}
+        <div className="absolute -top-20 -right-20 w-72 h-72 bg-purple-200/40 rounded-full blur-3xl animate-float-blob-slow pointer-events-none"></div>
+        <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-indigo-200/30 rounded-full blur-3xl animate-float-blob-reverse pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/3 w-40 h-40 bg-pink-100/20 rounded-full blur-3xl animate-float-blob pointer-events-none"></div>
+
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row items-center justify-between gap-8 w-full relative z-10">
           {/* Text Content */}
-          <div className="w-full md:w-1/2 text-center md:text-left relative z-10">
+          <ScrollReveal direction="left" duration={800} className="w-full md:w-1/2 text-center md:text-left">
             <h1 className="text-lg md:text-xl lg:text-2xl xl:text-3xl tracking-tight font-extrabold text-[#60318e] drop-shadow-sm">
               <span className="block xl:inline leading-tight text-[#60318e]">{t.home.heroTitle}</span>{' '}
               <span className="block text-[#7A1CAC] xl:inline leading-tight mt-1">{t.home.heroTitleHighlight}</span>
@@ -61,25 +67,25 @@ export default function Home() {
             <p className="mt-4 text-xs md:text-sm lg:text-sm text-text-body font-medium leading-relaxed max-w-lg mx-auto md:mx-0">
               {t.home.heroSubtitle}
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* Image Content - More Compact */}
-          <div className="w-full md:w-5/12 relative z-10 hidden md:block">
+          <ScrollReveal direction="right" duration={800} delay={200} className="w-full md:w-5/12 relative hidden md:block">
             <div className="aspect-w-16 aspect-h-7 lg:aspect-w-16 lg:aspect-h-9 rounded-2xl overflow-hidden shadow-xl border-4 border-white transform rotate-1 hover:rotate-0 transition-transform duration-500">
               <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=80" alt="IICE Laboratory" className="w-full h-full object-cover" />
             </div>
             {/* Decorative elements */}
-            <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-purple-200 rounded-full z-[-1] opacity-60 blur-xl"></div>
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-indigo-100 rounded-full z-[-1] opacity-60 blur-xl"></div>
-          </div>
+            <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-purple-200 rounded-full z-[-1] opacity-60 blur-xl animate-float-blob"></div>
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-indigo-100 rounded-full z-[-1] opacity-60 blur-xl animate-float-blob-reverse"></div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Departments Grid (Restored and limited to 3) */}
-      <section className="py-16 bg-white shrink-0 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+      <section className="py-16 bg-white shrink-0">
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4 sm:gap-0">
-            <h2 className="text-lg md:text-xl lg:text-2xl font-extrabold text-[#60318e] tracking-tight uppercase">{t.nav?.departments || 'განყოფილებები'}</h2>
+            <ScrollReveal><h2 className="text-lg md:text-xl lg:text-2xl font-extrabold text-[#60318e] tracking-tight uppercase">{t.nav?.departments || 'განყოფილებები'}</h2></ScrollReveal>
             <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
               <Link href="/departments" className="text-[#60318e] font-bold hover:text-[#7A1CAC] transition-colors uppercase text-xs sm:text-sm tracking-wide">
                 {language === 'en' ? 'All Departments' : 'ყველა განყოფილება'} &rarr;
@@ -107,7 +113,7 @@ export default function Home() {
 
               return (
                 <Link href={`/departments/${dept.id}`} key={dept.id} className="w-full min-w-full sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] block group snap-start shrink-0">
-                  <div className="h-full bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover-scale flex flex-col p-6 transition-all duration-300 hover:shadow-xl hover:border-[#AD49E1] relative">
+                  <div className="h-full bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover-scale flex flex-col p-6 transition-all duration-300 hover:shadow-xl hover:border-[#AD49E1] relative card-hover-glow">
                     <div className="flex items-start gap-4 mb-4">
                       <div className="flex-shrink-0 w-12 h-12 md:w-16 md:h-16 bg-slate-50 text-[#AD49E1] rounded-xl flex items-center justify-center shadow-sm group-hover:bg-[#60318e] group-hover:text-white transition-colors duration-300 border border-slate-100">
                         {getIconForDepartment(dept.id)}
@@ -128,15 +134,15 @@ export default function Home() {
       </section>
 
       {/* Latest News & Announcements Sliders */}
-      <section className="py-16 bg-slate-50 shrink-0 border-t border-purple-100/50 animate-fade-in-up flex-grow" style={{ animationDelay: '0.2s' }}>
+      <section className="py-16 bg-slate-50 shrink-0 border-t border-purple-100/50 flex-grow">
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* სიახლეები (News) */}
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4 sm:gap-0">
-              <h2 className="text-lg md:text-xl lg:text-2xl font-extrabold text-[#663191] tracking-tight uppercase">
+              <ScrollReveal><h2 className="text-lg md:text-xl lg:text-2xl font-extrabold text-[#663191] tracking-tight uppercase">
                 {language === 'en' ? 'Latest News' : 'სიახლეები'}
-              </h2>
+              </h2></ScrollReveal>
               <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
                 <Link href="/news" className="text-[#663191] font-bold hover:text-[#AD49E1] transition-colors uppercase text-xs sm:text-sm tracking-wide">
                   {language === 'en' ? 'See All News' : 'ყველა სიახლე'} &rarr;
@@ -205,9 +211,9 @@ export default function Home() {
           {/* ანონსები (Announcements/Seminars) */}
           <div>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4 sm:gap-0">
-              <h2 className="text-2xl font-extrabold text-[#663191] tracking-tight uppercase">
+              <ScrollReveal><h2 className="text-2xl font-extrabold text-[#663191] tracking-tight uppercase">
                 {language === 'en' ? 'Announcements' : 'ანონსები'}
-              </h2>
+              </h2></ScrollReveal>
               <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
                 <Link href="/news" className="text-[#663191] font-bold hover:text-[#AD49E1] transition-colors uppercase text-xs sm:text-sm tracking-wide">
                   {language === 'en' ? 'See All Announcements' : 'ყველა ანონსი'} &rarr;

@@ -47,7 +47,7 @@ export default function AdministrationPage() {
             degreeKa: 'ქიმიის მეცნიერებათა კანდიდატი / აკადემიური დოქტორი',
             degreeEn: 'Candidate of Chemical Sciences / Academic Doctor',
             email: 'lela.kvinikadze@tsu.ge',
-            image: '/staff/phys-chem-analysis/kvinikadze-pic.jpg'
+            image: '/staff/phys-chem-analysis/lela-kvinikadze-pic.jpg'
         }
     ];
 

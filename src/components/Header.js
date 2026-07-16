@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
 import en from '../locales/en';
@@ -11,6 +11,16 @@ export default function Header() {
     const t = language === 'en' ? en : ka;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [openMobileDropdowns, setOpenMobileDropdowns] = useState({});
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 10);
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll(); // Check initial state
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     const toggleMobileDropdown = (menu) => {
         setOpenMobileDropdowns(prev => ({
@@ -21,15 +31,20 @@ export default function Header() {
 
     return (
         /* 
-           ფერის შეცვლა: bg-[#2e0d42] (უფრო მუქი იასამნისფერი)
+           Glassmorphism: scrolled → semi-transparent + blur
+           Not scrolled → solid background
         */
-        <header className="bg-[#2e0d42] shadow-lg sticky top-0 z-50 transition-all duration-300">
+        <header className={`sticky top-0 z-50 transition-all duration-500 ease-out ${
+            isScrolled 
+                ? 'bg-[#2e0d42]/85 header-glass shadow-lg shadow-purple-950/20' 
+                : 'bg-[#2e0d42] shadow-lg'
+        }`}>
             <div className="max-w-[96%] xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
                 {/* 
                    ზომის აწევა/დაწევა (სიმაღლე): h-20 
                    თუ გსურთ უფრო ვიწრო, ჩაწერეთ h-16, თუ განიერი - h-24  
                 */}
-                <div className="flex justify-between lg:grid lg:grid-cols-[240px_1fr_100px] xl:grid-cols-[280px_1fr_120px] items-center h-22 gap-2 xl:gap-4">
+                <div className={`flex justify-between lg:grid lg:grid-cols-[240px_1fr_100px] xl:grid-cols-[280px_1fr_120px] items-center gap-2 xl:gap-4 transition-all duration-500 ${isScrolled ? 'h-16' : 'h-22'}`}>
                     {/* Logo Segment */}
                     <div className="flex items-center animate-fade-in-up">
                         <Link href="/" className="flex items-center gap-2 xl:gap-3 group">

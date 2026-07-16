@@ -84,9 +84,9 @@ export default function CollaborationPage() {
                                     "სამეცნიერო და ტექნიკური თანამშრომლობის შესახებ საერთაშორისო სამეცნიერო კომპლექსი „ასტანა“ (ყაზახეთი) და თბილისის სახელმწიფო უნივერსიტეტის რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტს შორის სამეცნიერო და ტექნიკური კოლაბორაციის განვითარება."
                                 }
                             </p>
-                            <span className="inline-block bg-slate-100 text-slate-500 font-extrabold px-4 py-2 rounded-md text-xs uppercase border border-slate-200">
-                                {isEn ? 'Information is being processed' : 'ინფორმაცია მუშავდება'}
-                            </span>
+                            <a href="https://qazaqgreen.com/news/kazakhstan/1972/" target="_blank" rel="noopener noreferrer" className="inline-block bg-[#663191] hover:bg-purple-800 text-white font-bold px-6 py-3 rounded-lg text-sm uppercase transition-colors shadow-sm">
+                                {isEn ? 'Read More' : 'ვრცლად ნახვა'}
+                            </a>
                         </div>
                     </div>
 
