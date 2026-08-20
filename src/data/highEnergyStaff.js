@@ -32,8 +32,8 @@ export const highEnergyStaff = [
         bioLink: '', 
         bioLinkEn: '', 
         cvLink: '/staff/high-energy-chemistry/Grigor_Tatishvili_CV.docx', 
-        cvLinkEn: '/staff/high-energy-chemistry/Grigor_Tatishvili_CV.docx', 
-        emails: ['g.tatishvili@iice.ge'] 
+        cvLinkEn: '/staff/high-energy-chemistry/Grigor_Tatishvili_CV_EN.docx', 
+        emails: ['tati@iice.ge'] 
     },
     { id: 'h_varazashvili', name: 'ვერა ვარაზაშვილი', nameEn: 'Vera Varazashvili', role: 'მთავარი მეცნიერ-თანამშრომელი', roleEn: 'Chief Researcher', department: 'მაღალი ენერგიების ქიმიის განყოფილება', departmentId: 'high-energy-chemistry', imageUrl: '/staff/high-energy-chemistry/varazashvili-pic.jpg', placeholderUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80', bioLink: '', bioLinkEn: '', cvLink: '/staff/high-energy-chemistry/vera varazashvili-ge.docx', cvLinkEn: '/staff/high-energy-chemistry/Vera Varazashvili-eng.docx', emails: ['v_varazi@yahoo.com'], links: [{ title: 'Google Scholar', url: 'https://scholar.google.com/citations?user=xZoQAjkAAAAJ&hl=en' }] },
     { id: 'h_jorbenadze', name: 'რუსუდანი ჯორბენაძე', nameEn: 'Rusudan Jorbenadze', role: 'უფროსი მეცნიერ-თანამშრომელი', roleEn: 'Senior Researcher', department: 'მაღალი ენერგიების ქიმიის განყოფილება', departmentId: 'high-energy-chemistry', imageUrl: '/staff/high-energy-chemistry/jorbenadze-pic.jpg', placeholderUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80', bioLink: '', bioLinkEn: '', cvLink: '/staff/high-energy-chemistry/რუსუდან ჯორბენაძე-ka.pdf', cvLinkEn: '/staff/high-energy-chemistry/Rusudan Jorbenadze-eng.pdf', emails: ['rusudan.jorbenadze@tsu.ge'] },

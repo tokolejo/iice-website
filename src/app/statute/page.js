@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Head from 'next/head';
 import { FileText, Download } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -11,9 +10,7 @@ export default function StatutePage() {
 
     return (
         <div className="bg-slate-50 min-h-screen">
-            <Head>
-                <title>{isEn ? 'Statute | IICE' : 'დებულება | IICE'}</title>
-            </Head>
+            <title>{isEn ? 'Statute | IICE' : 'დებულება | IICE'}</title>
 
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">

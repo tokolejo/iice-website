@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useLanguage } from '../../context/LanguageContext';
 
 export default function InfrastructurePage() {
@@ -8,6 +9,28 @@ export default function InfrastructurePage() {
     const isEn = language === 'en';
     const [visibleCount, setVisibleCount] = useState(8);
     const [selectedItem, setSelectedItem] = useState(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Lock body scroll and listen for ESC key when modal is open
+    useEffect(() => {
+        if (selectedItem) {
+            document.body.style.overflow = 'hidden';
+            const handleKeyDown = (e) => {
+                if (e.key === 'Escape') {
+                    setSelectedItem(null);
+                }
+            };
+            window.addEventListener('keydown', handleKeyDown);
+            return () => {
+                document.body.style.overflow = 'unset';
+                window.removeEventListener('keydown', handleKeyDown);
+            };
+        }
+    }, [selectedItem]);
 
     const infraData = [
         {
@@ -246,8 +269,8 @@ export default function InfrastructurePage() {
                 )}
             </div>
 
-            {/* Read More Modal */}
-            {selectedItem && (
+            {/* Read More Modal - rendered via portal like NewsModal */}
+            {selectedItem && mounted && createPortal(
                 <div
                     className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-[#60318e]/90 backdrop-blur-md animate-fade-in"
                     onClick={() => setSelectedItem(null)}
@@ -256,10 +279,10 @@ export default function InfrastructurePage() {
                         className="bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col relative animate-scale-in"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {/* Close button */}
+                        {/* Close button - Glassmorphic high contrast (matching NewsModal) */}
                         <button
                             onClick={() => setSelectedItem(null)}
-                            className="absolute top-4 right-4 md:top-6 md:right-6 z-50 p-2 md:p-3 bg-white/50 hover:bg-white rounded-full text-[#60318e] hover:text-[#AD49E1] transition-all shadow-xl hover:scale-110 active:scale-95 group"
+                            className="absolute top-4 right-4 md:top-6 md:right-6 z-[60] p-2 md:p-3 bg-slate-950/40 hover:bg-slate-950/80 text-white backdrop-blur-md rounded-full border border-white/10 transition-all shadow-xl hover:scale-110 active:scale-95 group"
                         >
                             <svg className="w-5 h-5 md:w-6 md:h-6 transition-transform group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -267,12 +290,10 @@ export default function InfrastructurePage() {
                         </button>
 
                         <div className="overflow-y-auto w-full">
-                            {/* Images Gallery - Removed as per user request */}
-
                             {/* Content Section */}
                             <div className="p-6 md:p-10 pt-12 md:pt-16 bg-white flex flex-col">
                                 <div className="flex items-center gap-3 mb-6">
-                                    <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em] shadow-sm bg-[#AD49E1] text-white`}>
+                                    <span className="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em] shadow-sm bg-[#AD49E1] text-white">
                                         {isEn ? 'Equipment' : 'მოწყობილობა'}
                                     </span>
                                     <div className="h-px flex-grow bg-slate-100"></div>
@@ -294,7 +315,8 @@ export default function InfrastructurePage() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     );

@@ -50,7 +50,6 @@ export default function Footer() {
                         <ul className="space-y-3 md:space-y-4 text-sm md:text-base font-bold text-white">
                             <li><Link href="/history" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.history}</Link></li>
                             <li><Link href="/mission" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.mission}</Link></li>
-                            <li><Link href="/structure" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.structure}</Link></li>
                             <li><Link href="/statute" className="text-white hover:text-white/80 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] scale-0 group-hover:scale-100 transition-transform"></span>{t.nav.statute}</Link></li>
                         </ul>
                     </ScrollReveal>

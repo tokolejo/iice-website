@@ -1,17 +1,16 @@
 'use client';
 
 import React from 'react';
-import Head from 'next/head';
 import Image from 'next/image';
 import { useLanguage } from '../../context/LanguageContext';
 
 const directors = [
-    { name: 'აკადემიის წევრ-კორესპონდენტი გრიგორ ტატიშვილი', nameEn: 'Corresponding Member of the Academy Grigor Tatishvili', years: '2006 - დღემდე', yearsEn: '2006 - Present', img: 'https://iice.ge/wp-content/uploads/2026/director/g.tatishvili.jpg' },
-    { name: 'აკადემიკოსი ჯონდო ჯაფარიძე', nameEn: 'Academician Jondo Japaridze', years: '1996 - 2006', yearsEn: '1996 - 2006', img: 'https://iice.ge/wp-content/uploads/2026/director/j.jafaridze.jpg' },
-    { name: 'აკადემიის წევრ-კორესპონდენტი ლევან ჯაფარიძე', nameEn: 'Corresponding Member of the Academy Levan Japaridze', years: '1980 - 1996', yearsEn: '1980 - 1996', img: 'https://iice.ge/wp-content/uploads/2026/director/l.jafaridze.jpg' },
-    { name: 'აპოლონ ავალიანი', nameEn: 'Apollon Avaliani', years: '1972 - 1980', yearsEn: '1972 - 1980', img: 'https://iice.ge/wp-content/uploads/2026/director/a.avaliani.jpg' },
-    { name: 'აკადემიკოსი ნიკოლოზ ლანდია', nameEn: 'Academician Nikoloz Landia', years: '1960 - 1972', yearsEn: '1960 - 1972', img: 'https://iice.ge/wp-content/uploads/2026/director/n.landia.jpg' },
-    { name: 'აკადემიკოსი რაფიელ აგლაძე', nameEn: 'Academician Rafael Agladze', years: '1956 - 1960', yearsEn: '1956 - 1960', img: 'https://iice.ge/wp-content/uploads/2026/director/r.agladze.jpg' }
+    { name: 'აკადემიის წევრ-კორესპონდენტი გრიგორ ტატიშვილი', nameEn: 'Corresponding Member of the Academy Grigor Tatishvili', years: '2006 - დღემდე', yearsEn: '2006 - Present', img: '/staff/high-energy-chemistry/tatishvili-pic.jpg' },
+    { name: 'აკადემიკოსი ჯონდო ჯაფარიძე', nameEn: 'Academician Jondo Japaridze', years: '1996 - 2006', yearsEn: '1996 - 2006', img: '/images/director/j.jafaridze.jpg' },
+    { name: 'აკადემიის წევრ-კორესპონდენტი ლევან ჯაფარიძე', nameEn: 'Corresponding Member of the Academy Levan Japaridze', years: '1980 - 1996', yearsEn: '1980 - 1996', img: '/images/director/l.jafaridze.jpg' },
+    { name: 'აპოლონ ავალიანი', nameEn: 'Apollon Avaliani', years: '1972 - 1980', yearsEn: '1972 - 1980', img: '' },
+    { name: 'აკადემიკოსი ნიკოლოზ ლანდია', nameEn: 'Academician Nikoloz Landia', years: '1960 - 1972', yearsEn: '1960 - 1972', img: '/images/director/n.landia.jpg' },
+    { name: 'აკადემიკოსი რაფიელ აგლაძე', nameEn: 'Academician Rafael Agladze', years: '1956 - 1960', yearsEn: '1956 - 1960', img: '/images/director/r.agladze.jpg' }
 ];
 
 export default function HistoryPage() {
@@ -20,13 +19,11 @@ export default function HistoryPage() {
 
     return (
         <div className="bg-slate-50 min-h-screen">
-            <Head>
-                <title>{isEn ? 'History | TSU IICE' : 'ისტორია | TSU IICE'}</title>
-                <meta name="description" content={isEn ? "History of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry, established in 1956." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის ისტორია, დაარსებული 1956 წელს."} />
-                <meta property="og:title" content={isEn ? 'History | TSU IICE' : 'ისტორია | TSU IICE'} />
-                <meta property="og:description" content={isEn ? "History of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry, established in 1956." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის ისტორია, დაარსებული 1956 წელს."} />
-                <link rel="canonical" href="https://iice.ge/history" />
-            </Head>
+            <title>{isEn ? 'History | TSU IICE' : 'ისტორია | TSU IICE'}</title>
+            <meta name="description" content={isEn ? "History of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry, established in 1956." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის ისტორია, დაარსებული 1956 წელს."} />
+            <meta property="og:title" content={isEn ? 'History | TSU IICE' : 'ისტორია | TSU IICE'} />
+            <meta property="og:description" content={isEn ? "History of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry, established in 1956." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის ისტორია, დაარსებული 1956 წელს."} />
+            <link rel="canonical" href="https://iice.ge/history" />
 
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
@@ -147,8 +144,12 @@ export default function HistoryPage() {
                                 {directors.map((dir, idx) => (
                                     <div key={idx} className="flex flex-col sm:flex-row justify-between sm:items-center py-4 border-b border-slate-100 last:border-0 hover:bg-slate-50 rounded-lg px-4 transition-colors">
                                         <div className="flex items-center gap-4 mb-2 sm:mb-0">
-                                            <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-slate-200 flex-shrink-0">
-                                                <Image src={dir.img} alt={dir.name} width={56} height={56} className="object-cover w-full h-full" unoptimized />
+                                            <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-slate-200 flex-shrink-0 bg-slate-100 flex items-center justify-center">
+                                                {dir.img ? (
+                                                    <Image src={dir.img} alt={dir.name} width={56} height={56} className="object-cover w-full h-full" unoptimized />
+                                                ) : (
+                                                    <svg className="w-8 h-8 text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+                                                )}
                                             </div>
                                             <span className="text-slate-800 font-semibold text-base">{isEn ? dir.nameEn : dir.name}</span>
                                         </div>

@@ -10,7 +10,6 @@ export default function sitemap() {
         '',
         '/history',
         '/mission',
-        '/structure',
         '/statute',
         '/scientific-council',
         '/reports',

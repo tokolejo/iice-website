@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useLanguage } from '../context/LanguageContext';
 import en from '../locales/en';
 import ka from '../locales/ka';
@@ -11,20 +12,28 @@ export default function StaffModal({ isOpen, onClose, member }) {
     const displayName = member ? (language === 'en' && member.nameEn ? member.nameEn : member.name) : '';
     const displayRole = member ? (language === 'en' && member.roleEn ? member.roleEn : member.role) : '';
 
+    const [mounted, setMounted] = useState(false);
+
     useEffect(() => {
+        setMounted(true);
         if (isOpen) {
             document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
+            const handleKeyDown = (e) => {
+                if (e.key === 'Escape') onClose();
+            };
+            window.addEventListener('keydown', handleKeyDown);
+            return () => {
+                setMounted(false);
+                document.body.style.overflow = 'unset';
+                window.removeEventListener('keydown', handleKeyDown);
+            };
         }
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
-    }, [isOpen]);
+    }, [isOpen, onClose]);
 
     if (!isOpen || !member) return null;
+    if (!mounted) return null;
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true">
             {/* Backdrop */}
             <div
@@ -59,8 +68,10 @@ export default function StaffModal({ isOpen, onClose, member }) {
                             }}
                         />
                     ) : (
-                        <div className="bg-white p-6 rounded-full shadow-sm border border-purple-100/50">
-                            <User size={64} className="text-[#60318e] opacity-30" strokeWidth={1.5} />
+                        <div className="absolute inset-0 w-full h-full bg-[#f3e8ff]/50 flex items-end justify-center overflow-hidden z-0 select-none">
+                            <svg className="w-[85%] h-[85%] text-purple-200/90" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
                         </div>
                     )}
                 </div>
@@ -158,6 +169,7 @@ export default function StaffModal({ isOpen, onClose, member }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

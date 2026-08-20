@@ -3,7 +3,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
-export default function NewsCard({ item, onClick }) {
+export default function NewsCard({ item, onClick, compact = false }) {
     const { language } = useLanguage();
 
     const title = language === 'en' ? item.titleEn : item.title;
@@ -12,43 +12,44 @@ export default function NewsCard({ item, onClick }) {
         ? (language === 'en' ? 'News' : 'სიახლეები')
         : (language === 'en' ? 'Seminar' : 'სემინარი');
 
+    const hasImage = item.imageUrl && item.imageUrl !== '' && !item.imageUrl.includes('placeholder.jpg');
+
     return (
         <div
-            className="bg-white rounded-3xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100/80 overflow-hidden hover:shadow-[0_20px_50px_-12px_rgba(173,73,225,0.15)] transition-all duration-500 flex flex-col group h-full cursor-pointer"
+            className={`bg-white border border-slate-100/80 overflow-hidden hover:shadow-[0_20px_50px_-12px_rgba(173,73,225,0.15)] transition-all duration-500 flex flex-col group h-full cursor-pointer ${
+                compact ? 'rounded-2xl shadow-sm' : 'rounded-3xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]'
+            }`}
             onClick={onClick}
         >
             {/* Image Container */}
-            <div className="relative h-56 overflow-hidden">
-                {(!item.imageUrl || item.imageUrl.includes('placeholder.jpg')) ? (
-                    <div className="w-full h-full bg-gradient-to-br from-[#60318e] to-[#8c3ab8] transition-all duration-700 ease-out group-hover:scale-110 group-hover:rotate-1 flex items-center justify-center relative overflow-hidden">
-                        {/* Elegant Background Elements */}
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-[#AD49E1] rounded-full mix-blend-screen filter blur-3xl opacity-70 animate-pulse"></div>
-                        <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-pink-500 rounded-full mix-blend-screen filter blur-3xl opacity-50"></div>
-                        
-                        {/* Elegant Icon */}
-                        <div className="relative z-10 p-5 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl group-hover:scale-110 transition-transform duration-500">
-                            <svg className="w-10 h-10 text-white/90 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                {item.category === 'news' ? (
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                                ) : (
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                )}
-                            </svg>
-                        </div>
-                    </div>
-                ) : (
+            <div className={`relative overflow-hidden flex-shrink-0 bg-slate-950 ${compact ? 'h-40 md:h-44' : 'h-56'}`}>
+                {hasImage ? (
                     <img
                         src={item.imageUrl?.startsWith('/') ? `${item.imageUrl}` : item.imageUrl}
                         alt={title}
                         className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:rotate-1"
                     />
+                ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-[#60318e] to-[#2e0d42] flex items-center justify-center relative overflow-hidden">
+                        {/* Elegant grid background */}
+                        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:16px_16px]"></div>
+                        
+                        {/* Subtle blur highlights */}
+                        <div className="absolute top-0 right-0 w-28 h-28 bg-[#AD49E1] rounded-full mix-blend-screen filter blur-2xl opacity-60"></div>
+                        <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-purple-500 rounded-full mix-blend-screen filter blur-2xl opacity-40"></div>
+                        
+                        {/* Logo Wrapper */}
+                        <div className="relative z-10 p-4 bg-white/10 rounded-2xl backdrop-blur-md border border-white/20 shadow-xl group-hover:scale-105 transition-transform duration-500">
+                            <img src="/logo.png" alt="IICE Logo" className="w-12 h-12 object-contain opacity-80 invert brightness-200" />
+                        </div>
+                    </div>
                 )}
 
                 {/* Overlay Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#60318e]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                 {/* Category Badge - Glassmorphism */}
-                <div className="absolute top-5 left-5">
+                <div className={`absolute ${compact ? 'top-3 left-3' : 'top-5 left-5'}`}>
                     <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em] backdrop-blur-md shadow-lg border border-white/20 ${item.category === 'news'
                         ? 'bg-[#AD49E1]/90 text-white'
                         : 'bg-[#60318e]/90 text-white'
@@ -58,7 +59,7 @@ export default function NewsCard({ item, onClick }) {
                 </div>
 
                 {/* Date Badge */}
-                <div className="absolute bottom-5 right-5 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                <div className={`absolute ${compact ? 'bottom-3 right-3' : 'bottom-5 right-5'} translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500`}>
                     <span className="px-3 py-1 bg-white/90 backdrop-blur-md rounded-lg text-[10px] font-bold text-[#60318e] shadow-xl border border-white/50">
                         {item.date}
                     </span>
@@ -66,17 +67,19 @@ export default function NewsCard({ item, onClick }) {
             </div>
 
             {/* Content */}
-            <div className="p-7 flex flex-col flex-grow bg-white relative z-10">
+            <div className={`${compact ? 'p-5' : 'p-7'} flex flex-col flex-grow bg-white relative z-10`}>
                 <div className="flex items-center text-[10px] font-bold text-slate-400 mb-4 uppercase tracking-widest">
                     <span className="w-8 h-px bg-slate-200 mr-3 transition-all duration-500 group-hover:w-12 group-hover:bg-[#AD49E1]"></span>
                     {item.date}
                 </div>
 
-                <h3 className="text-lg font-black text-[#60318e] mb-4 leading-[1.25] group-hover:text-[#AD49E1] transition-colors duration-300">
+                <h3 className={`${compact ? 'text-xs md:text-sm font-extrabold mb-2' : 'text-lg font-black mb-4'} text-[#60318e] leading-[1.25] group-hover:text-[#AD49E1] transition-colors duration-300 line-clamp-3`}>
                     {title}
                 </h3>
 
-                <p className="text-slate-500 text-sm leading-relaxed mb-8 line-clamp-3 font-medium">
+                <p className={`text-slate-500 leading-relaxed font-medium ${
+                    compact ? 'text-xs mb-4 line-clamp-2' : 'text-sm mb-8 line-clamp-3'
+                }`}>
                     {description}
                 </p>
 

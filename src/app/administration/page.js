@@ -16,7 +16,7 @@ export default function AdministrationPage() {
             nameEn: 'Grigor Tatishvili',
             degreeKa: 'საქართველოს მეცნიერებათა ეროვნული აკადემიის წევრ-კორესპონდენტი',
             degreeEn: 'Corresponding Member of the Georgian National Academy of Sciences',
-            email: 'g.tatishvili@iice.ge',
+            email: 'tati@iice.ge',
             image: '/staff/high-energy-chemistry/tatishvili-pic.jpg'
         },
         {
@@ -86,10 +86,9 @@ export default function AdministrationPage() {
                                     {admin.image ? (
                                         <img src={admin.image?.startsWith('/') ? `${admin.image}` : admin.image} alt={name} className="w-full h-full object-cover" />
                                     ) : (
-                                        <div className="w-full h-full bg-purple-50 flex items-center justify-center text-[#AD49E1]">
-                                            {/* Generic user icon */}
-                                            <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        <div className="w-full h-full bg-[#f3e8ff]/50 flex items-end justify-center overflow-hidden select-none">
+                                            <svg className="w-[85%] h-[85%] text-purple-200/90" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                                             </svg>
                                         </div>
                                     )}

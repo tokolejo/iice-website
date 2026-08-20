@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Head from 'next/head';
 import { useLanguage } from '../../context/LanguageContext';
 import { newsData } from '../../data/newsData';
 import NewsCard from '../../components/NewsCard';
@@ -15,10 +14,18 @@ export default function NewsPage() {
     const [filter, setFilter] = useState('all');
     const [selectedNews, setSelectedNews] = useState(null);
     const [visibleCount, setVisibleCount] = useState(8);
+    const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredNews = filter === 'all'
-        ? newsData
-        : newsData.filter(item => item.category === filter);
+    const filteredNews = newsData
+        .filter(item => {
+            const matchesCategory = filter === 'all' || item.category === filter;
+            const title = language === 'en' ? item.titleEn : item.title;
+            const content = language === 'en' ? item.contentEn : item.content;
+            const matchesSearch = !searchQuery.trim() ||
+                title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                content?.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchesCategory && matchesSearch;
+        });
 
     const visibleNews = filteredNews.slice(0, visibleCount);
     const hasMore = visibleCount < filteredNews.length;
@@ -38,15 +45,18 @@ export default function NewsPage() {
         { id: 'seminars', label: language === 'en' ? 'Seminars' : 'სემინარები' }
     ];
 
+    const countByCategory = (catId) => {
+        if (catId === 'all') return newsData.length;
+        return newsData.filter(item => item.category === catId).length;
+    };
+
     return (
         <div className="bg-[#FAF9FF] min-h-screen pb-16">
-            <Head>
-                <title>{language === 'en' ? 'News & Seminars | TSU IICE' : 'სიახლეები და სემინარები | TSU IICE'}</title>
-                <meta name="description" content={language === 'en' ? "Latest news, academic seminars, and announcements from the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის უახლესი ამბები, აკადემიური სემინარები და ანონსები."} />
-                <meta property="og:title" content={language === 'en' ? 'News & Seminars | TSU IICE' : 'სიახლეები და სემინარები | TSU IICE'} />
-                <meta property="og:description" content={language === 'en' ? "Latest news, academic seminars, and announcements from the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის უახლესი ამბები, აკადემიური სემინარები და ანონსები."} />
-                <link rel="canonical" href="https://iice.ge/news" />
-            </Head>
+            <title>{language === 'en' ? 'News & Seminars | TSU IICE' : 'სიახლეები და სემინარები | TSU IICE'}</title>
+            <meta name="description" content={language === 'en' ? "Latest news, academic seminars, and announcements from the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის უახლესი ამბები, აკადემიური სემინარები და ანონსები."} />
+            <meta property="og:title" content={language === 'en' ? 'News & Seminars | TSU IICE' : 'სიახლეები და სემინარები | TSU IICE'} />
+            <meta property="og:description" content={language === 'en' ? "Latest news, academic seminars, and announcements from the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის უახლესი ამბები, აკადემიური სემინარები და ანონსები."} />
+            <link rel="canonical" href="https://iice.ge/news" />
             {/* აქედან რეგულირდება ფუტერსა და კონტენტს შორის დაშორება (მაგ: pb-12, pb-20, pb-32) */}
             {/* Head should be handled by metadata API or layout in App Router */}
 
@@ -58,7 +68,7 @@ export default function NewsPage() {
                     <div className="max-w-4xl">
                         <div className="flex items-center gap-4 mb-4 animate-fade-in-up">
                             <span className="w-12 h-1 bg-[#AD49E1] rounded-full"></span>
-                            <span className="text-[#AD49E1] text-[10px] font-black uppercase tracking-[0.3em]">{t.nav.news}</span>
+                            <span className="text-xs font-black uppercase tracking-[0.2em] text-[#AD49E1]">{language === 'en' ? 'Information Hub' : 'საინფორმაციო სივრცე'}</span>
                         </div>
                         <h1 className="text-lg md:text-xl lg:text-2xl font-black text-[#60318e] leading-tight mb-4 animate-fade-in-up uppercase tracking-wider" style={{ animationDelay: '0.1s' }}>
                             {language === 'en' ? 'Latest Updates & Scientific Events' : 'უახლესი ამბები და სამეცნიერო ღონისძიებები'}
@@ -74,21 +84,53 @@ export default function NewsPage() {
             </div >
 
             <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-8">
-                {/* Filters */}
-                <div className="flex justify-center mb-8 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                    <div className="bg-white/70 backdrop-blur-xl p-2 rounded-[2rem] shadow-xl border border-white inline-flex">
+                {/* Search Bar & Filters Horizontal Control Panel (Stage 2.1 Refined) */}
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
+                    {/* Categories (Left) */}
+                    <div className="bg-slate-100/90 backdrop-blur-xl p-1.5 rounded-[2rem] shadow-lg border border-slate-200 inline-flex shrink-0">
                         {categories.map(cat => (
                             <button
                                 key={cat.id}
                                 onClick={() => setFilter(cat.id)}
-                                className={`px-8 py-3 rounded-[1.5rem] text-[11px] font-black uppercase tracking-wider transition-all duration-500 ${filter === cat.id
-                                    ? 'bg-[#AD49E1] text-white shadow-[0_8px_20px_-4px_rgba(173,73,225,0.4)] scale-105'
-                                    : 'text-slate-500 hover:text-[#AD49E1] hover:bg-white'
+                                className={`px-5 py-2.5 rounded-[1.5rem] text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all duration-300 inline-flex items-center gap-2 ${filter === cat.id
+                                    ? 'bg-[#AD49E1] text-white shadow-[0_6px_15px_-3px_rgba(173,73,225,0.35)] scale-105 font-black'
+                                    : 'text-slate-600 hover:text-[#AD49E1] hover:bg-white'
                                     }`}
                             >
-                                {cat.label}
+                                <span>{cat.label}</span>
+                                <span className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold transition-all duration-300 ${
+                                    filter === cat.id ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-500'
+                                }`}>
+                                    {countByCategory(cat.id)}
+                                </span>
                             </button>
                         ))}
+                    </div>
+
+                    {/* Search Input (Right) */}
+                    <div className="relative w-full max-w-xs">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <svg className="h-4 w-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                        <input
+                            type="text"
+                            className="focus:ring-2 focus:ring-[#AD49E1]/20 focus:border-[#AD49E1] block w-full pl-10 pr-10 py-2.5 text-xs md:text-sm border border-slate-300 focus:outline-none rounded-full bg-white shadow-md text-slate-800 font-bold placeholder-slate-500"
+                            placeholder={language === 'en' ? "Search..." : "ძებნა..."}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        {searchQuery && (
+                            <button
+                                onClick={() => setSearchQuery('')}
+                                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                            >
+                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        )}
                     </div>
                 </div>
 

@@ -1,21 +1,22 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Noto_Sans_Georgian } from "next/font/google";
 import "./globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { LanguageProvider } from "../context/LanguageContext";
 import ScrollToTop from "../components/ScrollToTop";
+import PageTransition from "../components/PageTransition";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const notoGeo = Noto_Sans_Georgian({
+  variable: "--font-noto-geo",
+  subsets: ["georgian"],
   display: "swap",
 });
 
@@ -66,14 +67,16 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="overflow-x-hidden" suppressHydrationWarning>
+    <html lang="en" className="overflow-x-clip" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-slate-50 overflow-x-hidden`}
+        className={`${inter.variable} ${notoGeo.variable} antialiased min-h-screen flex flex-col bg-slate-50 overflow-x-clip`}
       >
         <LanguageProvider>
           <Header />
           <main className="flex-grow">
-            {children}
+            <PageTransition>
+              {children}
+            </PageTransition>
           </main>
           <Footer />
           <ScrollToTop />

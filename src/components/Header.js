@@ -6,12 +6,31 @@ import { useLanguage } from '../context/LanguageContext';
 import en from '../locales/en';
 import ka from '../locales/ka';
 
+import { usePathname } from 'next/navigation';
+
 export default function Header() {
     const { language, toggleLanguage } = useLanguage();
     const t = language === 'en' ? en : ka;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [openMobileDropdowns, setOpenMobileDropdowns] = useState({});
     const [isScrolled, setIsScrolled] = useState(false);
+    const pathname = usePathname();
+
+    const isAboutActive = ['/history', '/mission', '/administration', '/scientific-council', '/statute', '/reports', '/studies-internships', '/important-projects', '/collaboration'].some(p => pathname === p);
+    const isEventsActive = ['/news', '/events/conference-2016'].some(p => pathname === p || pathname.startsWith('/events/'));
+
+    const getLinkClass = (path) => {
+        const active = path === '/' ? pathname === '/' : pathname.startsWith(path);
+        return `text-white px-0.5 xl:px-1 2xl:px-2 py-2 rounded-md text-[11px] xl:text-[12px] 2xl:text-[14px] font-bold transition-all whitespace-nowrap ${
+            active ? 'bg-white/20 text-[#EBD3F8]' : 'hover:text-white/80 hover:bg-white/10'
+        }`;
+    };
+
+    const getDropdownBtnClass = (isActive) => {
+        return `text-white px-0.5 xl:px-1 2xl:px-2 py-2 rounded-md text-[11px] xl:text-[12px] 2xl:text-[14px] font-bold transition-all inline-flex items-center whitespace-nowrap ${
+            isActive ? 'bg-white/20 text-[#EBD3F8]' : 'hover:text-white/80 hover:bg-white/10'
+        }`;
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -30,50 +49,42 @@ export default function Header() {
     };
 
     return (
-        /* 
-           Glassmorphism: scrolled → semi-transparent + blur
-           Not scrolled → solid background
-        */
-        <header className={`sticky top-0 z-50 transition-all duration-500 ease-out ${
-            isScrolled 
-                ? 'bg-[#2e0d42]/85 header-glass shadow-lg shadow-purple-950/20' 
-                : 'bg-[#2e0d42] shadow-lg'
-        }`}>
-            <div className="max-w-[96%] xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+        <header className="bg-[#2e0d42] shadow-lg sticky top-0 z-50">
+            <div className="max-w-[96%] xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-4 xl:px-8">
                 {/* 
                    ზომის აწევა/დაწევა (სიმაღლე): h-20 
                    თუ გსურთ უფრო ვიწრო, ჩაწერეთ h-16, თუ განიერი - h-24  
                 */}
-                <div className={`flex justify-between lg:grid lg:grid-cols-[240px_1fr_100px] xl:grid-cols-[280px_1fr_120px] items-center gap-2 xl:gap-4 transition-all duration-500 ${isScrolled ? 'h-16' : 'h-22'}`}>
+                <div className="flex justify-between items-center h-22 gap-2 lg:gap-4 xl:gap-8 w-full">
                     {/* Logo Segment */}
-                    <div className="flex items-center animate-fade-in-up">
+                    <div className="flex-shrink-0 flex items-center animate-fade-in-up">
                         <Link href="/" className="flex items-center gap-2 xl:gap-3 group">
                             {/* Site Logo */}
                             <div className="w-10 h-10 xl:w-14 xl:h-14 flex items-center justify-center transition-all duration-300 transform group-hover:scale-105 flex-shrink-0">
                                 <img src="/logo.png" alt="IICE Logo" className="w-full h-full object-contain" />
                             </div>
-                            <div className="hidden sm:block transition-all duration-300 transform group-hover:translate-x-1">
-                                <h1 className="font-bold text-xs lg:text-sm xl:text-base text-white leading-tight" style={{ color: '#ffffff' }}>TSU R.Agladze Institute</h1>
-                                <p className="text-[9px] lg:text-[10px] xl:text-xs text-white truncate whitespace-normal" style={{ color: '#ffffff', opacity: 0.9 }}>of Inorganic Chemistry and Electrochemistry</p>
+                            <div className="hidden sm:block lg:hidden xl:block transition-all duration-300 transform group-hover:translate-x-1">
+                                <h1 className="font-bold text-xs lg:text-[10px] xl:text-sm text-white leading-tight" style={{ color: '#ffffff' }}>TSU R.Agladze Institute</h1>
+                                <p className="text-[9px] lg:text-[8px] xl:text-[10px] text-white truncate whitespace-normal" style={{ color: '#ffffff', opacity: 0.9 }}>of Inorganic Chemistry and Electrochemistry</p>
                             </div>
                         </Link>
                     </div>
 
                     {/* Navigation */}
-                    <nav className="hidden lg:flex justify-center space-x-1 xl:space-x-3 items-center whitespace-nowrap px-1">
-                        <Link href="/" className="text-white hover:text-white/80 px-2 py-2 rounded-md text-sm xl:text-base font-bold transition-colors hover:bg-white/10">
+                    <nav className="hidden lg:flex flex-grow justify-center items-center gap-1 xl:gap-2 2xl:gap-3 px-1">
+                        <Link href="/" className={getLinkClass('/')}>
                             {t.nav.home}
                         </Link>
 
                         {/* About Us Menu */}
                         <div className="relative group">
-                            <button className="text-white hover:text-white/80 px-2 py-2 rounded-md text-sm xl:text-base font-bold transition-colors hover:bg-white/10 inline-flex items-center">
+                            <button className={getDropdownBtnClass(isAboutActive)}>
                                 {t.nav.about}
                                 <svg className="ml-1 h-3 w-3 xl:h-4 xl:w-4 transition-transform group-hover:rotate-180 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
-                            <div className="absolute left-0 mt-2 w-64 rounded-xl shadow-2xl bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top border-t-4 border-[#7A1CAC] flex flex-col pt-2 pb-2 z-50">
+                            <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-64 rounded-xl shadow-2xl bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top border-t-4 border-[#7A1CAC] flex flex-col pt-2 pb-2 z-50">
                                 <Link href="/history" className="px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors">{t.nav.history}</Link>
                                 <Link href="/mission" className="px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors">{t.nav.mission}</Link>
                                 <div className="px-4 py-2 text-sm font-bold text-gray-800 mt-1 cursor-default">{t.nav.structure}</div>
@@ -87,19 +98,19 @@ export default function Header() {
                             </div>
                         </div>
 
-                        <Link href="/departments" className="text-white hover:text-white/80 px-2 py-2 rounded-md text-sm xl:text-base font-bold transition-colors hover:bg-white/10">
+                        <Link href="/departments" className={getLinkClass('/departments')}>
                             {t.nav.departments}
                         </Link>
 
                         {/* Events Menu */}
                         <div className="relative group">
-                            <button className="text-white hover:text-white/80 px-2 py-2 rounded-md text-sm xl:text-base font-bold transition-colors hover:bg-white/10 inline-flex items-center">
+                            <button className={getDropdownBtnClass(isEventsActive)}>
                                 {t.nav.events}
                                 <svg className="ml-1 h-3 w-3 xl:h-4 xl:w-4 transition-transform group-hover:rotate-180 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
-                            <div className="absolute left-0 mt-2 w-48 rounded-xl shadow-2xl bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top flex flex-col pt-2 pb-2 border-t-4 border-[#7A1CAC] z-50">
+                            <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-48 rounded-xl shadow-2xl bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top flex flex-col pt-2 pb-2 border-t-4 border-[#7A1CAC] z-50">
                                 <Link href="/news" className="px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors">{t.nav.seminars}</Link>
                                 <div className="px-4 py-2 text-sm font-bold text-gray-800 border-t border-purple-50 mt-1">{t.nav.conference}</div>
                                 <a href="https://conference23iice.ge/" target="_blank" rel="noopener noreferrer" className="px-4 py-1.5 text-xs text-gray-600 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors ml-4 border-l-2 border-purple-100 flex items-center justify-between">
@@ -110,23 +121,23 @@ export default function Header() {
                             </div>
                         </div>
 
-                        <Link href="/infrastructure" className="text-white hover:text-white/80 px-2 py-2 rounded-md text-sm xl:text-base font-bold transition-colors hover:bg-white/10">
+                        <Link href="/infrastructure" className={getLinkClass('/infrastructure')}>
                             {t.nav.infrastructure}
                         </Link>
 
-                        <Link href="/news" className="text-white hover:text-white/80 px-2 py-2 rounded-md text-sm xl:text-base font-bold transition-colors hover:bg-white/10">
+                        <Link href="/news" className={getLinkClass('/news')}>
                             {t.nav.news}
                         </Link>
 
-                        <Link href="/contact" className="text-white hover:text-white/80 px-2 py-2 rounded-md text-sm xl:text-base font-bold transition-colors hover:bg-white/10">
+                        <Link href="/contact" className={getLinkClass('/contact')}>
                             {t.nav.contact}
                         </Link>
                     </nav>
 
                     {/* Utils (Lang Switcher & Mobile Menu Toggle) */}
-                    <div className="flex justify-end items-center space-x-1 xl:space-x-2 animate-fade-in-up">
+                    <div className="flex-shrink-0 flex items-center justify-end gap-2 xl:gap-4 animate-fade-in-up">
                         {/* Language Switcher - visible on both mobile and desktop inline with the header */}
-                        <div className="flex items-center border border-white/20 bg-white/10 rounded-full p-1 shadow-inner w-[60px] xl:w-[68px] justify-between flex-shrink-0 mr-1 lg:mr-0 lg:ml-1">
+                        <div className="flex items-center border border-white/20 bg-white/10 rounded-full p-1 shadow-inner justify-between flex-shrink-0 mr-1 lg:mr-0 lg:ml-1">
                             <button
                                 onClick={() => toggleLanguage('ka')}
                                 className={`w-7 h-7 xl:w-8 xl:h-8 flex items-center justify-center rounded-full text-[10px] xl:text-xs font-bold transition-all duration-300 ${language === 'ka' ? 'bg-white text-[#60318e] shadow-md' : 'text-white/60 hover:text-white'}`}

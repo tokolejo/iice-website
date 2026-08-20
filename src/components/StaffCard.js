@@ -40,10 +40,10 @@ export default function StaffCard({ member }) {
                         }}
                     />
                 ) : (
-                    <div className={`flex flex-col items-center justify-center w-full h-full transition-transform duration-500 ease-out z-0 ${isHovered ? 'scale-110' : 'scale-100'}`}>
-                        <div className="bg-white p-4 rounded-full shadow-sm border border-purple-100/50">
-                            <User size={48} className="text-[#60318e] opacity-30" strokeWidth={1.5} />
-                        </div>
+                    <div className="w-full h-full bg-[#f3e8ff]/50 flex items-end justify-center overflow-hidden z-0 select-none">
+                        <svg className={`w-[85%] h-[85%] text-purple-200/90 transition-transform duration-500 ease-out ${isHovered ? 'scale-105' : 'scale-100'}`} fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
                     </div>
                 )}
                 

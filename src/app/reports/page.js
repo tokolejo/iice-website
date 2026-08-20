@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Head from 'next/head';
 import { FileText, Download, Clock } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -19,9 +18,7 @@ export default function ReportsPage() {
 
     return (
         <div className="bg-slate-50 min-h-screen">
-            <Head>
-                <title>{isEn ? 'Scientific Reports | IICE' : 'სამეცნიერო ანგარიშები | IICE'}</title>
-            </Head>
+            <title>{isEn ? 'Scientific Reports | IICE' : 'სამეცნიერო ანგარიშები | IICE'}</title>
 
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">

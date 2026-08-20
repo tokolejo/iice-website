@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Head from 'next/head';
 import { useLanguage } from '../../context/LanguageContext';
 
 export default function MissionPage() {
@@ -10,13 +9,11 @@ export default function MissionPage() {
 
     return (
         <div className="bg-slate-50 min-h-screen">
-            <Head>
-                <title>{isEn ? 'Mission | TSU IICE' : 'მისია | TSU IICE'}</title>
-                <meta name="description" content={isEn ? "The mission and strategic goals of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის მისია და სტრატეგიული გეგმები."} />
-                <meta property="og:title" content={isEn ? 'Mission | TSU IICE' : 'მისია | TSU IICE'} />
-                <meta property="og:description" content={isEn ? "The mission and strategic goals of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის მისია და სტრატეგიული გეგმები."} />
-                <link rel="canonical" href="https://iice.ge/mission" />
-            </Head>
+            <title>{isEn ? 'Mission | TSU IICE' : 'მისია | TSU IICE'}</title>
+            <meta name="description" content={isEn ? "The mission and strategic goals of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის მისია და სტრატეგიული გეგმები."} />
+            <meta property="og:title" content={isEn ? 'Mission | TSU IICE' : 'მისია | TSU IICE'} />
+            <meta property="og:description" content={isEn ? "The mission and strategic goals of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის მისია და სტრატეგიული გეგმები."} />
+            <link rel="canonical" href="https://iice.ge/mission" />
 
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">

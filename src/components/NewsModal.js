@@ -1,22 +1,34 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function NewsModal({ item, onClose }) {
     const { language } = useLanguage();
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const [showFullContent, setShowFullContent] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
-    // Lock body scroll when modal is open
+    // Lock body scroll and listen for ESC key when modal is open
     useEffect(() => {
+        setMounted(true);
         document.body.style.overflow = 'hidden';
-        return () => {
-            document.body.style.overflow = 'unset';
+        
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                onClose();
+            }
         };
-    }, []);
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            setMounted(false);
+            document.body.style.overflow = 'unset';
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [onClose]);
 
     if (!item) return null;
+    if (!mounted) return null;
 
     const title = language === 'en' ? item.titleEn : item.title;
     const rawContent = language === 'en' ? item.contentEn : item.content;
@@ -46,7 +58,7 @@ export default function NewsModal({ item, onClose }) {
     const isLongContent = content.length > 300;
     const displayContent = showFullContent || !isLongContent ? content : content.slice(0, 300) + '...';
 
-    return (
+    return createPortal(
         <div
             className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-[#60318e]/90 backdrop-blur-md animate-fade-in"
             onClick={onClose}
@@ -55,10 +67,10 @@ export default function NewsModal({ item, onClose }) {
                 className="bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col relative animate-scale-in"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Close button */}
+                {/* Close button - Glassmorphic high contrast */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 md:top-6 md:right-6 z-50 p-2 md:p-3 bg-white/50 hover:bg-white rounded-full text-[#60318e] hover:text-[#AD49E1] transition-all shadow-xl hover:scale-110 active:scale-95 group"
+                    className="absolute top-4 right-4 md:top-6 md:right-6 z-[60] p-2 md:p-3 bg-slate-950/40 hover:bg-slate-950/80 text-white backdrop-blur-md rounded-full border border-white/10 transition-all shadow-xl hover:scale-110 active:scale-95 group"
                 >
                     <svg className="w-5 h-5 md:w-6 md:h-6 transition-transform group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -66,61 +78,80 @@ export default function NewsModal({ item, onClose }) {
                 </button>
 
                 <div className="overflow-y-auto w-full">
-                    {/* Top Section: Media Gallery (Conditional) */}
+                    {/* Top Section: Media Gallery (Stage 1.1 - Full-bleed Dark Gallery) */}
                     {hasImages && (
-                        <div className="w-full bg-slate-950 relative group/gallery flex items-center justify-center h-[300px] md:h-[450px] overflow-hidden">
-                            {/* Blurred Backdrop for better quality of small images */}
-                            <img
-                                key={`bg-${activeImageIndex}`}
-                                src={images[activeImageIndex]?.startsWith('/') ? `${images[activeImageIndex]}` : images[activeImageIndex]}
-                                alt=""
-                                className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110 animate-fade-in"
-                            />
-                            {/* Main Foreground Image */}
-                            <img
-                                key={activeImageIndex}
-                                src={images[activeImageIndex]?.startsWith('/') ? `${images[activeImageIndex]}` : images[activeImageIndex]}
-                                alt={title}
-                                className="w-full h-full object-contain relative z-10 drop-shadow-2xl animate-fade-in"
-                            />
+                        <div className="w-full bg-slate-950 flex flex-col relative group/gallery border-b border-slate-900 overflow-hidden">
+                            {/* Main Slider Canvas */}
+                            <div className="w-full relative flex items-center justify-center h-[280px] md:h-[400px]">
+                                {/* Subtle background gradient grid overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-tr from-slate-950 to-[#2e1065]/40 opacity-90 z-0"></div>
+                                <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:24px_24px] z-0"></div>
 
-                            {/* Gallery Navigation */}
-                            {images.length > 1 && (
-                                <>
-                                    <button
-                                        onClick={handlePrevImage}
-                                        className="absolute left-6 z-20 p-4 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all opacity-0 group-hover/gallery:opacity-100 -translate-x-4 group-hover/gallery:translate-x-0"
-                                    >
-                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-                                        </svg>
-                                    </button>
-                                    <button
-                                        onClick={handleNextImage}
-                                        className="absolute right-6 z-20 p-4 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all opacity-0 group-hover/gallery:opacity-100 translate-x-4 group-hover/gallery:translate-x-0"
-                                    >
-                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                                        </svg>
-                                    </button>
+                                {/* Main Foreground Image */}
+                                <img
+                                    key={activeImageIndex}
+                                    src={images[activeImageIndex]?.startsWith('/') ? `${images[activeImageIndex]}` : images[activeImageIndex]}
+                                    alt={title}
+                                    className="w-full h-full object-contain relative z-10 drop-shadow-2xl animate-fade-in"
+                                />
 
-                                    {/* Indicators */}
-                                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-                                        {images.map((_, idx) => (
-                                            <button
-                                                key={idx}
-                                                onClick={() => setActiveImageIndex(idx)}
-                                                className={`h-1.5 rounded-full transition-all duration-300 ${idx === activeImageIndex ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'}`}
-                                            />
-                                        ))}
+                                {/* Floating Page Indicator Badge (Glassmorphic) */}
+                                {images.length > 1 && (
+                                    <div className="absolute top-4 left-4 z-20 px-3 py-1 text-[10px] font-black tracking-widest text-white bg-slate-900/60 backdrop-blur-md rounded-full border border-white/10 shadow-md select-none">
+                                        {activeImageIndex + 1} / {images.length}
                                     </div>
-                                </>
+                                )}
+
+                                {/* Gallery Navigation Arrows */}
+                                {images.length > 1 && (
+                                    <>
+                                        <button
+                                            onClick={handlePrevImage}
+                                            className="absolute left-4 z-20 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all shadow-xl hover:scale-105 active:scale-95 border border-white/5"
+                                        >
+                                            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                                            </svg>
+                                        </button>
+                                        <button
+                                            onClick={handleNextImage}
+                                            className="absolute right-4 z-20 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all shadow-xl hover:scale-105 active:scale-95 border border-white/5"
+                                        >
+                                            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+
+                            {/* Thumbnail Filmstrip (inside the dark block at the bottom) */}
+                            {images.length > 1 && (
+                                <div className="bg-slate-950/70 border-t border-white/5 flex gap-2 overflow-x-auto py-3 justify-center max-w-full hide-scrollbar z-20">
+                                    {images.map((img, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => setActiveImageIndex(idx)}
+                                            className={`relative w-14 h-10 md:w-16 md:h-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 ${
+                                                idx === activeImageIndex
+                                                    ? 'border-[#AD49E1] scale-105 shadow-md'
+                                                    : 'border-white/10 hover:border-[#AD49E1]/50'
+                                            }`}
+                                        >
+                                            <img
+                                                src={img?.startsWith('/') ? img : `${img}`}
+                                                alt=""
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
                             )}
                         </div>
                     )}
 
                     {/* Content Section */}
-                    <div className={`p-6 md:p-10 bg-white flex flex-col ${!hasImages ? 'pt-12 md:pt-16' : ''}`}>
+                    <div className={`p-6 md:p-10 bg-white flex flex-col ${!hasImages ? 'pt-12 md:pt-16' : 'pt-6 md:pt-8'}`}>
                         <div className="flex items-center gap-3 mb-6">
                             <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em] shadow-sm ${item.category === 'news' ? 'bg-[#AD49E1] text-white' : 'bg-[#60318e] text-white'
                                 }`}>
@@ -167,6 +198,7 @@ export default function NewsModal({ item, onClose }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

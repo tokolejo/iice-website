@@ -12,6 +12,15 @@ export const LanguageProvider = ({ children }) => {
         const savedLang = localStorage.getItem('iice-lang');
         if (savedLang) {
             setLanguage(savedLang);
+        } else {
+            // Check browser language
+            const browserLang = typeof navigator !== 'undefined' ? (navigator.language || navigator.userLanguage) : null;
+            if (browserLang) {
+                const isGeorgian = browserLang.toLowerCase().startsWith('ka');
+                const defaultLang = isGeorgian ? 'ka' : 'en';
+                setLanguage(defaultLang);
+                localStorage.setItem('iice-lang', defaultLang);
+            }
         }
     }, []);
 
