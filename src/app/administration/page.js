@@ -37,7 +37,7 @@ export default function AdministrationPage() {
             degreeKa: 'ქიმიის მეცნიერებათა კანდიდატი / აკადემიური დოქტორი',
             degreeEn: 'Candidate of Chemical Sciences / Academic Doctor',
             email: 'natela.ananiashvili@tsu.ge',
-            image: null
+            image: '/staff/fundamental-research/ananiashvili-pic.jpg'
         },
         {
             roleKa: 'მენეჯერი (საგარეო ურთ.)',

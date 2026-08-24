@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '../../context/LanguageContext';
 import { newsData } from '../../data/newsData';
 import NewsCard from '../../components/NewsCard';
@@ -8,13 +9,36 @@ import NewsModal from '../../components/NewsModal';
 import en from '../../locales/en';
 import ka from '../../locales/ka';
 
-export default function NewsPage() {
+function NewsContent() {
     const { language } = useLanguage();
     const t = language === 'en' ? en : ka;
+    const searchParams = useSearchParams();
     const [filter, setFilter] = useState('all');
     const [selectedNews, setSelectedNews] = useState(null);
     const [visibleCount, setVisibleCount] = useState(8);
     const [searchQuery, setSearchQuery] = useState('');
+
+    useEffect(() => {
+        const categoryParam = searchParams.get('category') || searchParams.get('filter');
+        if (categoryParam && ['all', 'news', 'seminars'].includes(categoryParam)) {
+            setFilter(categoryParam);
+        }
+    }, [searchParams]);
+
+    const handleFilterChange = (catId) => {
+        setFilter(catId);
+        if (typeof window !== 'undefined') {
+            const url = new URL(window.location.href);
+            if (catId === 'all') {
+                url.searchParams.delete('category');
+                url.searchParams.delete('filter');
+            } else {
+                url.searchParams.set('category', catId);
+                url.searchParams.delete('filter');
+            }
+            window.history.replaceState({}, '', url.pathname + (url.search ? url.search : ''));
+        }
+    };
 
     const filteredNews = newsData
         .filter(item => {
@@ -57,8 +81,6 @@ export default function NewsPage() {
             <meta property="og:title" content={language === 'en' ? 'News & Seminars | TSU IICE' : 'სიახლეები და სემინარები | TSU IICE'} />
             <meta property="og:description" content={language === 'en' ? "Latest news, academic seminars, and announcements from the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის უახლესი ამბები, აკადემიური სემინარები და ანონსები."} />
             <link rel="canonical" href="https://iice.ge/news" />
-            {/* აქედან რეგულირდება ფუტერსა და კონტენტს შორის დაშორება (მაგ: pb-12, pb-20, pb-32) */}
-            {/* Head should be handled by metadata API or layout in App Router */}
 
             <div className="relative bg-gradient-to-b from-[#F8F6FF] to-[#FAF9FF] pt-4 pb-12 overflow-hidden border-b border-[#EBD3F8]/30">
                 <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#AD49E1]/5 to-transparent"></div>
@@ -81,17 +103,17 @@ export default function NewsPage() {
                         </p>
                     </div>
                 </div>
-            </div >
+            </div>
 
             <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-8">
-                {/* Search Bar & Filters Horizontal Control Panel (Stage 2.1 Refined) */}
+                {/* Search Bar & Filters Horizontal Control Panel */}
                 <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
                     {/* Categories (Left) */}
                     <div className="bg-slate-100/90 backdrop-blur-xl p-1.5 rounded-[2rem] shadow-lg border border-slate-200 inline-flex shrink-0">
                         {categories.map(cat => (
                             <button
                                 key={cat.id}
-                                onClick={() => setFilter(cat.id)}
+                                onClick={() => handleFilterChange(cat.id)}
                                 className={`px-5 py-2.5 rounded-[1.5rem] text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all duration-300 inline-flex items-center gap-2 ${filter === cat.id
                                     ? 'bg-[#AD49E1] text-white shadow-[0_6px_15px_-3px_rgba(173,73,225,0.35)] scale-105 font-black'
                                     : 'text-slate-600 hover:text-[#AD49E1] hover:bg-white'
@@ -136,7 +158,7 @@ export default function NewsPage() {
 
                 {/* Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                    {visibleNews.map((item, index) => (
+                    {visibleNews.map((item) => (
                         <NewsCard
                             key={item.id}
                             item={item}
@@ -171,16 +193,21 @@ export default function NewsPage() {
                 )}
             </div>
 
-            {/* New Modal Component */}
-            {
-                selectedNews && (
-                    <NewsModal
-                        item={selectedNews}
-                        onClose={() => setSelectedNews(null)}
-                    />
-                )
-            }
-        </div >
+            {/* Modal Component */}
+            {selectedNews && (
+                <NewsModal
+                    item={selectedNews}
+                    onClose={() => setSelectedNews(null)}
+                />
+            )}
+        </div>
     );
 }
 
+export default function NewsPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-[#FAF9FF]" />}>
+            <NewsContent />
+        </Suspense>
+    );
+}
