@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS public.departments (
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+ALTER TABLE public.departments ENABLE ROW LEVEL SECURITY;
 
 -- Seed Departments
 INSERT INTO public.departments (slug, name_ka, name_en, description_ka, description_en, order_index)
@@ -152,6 +153,7 @@ CREATE TABLE IF NOT EXISTS public.staff_members (
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+ALTER TABLE public.staff_members ENABLE ROW LEVEL SECURITY;
 
 CREATE INDEX IF NOT EXISTS idx_staff_department_id ON public.staff_members(department_id);
 CREATE INDEX IF NOT EXISTS idx_staff_order ON public.staff_members(order_index);
@@ -2324,6 +2326,7 @@ CREATE TABLE IF NOT EXISTS public.news (
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+ALTER TABLE public.news ENABLE ROW LEVEL SECURITY;
 
 CREATE INDEX IF NOT EXISTS idx_news_category_id ON public.news(category_id);
 CREATE INDEX IF NOT EXISTS idx_news_published_at ON public.news(published_at DESC);
@@ -2483,7 +2486,7 @@ INSERT INTO public.news (
 				<a data-elementor-open-lightbox="yes" data-elementor-lightbox-slideshow="ff28e97" data-elementor-lightbox-title="IMG_7606" data-e-action-hash="#elementor-action%3Aaction%3Dlightbox%26settings%3DeyJpZCI6NjIxNCwidXJsIjoiaHR0cHM6XC9cL2lpY2UuZ2VcL3dwLWNvbnRlbnRcL3VwbG9hZHNcLzIwMjVcLzEyXC9JTUdfNzYwNi1zY2FsZWQuanBnIiwic2xpZGVzaG93IjoiZmYyOGU5NyJ9" href=''/images/news/IMG_7606.jpg''><img width="150" height="150" src="/images/news/IMG_7606.jpg" alt="" decoding="async" srcset="/images/news/IMG_7606.jpg 150w, /images/news/IMG_7606.jpg 400w" sizes="(max-width: 150px) 100vw, 150px" /></a>
 			</figure><figure class=''gallery-item''>
 				<a data-elementor-open-lightbox="yes" data-elementor-lightbox-slideshow="ff28e97" data-elementor-lightbox-title="IMG_7603" data-e-action-hash="#elementor-action%3Aaction%3Dlightbox%26settings%3DeyJpZCI6NjIxMywidXJsIjoiaHR0cHM6XC9cL2lpY2UuZ2VcL3dwLWNvbnRlbnRcL3VwbG9hZHNcLzIwMjVcLzEyXC9JTUdfNzYwMy1zY2FsZWQuanBnIiwic2xpZGVzaG93IjoiZmYyOGU5NyJ9" href=''/images/news/IMG_7603.jpg''><img width="150" height="150" src="/images/news/IMG_7603.jpg" alt="" decoding="async" srcset="/images/news/IMG_7603.jpg 150w, /images/news/IMG_7603.jpg 400w" sizes="(max-width: 150px) 100vw, 150px" /></a>
-			</figure>', '<p>On October 8, 2025, R.Agladze Institute of Inorganic Chemistry and Electrochemistry had the pleasure of hosting Dr. Paula Fraga García from the Chair of Bioseparation Engineering at the Technical University of Munich (TUM). The visit took place within the framework of the project “Bionanocomposites based on silver-containing humic acids as antibacterial and anti-inflammatory agents”, led by Dr. Spartak Khutsishvili and funded by the National Science Foundation of Georgia. As part of her visit, Dr. Fraga delivered a lecture titled “Impact of Carrier Material and Target Properties on Bioseparation Engineering.”</p><p>Paula started her presentation with some “facts and figures” about TUM and a general overview of the research topics in the Chair of Bioseparation Engineering. Afterwards, Paula provided an overview of the magnetic nanoparticles commonly employed in her research group, highlighting their physicochemical properties and their relevance in bioseparation processes. She presented experimental data illustrating the behavior of amino acids, proteins, and other biomolecules in solution, and discussed their adsorption characteristics through isotherm analyses. Furthermore, she expanded the scope of the talk to include results from electrosorption processes, offering valuable insights into protein separation using metallized membranes and how molecule binding and release can be triggered applying an electrical potential to the membranes.</p><p>After the presentation the members of the institute discussed with Paula Fraga about physical and chemical adsorption and about different phenomena taking place in aqueous solutions. Several questions dealt with the methodology applied to advance understanding of the properties of colloidal systems.</p><p>Paula had already visited our Agladze Institute of Inorganic Chemistry and Electrochemistry one year before, in September 2024. At that time, she had given a talk with the title “Adsorption and Magnetic Separation for Molecule Recovery in Biotechnology”.</p><p>This first presentation had focused on the behavior of mixtures and complex systems as saline microalgae upon incubation with magnetic particles for biomolecule separation purposes. Moreover, Paula had explained about difficulties and opportunities related with grinding of magnetite ores and about differences in the output of adsorption processes depending on the properties of the initial magnetic material. The colleagues of the Agladze Institute could learn about magnetic separation not only in the lab scale, but also at the technical scale.</p><p>Dr. Fraga''s lectures and discussions have contributed significantly to the understanding of modern approaches to bioseparation and magnetic separation—at both laboratory and technical levels. Her visit will further strengthen the cooperation between the Technical University of Munich and the Agladze Institute.</p>',
+			</figure>', '<p>On October 8, 2025, R.Agladze Institute of Inorganic Chemistry and Electrochemistry had the pleasure of hosting Dr. Paula Fraga García from the Chair of Bioseparation Engineering at the Technical University of Munich (TUM). The visit took place within the framework of the project “Bionanocomposites based on silver-containing humic acids as antibacterial and anti-inflammatory agents”, led by Dr. Spartak Khutsishvili and funded by the National Science Foundation of Georgia. As part of her visit, Dr. Fraga delivered a lecture titled “Impact of Carrier Material and Target Properties on Bioseparation Engineering.”</p><p>Paula started her presentation with some “facts and figures” about TUM and a general overview of the research topics in the Chair of Bioseparation Engineering. Afterwards, Paula provided an overview of the magnetic nanoparticles commonly employed in her research group, highlighting their physicochemical properties and their relevance in bioseparation processes. She presented experimental data illustrating the behavior of amino acids, proteins, and other biomolecules in solution, and discussed their adsorption characteristics through isotherm analyses. Furthermore, she expanded the scope of the talk to include results from electrosorption processes, offering valuable insights regarding protein separation using metallized membranes and how molecule binding and release can be triggered applying an electrical potential to the membranes.</p><p>After the presentation the members of the institute discussed with Paula Fraga about physical and chemical adsorption and about different phenomena taking place in aqueous solutions. Several questions dealt with the methodology applied to advance understanding of the properties of colloidal systems.</p><p>Paula had already visited our Agladze Institute of Inorganic Chemistry and Electrochemistry one year before, in September 2024. At that time, she had given a talk with the title “Adsorption and Magnetic Separation for Molecule Recovery in Biotechnology”.</p><p>This first presentation had focused on the behavior of mixtures and complex systems as saline microalgae upon incubation with magnetic particles for biomolecule separation purposes. Moreover, Paula had explained about difficulties and opportunities related with grinding of magnetite ores and about differences in the output of adsorption processes depending on the properties of the initial magnetic material. The colleagues of the Agladze Institute could learn about magnetic separation not only in the lab scale, but also at the technical scale.</p><p>Dr. Fraga''s lectures and discussions have contributed significantly to the understanding of modern approaches to bioseparation and magnetic separation—at both laboratory and technical levels. Her visit will further strengthen the cooperation between the Technical University of Munich and the Agladze Institute.</p>',
     'published', '2025-12-15T10:00:00Z'
 ) ON CONFLICT (slug) DO UPDATE SET
     title_ka = EXCLUDED.title_ka,
@@ -2742,6 +2745,7 @@ CREATE TABLE IF NOT EXISTS public.infrastructure_items (
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+ALTER TABLE public.infrastructure_items ENABLE ROW LEVEL SECURITY;
 
 -- Seed Infrastructure Items
 INSERT INTO public.infrastructure_items (name_ka, name_en, description_ka, description_en, location_ka, location_en, order_index)
@@ -2815,6 +2819,7 @@ CREATE TABLE IF NOT EXISTS public.conference_registrations_2026 (
     abstract_file_eng_url TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
+ALTER TABLE public.conference_registrations_2026 ENABLE ROW LEVEL SECURITY;
 
 CREATE INDEX IF NOT EXISTS idx_conf_email ON public.conference_registrations_2026(email);
 CREATE INDEX IF NOT EXISTS idx_conf_topic ON public.conference_registrations_2026(thematic_topic);
@@ -2846,6 +2851,7 @@ CREATE TABLE IF NOT EXISTS public.user_profiles (
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
+ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
 
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
@@ -2896,6 +2902,7 @@ CREATE TABLE IF NOT EXISTS public.audit_logs (
     details JSONB,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
+ALTER TABLE public.audit_logs ENABLE ROW LEVEL SECURITY;
 
 -- 8. Storage Buckets Setup
 INSERT INTO storage.buckets (id, name, public) VALUES 
