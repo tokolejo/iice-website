@@ -26,7 +26,10 @@ import {
     FileSpreadsheet,
     FileCode,
     Sparkles,
-    RefreshCw
+    RefreshCw,
+    Printer,
+    Loader2,
+    UploadCloud
 } from 'lucide-react';
 
 const TOPICS = [
@@ -55,6 +58,10 @@ export default function AdminConferencePage() {
     const [selectedReg, setSelectedReg] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
+
+    // File action state
+    const [downloadingFile, setDownloadingFile] = useState(null);
+    const [isUploadingFile, setIsUploadingFile] = useState(false);
 
     const fetchRegistrations = async () => {
         setIsLoading(true);
@@ -107,6 +114,77 @@ export default function AdminConferencePage() {
     useEffect(() => {
         fetchRegistrations();
     }, []);
+
+    // File download helper (forces blob download with proper filename)
+    const handleDownloadFile = async (url, customName) => {
+        if (!url) return;
+        try {
+            setDownloadingFile(url);
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Download request failed');
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = customName || 'abstract_document';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+        } catch (e) {
+            console.warn('Direct blob download error, falling back to window.open:', e);
+            window.open(url, '_blank');
+        } finally {
+            setDownloadingFile(null);
+        }
+    };
+
+    // Admin direct file upload/attachment to existing participant
+    const handleAdminFileUpload = async (e, type) => {
+        const file = e.target.files?.[0];
+        if (!file || !selectedReg) return;
+
+        try {
+            setIsUploadingFile(true);
+            const supabase = getSupabaseBrowserClient();
+            if (!supabase) throw new Error('Supabase client not available');
+
+            const ext = (file.name.split('.').pop() || 'docx').replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || 'docx';
+            const filePath = `${type}_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${ext}`;
+
+            const { error: upErr } = await supabase.storage
+                .from('conference-abstracts')
+                .upload(filePath, file, { upsert: true });
+
+            if (upErr) throw upErr;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('conference-abstracts')
+                .getPublicUrl(filePath);
+
+            const updatePayload = type === 'geo'
+                ? { abstract_file_geo_url: publicUrl }
+                : { abstract_file_eng_url: publicUrl };
+
+            const { error: dbErr } = await supabase
+                .from('conference_registrations_2026')
+                .update(updatePayload)
+                .eq('id', selectedReg.id);
+
+            if (dbErr) throw dbErr;
+
+            setSelectedReg(prev => ({ ...prev, ...updatePayload }));
+            setRegistrations(prev => prev.map(r => r.id === selectedReg.id ? { ...r, ...updatePayload } : r));
+
+            alert(type === 'geo' ? 'ქართული თეზისის ფაილი წარმატებით მიემაგრა!' : 'ინგლისური თეზისის ფაილი წარმატებით მიემაგრა!');
+        } catch (err) {
+            console.error('Admin file upload error:', err);
+            alert(`ფაილის ატვირთვის შეცდომა: ${err.message}`);
+        } finally {
+            setIsUploadingFile(false);
+            e.target.value = '';
+        }
+    };
 
     // Filter & Sort
     const filteredAndSortedList = useMemo(() => {
@@ -591,31 +669,33 @@ export default function AdminConferencePage() {
                                             <td className="py-3.5 px-4 text-center whitespace-nowrap">
                                                 <div className="flex items-center justify-center gap-1.5">
                                                     {reg.abstract_file_geo_url ? (
-                                                        <a
-                                                            href={reg.abstract_file_geo_url}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            download
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleDownloadFile(
+                                                                reg.abstract_file_geo_url,
+                                                                `${reg.abstract_number}_GEO_${reg.last_name || 'abstract'}.docx`
+                                                            )}
                                                             title="ქართული თეზისის გადმოწერა"
-                                                            className="px-2 py-0.5 rounded-md bg-purple-100 text-[#60318e] text-[10px] font-bold hover:bg-[#60318e] hover:text-white transition-colors flex items-center gap-1"
+                                                            className="px-2 py-0.5 rounded-md bg-purple-100 text-[#60318e] text-[10px] font-bold hover:bg-[#60318e] hover:text-white transition-colors flex items-center gap-1 cursor-pointer"
                                                         >
                                                             <FileDown className="w-3 h-3" />
                                                             <span>GEO</span>
-                                                        </a>
+                                                        </button>
                                                     ) : null}
 
                                                     {reg.abstract_file_eng_url ? (
-                                                        <a
-                                                            href={reg.abstract_file_eng_url}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            download
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleDownloadFile(
+                                                                reg.abstract_file_eng_url,
+                                                                `${reg.abstract_number}_ENG_${reg.last_name || 'abstract'}.docx`
+                                                            )}
                                                             title="ინგლისური თეზისის გადმოწერა"
-                                                            className="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700 text-[10px] font-bold hover:bg-indigo-700 hover:text-white transition-colors flex items-center gap-1"
+                                                            className="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700 text-[10px] font-bold hover:bg-indigo-700 hover:text-white transition-colors flex items-center gap-1 cursor-pointer"
                                                         >
                                                             <FileDown className="w-3 h-3" />
                                                             <span>ENG</span>
-                                                        </a>
+                                                        </button>
                                                     ) : null}
 
                                                     {!reg.abstract_file_geo_url && !reg.abstract_file_eng_url && (
@@ -732,58 +812,178 @@ export default function AdminConferencePage() {
                         </div>
 
                         {/* Attached Abstract Files Section */}
-                        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                            <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block">
-                                მიმაგრებული თეზისის ფაილები (Abstract Documents):
-                            </span>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                                {selectedReg.abstract_file_geo_url ? (
-                                    <a
-                                        href={selectedReg.abstract_file_geo_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        download
-                                        className="p-3 rounded-xl bg-white border border-purple-200 hover:border-[#60318e] hover:bg-purple-50 transition-all flex items-center justify-between group cursor-pointer"
-                                    >
-                                        <div className="flex items-center gap-2 min-w-0">
-                                            <FileDown className="w-5 h-5 text-[#60318e] flex-shrink-0" />
-                                            <div className="truncate">
-                                                <p className="font-bold text-gray-900 text-xs">ქართული თეზისი (GEO)</p>
-                                                <p className="text-[10px] text-gray-400">დააჭირეთ გადმოსაწერად</p>
-                                            </div>
-                                        </div>
-                                        <Download className="w-4 h-4 text-gray-400 group-hover:text-[#60318e] flex-shrink-0" />
-                                    </a>
-                                ) : (
-                                    <div className="p-3 rounded-xl bg-white/60 border border-gray-200 text-gray-400 text-xs flex items-center gap-2">
-                                        <FileText className="w-4 h-4" />
-                                        <span>ქართული ფაილი არ არის ატვირთული</span>
-                                    </div>
+                        <div className="p-4 rounded-2xl bg-purple-50/40 border border-purple-100 space-y-3">
+                            <div className="flex items-center justify-between">
+                                <span className="text-[11px] font-bold uppercase tracking-wider text-[#60318e] flex items-center gap-1.5">
+                                    <FileText className="w-4 h-4" />
+                                    <span>მიმაგრებული თეზისის ფაილები (Abstract Documents)</span>
+                                </span>
+                                {isUploadingFile && (
+                                    <span className="text-[11px] font-semibold text-purple-600 flex items-center gap-1 animate-pulse">
+                                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                        <span>მიმდინარეობს ატვირთვა...</span>
+                                    </span>
                                 )}
+                            </div>
 
-                                {selectedReg.abstract_file_eng_url ? (
-                                    <a
-                                        href={selectedReg.abstract_file_eng_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        download
-                                        className="p-3 rounded-xl bg-white border border-indigo-200 hover:border-indigo-600 hover:bg-indigo-50 transition-all flex items-center justify-between group cursor-pointer"
-                                    >
-                                        <div className="flex items-center gap-2 min-w-0">
-                                            <FileDown className="w-5 h-5 text-indigo-600 flex-shrink-0" />
-                                            <div className="truncate">
-                                                <p className="font-bold text-gray-900 text-xs">ინგლისური თეზისი (ENG)</p>
-                                                <p className="text-[10px] text-gray-400">დააჭირეთ გადმოსაწერად</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {/* GEO Abstract Card */}
+                                <div className="p-3.5 rounded-2xl bg-white border border-purple-200/80 shadow-xs flex flex-col justify-between gap-3">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-8 h-8 rounded-xl bg-purple-100 text-[#60318e] flex items-center justify-center font-bold text-xs flex-shrink-0">
+                                                GEO
+                                            </div>
+                                            <div>
+                                                <p className="font-bold text-gray-900 text-xs">ქართული თეზისი</p>
+                                                <p className="text-[10px] text-gray-400">
+                                                    {selectedReg.abstract_file_geo_url ? 'დოკუმენტი ატვირთულია' : 'ფაილი არ არის ატვირთული'}
+                                                </p>
                                             </div>
                                         </div>
-                                        <Download className="w-4 h-4 text-gray-400 group-hover:text-indigo-600 flex-shrink-0" />
-                                    </a>
-                                ) : (
-                                    <div className="p-3 rounded-xl bg-white/60 border border-gray-200 text-gray-400 text-xs flex items-center gap-2">
-                                        <FileText className="w-4 h-4" />
-                                        <span>ინგლისური ფაილი არ არის ატვირთული</span>
+                                        {selectedReg.abstract_file_geo_url && (
+                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                                                <CheckCircle2 className="w-3 h-3" />
+                                                აქტიური
+                                            </span>
+                                        )}
                                     </div>
-                                )}
+
+                                    <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-100">
+                                        {selectedReg.abstract_file_geo_url ? (
+                                            <>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleDownloadFile(
+                                                        selectedReg.abstract_file_geo_url,
+                                                        `${selectedReg.abstract_number}_GEO_${selectedReg.last_name || 'abstract'}.docx`
+                                                    )}
+                                                    disabled={downloadingFile === selectedReg.abstract_file_geo_url}
+                                                    className="flex-1 px-3 py-1.5 rounded-xl bg-[#60318e] hover:bg-[#4a2470] text-white font-bold text-[11px] flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+                                                >
+                                                    {downloadingFile === selectedReg.abstract_file_geo_url ? (
+                                                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                                    ) : (
+                                                        <Download className="w-3.5 h-3.5" />
+                                                    )}
+                                                    <span>ჩამოტვირთვა</span>
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => window.open(selectedReg.abstract_file_geo_url, '_blank')}
+                                                    className="px-2.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#60318e] font-bold text-[11px] flex items-center gap-1 transition-colors cursor-pointer border border-purple-200"
+                                                    title="გახსნა და ბეჭდვა"
+                                                >
+                                                    <Printer className="w-3.5 h-3.5" />
+                                                    <span>ბეჭდვა</span>
+                                                </button>
+
+                                                <label className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors cursor-pointer" title="ფაილის შეცვლა">
+                                                    <RefreshCw className="w-3.5 h-3.5" />
+                                                    <input
+                                                        type="file"
+                                                        accept=".doc,.docx,.pdf"
+                                                        onChange={(e) => handleAdminFileUpload(e, 'geo')}
+                                                        className="hidden"
+                                                        disabled={isUploadingFile}
+                                                    />
+                                                </label>
+                                            </>
+                                        ) : (
+                                            <label className="w-full py-2 px-3 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#60318e] border border-dashed border-purple-300 hover:border-[#60318e] font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+                                                <UploadCloud className="w-4 h-4" />
+                                                <span>+ ფაილის მიმაგრება (GEO)</span>
+                                                <input
+                                                    type="file"
+                                                    accept=".doc,.docx,.pdf"
+                                                    onChange={(e) => handleAdminFileUpload(e, 'geo')}
+                                                    className="hidden"
+                                                    disabled={isUploadingFile}
+                                                />
+                                            </label>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* ENG Abstract Card */}
+                                <div className="p-3.5 rounded-2xl bg-white border border-indigo-200/80 shadow-xs flex flex-col justify-between gap-3">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                                                ENG
+                                            </div>
+                                            <div>
+                                                <p className="font-bold text-gray-900 text-xs">ინგლისური თეზისი</p>
+                                                <p className="text-[10px] text-gray-400">
+                                                    {selectedReg.abstract_file_eng_url ? 'დოკუმენტი ატვირთულია' : 'ფაილი არ არის ატვირთული'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        {selectedReg.abstract_file_eng_url && (
+                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                                                <CheckCircle2 className="w-3 h-3" />
+                                                აქტიური
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-100">
+                                        {selectedReg.abstract_file_eng_url ? (
+                                            <>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleDownloadFile(
+                                                        selectedReg.abstract_file_eng_url,
+                                                        `${selectedReg.abstract_number}_ENG_${selectedReg.last_name || 'abstract'}.docx`
+                                                    )}
+                                                    disabled={downloadingFile === selectedReg.abstract_file_eng_url}
+                                                    className="flex-1 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+                                                >
+                                                    {downloadingFile === selectedReg.abstract_file_eng_url ? (
+                                                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                                    ) : (
+                                                        <Download className="w-3.5 h-3.5" />
+                                                    )}
+                                                    <span>ჩამოტვირთვა</span>
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => window.open(selectedReg.abstract_file_eng_url, '_blank')}
+                                                    className="px-2.5 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-[11px] flex items-center gap-1 transition-colors cursor-pointer border border-indigo-200"
+                                                    title="გახსნა და ბეჭდვა"
+                                                >
+                                                    <Printer className="w-3.5 h-3.5" />
+                                                    <span>ბეჭდვა</span>
+                                                </button>
+
+                                                <label className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors cursor-pointer" title="ფაილის შეცვლა">
+                                                    <RefreshCw className="w-3.5 h-3.5" />
+                                                    <input
+                                                        type="file"
+                                                        accept=".doc,.docx,.pdf"
+                                                        onChange={(e) => handleAdminFileUpload(e, 'eng')}
+                                                        className="hidden"
+                                                        disabled={isUploadingFile}
+                                                    />
+                                                </label>
+                                            </>
+                                        ) : (
+                                            <label className="w-full py-2 px-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-dashed border-indigo-300 hover:border-indigo-600 font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+                                                <UploadCloud className="w-4 h-4" />
+                                                <span>+ ფაილის მიმაგრება (ENG)</span>
+                                                <input
+                                                    type="file"
+                                                    accept=".doc,.docx,.pdf"
+                                                    onChange={(e) => handleAdminFileUpload(e, 'eng')}
+                                                    className="hidden"
+                                                    disabled={isUploadingFile}
+                                                />
+                                            </label>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

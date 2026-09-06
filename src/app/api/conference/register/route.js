@@ -60,13 +60,20 @@ export async function POST(request) {
             });
         }
 
-        let geoUrl = null;
-        let engUrl = null;
+        const clientGeoUrl = formData.get('clientGeoUrl');
+        const clientEngUrl = formData.get('clientEngUrl');
 
-        // Try file uploads safely
-        if (geoFile && typeof geoFile === 'object' && geoFile.name && geoFile.size > 0) {
+        let geoUrl = (clientGeoUrl && typeof clientGeoUrl === 'string' && clientGeoUrl.startsWith('http'))
+            ? clientGeoUrl.trim()
+            : null;
+        let engUrl = (clientEngUrl && typeof clientEngUrl === 'string' && clientEngUrl.startsWith('http'))
+            ? clientEngUrl.trim()
+            : null;
+
+        // Try server-side file uploads if client-side direct upload was not present or failed
+        if (!geoUrl && geoFile && typeof geoFile === 'object' && geoFile.name && geoFile.size > 0) {
             try {
-                const ext = geoFile.name.split('.').pop() || 'docx';
+                const ext = (geoFile.name.split('.').pop() || 'docx').replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || 'docx';
                 const path = `geo_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${ext}`;
                 const buffer = Buffer.from(await geoFile.arrayBuffer());
                 const { error: upErr } = await supabase.storage
@@ -81,16 +88,16 @@ export async function POST(request) {
                         .getPublicUrl(path);
                     geoUrl = publicUrl;
                 } else {
-                    console.warn('GEO file upload warning:', upErr.message);
+                    console.error('GEO file server upload error:', upErr.message);
                 }
             } catch (err) {
-                console.warn('Upload GEO file exception:', err.message);
+                console.error('Upload GEO file exception:', err.message);
             }
         }
 
-        if (engFile && typeof engFile === 'object' && engFile.name && engFile.size > 0) {
+        if (!engUrl && engFile && typeof engFile === 'object' && engFile.name && engFile.size > 0) {
             try {
-                const ext = engFile.name.split('.').pop() || 'docx';
+                const ext = (engFile.name.split('.').pop() || 'docx').replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || 'docx';
                 const path = `eng_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${ext}`;
                 const buffer = Buffer.from(await engFile.arrayBuffer());
                 const { error: upErr } = await supabase.storage
@@ -105,10 +112,10 @@ export async function POST(request) {
                         .getPublicUrl(path);
                     engUrl = publicUrl;
                 } else {
-                    console.warn('ENG file upload warning:', upErr.message);
+                    console.error('ENG file server upload error:', upErr.message);
                 }
             } catch (err) {
-                console.warn('Upload ENG file exception:', err.message);
+                console.error('Upload ENG file exception:', err.message);
             }
         }
 

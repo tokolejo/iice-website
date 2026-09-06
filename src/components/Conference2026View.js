@@ -72,6 +72,7 @@ export default function Conference2026View() {
     const [geoFile, setGeoFile] = useState(null);
     const [engFile, setEngFile] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState('');
     const [submitError, setSubmitError] = useState('');
     const [successData, setSuccessData] = useState(null);
     const [copied, setCopied] = useState(false);
@@ -190,8 +191,56 @@ export default function Conference2026View() {
         }
 
         setIsSubmitting(true);
+        setUploadStatus(isEn ? 'Preparing registration...' : 'რეგისტრაციის მომზადება...');
 
         try {
+            const supabase = getSupabaseBrowserClient();
+            let clientGeoUrl = null;
+            let clientEngUrl = null;
+
+            // 1. Direct browser upload to Supabase Storage (conference-abstracts)
+            if (supabase && geoFile) {
+                try {
+                    setUploadStatus(isEn ? 'Uploading Georgian abstract...' : 'მიმდინარეობს ქართული თეზისის ატვირთვა...');
+                    const ext = (geoFile.name.split('.').pop() || 'docx').replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || 'docx';
+                    const path = `geo_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${ext}`;
+                    const { error: upErr } = await supabase.storage
+                        .from('conference-abstracts')
+                        .upload(path, geoFile, { upsert: true });
+
+                    if (!upErr) {
+                        const { data } = supabase.storage.from('conference-abstracts').getPublicUrl(path);
+                        clientGeoUrl = data?.publicUrl || null;
+                    } else {
+                        console.warn('Browser GEO upload notice:', upErr.message);
+                    }
+                } catch (cErr) {
+                    console.warn('Browser GEO upload exception:', cErr);
+                }
+            }
+
+            if (supabase && engFile) {
+                try {
+                    setUploadStatus(isEn ? 'Uploading English abstract...' : 'მიმდინარეობს ინგლისური თეზისის ატვირთვა...');
+                    const ext = (engFile.name.split('.').pop() || 'docx').replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || 'docx';
+                    const path = `eng_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${ext}`;
+                    const { error: upErr } = await supabase.storage
+                        .from('conference-abstracts')
+                        .upload(path, engFile, { upsert: true });
+
+                    if (!upErr) {
+                        const { data } = supabase.storage.from('conference-abstracts').getPublicUrl(path);
+                        clientEngUrl = data?.publicUrl || null;
+                    } else {
+                        console.warn('Browser ENG upload notice:', upErr.message);
+                    }
+                } catch (cErr) {
+                    console.warn('Browser ENG upload exception:', cErr);
+                }
+            }
+
+            setUploadStatus(isEn ? 'Submitting registration details...' : 'მონაცემების რეგისტრაცია...');
+
             const fd = new FormData();
             fd.append('firstName', formData.firstName);
             fd.append('lastName', formData.lastName);
@@ -214,6 +263,10 @@ export default function Conference2026View() {
             fd.append('participationRole', participationRole);
             fd.append('thematicTopic', formData.thematicTopic);
 
+            if (clientGeoUrl) fd.append('clientGeoUrl', clientGeoUrl);
+            if (clientEngUrl) fd.append('clientEngUrl', clientEngUrl);
+
+            // Raw files fallback
             if (geoFile) fd.append('geoFile', geoFile);
             if (engFile) fd.append('engFile', engFile);
 
@@ -253,8 +306,8 @@ export default function Conference2026View() {
                     presentationTitle: formData.presentationTitle,
                     presentationType: formData.presentationType,
                     thematicTopic: formData.thematicTopic,
-                    hasGeoFile: !!geoUrl,
-                    hasEngFile: !!engUrl,
+                    hasGeoFile: Boolean(clientGeoUrl || geoFile),
+                    hasEngFile: Boolean(clientEngUrl || engFile),
                 }
             });
 
@@ -283,6 +336,7 @@ export default function Conference2026View() {
             setSubmitError(err.message || (isEn ? "An unexpected error occurred. Please try again." : "დაფიქსირდა შეცდომა. გთხოვთ სცადოთ თავიდან."));
         } finally {
             setIsSubmitting(false);
+            setUploadStatus('');
         }
     };
 
@@ -820,7 +874,7 @@ export default function Conference2026View() {
                                     {isSubmitting ? (
                                         <>
                                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                            <span>{t.form.submitting}</span>
+                                            <span>{uploadStatus || t.form.submitting}</span>
                                         </>
                                     ) : (
                                         <>
