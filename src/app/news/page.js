@@ -3,7 +3,8 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '../../context/LanguageContext';
-import { newsData } from '../../data/newsData';
+import { newsData as fallbackNews } from '../../data/newsData';
+import { getDynamicNews } from '../../lib/supabase/news';
 import NewsCard from '../../components/NewsCard';
 import NewsModal from '../../components/NewsModal';
 import en from '../../locales/en';
@@ -17,6 +18,17 @@ function NewsContent() {
     const [selectedNews, setSelectedNews] = useState(null);
     const [visibleCount, setVisibleCount] = useState(8);
     const [searchQuery, setSearchQuery] = useState('');
+    const [newsItems, setNewsItems] = useState(fallbackNews);
+
+    useEffect(() => {
+        let isMounted = true;
+        getDynamicNews().then(data => {
+            if (isMounted && data && data.length > 0) {
+                setNewsItems(data);
+            }
+        });
+        return () => { isMounted = false; };
+    }, []);
 
     useEffect(() => {
         const categoryParam = searchParams.get('category') || searchParams.get('filter');
@@ -40,7 +52,7 @@ function NewsContent() {
         }
     };
 
-    const filteredNews = newsData
+    const filteredNews = newsItems
         .filter(item => {
             const matchesCategory = filter === 'all' || item.category === filter;
             const title = language === 'en' ? item.titleEn : item.title;
@@ -70,8 +82,8 @@ function NewsContent() {
     ];
 
     const countByCategory = (catId) => {
-        if (catId === 'all') return newsData.length;
-        return newsData.filter(item => item.category === catId).length;
+        if (catId === 'all') return newsItems.length;
+        return newsItems.filter(item => item.category === catId).length;
     };
 
     return (

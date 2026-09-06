@@ -1,4 +1,4 @@
-import { Inter, Noto_Sans_Georgian } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -8,15 +8,50 @@ import PageTransition from "../components/PageTransition";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const notoGeo = Noto_Sans_Georgian({
-  variable: "--font-noto-geo",
-  subsets: ["georgian"],
+const googleSans = localFont({
+  src: [
+    {
+      path: "../fonts/static/GoogleSans-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/static/GoogleSans-Italic.ttf",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../fonts/static/GoogleSans-Medium.ttf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../fonts/static/GoogleSans-MediumItalic.ttf",
+      weight: "500",
+      style: "italic",
+    },
+    {
+      path: "../fonts/static/GoogleSans-SemiBold.ttf",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../fonts/static/GoogleSans-SemiBoldItalic.ttf",
+      weight: "600",
+      style: "italic",
+    },
+    {
+      path: "../fonts/static/GoogleSans-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../fonts/static/GoogleSans-BoldItalic.ttf",
+      weight: "700",
+      style: "italic",
+    },
+  ],
+  variable: "--font-google-sans",
   display: "swap",
 });
 
@@ -69,7 +104,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="overflow-x-clip" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${notoGeo.variable} antialiased min-h-screen flex flex-col bg-slate-50 overflow-x-clip`}
+        className={`${googleSans.variable} antialiased min-h-screen flex flex-col bg-slate-50 overflow-x-clip`}
       >
         <LanguageProvider>
           <Header />

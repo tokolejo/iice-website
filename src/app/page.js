@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
 import en from '../locales/en';
 import ka from '../locales/ka';
-import { departmentsData, staffData } from '../data';
-import { newsData } from '../data/newsData';
+import { departmentsData as fallbackDepts, staffData as fallbackStaff } from '../data';
+import { newsData as fallbackNews } from '../data/newsData';
+import { getDynamicNews } from '../lib/supabase/news';
+import { getDynamicDepartments, getDynamicStaff } from '../lib/supabase/staff';
 import ScrollReveal from '../components/ScrollReveal';
 import NewsCard from '../components/NewsCard';
 import NewsModal from '../components/NewsModal';
@@ -30,6 +32,26 @@ export default function Home() {
   const newsSliderRef = useRef(null);
   const [selectedNews, setSelectedNews] = useState(null);
 
+  const [departments, setDepartments] = useState(fallbackDepts);
+  const [staff, setStaff] = useState(fallbackStaff);
+  const [news, setNews] = useState(fallbackNews);
+
+  useEffect(() => {
+    let isMounted = true;
+    Promise.all([
+      getDynamicDepartments(),
+      getDynamicStaff(),
+      getDynamicNews()
+    ]).then(([d, s, n]) => {
+      if (isMounted) {
+        if (d && d.length > 0) setDepartments(d);
+        if (s && s.length > 0) setStaff(s);
+        if (n && n.length > 0) setNews(n);
+      }
+    }).catch(err => console.warn('Homepage dynamic load notice:', err));
+    return () => { isMounted = false; };
+  }, []);
+
   const scrollSlider = (ref, direction) => {
     if (ref && ref.current) {
       const { scrollLeft, clientWidth } = ref.current;
@@ -39,7 +61,7 @@ export default function Home() {
   };
 
   // Filter latest news and seminars (6 combined) - Sorted by date
-  const latestNews = newsData
+  const latestNews = news
     .filter(item => item.category === 'news' || item.category === 'seminars')
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 6);
@@ -78,6 +100,100 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 2026 Conference High-Priority Featured Banner / Hero Card */}
+      <section className="relative z-20 -mt-4 sm:-mt-6 mb-4 px-4 sm:px-6 lg:px-8 max-w-[1500px] mx-auto w-full">
+        <ScrollReveal direction="up" duration={700}>
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#200533] via-[#48126b] to-[#60318e] p-6 sm:p-8 lg:p-10 text-white shadow-2xl border border-purple-300/30">
+            {/* Decorative background glow */}
+            <div className="absolute -right-16 -top-16 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="absolute -left-16 -bottom-16 w-72 h-72 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div className="max-w-4xl space-y-4">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black tracking-wide bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-md">
+                  <span>🌟</span>
+                  <span>
+                    {language === 'en'
+                      ? '3rd International Scientific Conference 2026'
+                      : '2026 წლის საერთაშორისო კონფერენცია'}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h2 className="text-base sm:text-xl md:text-2xl lg:text-3xl font-black text-white leading-snug tracking-tight">
+                  {language === 'en'
+                    ? '3rd International Scientific Conference: "Modern Trends in Chemistry, Chemical Technologies and Related Fields: Green Energy Prospects, Ecological Sustainability, Food Safety. 2026"'
+                    : 'მე-3 საერთაშორისო სამეცნიერო კონფერენცია: „თანამედროვე ტენდენციები ქიმიაში, ქიმიურ ტექნოლოგიებსა და მომიჯნავე დარგებში: მწვანე ენერგეტიკის პერსპექტივები, ეკოლოგიური მდგრადობა, სურსათის უვნებელობა. 2026“'}
+                </h2>
+
+                {/* Anniversary Note */}
+                <div className="inline-flex items-center gap-2 bg-amber-400/15 border border-amber-300/40 text-amber-200 text-xs sm:text-sm font-bold px-4 py-2 rounded-2xl">
+                  <span>✨</span>
+                  <span>
+                    {language === 'en'
+                      ? 'Dedicated to the 70th anniversary of the founding of Rafael Agladze Institute of Inorganic Chemistry and Electrochemistry'
+                      : 'ეძღვნება რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის დაარსების 70 წელს'}
+                  </span>
+                </div>
+
+                {/* Dates & Venues & Grant */}
+                <div className="flex flex-wrap items-center gap-3 pt-1 text-xs sm:text-sm font-semibold text-purple-100">
+                  <div className="flex items-center gap-2 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/10 backdrop-blur-sm">
+                    <svg className="w-4 h-4 text-amber-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>
+                      {language === 'en'
+                        ? 'November 25–27, 2026'
+                        : '25–27 ნოემბერი, 2026'}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/10 backdrop-blur-sm">
+                    <svg className="w-4 h-4 text-amber-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>
+                      {language === 'en'
+                        ? 'Tbilisi (TSU) & Telavi (Telavi State University)'
+                        : 'თბილისი (თსუ) & თელავი (თელავის სახელმწიფო უნივერსიტეტი)'}
+                    </span>
+                  </div>
+
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                    ✓ {language === 'en' ? 'Free Participation' : 'მონაწილეობა უფასოა'}
+                  </span>
+                </div>
+              </div>
+
+              {/* CTA Action Button */}
+              <div className="flex-shrink-0 pt-2 lg:pt-0">
+                <Link
+                  href="/conference-2026"
+                  className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-white text-[#60318e] hover:bg-[#EBD3F8] font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group/btn"
+                >
+                  <span>
+                    {language === 'en'
+                      ? 'Conference Details & Registration'
+                      : 'კონფერენციის პროგრამა და რეგისტრაცია'}
+                  </span>
+                  <svg
+                    className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
+      </section>
+
       {/* Departments Grid (Restored and limited to 3) */}
       <section className="py-16 bg-white shrink-0">
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,8 +219,8 @@ export default function Home() {
             className="flex overflow-x-auto gap-4 sm:gap-6 pb-8 snap-x snap-mandatory hide-scrollbar style-hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0"
             style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
           >
-            {departmentsData.map((dept) => {
-              const head = staffData.find(s => s.departmentId === dept.id && s.isHead);
+            {departments.map((dept) => {
+              const head = staff.find(s => s.departmentId === dept.id && s.isHead);
               const headName = language === 'en' && head?.nameEn ? head.nameEn : head?.name;
               const deptName = language === 'en' ? dept.nameEn : dept.name;
 

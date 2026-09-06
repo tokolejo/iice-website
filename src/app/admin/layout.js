@@ -1,0 +1,232 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { getSupabaseBrowserClient } from '../../lib/supabase/client';
+import {
+    LayoutDashboard,
+    Calendar,
+    Users,
+    Building2,
+    Newspaper,
+    ShieldCheck,
+    History,
+    LogOut,
+    ExternalLink,
+    Menu,
+    X,
+    ChevronRight,
+    Sparkles,
+    UserCircle
+} from 'lucide-react';
+
+export default function AdminLayout({ children }) {
+    const pathname = usePathname();
+    const router = useRouter();
+
+    const [user, setUser] = useState(null);
+    const [role, setRole] = useState('admin');
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const isAuthPage = pathname === '/admin/login' || pathname === '/admin/pending';
+
+    useEffect(() => {
+        if (isAuthPage) {
+            setIsLoading(false);
+            return;
+        }
+
+        async function checkUser() {
+            try {
+                const supabase = getSupabaseBrowserClient();
+                if (!supabase) {
+                    // Fallback for local testing without Supabase env
+                    setUser({ email: 'tokolejo@gmail.com', name: 'Super Admin' });
+                    setRole('super_admin');
+                    setIsLoading(false);
+                    return;
+                }
+
+                const { data: { user: currentUser } } = await supabase.auth.getUser();
+
+                if (!currentUser) {
+                    router.push('/admin/login');
+                    return;
+                }
+
+                setUser(currentUser);
+
+                if (currentUser.email?.toLowerCase() === 'tokolejo@gmail.com') {
+                    setRole('super_admin');
+                } else {
+                    const { data: profile } = await supabase
+                        .from('user_profiles')
+                        .select('role')
+                        .eq('id', currentUser.id)
+                        .single();
+
+                    setRole(profile?.role || 'pending');
+                }
+            } catch (err) {
+                console.warn('Admin layout auth check error:', err);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        checkUser();
+    }, [pathname, isAuthPage, router]);
+
+    const handleSignOut = async () => {
+        const supabase = getSupabaseBrowserClient();
+        if (supabase) {
+            await supabase.auth.signOut();
+        }
+        router.push('/admin/login');
+    };
+
+    // If on login or pending page, don't show the dashboard sidebar and top header
+    if (isAuthPage) {
+        return <>{children}</>;
+    }
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-3">
+                    <div className="w-10 h-10 border-3 border-[#60318e] border-t-transparent rounded-full animate-spin"></div>
+                    <span className="text-xs font-bold text-[#60318e] tracking-wider">იტვირთება ადმინ პანელი...</span>
+                </div>
+            </div>
+        );
+    }
+
+    const navItems = [
+        { href: '/admin', label: 'მთავარი (Overview)', icon: LayoutDashboard },
+        { href: '/admin/conference', label: 'კონფერენცია 2026', icon: Calendar, badge: 'Registrations' },
+        { href: '/admin/staff', label: 'თანამშრომლები (Staff)', icon: Users },
+        { href: '/admin/departments', label: 'განყოფილებები', icon: Building2 },
+        { href: '/admin/news', label: 'სიახლეები (News)', icon: Newspaper },
+        ...(role === 'super_admin' ? [{ href: '/admin/users', label: 'მომხმარებლები (RBAC)', icon: ShieldCheck }] : []),
+        { href: '/admin/audit', label: 'აუდიტის ლოგი (Audit)', icon: History },
+    ];
+
+    return (
+        <div className="min-h-screen bg-slate-100 flex flex-col md:flex-row">
+            {/* Sidebar Desktop */}
+            <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#2e0d42] text-white flex flex-col transition-transform duration-300 transform md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:static md:inset-auto md:min-h-screen shadow-xl`}>
+                {/* Brand Header */}
+                <div className="p-5 border-b border-white/10 flex items-center justify-between">
+                    <Link href="/admin" className="flex items-center gap-3 group">
+                        <div className="w-10 h-10 rounded-xl bg-white/10 p-1 flex items-center justify-center">
+                            <img src="/logo.png" alt="IICE" className="w-full h-full object-contain" />
+                        </div>
+                        <div>
+                            <h2 className="font-black text-sm text-white tracking-wide">TSU IICE</h2>
+                            <p className="text-[10px] text-[#EBD3F8]/80 font-bold uppercase tracking-wider">Admin Portal</p>
+                        </div>
+                    </Link>
+                    <button
+                        onClick={() => setIsSidebarOpen(false)}
+                        className="md:hidden text-white/70 hover:text-white p-1"
+                    >
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
+
+                {/* User Info Card */}
+                <div className="p-4 mx-3 my-3 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-[#AD49E1]/30 border border-[#AD49E1]/50 flex items-center justify-center text-white">
+                        <UserCircle className="w-5 h-5" />
+                    </div>
+                    <div className="overflow-hidden flex-1">
+                        <p className="text-xs font-bold text-white truncate">{user?.email}</p>
+                        <span className={`inline-block text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full mt-0.5 ${role === 'super_admin' ? 'bg-amber-400/20 text-amber-300 border border-amber-400/40' : 'bg-purple-400/20 text-[#EBD3F8]'}`}>
+                            {role === 'super_admin' ? 'Super Admin' : 'Admin'}
+                        </span>
+                    </div>
+                </div>
+
+                {/* Navigation Links */}
+                <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
+                    {navItems.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = pathname === item.href;
+                        return (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                onClick={() => setIsSidebarOpen(false)}
+                                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                                    isActive
+                                        ? 'bg-[#60318e] text-white shadow-md'
+                                        : 'text-white/70 hover:text-white hover:bg-white/5'
+                                }`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <Icon className={`w-4 h-4 ${isActive ? 'text-[#EBD3F8]' : 'text-white/60'}`} />
+                                    <span>{item.label}</span>
+                                </div>
+                                {item.badge && (
+                                    <span className="text-[9px] bg-[#AD49E1] text-white px-2 py-0.5 rounded-full font-bold">
+                                        {item.badge}
+                                    </span>
+                                )}
+                            </Link>
+                        );
+                    })}
+                </nav>
+
+                {/* Sidebar Footer */}
+                <div className="p-4 border-t border-white/10 space-y-2">
+                    <Link
+                        href="/"
+                        target="_blank"
+                        className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+                    >
+                        <div className="flex items-center gap-2">
+                            <ExternalLink className="w-4 h-4" />
+                            <span>საიტის ნახვა (Public)</span>
+                        </div>
+                        <ChevronRight className="w-3.5 h-3.5 opacity-50" />
+                    </Link>
+
+                    <button
+                        onClick={handleSignOut}
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-red-300 hover:text-red-200 hover:bg-red-500/10 transition-colors cursor-pointer"
+                    >
+                        <LogOut className="w-4 h-4" />
+                        <span>გამოსვლა (Sign Out)</span>
+                    </button>
+                </div>
+            </aside>
+
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col min-w-0">
+                {/* Mobile Top Navbar */}
+                <header className="md:hidden bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between shadow-sm sticky top-0 z-40">
+                    <button
+                        onClick={() => setIsSidebarOpen(true)}
+                        className="text-slate-700 p-1.5 rounded-lg hover:bg-slate-100"
+                    >
+                        <Menu className="w-5 h-5" />
+                    </button>
+                    <span className="text-xs font-black text-[#60318e] uppercase tracking-wider">IICE Admin</span>
+                    <button
+                        onClick={handleSignOut}
+                        className="text-red-500 p-1.5 hover:bg-red-50 rounded-lg text-xs font-bold"
+                    >
+                        <LogOut className="w-4 h-4" />
+                    </button>
+                </header>
+
+                {/* Main Page Body */}
+                <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+                    {children}
+                </main>
+            </div>
+        </div>
+    );
+}

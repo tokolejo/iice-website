@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { staffData, departmentsData } from '../../data';
+import { useState, useMemo, useEffect } from 'react';
+import { staffData as staticStaff, departmentsData as staticDepts } from '../../data';
+import { getDynamicStaff, getDynamicDepartments } from '../../lib/supabase/staff';
 import StaffCard from '../../components/StaffCard';
 import StaffModal from '../../components/StaffModal';
 import { useLanguage } from '../../context/LanguageContext';
@@ -13,10 +14,32 @@ export default function StaffDirectory() {
     const isEn = language === 'en';
     const t = isEn ? en : ka;
 
+    const [staffList, setStaffList] = useState(staticStaff);
+    const [departmentsList, setDepartmentsList] = useState(staticDepts);
     const [selectedMember, setSelectedMember] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterDepartment, setFilterDepartment] = useState('All');
+
+    useEffect(() => {
+        let isMounted = true;
+        async function loadData() {
+            try {
+                const [sData, dData] = await Promise.all([
+                    getDynamicStaff(),
+                    getDynamicDepartments(),
+                ]);
+                if (isMounted) {
+                    if (sData && sData.length > 0) setStaffList(sData);
+                    if (dData && dData.length > 0) setDepartmentsList(dData);
+                }
+            } catch (err) {
+                console.warn('Error loading dynamic staff directory:', err);
+            }
+        }
+        loadData();
+        return () => { isMounted = false; };
+    }, []);
 
     const handleOpenModal = (member) => {
         setSelectedMember(member);
@@ -29,13 +52,13 @@ export default function StaffDirectory() {
     };
 
     const filteredStaff = useMemo(() => {
-        return staffData.filter(member => {
+        return staffList.filter(member => {
             const matchesSearch = member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 (member.nameEn && member.nameEn.toLowerCase().includes(searchQuery.toLowerCase()));
             const matchesDept = filterDepartment === 'All' || member.departmentId === filterDepartment;
             return matchesSearch && matchesDept;
         });
-    }, [searchQuery, filterDepartment]);
+    }, [staffList, searchQuery, filterDepartment]);
 
     return (
         <div className="bg-white min-h-screen flex flex-col">
@@ -74,7 +97,7 @@ export default function StaffDirectory() {
                             onChange={(e) => setFilterDepartment(e.target.value)}
                         >
                             <option value="All">{isEn ? 'All Departments' : 'ყველა განყოფილება'}</option>
-                            {departmentsData.map(dept => (
+                            {departmentsList.map(dept => (
                                 <option key={dept.id} value={dept.id}>{isEn && dept.nameEn ? dept.nameEn : dept.name}</option>
                             ))}
                             <option value="administration">{isEn ? 'Administration' : 'ადმინისტრაცია'}</option>

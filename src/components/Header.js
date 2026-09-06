@@ -48,6 +48,10 @@ export default function Header() {
         }));
     };
 
+    if (pathname?.startsWith('/admin')) {
+        return null;
+    }
+
     return (
         <header className="bg-[#2e0d42] shadow-lg sticky top-0 z-50">
             <div className="max-w-[96%] xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-4 xl:px-8">
@@ -113,6 +117,10 @@ export default function Header() {
                             <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-48 rounded-xl shadow-2xl bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top flex flex-col pt-2 pb-2 border-t-4 border-[#7A1CAC] z-50">
                                 <Link href="/news?category=seminars" className="px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors">{t.nav.seminars}</Link>
                                 <div className="px-4 py-2 text-sm font-bold text-gray-800 border-t border-purple-50 mt-1">{t.nav.conference}</div>
+                                <Link href="/conference-2026" className="px-4 py-1.5 text-xs font-bold text-[#AD49E1] hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors ml-4 border-l-2 border-[#AD49E1] flex items-center justify-between">
+                                    <span>2026</span>
+                                    <span className="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase shadow-xs">NEW</span>
+                                </Link>
                                 <Link href="/events/conference-2023" className="px-4 py-1.5 text-xs text-gray-600 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors ml-4 border-l-2 border-purple-100">2023</Link>
                                 <Link href="/events/conference-2016" className="px-4 py-1.5 text-xs text-gray-600 hover:bg-purple-50 hover:text-[#7A1CAC] transition-colors ml-4 border-l-2 border-purple-100 mb-1">2016</Link>
                             </div>
@@ -229,6 +237,10 @@ export default function Header() {
                                 <Link href="/news?category=seminars" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.seminars}</Link>
                                 <div className="px-3 py-2 text-sm font-bold text-text-body border-t border-gray-100 mt-1">{t.nav.conference}</div>
                                 <div className="pl-4 border-l-2 border-purple-100 ml-3 mb-2 space-y-1">
+                                    <Link href="/conference-2026" onClick={() => setIsMobileMenuOpen(false)} className="px-3 py-1.5 text-sm font-bold text-[#AD49E1] hover:bg-slate-50 flex items-center justify-between">
+                                        <span>2026</span>
+                                        <span className="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase shadow-xs">NEW</span>
+                                    </Link>
                                     <Link href="/events/conference-2023" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-1.5 text-sm text-text-body hover:text-primary hover:bg-slate-50">2023</Link>
                                     <Link href="/events/conference-2016" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-1.5 text-sm text-text-body hover:text-primary hover:bg-slate-50">2016</Link>
                                 </div>

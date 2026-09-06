@@ -1,14 +1,20 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useLanguage } from '../context/LanguageContext';
 import en from '../locales/en';
 import ka from '../locales/ka';
 import ScrollReveal from './ScrollReveal';
 
 export default function Footer() {
+    const pathname = usePathname();
     const { language } = useLanguage();
     const t = language === 'en' ? en : ka;
+
+    if (pathname?.startsWith('/admin')) {
+        return null;
+    }
 
     return (
         <footer className="bg-[#2e0d42] border-t border-white/4 pt-5 pb-10 text-white transition-all duration-300 relative overflow-hidden">

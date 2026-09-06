@@ -1,9 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function ScrollToTop() {
+    const pathname = usePathname();
     const [isVisible, setIsVisible] = useState(false);
+
+    if (pathname?.startsWith('/admin')) {
+        return null;
+    }
 
     // Show button when page is scrolled down
     const toggleVisibility = () => {

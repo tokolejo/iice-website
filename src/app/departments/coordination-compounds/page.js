@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Users } from 'lucide-react';
-import { departmentsData, staffData } from '../../../data';
+import { departmentsData, staffData as staticStaff } from '../../../data';
+import { getDynamicStaff } from '../../../lib/supabase/staff';
 import StaffCard from '../../../components/StaffCard';
 import StaffModal from '../../../components/StaffModal';
 import { useLanguage } from '../../../context/LanguageContext';
@@ -13,7 +14,18 @@ import ka from '../../../locales/ka';
 export default function CoordinationCompounds() {
     const departmentId = 'coordination-compounds';
     const department = departmentsData.find(d => d.id === departmentId);
-    const staff = staffData.filter(s => s.departmentId === departmentId);
+    const [staff, setStaff] = useState(() => staticStaff.filter(s => s.departmentId === departmentId));
+
+    useEffect(() => {
+        let isMounted = true;
+        getDynamicStaff(departmentId).then((data) => {
+            if (isMounted && data && data.length > 0) {
+                setStaff(data);
+            }
+        }).catch(err => console.warn('Could not load dynamic staff:', err));
+        return () => { isMounted = false; };
+    }, []);
+
     const headOfDepartment = staff.find(s => s.isHead);
     const otherStaff = staff.filter(s => !s.isHead);
 

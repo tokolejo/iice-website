@@ -1,7 +1,9 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { departmentsData, staffData } from '../../data';
+import { departmentsData as staticDepts, staffData as staticStaff } from '../../data';
+import { getDynamicDepartments, getDynamicStaff } from '../../lib/supabase/staff';
 import { useLanguage } from '../../context/LanguageContext';
 import en from '../../locales/en';
 import ka from '../../locales/ka';
@@ -48,12 +50,33 @@ const getIconForDepartment = (id) => {
     }
 };
 
-
-
 export default function DepartmentsPage() {
     const { language } = useLanguage();
     const t = language === 'en' ? en : ka;
     const isEn = language === 'en';
+
+    const [departments, setDepartments] = useState(staticDepts);
+    const [staff, setStaff] = useState(staticStaff);
+
+    useEffect(() => {
+        let isMounted = true;
+        async function loadData() {
+            try {
+                const [dData, sData] = await Promise.all([
+                    getDynamicDepartments(),
+                    getDynamicStaff(),
+                ]);
+                if (isMounted) {
+                    if (dData && dData.length > 0) setDepartments(dData);
+                    if (sData && sData.length > 0) setStaff(sData);
+                }
+            } catch (err) {
+                console.warn('Could not load dynamic departments data:', err);
+            }
+        }
+        loadData();
+        return () => { isMounted = false; };
+    }, []);
 
     return (
         /*
@@ -84,8 +107,8 @@ export default function DepartmentsPage() {
             <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up mt-3" style={{ animationDelay: '0.1s' }}>
                 {/* Horizontal Grid for 5 departments */}
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 items-stretch">
-                    {departmentsData.map((dept) => {
-                        const head = staffData.find(s => s.departmentId === dept.id && s.isHead);
+                    {departments.map((dept) => {
+                        const head = staff.find(s => s.departmentId === dept.id && s.isHead);
                         const headName = language === 'en' && head?.nameEn ? head.nameEn : head?.name;
                         const deptName = language === 'en' ? dept.nameEn : dept.name;
 
