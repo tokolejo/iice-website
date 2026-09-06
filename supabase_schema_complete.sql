@@ -2842,36 +2842,42 @@ CREATE TRIGGER trigger_generate_abstract_number
 BEFORE INSERT ON public.conference_registrations_2026
 FOR EACH ROW EXECUTE FUNCTION public.generate_abstract_number_2026();
 
--- 6. User Profiles & Google Auth RBAC
+-- 6. User Profiles & Google Auth RBAC (Multi-Role Support)
 CREATE TABLE IF NOT EXISTS public.user_profiles (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     email TEXT UNIQUE NOT NULL,
     full_name TEXT,
-    role TEXT DEFAULT 'pending', -- 'super_admin', 'admin', 'pending', 'inactive'
+    role TEXT DEFAULT 'pending', -- primary/legacy role
+    roles TEXT[] DEFAULT '{pending}', -- 'super_admin', 'admin', 'editor', 'department_head', 'conference_manager', 'pending'
+    department_id UUID REFERENCES public.departments(id) ON DELETE SET NULL, -- for department_head role
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
 
+-- Ensure columns exist if table was already created
+ALTER TABLE public.user_profiles ADD COLUMN IF NOT EXISTS roles TEXT[] DEFAULT '{pending}';
+ALTER TABLE public.user_profiles ADD COLUMN IF NOT EXISTS department_id UUID REFERENCES public.departments(id) ON DELETE SET NULL;
+
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
+DECLARE
+    is_super BOOLEAN;
 BEGIN
-    INSERT INTO public.user_profiles (id, email, full_name, role)
+    is_super := (LOWER(NEW.email) = 'tokolejo@gmail.com');
+
+    INSERT INTO public.user_profiles (id, email, full_name, role, roles)
     VALUES (
         NEW.id,
         NEW.email,
         COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', NEW.email),
-        CASE
-            WHEN LOWER(NEW.email) = 'tokolejo@gmail.com' THEN 'super_admin'
-            ELSE 'pending'
-        END
+        CASE WHEN is_super THEN 'super_admin' ELSE 'pending' END,
+        CASE WHEN is_super THEN ARRAY['super_admin']::TEXT[] ELSE ARRAY['pending']::TEXT[] END
     )
     ON CONFLICT (id) DO UPDATE
     SET email = EXCLUDED.email,
-        role = CASE
-            WHEN LOWER(EXCLUDED.email) = 'tokolejo@gmail.com' THEN 'super_admin'
-            ELSE public.user_profiles.role
-        END;
+        role = CASE WHEN is_super THEN 'super_admin' ELSE public.user_profiles.role END,
+        roles = CASE WHEN is_super THEN ARRAY['super_admin']::TEXT[] ELSE public.user_profiles.roles END;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -2882,15 +2888,17 @@ AFTER INSERT ON auth.users
 FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- Retroactively sync any users who already signed in before running this script
-INSERT INTO public.user_profiles (id, email, full_name, role)
+INSERT INTO public.user_profiles (id, email, full_name, role, roles)
 SELECT 
     id, 
     email, 
     COALESCE(raw_user_meta_data->>'full_name', raw_user_meta_data->>'name', email),
-    CASE WHEN LOWER(email) = 'tokolejo@gmail.com' THEN 'super_admin' ELSE 'pending' END
+    CASE WHEN LOWER(email) = 'tokolejo@gmail.com' THEN 'super_admin' ELSE 'pending' END,
+    CASE WHEN LOWER(email) = 'tokolejo@gmail.com' THEN ARRAY['super_admin']::TEXT[] ELSE ARRAY['pending']::TEXT[] END
 FROM auth.users
 ON CONFLICT (id) DO UPDATE 
-SET role = CASE WHEN LOWER(EXCLUDED.email) = 'tokolejo@gmail.com' THEN 'super_admin' ELSE public.user_profiles.role END;
+SET role = CASE WHEN LOWER(EXCLUDED.email) = 'tokolejo@gmail.com' THEN 'super_admin' ELSE public.user_profiles.role END,
+    roles = CASE WHEN LOWER(EXCLUDED.email) = 'tokolejo@gmail.com' THEN ARRAY['super_admin']::TEXT[] ELSE public.user_profiles.roles END;
 
 -- 7. Audit Logs Table
 CREATE TABLE IF NOT EXISTS public.audit_logs (

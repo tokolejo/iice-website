@@ -26,7 +26,8 @@ export default function AdminLayout({ children }) {
     const router = useRouter();
 
     const [user, setUser] = useState(null);
-    const [role, setRole] = useState('admin');
+    const [roles, setRoles] = useState(['admin']);
+    const [deptName, setDeptName] = useState('');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -42,9 +43,9 @@ export default function AdminLayout({ children }) {
             try {
                 const supabase = getSupabaseBrowserClient();
                 if (!supabase) {
-                    // Fallback for local testing without Supabase env
+                    // Fallback for local preview without Supabase env
                     setUser({ email: 'tokolejo@gmail.com', name: 'Super Admin' });
-                    setRole('super_admin');
+                    setRoles(['super_admin']);
                     setIsLoading(false);
                     return;
                 }
@@ -59,15 +60,27 @@ export default function AdminLayout({ children }) {
                 setUser(currentUser);
 
                 if (currentUser.email?.toLowerCase() === 'tokolejo@gmail.com') {
-                    setRole('super_admin');
+                    setRoles(['super_admin']);
                 } else {
                     const { data: profile } = await supabase
                         .from('user_profiles')
-                        .select('role')
+                        .select('role, roles, department_id, departments(name_ka)')
                         .eq('id', currentUser.id)
-                        .single();
+                        .maybeSingle();
 
-                    setRole(profile?.role || 'pending');
+                    let userRoles = [];
+                    if (Array.isArray(profile?.roles) && profile.roles.length > 0) {
+                        userRoles = profile.roles;
+                    } else if (profile?.role) {
+                        userRoles = [profile.role];
+                    } else {
+                        userRoles = ['pending'];
+                    }
+                    setRoles(userRoles);
+
+                    if (profile?.departments?.name_ka) {
+                        setDeptName(profile.departments.name_ka);
+                    }
                 }
             } catch (err) {
                 console.warn('Admin layout auth check error:', err);
@@ -103,14 +116,20 @@ export default function AdminLayout({ children }) {
         );
     }
 
+    const isSuperAdmin = roles.includes('super_admin');
+    const isAdmin = isSuperAdmin || roles.includes('admin');
+    const isEditor = isAdmin || roles.includes('editor');
+    const isDeptHead = isAdmin || roles.includes('department_head');
+    const isConfManager = isAdmin || roles.includes('conference_manager');
+
     const navItems = [
         { href: '/admin', label: 'მთავარი (Overview)', icon: LayoutDashboard },
-        { href: '/admin/conference', label: 'კონფერენცია 2026', icon: Calendar, badge: 'Registrations' },
-        { href: '/admin/staff', label: 'თანამშრომლები (Staff)', icon: Users },
-        { href: '/admin/departments', label: 'განყოფილებები', icon: Building2 },
-        { href: '/admin/news', label: 'სიახლეები (News)', icon: Newspaper },
-        ...(role === 'super_admin' ? [{ href: '/admin/users', label: 'მომხმარებლები (RBAC)', icon: ShieldCheck }] : []),
-        { href: '/admin/audit', label: 'აუდიტის ლოგი (Audit)', icon: History },
+        ...(isConfManager ? [{ href: '/admin/conference', label: 'კონფერენცია 2026', icon: Calendar, badge: 'Registrations' }] : []),
+        ...(isDeptHead ? [{ href: '/admin/staff', label: 'თანამშრომლები (Staff)', icon: Users }] : []),
+        ...(isAdmin ? [{ href: '/admin/departments', label: 'განყოფილებები', icon: Building2 }] : []),
+        ...(isEditor ? [{ href: '/admin/news', label: 'სიახლეები (News)', icon: Newspaper }] : []),
+        ...(isSuperAdmin ? [{ href: '/admin/users', label: 'მომხმარებლები (RBAC)', icon: ShieldCheck }] : []),
+        ...(isAdmin ? [{ href: '/admin/audit', label: 'აუდიტის ლოგი (Audit)', icon: History }] : []),
     ];
 
     return (
@@ -137,15 +156,61 @@ export default function AdminLayout({ children }) {
                 </div>
 
                 {/* User Info Card */}
-                <div className="p-4 mx-3 my-3 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-[#AD49E1]/30 border border-[#AD49E1]/50 flex items-center justify-center text-white">
-                        <UserCircle className="w-5 h-5" />
+                <div className="p-4 mx-3 my-3 rounded-2xl bg-white/5 border border-white/10">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="w-9 h-9 rounded-full bg-[#AD49E1]/30 border border-[#AD49E1]/50 flex items-center justify-center text-white flex-shrink-0">
+                            <UserCircle className="w-5 h-5" />
+                        </div>
+                        <div className="overflow-hidden flex-1">
+                            <p className="text-xs font-bold text-white truncate">{user?.email}</p>
+                            {deptName && (
+                                <p className="text-[10px] text-[#EBD3F8]/70 truncate font-medium">{deptName}</p>
+                            )}
+                        </div>
                     </div>
-                    <div className="overflow-hidden flex-1">
-                        <p className="text-xs font-bold text-white truncate">{user?.email}</p>
-                        <span className={`inline-block text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full mt-0.5 ${role === 'super_admin' ? 'bg-amber-400/20 text-amber-300 border border-amber-400/40' : 'bg-purple-400/20 text-[#EBD3F8]'}`}>
-                            {role === 'super_admin' ? 'Super Admin' : 'Admin'}
-                        </span>
+                    {/* Role Badges */}
+                    <div className="flex flex-wrap gap-1">
+                        {isSuperAdmin ? (
+                            <span className="inline-block text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40">
+                                👑 Super Admin
+                            </span>
+                        ) : (
+                            roles.map((r) => {
+                                if (r === 'admin') {
+                                    return (
+                                        <span key={r} className="inline-block text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-purple-400/20 text-[#EBD3F8] border border-purple-400/40">
+                                            🛡️ Admin
+                                        </span>
+                                    );
+                                }
+                                if (r === 'editor') {
+                                    return (
+                                        <span key={r} className="inline-block text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-blue-400/20 text-blue-200 border border-blue-400/40">
+                                            📰 Editor
+                                        </span>
+                                    );
+                                }
+                                if (r === 'department_head') {
+                                    return (
+                                        <span key={r} className="inline-block text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-200 border border-emerald-400/40">
+                                            🏢 Dept Head
+                                        </span>
+                                    );
+                                }
+                                if (r === 'conference_manager') {
+                                    return (
+                                        <span key={r} className="inline-block text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-indigo-400/20 text-indigo-200 border border-indigo-400/40">
+                                            🎓 Conf Mgr
+                                        </span>
+                                    );
+                                }
+                                return (
+                                    <span key={r} className="inline-block text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-white/10 text-white/70">
+                                        {r}
+                                    </span>
+                                );
+                            })
+                        )}
                     </div>
                 </div>
 

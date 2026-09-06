@@ -16,7 +16,9 @@ import {
     AlertCircle,
     ExternalLink,
     Filter,
-    Camera
+    Camera,
+    Building2,
+    Lock
 } from 'lucide-react';
 
 export default function AdminStaffPage() {
@@ -25,6 +27,11 @@ export default function AdminStaffPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterDept, setFilterDept] = useState('All');
+
+    // Role & Department Head restrictions
+    const [userRoles, setUserRoles] = useState([]);
+    const [userDeptId, setUserDeptId] = useState(null);
+    const [userDeptName, setUserDeptName] = useState('');
 
     // Modal state for Create / Edit
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -123,6 +130,36 @@ export default function AdminStaffPage() {
                         is_active: true,
                     };
                 }));
+            // Check current user role & assigned department
+            const { data: { user: currentUser } } = await supabase.auth.getUser();
+            if (currentUser) {
+                if (currentUser.email?.toLowerCase() === 'tokolejo@gmail.com') {
+                    setUserRoles(['super_admin']);
+                } else {
+                    const { data: profile } = await supabase
+                        .from('user_profiles')
+                        .select('role, roles, department_id, departments(name_ka)')
+                        .eq('id', currentUser.id)
+                        .maybeSingle();
+
+                    let roles = [];
+                    if (Array.isArray(profile?.roles) && profile.roles.length > 0) {
+                        roles = profile.roles;
+                    } else if (profile?.role) {
+                        roles = [profile.role];
+                    }
+                    setUserRoles(roles);
+
+                    const isOnlyHead = roles.includes('department_head') && !roles.includes('super_admin') && !roles.includes('admin');
+                    if (isOnlyHead) {
+                        const assignedDept = profile?.department_id || null;
+                        setUserDeptId(assignedDept);
+                        setUserDeptName(profile?.departments?.name_ka || '');
+                        if (assignedDept) {
+                            setFilterDept(assignedDept);
+                        }
+                    }
+                }
             }
         } catch (err) {
             console.warn('Error fetching staff list:', err);
@@ -135,6 +172,11 @@ export default function AdminStaffPage() {
         loadData();
     }, []);
 
+    const isRestrictedHead =
+        userRoles.includes('department_head') &&
+        !userRoles.includes('super_admin') &&
+        !userRoles.includes('admin');
+
     const filteredList = useMemo(() => {
         return staffList.filter(s => {
             const fullName = `${s.first_name_ka || ''} ${s.last_name_ka || ''} ${s.first_name_en || ''} ${s.last_name_en || ''}`.toLowerCase();
@@ -143,13 +185,20 @@ export default function AdminStaffPage() {
                 (s.position_ka && s.position_ka.toLowerCase().includes(searchQuery.toLowerCase())) ||
                 (s.email && s.email.toLowerCase().includes(searchQuery.toLowerCase()));
 
-            const matchesDept = filterDept === 'All' || s.department_id === filterDept;
+            const matchesDept = isRestrictedHead
+                ? (userDeptId ? s.department_id === userDeptId : false)
+                : (filterDept === 'All' || s.department_id === filterDept);
 
             return matchesSearch && matchesDept;
         });
-    }, [staffList, searchQuery, filterDept]);
+    }, [staffList, searchQuery, filterDept, isRestrictedHead, userDeptId]);
 
     const openCreateModal = () => {
+        if (isRestrictedHead && !userDeptId) {
+            alert('თქვენ მინიჭებული გაქვთ განყოფილების ხელმძღვანელის როლი, თუმცა კონკრეტული განყოფილება ჯერ არ არის მიმაგრებული. გთხოვთ მიმართოთ სუპერ ადმინისტრატორს.');
+            return;
+        }
+
         setEditingMember(null);
         setFormData({
             firstNameKa: '',
@@ -158,7 +207,7 @@ export default function AdminStaffPage() {
             lastNameEn: '',
             positionKa: '',
             positionEn: '',
-            departmentId: departments[0]?.id || '',
+            departmentId: isRestrictedHead ? (userDeptId || '') : (departments[0]?.id || ''),
             scientificDegreeKa: '',
             scientificDegreeEn: '',
             email: '',
@@ -183,6 +232,11 @@ export default function AdminStaffPage() {
     };
 
     const openEditModal = (member) => {
+        if (isRestrictedHead && member.department_id !== userDeptId) {
+            alert('თქვენ შეგიძლიათ დაარედაქტიროთ მხოლოდ თქვენი განყოფილების თანამშრომელი!');
+            return;
+        }
+
         setEditingMember(member);
         setFormData({
             firstNameKa: member.first_name_ka || '',
@@ -222,6 +276,17 @@ export default function AdminStaffPage() {
         if (!formData.firstNameKa || !formData.lastNameKa || !formData.positionKa) {
             setSaveError('გთხოვთ შეავსოთ სავალდებულო ველები (სახელი, გვარი, პოზიცია).');
             return;
+        }
+
+        if (isRestrictedHead) {
+            if (!userDeptId) {
+                setSaveError('თქვენ არ გაქვთ მიმაგრებული კონკრეტული განყოფილება.');
+                return;
+            }
+            if (editingMember && editingMember.department_id !== userDeptId) {
+                setSaveError('თქვენ არ გაქვთ უფლება შეცვალოთ სხვა განყოფილების თანამშრომელი.');
+                return;
+            }
         }
 
         setIsSaving(true);
@@ -264,6 +329,8 @@ export default function AdminStaffPage() {
                     }
                 }
 
+                const effectiveDeptId = isRestrictedHead ? userDeptId : (formData.departmentId || null);
+
                 const recordData = {
                     first_name_ka: formData.firstNameKa,
                     last_name_ka: formData.lastNameKa,
@@ -271,7 +338,7 @@ export default function AdminStaffPage() {
                     last_name_en: formData.lastNameEn || null,
                     position_ka: formData.positionKa,
                     position_en: formData.positionEn || null,
-                    department_id: formData.departmentId || null,
+                    department_id: effectiveDeptId,
                     scientific_degree_ka: formData.scientificDegreeKa || null,
                     scientific_degree_en: formData.scientificDegreeEn || null,
                     email: formData.email || null,
@@ -336,6 +403,12 @@ export default function AdminStaffPage() {
 
     const handleDelete = async () => {
         if (!itemToDelete) return;
+        if (isRestrictedHead && itemToDelete.department_id !== userDeptId) {
+            alert('თქვენ არ გაქვთ სხვა განყოფილების თანამშრომლის წაშლის უფლება!');
+            setItemToDelete(null);
+            return;
+        }
+
         try {
             const supabase = getSupabaseBrowserClient();
             if (supabase) {
@@ -377,6 +450,16 @@ export default function AdminStaffPage() {
                 </button>
             </div>
 
+            {/* Unassigned Department Warning */}
+            {isRestrictedHead && !userDeptId && (
+                <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center gap-3 animate-fade-in">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0 text-amber-600" />
+                    <div>
+                        <strong className="font-extrabold">ყურადღება:</strong> თქვენ მინიჭებული გაქვთ განყოფილების ხელმძღვანელის როლი, მაგრამ კონკრეტული განყოფილება ჯერ არ არის მიმაგრებული. გთხოვთ მიმართოთ სუპერ ადმინისტრატორს (tokolejo@gmail.com).
+                    </div>
+                </div>
+            )}
+
             {/* Filters */}
             <div className="bg-white rounded-2xl p-4 border border-purple-100 shadow-sm flex flex-col md:flex-row gap-3 items-center">
                 <div className="relative flex-1 w-full">
@@ -390,18 +473,25 @@ export default function AdminStaffPage() {
                     />
                 </div>
 
-                <select
-                    value={filterDept}
-                    onChange={(e) => setFilterDept(e.target.value)}
-                    className="px-3 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white w-full md:w-64"
-                >
-                    <option value="All">ყველა განყოფილება</option>
-                    {departments.map((d) => (
-                        <option key={d.id || d.slug} value={d.id || d.slug}>
-                            {d.name_ka || d.name}
-                        </option>
-                    ))}
-                </select>
+                {isRestrictedHead ? (
+                    <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-800 whitespace-nowrap">
+                        <Building2 className="w-4 h-4 text-emerald-600" />
+                        <span>განყოფილება: {userDeptName || 'თქვენი განყოფილება'}</span>
+                    </div>
+                ) : (
+                    <select
+                        value={filterDept}
+                        onChange={(e) => setFilterDept(e.target.value)}
+                        className="px-3 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white w-full md:w-64"
+                    >
+                        <option value="All">ყველა განყოფილება</option>
+                        {departments.map((d) => (
+                            <option key={d.id || d.slug} value={d.id || d.slug}>
+                                {d.name_ka || d.name}
+                            </option>
+                        ))}
+                    </select>
+                )}
             </div>
 
             {/* Staff Table */}
@@ -474,22 +564,26 @@ export default function AdminStaffPage() {
                                             </span>
                                         </td>
                                         <td className="py-3 px-4 text-right whitespace-nowrap">
-                                            <div className="flex items-center justify-end gap-1.5">
-                                                <button
-                                                    onClick={() => openEditModal(member)}
-                                                    className="p-1.5 rounded-lg bg-slate-100 text-[#60318e] hover:bg-[#60318e] hover:text-white transition-colors cursor-pointer"
-                                                    title="რედაქტირება"
-                                                >
-                                                    <Edit2 className="w-3.5 h-3.5" />
-                                                </button>
-                                                <button
-                                                    onClick={() => setItemToDelete(member)}
-                                                    className="p-1.5 rounded-lg bg-slate-100 text-red-500 hover:bg-red-500 hover:text-white transition-colors cursor-pointer"
-                                                    title="წაშლა"
-                                                >
-                                                    <Trash2 className="w-3.5 h-3.5" />
-                                                </button>
-                                            </div>
+                                            {(!isRestrictedHead || member.department_id === userDeptId) ? (
+                                                <div className="flex items-center justify-end gap-1.5">
+                                                    <button
+                                                        onClick={() => openEditModal(member)}
+                                                        className="p-1.5 rounded-lg bg-slate-100 text-[#60318e] hover:bg-[#60318e] hover:text-white transition-colors cursor-pointer"
+                                                        title="რედაქტირება"
+                                                    >
+                                                        <Edit2 className="w-3.5 h-3.5" />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setItemToDelete(member)}
+                                                        className="p-1.5 rounded-lg bg-slate-100 text-red-500 hover:bg-red-500 hover:text-white transition-colors cursor-pointer"
+                                                        title="წაშლა"
+                                                    >
+                                                        <Trash2 className="w-3.5 h-3.5" />
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <span className="text-[10px] text-gray-400 italic">სხვა განყოფილება</span>
+                                            )}
                                         </td>
                                     </tr>
                                 ))
@@ -618,18 +712,25 @@ export default function AdminStaffPage() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
                                     <label className="block font-bold text-gray-700 mb-1">განყოფილება</label>
-                                    <select
-                                        value={formData.departmentId}
-                                        onChange={(e) => setFormData(p => ({ ...p, departmentId: e.target.value }))}
-                                        className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
-                                    >
-                                        <option value="">(არცერთი)</option>
-                                        {departments.map((d) => (
-                                            <option key={d.id || d.slug} value={d.id || d.slug}>
-                                                {d.name_ka || d.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    {isRestrictedHead ? (
+                                        <div className="p-2.5 rounded-xl border border-emerald-200 bg-emerald-50/70 text-emerald-800 font-bold text-xs flex items-center gap-2">
+                                            <Building2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                                            <span>{userDeptName || 'თქვენი განყოფილება'} (მიმაგრებულია ავტომატურად)</span>
+                                        </div>
+                                    ) : (
+                                        <select
+                                            value={formData.departmentId}
+                                            onChange={(e) => setFormData(p => ({ ...p, departmentId: e.target.value }))}
+                                            className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
+                                        >
+                                            <option value="">(არცერთი)</option>
+                                            {departments.map((d) => (
+                                                <option key={d.id || d.slug} value={d.id || d.slug}>
+                                                    {d.name_ka || d.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    )}
                                 </div>
                                 <div>
                                     <label className="block font-bold text-gray-700 mb-1">ელ-ფოსტა</label>

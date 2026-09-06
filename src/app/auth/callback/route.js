@@ -32,19 +32,49 @@ export async function GET(request) {
 
     if (!error && user) {
       const isSuperAdmin = user.email?.toLowerCase() === 'tokolejo@gmail.com';
-      const role = isSuperAdmin ? 'super_admin' : 'pending';
 
-      // Upsert profile
-      await supabase.from('user_profiles').upsert(
-        {
+      // Check if profile already exists to avoid resetting granted roles
+      const { data: existingProfile } = await supabase
+        .from('user_profiles')
+        .select('id, role, roles, department_id, is_active')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email;
+
+      if (isSuperAdmin) {
+        // tokolejo@gmail.com is always locked as super_admin
+        await supabase.from('user_profiles').upsert(
+          {
+            id: user.id,
+            email: user.email,
+            full_name: fullName,
+            role: 'super_admin',
+            roles: ['super_admin'],
+            is_active: true,
+          },
+          { onConflict: 'id' }
+        );
+      } else if (!existingProfile) {
+        // First-time user sign-in: default to pending
+        await supabase.from('user_profiles').insert({
           id: user.id,
           email: user.email,
-          full_name: user.user_metadata?.full_name || user.user_metadata?.name || user.email,
-          role,
+          full_name: fullName,
+          role: 'pending',
+          roles: ['pending'],
           is_active: true,
-        },
-        { onConflict: 'id' }
-      );
+        });
+      } else {
+        // Returning user: preserve their roles and department assignment
+        await supabase
+          .from('user_profiles')
+          .update({
+            email: user.email,
+            full_name: fullName,
+          })
+          .eq('id', user.id);
+      }
 
       return NextResponse.redirect(`${origin}${next}`);
     }

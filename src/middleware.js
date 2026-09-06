@@ -64,39 +64,83 @@ export async function middleware(request) {
       return NextResponse.redirect(new URL('/admin/', request.url));
     }
 
-    // Check user profile and role
-    let role = isSuperAdminEmail ? 'super_admin' : 'pending';
+    // Check user profile and roles
+    let roles = isSuperAdminEmail ? ['super_admin'] : [];
+    let isActive = true;
 
     if (!isSuperAdminEmail) {
       const { data: profile } = await supabase
         .from('user_profiles')
-        .select('role, is_active')
+        .select('role, roles, is_active')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
       if (profile) {
-        role = profile.role || 'pending';
+        if (Array.isArray(profile.roles) && profile.roles.length > 0) {
+          roles = profile.roles;
+        } else if (profile.role) {
+          roles = [profile.role];
+        }
         if (profile.is_active === false) {
-          role = 'inactive';
+          isActive = false;
         }
       }
     }
 
-    // Pending approval
-    if (role === 'pending' || role === 'inactive') {
+    const hasSuperAdmin = roles.includes('super_admin');
+    const hasAdmin = roles.includes('admin') || hasSuperAdmin;
+    const hasEditor = roles.includes('editor') || hasAdmin;
+    const hasDeptHead = roles.includes('department_head') || hasAdmin;
+    const hasConfManager = roles.includes('conference_manager') || hasAdmin;
+
+    const isApproved =
+      isActive &&
+      (hasSuperAdmin ||
+        hasAdmin ||
+        roles.some((r) =>
+          ['editor', 'department_head', 'conference_manager'].includes(r)
+        ));
+
+    // Pending approval or inactive
+    if (!isApproved) {
       if (!isPendingPage) {
         return NextResponse.redirect(new URL('/admin/pending/', request.url));
       }
       return response;
     }
 
-    // If user is approved (admin or super_admin) and trying to access /admin/pending, redirect to /admin/
+    // If approved user tries to access /admin/pending, redirect to /admin/
     if (isPendingPage) {
       return NextResponse.redirect(new URL('/admin/', request.url));
     }
 
-    // Protect super_admin only routes (e.g. /admin/users)
-    if (cleanPathname.startsWith('/admin/users') && role !== 'super_admin') {
+    // Route-level granular RBAC enforcement:
+    // 1. /admin/users: Super Admin only
+    if (cleanPathname.startsWith('/admin/users') && !hasSuperAdmin) {
+      return NextResponse.redirect(new URL('/admin/', request.url));
+    }
+
+    // 2. /admin/news: Super Admin, Admin, or News Editor
+    if (cleanPathname.startsWith('/admin/news') && !hasEditor) {
+      return NextResponse.redirect(new URL('/admin/', request.url));
+    }
+
+    // 3. /admin/staff: Super Admin, Admin, or Department Head
+    if (cleanPathname.startsWith('/admin/staff') && !hasDeptHead) {
+      return NextResponse.redirect(new URL('/admin/', request.url));
+    }
+
+    // 4. /admin/conference: Super Admin, Admin, or Conference Manager
+    if (cleanPathname.startsWith('/admin/conference') && !hasConfManager) {
+      return NextResponse.redirect(new URL('/admin/', request.url));
+    }
+
+    // 5. /admin/departments and /admin/audit: Super Admin or Admin
+    if (
+      (cleanPathname.startsWith('/admin/departments') ||
+        cleanPathname.startsWith('/admin/audit')) &&
+      !hasAdmin
+    ) {
       return NextResponse.redirect(new URL('/admin/', request.url));
     }
   }
