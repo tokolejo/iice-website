@@ -409,10 +409,10 @@ export default function AdminUsersPage() {
                                                 ) : (
                                                     <button
                                                         onClick={() => openRoleModal(u)}
-                                                        className="inline-flex items-center gap-1.5 bg-[#60318e] hover:bg-[#4a2470] text-white font-bold px-3 py-1.5 rounded-xl text-[11px] shadow-sm transition-all cursor-pointer"
+                                                        className="p-1.5 rounded-lg bg-[#60318e]/10 text-[#60318e] hover:bg-[#60318e] hover:text-white transition-colors cursor-pointer"
+                                                        title="როლების მართვა"
                                                     >
-                                                        <Key className="w-3.5 h-3.5 text-[#EBD3F8]" />
-                                                        <span>როლების მართვა</span>
+                                                        <Key className="w-3.5 h-3.5" />
                                                     </button>
                                                 )}
                                             </td>

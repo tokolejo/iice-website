@@ -160,71 +160,87 @@ export default function AdminDashboardPage() {
                 </div>
             </div>
 
-            {/* KPI Metric Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-                <div className="bg-white rounded-3xl p-5 sm:p-6 border border-purple-100 shadow-xs hover:shadow-md transition-all">
-                    <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">კონფერენცია 2026</span>
-                        <div className="w-10 h-10 rounded-2xl bg-purple-50 text-[#60318e] flex items-center justify-center">
-                            <Calendar className="w-5 h-5" />
+            {/* Compact KPI Metric Cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                <Link
+                    href="/admin/conference"
+                    className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
+                >
+                    <div className="min-w-0">
+                        <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
+                            კონფერენცია 2026
+                        </span>
+                        <div className="flex items-baseline gap-1.5 mt-0.5">
+                            <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
+                                {stats.conferenceCount}
+                            </span>
+                            <span className="text-[10px] text-gray-400 font-medium truncate">თეზისი</span>
                         </div>
                     </div>
-                    <div className="flex items-baseline justify-between">
-                        <span className="text-3xl font-black text-[#60318e]">{stats.conferenceCount}</span>
-                        <Link href="/admin/conference" className="text-xs font-bold text-[#AD49E1] hover:underline flex items-center gap-0.5">
-                            ნახვა <ArrowUpRight className="w-3.5 h-3.5" />
-                        </Link>
+                    <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
+                        <Calendar className="w-4 h-4" />
                     </div>
-                    <p className="text-[11px] text-gray-400 mt-2">რეგისტრირებული თეზისი</p>
-                </div>
+                </Link>
 
-                <div className="bg-white rounded-3xl p-5 sm:p-6 border border-purple-100 shadow-xs hover:shadow-md transition-all">
-                    <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">თანამშრომლები</span>
-                        <div className="w-10 h-10 rounded-2xl bg-purple-50 text-[#60318e] flex items-center justify-center">
-                            <Users className="w-5 h-5" />
+                <Link
+                    href="/admin/staff"
+                    className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
+                >
+                    <div className="min-w-0">
+                        <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
+                            თანამშრომლები
+                        </span>
+                        <div className="flex items-baseline gap-1.5 mt-0.5">
+                            <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
+                                {stats.staffCount}
+                            </span>
+                            <span className="text-[10px] text-gray-400 font-medium truncate">მეცნიერი</span>
                         </div>
                     </div>
-                    <div className="flex items-baseline justify-between">
-                        <span className="text-3xl font-black text-[#60318e]">{stats.staffCount}</span>
-                        <Link href="/admin/staff" className="text-xs font-bold text-[#AD49E1] hover:underline flex items-center gap-0.5">
-                            მართვა <ArrowUpRight className="w-3.5 h-3.5" />
-                        </Link>
+                    <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
+                        <Users className="w-4 h-4" />
                     </div>
-                    <p className="text-[11px] text-gray-400 mt-2">აქტიური მეცნიერი და პერსონალი</p>
-                </div>
+                </Link>
 
-                <div className="bg-white rounded-3xl p-5 sm:p-6 border border-purple-100 shadow-xs hover:shadow-md transition-all">
-                    <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">განყოფილებები</span>
-                        <div className="w-10 h-10 rounded-2xl bg-purple-50 text-[#60318e] flex items-center justify-center">
-                            <Building2 className="w-5 h-5" />
+                <Link
+                    href="/admin/departments"
+                    className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
+                >
+                    <div className="min-w-0">
+                        <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
+                            განყოფილებები
+                        </span>
+                        <div className="flex items-baseline gap-1.5 mt-0.5">
+                            <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
+                                {stats.departmentsCount}
+                            </span>
+                            <span className="text-[10px] text-gray-400 font-medium truncate">მიმართულება</span>
                         </div>
                     </div>
-                    <div className="flex items-baseline justify-between">
-                        <span className="text-3xl font-black text-[#60318e]">{stats.departmentsCount}</span>
-                        <Link href="/admin/departments" className="text-xs font-bold text-[#AD49E1] hover:underline flex items-center gap-0.5">
-                            ნახვა <ArrowUpRight className="w-3.5 h-3.5" />
-                        </Link>
+                    <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
+                        <Building2 className="w-4 h-4" />
                     </div>
-                    <p className="text-[11px] text-gray-400 mt-2">სამეცნიერო მიმართულება</p>
-                </div>
+                </Link>
 
-                <div className="bg-white rounded-3xl p-5 sm:p-6 border border-purple-100 shadow-xs hover:shadow-md transition-all">
-                    <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">სიახლეები</span>
-                        <div className="w-10 h-10 rounded-2xl bg-purple-50 text-[#60318e] flex items-center justify-center">
-                            <Newspaper className="w-5 h-5" />
+                <Link
+                    href="/admin/news"
+                    className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
+                >
+                    <div className="min-w-0">
+                        <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
+                            სიახლეები
+                        </span>
+                        <div className="flex items-baseline gap-1.5 mt-0.5">
+                            <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
+                                {stats.newsCount}
+                            </span>
+                            <span className="text-[10px] text-gray-400 font-medium truncate">სტატია</span>
                         </div>
                     </div>
-                    <div className="flex items-baseline justify-between">
-                        <span className="text-3xl font-black text-[#60318e]">{stats.newsCount}</span>
-                        <Link href="/admin/news" className="text-xs font-bold text-[#AD49E1] hover:underline flex items-center gap-0.5">
-                            სიახლეები <ArrowUpRight className="w-3.5 h-3.5" />
-                        </Link>
+                    <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
+                        <Newspaper className="w-4 h-4" />
                     </div>
-                    <p className="text-[11px] text-gray-400 mt-2">გამოქვეყნებული პოსტი</p>
-                </div>
+                </Link>
             </div>
 
             {/* Quick Actions Bar */}

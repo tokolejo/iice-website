@@ -64,6 +64,7 @@ export default function AdminNewsPage() {
     });
     const [categoryError, setCategoryError] = useState('');
     const [isSavingCategory, setIsSavingCategory] = useState(false);
+    const [deletingCatId, setDeletingCatId] = useState(null);
 
     // Load Data
     const loadNewsAndCategories = async () => {
@@ -362,6 +363,51 @@ export default function AdminNewsPage() {
             setCategoryError(err.message || 'შეცდომა კატეგორიის დამატებისას');
         } finally {
             setIsSavingCategory(false);
+        }
+    };
+
+    // Category Deletion (Full permissions for super_admin / admin)
+    const handleDeleteCategory = async (cat) => {
+        if (!cat) return;
+
+        const count = newsList.filter(n => (n.category_id || n.news_categories?.id) === cat.id).length;
+        const confirmMessage = count > 0
+            ? `კატეგორიაში „${cat.name_ka}“ არის ${count} სიახლე. წაშლის შემთხვევაში ამ სიახლეებს კატეგორია მოეხსნებათ. ნამდვილად გსურთ წაშლა?`
+            : `ნამდვილად გსურთ წაშალოთ კატეგორია „${cat.name_ka}“?`;
+
+        if (!window.confirm(confirmMessage)) return;
+
+        setDeletingCatId(cat.id);
+        try {
+            const supabase = getSupabaseBrowserClient();
+            if (supabase) {
+                const { error } = await supabase
+                    .from('news_categories')
+                    .delete()
+                    .eq('id', cat.id);
+
+                if (error) throw error;
+
+                await recordAuditLog({
+                    action: 'CATEGORY_DELETE',
+                    tableName: 'news_categories',
+                    recordId: String(cat.id),
+                    details: { name_ka: cat.name_ka, name_en: cat.name_en, slug: cat.slug }
+                });
+            }
+
+            setCategories(prev => prev.filter(c => c.id !== cat.id));
+
+            if (selectedCategoryFilter === cat.id) {
+                setSelectedCategoryFilter('ALL');
+            }
+
+            await loadNewsAndCategories();
+        } catch (err) {
+            console.error('Delete category error:', err);
+            alert(`კატეგორიის წაშლის შეცდომა: ${err.message}`);
+        } finally {
+            setDeletingCatId(null);
         }
     };
 
@@ -821,21 +867,47 @@ export default function AdminNewsPage() {
                         <h4 className="font-bold text-gray-800 uppercase tracking-wider text-[11px] mb-2">
                             არსებული კატეგორიები ({categories.length})
                         </h4>
-                        <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                            {categories.map((cat) => (
-                                <div
-                                    key={cat.id}
-                                    className="p-2.5 rounded-xl border border-gray-200 bg-white flex items-center justify-between"
-                                >
-                                    <div>
-                                        <p className="font-bold text-gray-900">{cat.name_ka}</p>
-                                        <p className="text-[10px] text-gray-400">{cat.name_en} • slug: {cat.slug}</p>
+                        <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+                            {categories.map((cat) => {
+                                const count = newsList.filter(n => (n.category_id || n.news_categories?.id) === cat.id).length;
+                                return (
+                                    <div
+                                        key={cat.id}
+                                        className="p-2.5 rounded-xl border border-gray-200 bg-white hover:border-purple-200 transition-colors flex items-center justify-between group"
+                                    >
+                                        <div className="flex items-center gap-2.5 min-w-0">
+                                            <div className="w-8 h-8 rounded-lg bg-purple-50 text-[#60318e] flex items-center justify-center flex-shrink-0 font-bold text-xs">
+                                                <Folder className="w-4 h-4" />
+                                            </div>
+                                            <div className="truncate">
+                                                <p className="font-bold text-gray-900 text-xs truncate flex items-center gap-1.5">
+                                                    <span>{cat.name_ka}</span>
+                                                    <span className="text-[10px] text-gray-400 font-normal">({cat.name_en})</span>
+                                                </p>
+                                                <p className="text-[10px] text-gray-400">
+                                                    {count} პოსტი • slug: {cat.slug}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-1 flex-shrink-0">
+                                            <button
+                                                type="button"
+                                                onClick={() => handleDeleteCategory(cat)}
+                                                disabled={deletingCatId === cat.id}
+                                                className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                                                title="კატეგორიის წაშლა"
+                                            >
+                                                {deletingCatId === cat.id ? (
+                                                    <div className="w-3.5 h-3.5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                                                ) : (
+                                                    <Trash2 className="w-4 h-4" />
+                                                )}
+                                            </button>
+                                        </div>
                                     </div>
-                                    <span className="px-2 py-0.5 rounded-md bg-purple-50 text-[#60318e] font-mono text-[10px] font-bold">
-                                        ID: {String(cat.id).slice(0, 8)}...
-                                    </span>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 </div>

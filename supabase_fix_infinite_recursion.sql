@@ -111,6 +111,22 @@ CREATE POLICY "Admins and editors can manage news" ON public.news
   USING (public.check_user_is_editor())
   WITH CHECK (public.check_user_is_editor());
 
+-- News Categories RLS Policies (Full CRUD for Super Admin, Admin, Editor)
+ALTER TABLE public.news_categories ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Categories are viewable by everyone" ON public.news_categories;
+DROP POLICY IF EXISTS "Admins and editors can manage news categories" ON public.news_categories;
+
+CREATE POLICY "Categories are viewable by everyone" ON public.news_categories
+  FOR SELECT
+  USING (true);
+
+CREATE POLICY "Admins and editors can manage news categories" ON public.news_categories
+  FOR ALL
+  TO authenticated
+  USING (public.check_user_is_editor())
+  WITH CHECK (public.check_user_is_editor());
+
 -- 4. Fix Conference Registrations 2026 RLS policies
 DROP POLICY IF EXISTS "Admins can manage conference registrations" ON public.conference_registrations_2026;
 DROP POLICY IF EXISTS "Public can submit conference registration" ON public.conference_registrations_2026;
