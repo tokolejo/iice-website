@@ -205,16 +205,16 @@ export default function Conference2023() {
             <title>{isEn ? '2nd International Scientific Conference 2023 | IICE' : 'II საერთაშორისო სამეცნიერო კონფერენცია 2023 | IICE'}</title>
 
             {/* Hero Section - Exact text sizes and styling from 2016 */}
-            <div className="bg-[#60318e] text-white pt-12 pb-16 md:pt-16 md:pb-24 relative overflow-hidden shadow-md w-full flex-shrink-0">
+            <div className="bg-[#60318e] text-white pt-10 pb-14 md:pt-14 md:pb-20 relative overflow-hidden shadow-md w-full flex-shrink-0">
                 <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-                    <h1 className="text-3xl md:text-5xl font-extrabold mb-6 animate-fade-in-up leading-tight text-white">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black mb-4 animate-fade-in-up leading-snug text-white max-w-4xl mx-auto">
                         {t.title}
                     </h1>
-                    <p className="text-lg md:text-2xl font-medium text-purple-100 max-w-4xl mx-auto mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                    <p className="text-sm sm:text-base md:text-lg font-semibold text-purple-100 max-w-3xl mx-auto mb-5 animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.1s' }}>
                         {t.subtitle}
                     </p>
-                    <p className="text-base md:text-lg text-white/90 max-w-3xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                    <p className="text-xs sm:text-sm text-purple-100/90 max-w-2xl mx-auto animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.2s' }}>
                         {t.description}
                     </p>
                     

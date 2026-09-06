@@ -79,6 +79,17 @@ export default function AdminUsersPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [modalError, setModalError] = useState('');
 
+    // Close modal on ESC key
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setIsRoleModalOpen(false);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
     const loadData = async () => {
         setIsLoading(true);
         try {
@@ -420,8 +431,16 @@ export default function AdminUsersPage() {
 
             {/* Multi-Role Assignment Modal */}
             {isRoleModalOpen && selectedUser && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-                    <div className="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-purple-100 overflow-y-auto max-h-[90vh]">
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/45 backdrop-blur-md animate-fade-in transition-all"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) setIsRoleModalOpen(false);
+                    }}
+                >
+                    <div
+                        className="bg-white rounded-3xl max-w-xl w-full p-5 sm:p-7 shadow-2xl border border-purple-100 overflow-y-auto max-h-[90vh] animate-scale-in"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         {/* Modal Header */}
                         <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-4">
                             <div>

@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { getSupabaseBrowserClient } from '../../../lib/supabase/client';
 import { logAudit } from '../../../lib/supabase/admin';
 import { newsData as staticNews } from '../../../data/newsData';
+import RichTextEditor from '../../../components/RichTextEditor';
 import {
     Newspaper,
     Search,
@@ -37,6 +38,18 @@ export default function AdminNewsPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState('');
     const [itemToDelete, setItemToDelete] = useState(null);
+
+    // Close modals on ESC key
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setIsEditModalOpen(false);
+                setItemToDelete(null);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
 
     const loadNews = async () => {
         setIsLoading(true);
@@ -377,17 +390,26 @@ export default function AdminNewsPage() {
 
             {/* Edit / Create News Modal */}
             {isEditModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in-up">
-                    <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 sm:p-8 relative border border-purple-100 max-h-[92vh] overflow-y-auto">
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/45 backdrop-blur-md animate-fade-in transition-all"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) setIsEditModalOpen(false);
+                    }}
+                >
+                    <div
+                        className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full p-5 sm:p-8 relative border border-purple-100 max-h-[90vh] overflow-y-auto animate-scale-in"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <button
                             onClick={() => setIsEditModalOpen(false)}
-                            className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 p-2 rounded-full hover:bg-slate-100 transition-colors"
+                            className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 p-2 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+                            aria-label="დახურვა"
                         >
                             <X className="w-5 h-5" />
                         </button>
 
                         <div className="flex items-center gap-3 mb-5">
-                            <div className="w-10 h-10 rounded-2xl bg-purple-100 text-[#60318e] flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-2xl bg-purple-100 text-[#60318e] flex items-center justify-center shadow-xs">
                                 <Newspaper className="w-5 h-5" />
                             </div>
                             <div>
@@ -395,19 +417,19 @@ export default function AdminNewsPage() {
                                     {editingNews ? 'სიახლის რედაქტირება' : 'ახალი სიახლის დამატება'}
                                 </h2>
                                 <p className="text-xs text-gray-500 font-medium">
-                                    შეიყვანეთ ინფორმაცია ქართულ და ინგლისურ ენებზე
+                                    შეიყვანეთ ინფორმაცია და დააფორმატეთ ტექსტი TipTap ედითორით
                                 </p>
                             </div>
                         </div>
 
                         {saveError && (
-                            <div className="mb-5 p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-2.5">
+                            <div className="mb-5 p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm flex items-center gap-2.5">
                                 <AlertCircle className="w-5 h-5 flex-shrink-0" />
                                 <span className="font-semibold">{saveError}</span>
                             </div>
                         )}
 
-                        <form onSubmit={handleSave} className="space-y-5 text-sm">
+                        <form onSubmit={handleSave} className="space-y-5 text-xs sm:text-sm">
                             {/* Georgian Section */}
                             <div className="bg-slate-50/70 p-4 sm:p-5 rounded-2xl border border-slate-200/80 space-y-4">
                                 <div className="flex items-center gap-2 pb-2 border-b border-slate-200">
@@ -426,21 +448,18 @@ export default function AdminNewsPage() {
                                         value={formData.titleKa}
                                         onChange={(e) => setFormData(p => ({ ...p, titleKa: e.target.value }))}
                                         placeholder="მაგ: ახალი სამეცნიერო მიღწევა..."
-                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] focus:border-transparent transition-all shadow-sm"
+                                        className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs sm:text-sm font-medium text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] focus:border-transparent transition-all shadow-xs"
                                     />
                                 </div>
 
                                 <div>
                                     <label className="block text-xs font-bold text-gray-700 mb-1.5">
-                                        შინაარსი (ქართულად) *
+                                        შინაარსი (ქართულად - TipTap Editor) *
                                     </label>
-                                    <textarea
-                                        rows={5}
-                                        required
+                                    <RichTextEditor
                                         value={formData.contentKa}
-                                        onChange={(e) => setFormData(p => ({ ...p, contentKa: e.target.value }))}
+                                        onChange={(html) => setFormData(p => ({ ...p, contentKa: html }))}
                                         placeholder="დაწერეთ სიახლის სრული ტექსტი..."
-                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] focus:border-transparent transition-all shadow-sm leading-relaxed"
                                     />
                                 </div>
                             </div>
@@ -462,20 +481,18 @@ export default function AdminNewsPage() {
                                         value={formData.titleEn}
                                         onChange={(e) => setFormData(p => ({ ...p, titleEn: e.target.value }))}
                                         placeholder="e.g. New scientific achievement..."
-                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] focus:border-transparent transition-all shadow-sm"
+                                        className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs sm:text-sm font-medium text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] focus:border-transparent transition-all shadow-xs"
                                     />
                                 </div>
 
                                 <div>
                                     <label className="block text-xs font-bold text-gray-700 mb-1.5">
-                                        Content (English)
+                                        Content (English - TipTap Editor)
                                     </label>
-                                    <textarea
-                                        rows={5}
+                                    <RichTextEditor
                                         value={formData.contentEn}
-                                        onChange={(e) => setFormData(p => ({ ...p, contentEn: e.target.value }))}
+                                        onChange={(html) => setFormData(p => ({ ...p, contentEn: html }))}
                                         placeholder="Full news text in English..."
-                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] focus:border-transparent transition-all shadow-sm leading-relaxed"
                                     />
                                 </div>
                             </div>
@@ -490,7 +507,7 @@ export default function AdminNewsPage() {
                                         type="file"
                                         accept="image/*"
                                         onChange={(e) => setCoverFile(e.target.files?.[0] || null)}
-                                        className="w-full text-xs text-gray-700 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#60318e] file:text-white hover:file:bg-[#7A1CAC] cursor-pointer bg-slate-50 rounded-xl p-1 border border-gray-200"
+                                        className="w-full text-xs text-gray-700 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#60318e] file:text-white hover:file:bg-[#7A1CAC] cursor-pointer bg-white rounded-xl p-1 border border-gray-200"
                                     />
                                     {formData.coverImageUrl && !coverFile && (
                                         <span className="text-[11px] text-gray-500 block mt-1.5 truncate">
@@ -506,7 +523,7 @@ export default function AdminNewsPage() {
                                     <select
                                         value={formData.status}
                                         onChange={(e) => setFormData(p => ({ ...p, status: e.target.value }))}
-                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-bold text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#AD49E1] focus:border-transparent transition-all shadow-sm"
+                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-xs sm:text-sm font-bold text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#AD49E1] focus:border-transparent transition-all shadow-xs cursor-pointer"
                                     >
                                         <option value="published">გამოქვეყნებული (Published)</option>
                                         <option value="draft">დრაფტი (Draft)</option>
@@ -518,14 +535,14 @@ export default function AdminNewsPage() {
                                 <button
                                     type="button"
                                     onClick={() => setIsEditModalOpen(false)}
-                                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-2xl transition-colors cursor-pointer text-sm"
+                                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-2xl transition-colors cursor-pointer text-xs sm:text-sm"
                                 >
                                     გაუქმება
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={isSaving}
-                                    className="flex-1 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold py-3 rounded-2xl transition-all shadow-md hover:shadow-lg cursor-pointer disabled:opacity-50 text-sm"
+                                    className="flex-1 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold py-3 rounded-2xl transition-all shadow-md hover:shadow-lg cursor-pointer disabled:opacity-50 text-xs sm:text-sm"
                                 >
                                     {isSaving ? 'ინახება...' : 'შენახვა'}
                                 </button>
@@ -537,8 +554,16 @@ export default function AdminNewsPage() {
 
             {/* Delete Modal */}
             {itemToDelete && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in-up">
-                    <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border border-red-100">
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/45 backdrop-blur-md animate-fade-in transition-all"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) setItemToDelete(null);
+                    }}
+                >
+                    <div
+                        className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border border-red-100 animate-scale-in"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-4">
                             <Trash2 className="w-6 h-6" />
                         </div>
@@ -549,13 +574,13 @@ export default function AdminNewsPage() {
                         <div className="flex gap-3">
                             <button
                                 onClick={() => setItemToDelete(null)}
-                                className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition-colors"
+                                className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition-colors cursor-pointer"
                             >
                                 გაუქმება
                             </button>
                             <button
                                 onClick={handleDelete}
-                                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-xs transition-colors"
+                                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-xs transition-colors cursor-pointer"
                             >
                                 წაშლა
                             </button>

@@ -31,6 +31,19 @@ export default function AdminConferencePage() {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
 
+    // Close modals on ESC key
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setSelectedReg(null);
+                setIsDeleteModalOpen(false);
+                setItemToDelete(null);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
     const fetchRegistrations = async () => {
         setIsLoading(true);
         try {
@@ -365,8 +378,16 @@ export default function AdminConferencePage() {
 
             {/* Details Modal */}
             {selectedReg && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in-up">
-                    <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 sm:p-8 max-h-[92vh] overflow-y-auto relative border border-purple-100">
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/45 backdrop-blur-md animate-fade-in transition-all"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) setSelectedReg(null);
+                    }}
+                >
+                    <div
+                        className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-5 sm:p-8 max-h-[90vh] overflow-y-auto relative border border-purple-100 animate-scale-in"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <button
                             onClick={() => setSelectedReg(null)}
                             className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 p-2 rounded-full hover:bg-slate-100 transition-colors"
@@ -482,8 +503,19 @@ export default function AdminConferencePage() {
 
             {/* Delete Confirmation Modal */}
             {isDeleteModalOpen && itemToDelete && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in-up">
-                    <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border border-red-100">
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/45 backdrop-blur-md animate-fade-in transition-all"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) {
+                            setIsDeleteModalOpen(false);
+                            setItemToDelete(null);
+                        }
+                    }}
+                >
+                    <div
+                        className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border border-red-100 animate-scale-in"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-4">
                             <Trash2 className="w-6 h-6" />
                         </div>
@@ -498,13 +530,13 @@ export default function AdminConferencePage() {
                                     setIsDeleteModalOpen(false);
                                     setItemToDelete(null);
                                 }}
-                                className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition-colors"
+                                className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition-colors cursor-pointer"
                             >
                                 გაუქმება
                             </button>
                             <button
                                 onClick={handleDelete}
-                                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-xs transition-colors"
+                                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-xs transition-colors cursor-pointer"
                             >
                                 წაშლა
                             </button>

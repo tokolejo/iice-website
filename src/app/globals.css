@@ -238,3 +238,28 @@
   box-shadow: 0 20px 40px -12px rgba(96, 49, 142, 0.15),
               0 4px 20px -4px rgba(173, 73, 225, 0.1);
 }
+
+/* ===== No Scrollbar Utility ===== */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ===== Scale In Animation for Modals ===== */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

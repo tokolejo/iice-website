@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
 import { getSupabaseBrowserClient } from '../lib/supabase/client';
@@ -27,7 +27,10 @@ import {
     Coffee,
     Bus,
     PartyPopper,
-    Tag
+    Tag,
+    ChevronLeft,
+    ChevronRight,
+    X
 } from 'lucide-react';
 
 export default function Conference2026View() {
@@ -35,6 +38,16 @@ export default function Conference2026View() {
     const isEn = language === 'en';
 
     const [activeTab, setActiveTab] = useState('registration');
+    const tabsContainerRef = useRef(null);
+
+    const scrollTabs = (direction) => {
+        if (tabsContainerRef.current) {
+            tabsContainerRef.current.scrollBy({
+                left: direction === 'left' ? -240 : 240,
+                behavior: 'smooth'
+            });
+        }
+    };
 
     // Registration Form State
     const [formData, setFormData] = useState({
@@ -319,38 +332,38 @@ export default function Conference2026View() {
                         <span>{t.badge}</span>
                     </div>
 
-                    <h1 className="text-2xl sm:text-3xl md:text-5xl font-black text-white mb-6 leading-tight tracking-tight max-w-4xl mx-auto drop-shadow-md">
+                    <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-white mb-4 leading-snug tracking-tight max-w-3xl mx-auto drop-shadow-sm">
                         {t.title}
                     </h1>
 
                     {/* 70 Years Commemorative Banner */}
-                    <div className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-500/15 via-amber-400/25 to-amber-500/15 text-amber-200 py-3 px-6 rounded-2xl border border-amber-300/40 shadow-md mb-8 max-w-3xl backdrop-blur-md">
-                        <Award className="w-6 h-6 text-amber-400 flex-shrink-0" />
-                        <span className="text-xs sm:text-sm md:text-base font-bold text-amber-100 leading-snug">
+                    <div className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-500/15 via-amber-400/25 to-amber-500/15 text-amber-200 py-2.5 px-5 rounded-2xl border border-amber-300/40 shadow-md mb-6 max-w-3xl backdrop-blur-md">
+                        <Award className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                        <span className="text-xs sm:text-sm font-bold text-amber-100 leading-snug">
                             {t.anniversary}
                         </span>
                     </div>
 
                     {/* Dates & Venues Pills */}
-                    <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs sm:text-sm font-bold mb-8">
-                        <div className="flex items-center gap-2.5 bg-white/10 text-white px-5 py-2.5 rounded-2xl backdrop-blur-md border border-white/20 shadow-sm">
+                    <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 text-xs font-bold mb-6">
+                        <div className="flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-2xl backdrop-blur-md border border-white/20 shadow-xs">
                             <Calendar className="w-4 h-4 text-amber-300" />
                             <span>{t.datesText}</span>
                         </div>
-                        <div className="flex items-center gap-2.5 bg-white/10 text-white px-5 py-2.5 rounded-2xl backdrop-blur-md border border-white/20 shadow-sm">
+                        <div className="flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-2xl backdrop-blur-md border border-white/20 shadow-xs">
                             <MapPin className="w-4 h-4 text-amber-300" />
                             <span>{t.venuesText}</span>
                         </div>
                     </div>
 
                     {/* Mandatory Grant Notice & Free Participation */}
-                    <div className="max-w-3xl mx-auto space-y-3 text-xs mb-8">
-                        <div className="bg-white/10 text-purple-100 px-5 py-3 rounded-2xl border border-white/15 backdrop-blur-md shadow-sm leading-relaxed flex items-center justify-center gap-2">
+                    <div className="max-w-3xl mx-auto space-y-2.5 text-xs mb-6">
+                        <div className="bg-white/10 text-purple-100 px-4 py-2.5 rounded-2xl border border-white/15 backdrop-blur-md shadow-xs leading-relaxed flex items-center justify-center gap-2">
                             <Landmark className="w-4 h-4 text-amber-300 flex-shrink-0" />
                             <span><strong>{t.grantNotice}</strong></span>
                         </div>
-                        <div className="inline-flex items-center gap-2 bg-emerald-500/25 text-emerald-200 font-extrabold px-4 py-1.5 rounded-full border border-emerald-400/40 shadow-xs">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        <div className="inline-flex items-center gap-2 bg-emerald-500/25 text-emerald-200 font-extrabold px-3.5 py-1 rounded-full border border-emerald-400/40 shadow-xs">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                             <span>{t.freeNotice}</span>
                         </div>
                     </div>
@@ -362,7 +375,7 @@ export default function Conference2026View() {
                                 setActiveTab('registration');
                                 document.getElementById('tabs-navigation')?.scrollIntoView({ behavior: 'smooth' });
                             }}
-                            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#AD49E1] to-[#7A1CAC] hover:from-[#bd5cf0] hover:to-[#8c25c2] text-white font-extrabold px-8 py-3.5 rounded-full text-xs sm:text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
+                            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#AD49E1] to-[#7A1CAC] hover:from-[#bd5cf0] hover:to-[#8c25c2] text-white font-extrabold px-7 py-3 rounded-full text-xs sm:text-sm shadow-md hover:shadow-lg hover:scale-105 transition-all cursor-pointer"
                         >
                             <Send className="w-4 h-4" />
                             <span>{isEn ? "Go to Registration Form ↓" : "რეგისტრაცია & აბსტრაქტის ატვირთვა ↓"}</span>
@@ -371,98 +384,30 @@ export default function Conference2026View() {
                 </div>
             </div>
 
-            {/* Institutional Organizers & Partners Section - Sleek Executive Showcase */}
-            <div className="bg-white border-b border-purple-100/80 py-10 px-4 sm:px-6 lg:px-8 shadow-xs">
-                <div className="max-w-6xl mx-auto">
-                    <div className="text-center mb-8">
-                        <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#60318e] bg-purple-100/70 px-3.5 py-1 rounded-full border border-purple-200 inline-block mb-2">
-                            {isEn ? "Organizing Institutions & Grant Support" : "საორგანიზაციო ინსტიტუციები და მხარდამჭერები"}
-                        </span>
-                        <h3 className="text-lg sm:text-xl font-black text-gray-900">
-                            {isEn ? "Co-Organizers & Partner Universities" : "ორგანიზატორები და პარტნიორი უნივერსიტეტები"}
-                        </h3>
-                    </div>
+            {/* Sticky Navigation Tabs with Chevron Scroll and Zero Native Scrollbar */}
+            <div id="tabs-navigation" className="sticky top-20 z-40 bg-white/95 backdrop-blur-md border-b border-purple-100 shadow-xs">
+                <div className="max-w-6xl mx-auto px-2 sm:px-6 lg:px-8 flex items-center relative py-2">
+                    {/* Left Scroll Button */}
+                    <button
+                        type="button"
+                        onClick={() => scrollTabs('left')}
+                        className="p-1.5 sm:p-2 rounded-xl bg-purple-50 hover:bg-[#60318e] text-[#60318e] hover:text-white transition-colors flex-shrink-0 cursor-pointer shadow-xs mr-1 flex items-center justify-center border border-purple-100"
+                        aria-label="Scroll Tabs Left"
+                        title="მარცხნივ გადახვევა"
+                    >
+                        <ChevronLeft className="w-4 h-4" />
+                    </button>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                        {/* 1. TSU */}
-                        <div className="bg-slate-50 p-5 rounded-3xl border border-purple-100 shadow-sm hover:shadow-md transition-all flex flex-col items-center text-center group hover:border-[#AD49E1]/40">
-                            <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-3 shadow-xs group-hover:scale-105 transition-transform">
-                                <Landmark className="w-8 h-8 text-blue-700" />
-                            </div>
-                            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 mb-2">
-                                {isEn ? "Co-Organizer" : "თანაორგანიზატორი"}
-                            </span>
-                            <h4 className="font-extrabold text-sm text-gray-900 leading-snug mb-1">
-                                {isEn ? "Ivane Javakhishvili Tbilisi State University" : "თბილისის სახელმწიფო უნივერსიტეტი (თსუ)"}
-                            </h4>
-                            <p className="text-[11px] text-gray-500 font-medium">
-                                {isEn ? "First National University of Georgia" : "ივანე ჯავახიშვილის სახელობის თსუ"}
-                            </p>
-                        </div>
-
-                        {/* 2. IICE (70 Years Lead) */}
-                        <div className="bg-purple-50/40 p-5 rounded-3xl border-2 border-amber-400/50 shadow-sm hover:shadow-md transition-all flex flex-col items-center text-center relative overflow-hidden group">
-                            <div className="absolute -right-8 top-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-[9px] font-black py-0.5 px-8 rotate-45 shadow-xs uppercase tracking-wider">
-                                70 წელი
-                            </div>
-                            <div className="w-16 h-16 rounded-2xl bg-white border border-purple-100 p-2 flex items-center justify-center mb-3 shadow-xs group-hover:scale-105 transition-transform">
-                                <img src="/logo.png" alt="IICE Logo" className="w-full h-full object-contain" />
-                            </div>
-                            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 mb-2 border border-amber-300">
-                                {isEn ? "Lead Organizer • 70 Years" : "მთავარი ორგანიზატორი • 70 წელი"}
-                            </span>
-                            <h4 className="font-extrabold text-sm text-[#60318e] leading-snug mb-1">
-                                {isEn ? "R. Agladze Institute (IICE)" : "რაფიელ აგლაძის ინსტიტუტი (IICE)"}
-                            </h4>
-                            <p className="text-[11px] text-gray-500 font-medium">
-                                {isEn ? "Institute of Inorganic Chemistry & Electrochemistry" : "არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
-                            </p>
-                        </div>
-
-                        {/* 3. TeSaU */}
-                        <div className="bg-slate-50 p-5 rounded-3xl border border-purple-100 shadow-sm hover:shadow-md transition-all flex flex-col items-center text-center group hover:border-[#AD49E1]/40">
-                            <div className="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-3 shadow-xs group-hover:scale-105 transition-transform">
-                                <GraduationCap className="w-8 h-8 text-emerald-700" />
-                            </div>
-                            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 mb-2">
-                                {isEn ? "Host University (Telavi)" : "მასპინძელი უნივერსიტეტი (თელავი)"}
-                            </span>
-                            <h4 className="font-extrabold text-sm text-gray-900 leading-snug mb-1">
-                                {isEn ? "Telavi State University (TeSaU)" : "თელავის სახელმწიფო უნივერსიტეტი"}
-                            </h4>
-                            <p className="text-[11px] text-gray-500 font-medium">
-                                {isEn ? "Iakob Gogebashvili Telavi State University" : "იაკობ გოგებაშვილის სახელობის თესაუ"}
-                            </p>
-                        </div>
-
-                        {/* 4. SRNSFG */}
-                        <div className="bg-slate-50 p-5 rounded-3xl border border-purple-100 shadow-sm hover:shadow-md transition-all flex flex-col items-center text-center group hover:border-[#AD49E1]/40">
-                            <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center mb-3 shadow-xs group-hover:scale-105 transition-transform">
-                                <Award className="w-8 h-8 text-amber-600" />
-                            </div>
-                            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 mb-2">
-                                {isEn ? "Grant Donor (ISE-26-286)" : "გრანტის დონორი (ISE-26-286)"}
-                            </span>
-                            <h4 className="font-extrabold text-sm text-gray-900 leading-snug mb-1">
-                                {isEn ? "Rustaveli National Science Foundation" : "რუსთაველის სამეცნიერო ფონდი"}
-                            </h4>
-                            <p className="text-[11px] text-gray-500 font-medium">
-                                {isEn ? "Shota Rustaveli Science Foundation of Georgia" : "შოთა რუსთაველის ეროვნული სამეცნიერო ფონდი"}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Sticky Navigation Tabs */}
-            <div id="tabs-navigation" className="sticky top-20 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto scrollbar-none">
-                    <div className="flex space-x-1 sm:space-x-2 py-3 min-w-max">
+                    {/* Scrollable Tabs */}
+                    <div
+                        ref={tabsContainerRef}
+                        className="flex space-x-1 sm:space-x-2 py-1 overflow-x-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden scroll-smooth flex-grow"
+                    >
                         {Object.entries(t.tabs).map(([key, label]) => (
                             <button
                                 key={key}
                                 onClick={() => setActiveTab(key)}
-                                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${
+                                className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer whitespace-nowrap flex-shrink-0 ${
                                     activeTab === key
                                         ? 'bg-[#60318e] text-white shadow-md font-extrabold'
                                         : 'text-slate-600 hover:text-[#60318e] hover:bg-purple-50/60'
@@ -474,44 +419,55 @@ export default function Conference2026View() {
                                 {key === 'organizers' && <Building2 className="w-3.5 h-3.5" />}
                                 {key === 'downloads' && <Download className="w-3.5 h-3.5" />}
                                 {key === 'venues' && <MapPin className="w-3.5 h-3.5" />}
-                                {label}
+                                <span>{label}</span>
                             </button>
                         ))}
                     </div>
+
+                    {/* Right Scroll Button */}
+                    <button
+                        type="button"
+                        onClick={() => scrollTabs('right')}
+                        className="p-1.5 sm:p-2 rounded-xl bg-purple-50 hover:bg-[#60318e] text-[#60318e] hover:text-white transition-colors flex-shrink-0 cursor-pointer shadow-xs ml-1 flex items-center justify-center border border-purple-100"
+                        aria-label="Scroll Tabs Right"
+                        title="მარჯვნივ გადახვევა"
+                    >
+                        <ChevronRight className="w-4 h-4" />
+                    </button>
                 </div>
             </div>
 
             {/* Tab Contents Area */}
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
 
-                {/* 1. REGISTRATION FORM TAB */}
+                {/* 1. REGISTRATION FORM TAB (Compact & Elegant) */}
                 {activeTab === 'registration' && (
-                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in-up">
-                        <div className="text-center max-w-2xl mx-auto mb-8">
-                            <h2 className="text-xl sm:text-2xl font-black text-[#60318e] mb-2">
+                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-5 sm:p-7 md:p-8 animate-fade-in-up">
+                        <div className="text-center max-w-2xl mx-auto mb-6">
+                            <h2 className="text-lg sm:text-xl font-black text-[#60318e] mb-1">
                                 {t.form.heading}
                             </h2>
-                            <p className="text-xs sm:text-sm text-slate-500 font-medium">
+                            <p className="text-xs text-slate-500 font-medium">
                                 {t.form.subheading}
                             </p>
                         </div>
 
                         {submitError && (
-                            <div className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+                            <div className="mb-5 p-3 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
                                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
                                 <span>{submitError}</span>
                             </div>
                         )}
 
-                        <form onSubmit={handleSubmit} className="space-y-8 text-xs">
-                            {/* Personal Info */}
-                            <div className="space-y-4">
-                                <h3 className="text-sm font-bold text-[#60318e] pb-2 border-b border-purple-100 flex items-center gap-2">
+                        <form onSubmit={handleSubmit} className="space-y-5 text-xs">
+                            {/* 1. Personal Info */}
+                            <div className="space-y-3 bg-purple-50/20 p-4 sm:p-5 rounded-2xl border border-purple-100/70">
+                                <h3 className="text-xs sm:text-sm font-bold text-[#60318e] pb-1.5 border-b border-purple-100 flex items-center gap-2">
                                     <Users className="w-4 h-4 text-[#AD49E1]" />
                                     <span>{isEn ? "1. Personal Information" : "1. პერსონალური მონაცემები"}</span>
                                 </h3>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     <div>
                                         <label className="block font-bold text-slate-700 mb-1">
                                             {t.form.firstName} <span className="text-red-500">*</span>
@@ -522,7 +478,8 @@ export default function Conference2026View() {
                                             required
                                             value={formData.firstName}
                                             onChange={handleInputChange}
-                                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                            placeholder={isEn ? "First name" : "სახელი"}
+                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
                                         />
                                     </div>
 
@@ -536,12 +493,13 @@ export default function Conference2026View() {
                                             required
                                             value={formData.lastName}
                                             onChange={handleInputChange}
-                                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                            placeholder={isEn ? "Last name" : "გვარი"}
+                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
                                         />
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                     <div>
                                         <label className="block font-bold text-slate-700 mb-1">
                                             {t.form.birthDate}
@@ -551,7 +509,7 @@ export default function Conference2026View() {
                                             name="birthDate"
                                             value={formData.birthDate}
                                             onChange={handleInputChange}
-                                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
                                         />
                                     </div>
 
@@ -566,34 +524,34 @@ export default function Conference2026View() {
                                             value={formData.citizenship}
                                             onChange={handleInputChange}
                                             placeholder={isEn ? "e.g., Georgia" : "მაგ: საქართველო"}
-                                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block font-bold text-slate-700 mb-1">
+                                            {t.form.affiliation} <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="affiliation"
+                                            required
+                                            value={formData.affiliation}
+                                            onChange={handleInputChange}
+                                            placeholder={isEn ? "Institution / University" : "ინსტიტუტი / უნივერსიტეტი"}
+                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
                                         />
                                     </div>
                                 </div>
 
+                                {/* Titulation Pills */}
                                 <div>
                                     <label className="block font-bold text-slate-700 mb-1">
-                                        {t.form.affiliation} <span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="affiliation"
-                                        required
-                                        value={formData.affiliation}
-                                        onChange={handleInputChange}
-                                        placeholder={isEn ? "e.g., Tbilisi State University / IICE" : "მაგ: თბილისის სახელმწიფო უნივერსიტეტი / რ. აგლაძის ინსტიტუტი"}
-                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
-                                    />
-                                </div>
-
-                                {/* Titulation Radio Buttons */}
-                                <div>
-                                    <label className="block font-bold text-slate-700 mb-2">
                                         {t.form.titulation}
                                     </label>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 bg-purple-50/30 p-3 rounded-2xl border border-purple-100">
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 bg-white p-2 rounded-xl border border-purple-100">
                                         {titulationOptions.map(opt => (
-                                            <label key={opt.value} className="flex items-center gap-2 cursor-pointer font-medium text-slate-700 p-1">
+                                            <label key={opt.value} className="flex items-center gap-1.5 cursor-pointer font-medium text-slate-700 text-xs py-1 px-1.5 rounded-lg hover:bg-purple-50 transition-colors">
                                                 <input
                                                     type="radio"
                                                     name="titulation"
@@ -602,20 +560,20 @@ export default function Conference2026View() {
                                                     onChange={handleInputChange}
                                                     className="text-[#60318e] focus:ring-[#AD49E1]"
                                                 />
-                                                <span>{isEn ? opt.labelEn : opt.labelKa}</span>
+                                                <span className="truncate">{isEn ? opt.labelEn : opt.labelKa}</span>
                                             </label>
                                         ))}
                                     </div>
                                 </div>
 
                                 {/* Gender & Email & Attendance */}
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
                                     <div>
-                                        <label className="block font-bold text-slate-700 mb-2">
+                                        <label className="block font-bold text-slate-700 mb-1">
                                             {t.form.gender}
                                         </label>
-                                        <div className="flex gap-4 pt-1">
-                                            <label className="inline-flex items-center gap-1.5 cursor-pointer font-semibold text-slate-700">
+                                        <div className="flex gap-4 pt-1 bg-white px-3 py-2 rounded-xl border border-slate-200">
+                                            <label className="inline-flex items-center gap-1.5 cursor-pointer font-semibold text-slate-700 text-xs">
                                                 <input
                                                     type="radio"
                                                     name="gender"
@@ -626,7 +584,7 @@ export default function Conference2026View() {
                                                 />
                                                 {t.form.female}
                                             </label>
-                                            <label className="inline-flex items-center gap-1.5 cursor-pointer font-semibold text-slate-700">
+                                            <label className="inline-flex items-center gap-1.5 cursor-pointer font-semibold text-slate-700 text-xs">
                                                 <input
                                                     type="radio"
                                                     name="gender"
@@ -651,16 +609,16 @@ export default function Conference2026View() {
                                             value={formData.email}
                                             onChange={handleInputChange}
                                             placeholder="researcher@domain.com"
-                                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block font-bold text-slate-700 mb-2">
+                                        <label className="block font-bold text-slate-700 mb-1">
                                             {t.form.attendance}
                                         </label>
-                                        <div className="flex gap-4 pt-1">
-                                            <label className="inline-flex items-center gap-1.5 cursor-pointer font-semibold text-slate-700">
+                                        <div className="flex gap-4 pt-1 bg-white px-3 py-2 rounded-xl border border-slate-200">
+                                            <label className="inline-flex items-center gap-1.5 cursor-pointer font-semibold text-slate-700 text-xs">
                                                 <input
                                                     type="radio"
                                                     name="isAttendingInPerson"
@@ -670,7 +628,7 @@ export default function Conference2026View() {
                                                 />
                                                 {t.form.yes}
                                             </label>
-                                            <label className="inline-flex items-center gap-1.5 cursor-pointer font-semibold text-slate-700">
+                                            <label className="inline-flex items-center gap-1.5 cursor-pointer font-semibold text-slate-700 text-xs">
                                                 <input
                                                     type="radio"
                                                     name="isAttendingInPerson"
@@ -685,9 +643,9 @@ export default function Conference2026View() {
                                 </div>
                             </div>
 
-                            {/* Presentation Info */}
-                            <div className="space-y-4 pt-4 border-t border-purple-100">
-                                <h3 className="text-sm font-bold text-[#60318e] pb-2 border-b border-purple-100 flex items-center gap-2">
+                            {/* 2. Presentation Details */}
+                            <div className="space-y-3 bg-purple-50/20 p-4 sm:p-5 rounded-2xl border border-purple-100/70">
+                                <h3 className="text-xs sm:text-sm font-bold text-[#60318e] pb-1.5 border-b border-purple-100 flex items-center gap-2">
                                     <FileText className="w-4 h-4 text-[#AD49E1]" />
                                     <span>{isEn ? "2. Presentation & Abstract Details" : "2. მოხსენებისა და აბსტრაქტის დეტალები"}</span>
                                 </h3>
@@ -703,108 +661,110 @@ export default function Conference2026View() {
                                         value={formData.presentationTitle}
                                         onChange={handleInputChange}
                                         placeholder={isEn ? "Title of your presentation..." : "თქვენი სამეცნიერო მოხსენების სათაური..."}
-                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                        className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
                                     />
                                 </div>
 
-                                <div>
-                                    <label className="block font-bold text-slate-700 mb-1">
-                                        {t.form.coAuthors}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="coAuthors"
-                                        value={formData.coAuthors}
-                                        onChange={handleInputChange}
-                                        placeholder={isEn ? "e.g., G. Tatishvili, T. Lezhava, N. Nioradze" : "მაგ: გ. ტატიშვილი, თ. ლეჟავა, ნ. ნიორაძე"}
-                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
-                                    />
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="block font-bold text-slate-700 mb-1">
+                                            {t.form.coAuthors}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="coAuthors"
+                                            value={formData.coAuthors}
+                                            onChange={handleInputChange}
+                                            placeholder={isEn ? "e.g., G. Tatishvili, T. Lezhava" : "მაგ: გ. ტატიშვილი, თ. ლეჟავა"}
+                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block font-bold text-slate-700 mb-1">
+                                            {t.form.topic}
+                                        </label>
+                                        <select
+                                            name="thematicTopic"
+                                            value={formData.thematicTopic}
+                                            onChange={handleInputChange}
+                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white font-medium truncate"
+                                        >
+                                            {thematicTopics.map(top => (
+                                                <option key={top.id} value={top.id}>
+                                                    {isEn ? top.titleEn : top.titleKa}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </div>
 
-                                {/* Presentation Type (Radio) */}
-                                <div>
-                                    <label className="block font-bold text-slate-700 mb-2">
-                                        {t.form.presType}
-                                    </label>
-                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-purple-50/30 p-3 rounded-2xl border border-purple-100">
-                                        {presentationTypeOptions.map(opt => (
-                                            <label key={opt.value} className="flex items-center gap-2 cursor-pointer font-medium text-slate-700">
+                                {/* Presentation Type & Role */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                    <div>
+                                        <label className="block font-bold text-slate-700 mb-1">
+                                            {t.form.presType}
+                                        </label>
+                                        <div className="grid grid-cols-2 gap-1.5 bg-white p-2 rounded-xl border border-purple-100">
+                                            {presentationTypeOptions.map(opt => (
+                                                <label key={opt.value} className="flex items-center gap-1.5 cursor-pointer font-medium text-slate-700 text-xs py-0.5">
+                                                    <input
+                                                        type="radio"
+                                                        name="presentationType"
+                                                        value={opt.value}
+                                                        checked={formData.presentationType === opt.value}
+                                                        onChange={handleInputChange}
+                                                        className="text-[#60318e] focus:ring-[#AD49E1]"
+                                                    />
+                                                    <span className="truncate">{isEn ? opt.labelEn : opt.labelKa}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="block font-bold text-slate-700 mb-1">
+                                            {t.form.role}
+                                        </label>
+                                        <div className="flex flex-wrap gap-4 bg-white p-2 rounded-xl border border-purple-100 h-[46px] items-center px-3">
+                                            <label className="inline-flex items-center gap-1.5 cursor-pointer font-bold text-slate-800 text-xs">
                                                 <input
-                                                    type="radio"
-                                                    name="presentationType"
-                                                    value={opt.value}
-                                                    checked={formData.presentationType === opt.value}
+                                                    type="checkbox"
+                                                    name="rolePresentingAuthor"
+                                                    checked={formData.rolePresentingAuthor}
                                                     onChange={handleInputChange}
-                                                    className="text-[#60318e] focus:ring-[#AD49E1]"
+                                                    className="text-[#60318e] rounded"
                                                 />
-                                                <span>{isEn ? opt.labelEn : opt.labelKa}</span>
+                                                <span>{t.form.presentingAuthor}</span>
                                             </label>
-                                        ))}
+                                            <label className="inline-flex items-center gap-1.5 cursor-pointer font-bold text-slate-800 text-xs">
+                                                <input
+                                                    type="checkbox"
+                                                    name="roleCoAuthor"
+                                                    checked={formData.roleCoAuthor}
+                                                    onChange={handleInputChange}
+                                                    className="text-[#60318e] rounded"
+                                                />
+                                                <span>{t.form.coAuthor}</span>
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-
-                                {/* Role Checkbox */}
-                                <div>
-                                    <label className="block font-bold text-slate-700 mb-2">
-                                        {t.form.role}
-                                    </label>
-                                    <div className="flex flex-wrap gap-6 bg-purple-50/30 p-3 rounded-2xl border border-purple-100">
-                                        <label className="inline-flex items-center gap-2 cursor-pointer font-bold text-slate-800">
-                                            <input
-                                                type="checkbox"
-                                                name="rolePresentingAuthor"
-                                                checked={formData.rolePresentingAuthor}
-                                                onChange={handleInputChange}
-                                                className="text-[#60318e] rounded"
-                                            />
-                                            <span>{t.form.presentingAuthor}</span>
-                                        </label>
-                                        <label className="inline-flex items-center gap-2 cursor-pointer font-bold text-slate-800">
-                                            <input
-                                                type="checkbox"
-                                                name="roleCoAuthor"
-                                                checked={formData.roleCoAuthor}
-                                                onChange={handleInputChange}
-                                                className="text-[#60318e] rounded"
-                                            />
-                                            <span>{t.form.coAuthor}</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                {/* Thematic Topics Dropdown */}
-                                <div>
-                                    <label className="block font-bold text-slate-700 mb-1">
-                                        {t.form.topic}
-                                    </label>
-                                    <select
-                                        name="thematicTopic"
-                                        value={formData.thematicTopic}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white font-medium"
-                                    >
-                                        {thematicTopics.map(top => (
-                                            <option key={top.id} value={top.id}>
-                                                {isEn ? top.titleEn : top.titleKa}
-                                            </option>
-                                        ))}
-                                    </select>
                                 </div>
                             </div>
 
-                            {/* File Uploads Section */}
-                            <div className="space-y-4 pt-4 border-t border-purple-100">
-                                <h3 className="text-sm font-bold text-[#60318e] pb-2 border-b border-purple-100 flex items-center gap-2">
+                            {/* 3. File Uploads */}
+                            <div className="space-y-3 bg-purple-50/20 p-4 sm:p-5 rounded-2xl border border-purple-100/70">
+                                <h3 className="text-xs sm:text-sm font-bold text-[#60318e] pb-1.5 border-b border-purple-100 flex items-center gap-2">
                                     <UploadCloud className="w-4 h-4 text-[#AD49E1]" />
                                     <span>{t.form.uploadAbstract}</span>
                                 </h3>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div className="border-2 border-dashed border-purple-200 rounded-2xl p-4 text-center bg-purple-50/40 hover:bg-purple-50 transition-colors relative">
-                                        <label className="block font-bold text-slate-700 mb-1 cursor-pointer">
-                                            {isEn ? "Georgian Abstract File" : "თეზისი ქართულ ენაზე"}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div className="border-2 border-dashed border-purple-200 rounded-xl p-3 text-center bg-white hover:bg-purple-50/40 transition-colors relative">
+                                        <label className="block font-bold text-slate-700 text-xs mb-0.5 cursor-pointer">
+                                            {isEn ? "Georgian Abstract (.doc, .docx, .pdf)" : "თეზისი ქართულად (.doc, .docx, .pdf)"}
                                         </label>
-                                        <span className="text-[11px] text-purple-700 block mb-3 font-semibold">
+                                        <span className="text-[10px] text-purple-700 block mb-2 font-semibold">
                                             {t.form.geoNotice}
                                         </span>
                                         {!geoFile ? (
@@ -812,31 +772,31 @@ export default function Conference2026View() {
                                                 type="file"
                                                 accept=".doc,.docx,.pdf"
                                                 onChange={(e) => setGeoFile(e.target.files?.[0] || null)}
-                                                className="text-[11px] text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-bold file:bg-[#60318e] file:text-white cursor-pointer"
+                                                className="text-[11px] text-slate-600 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-[#60318e] file:text-white cursor-pointer"
                                             />
                                         ) : (
-                                            <div className="flex items-center justify-between bg-white px-3 py-2 rounded-xl border border-purple-200 mt-2 shadow-xs">
-                                                <span className="font-bold text-[#60318e] text-[11px] truncate flex items-center gap-1.5">
+                                            <div className="flex items-center justify-between bg-purple-50 px-2.5 py-1.5 rounded-lg border border-purple-200 shadow-xs">
+                                                <span className="font-bold text-[#60318e] text-[11px] truncate flex items-center gap-1">
                                                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
                                                     {geoFile.name}
                                                 </span>
                                                 <button
                                                     type="button"
                                                     onClick={() => setGeoFile(null)}
-                                                    className="p-1 rounded-lg text-red-500 hover:bg-red-50 transition-colors ml-2 flex-shrink-0 cursor-pointer"
+                                                    className="p-1 rounded-md text-red-500 hover:bg-red-50 transition-colors ml-1 flex-shrink-0 cursor-pointer"
                                                     title={isEn ? "Remove file" : "ფაილის წაშლა"}
                                                 >
-                                                    <X className="w-4 h-4" />
+                                                    <X className="w-3.5 h-3.5" />
                                                 </button>
                                             </div>
                                         )}
                                     </div>
 
-                                    <div className="border-2 border-dashed border-purple-200 rounded-2xl p-4 text-center bg-purple-50/40 hover:bg-purple-50 transition-colors relative">
-                                        <label className="block font-bold text-slate-700 mb-1 cursor-pointer">
-                                            {isEn ? "English Abstract File" : "თეზისი ინგლისურ ენაზე"}
+                                    <div className="border-2 border-dashed border-purple-200 rounded-xl p-3 text-center bg-white hover:bg-purple-50/40 transition-colors relative">
+                                        <label className="block font-bold text-slate-700 text-xs mb-0.5 cursor-pointer">
+                                            {isEn ? "English Abstract (.doc, .docx, .pdf)" : "თეზისი ინგლისურად (.doc, .docx, .pdf)"}
                                         </label>
-                                        <span className="text-[11px] text-purple-700 block mb-3 font-semibold">
+                                        <span className="text-[10px] text-purple-700 block mb-2 font-semibold">
                                             {t.form.engNotice}
                                         </span>
                                         {!engFile ? (
@@ -844,21 +804,21 @@ export default function Conference2026View() {
                                                 type="file"
                                                 accept=".doc,.docx,.pdf"
                                                 onChange={(e) => setEngFile(e.target.files?.[0] || null)}
-                                                className="text-[11px] text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-bold file:bg-[#60318e] file:text-white cursor-pointer"
+                                                className="text-[11px] text-slate-600 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-[#60318e] file:text-white cursor-pointer"
                                             />
                                         ) : (
-                                            <div className="flex items-center justify-between bg-white px-3 py-2 rounded-xl border border-purple-200 mt-2 shadow-xs">
-                                                <span className="font-bold text-[#60318e] text-[11px] truncate flex items-center gap-1.5">
+                                            <div className="flex items-center justify-between bg-purple-50 px-2.5 py-1.5 rounded-lg border border-purple-200 shadow-xs">
+                                                <span className="font-bold text-[#60318e] text-[11px] truncate flex items-center gap-1">
                                                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
                                                     {engFile.name}
                                                 </span>
                                                 <button
                                                     type="button"
                                                     onClick={() => setEngFile(null)}
-                                                    className="p-1 rounded-lg text-red-500 hover:bg-red-50 transition-colors ml-2 flex-shrink-0 cursor-pointer"
+                                                    className="p-1 rounded-md text-red-500 hover:bg-red-50 transition-colors ml-1 flex-shrink-0 cursor-pointer"
                                                     title={isEn ? "Remove file" : "ფაილის წაშლა"}
                                                 >
-                                                    <X className="w-4 h-4" />
+                                                    <X className="w-3.5 h-3.5" />
                                                 </button>
                                             </div>
                                         )}
@@ -866,18 +826,18 @@ export default function Conference2026View() {
                                 </div>
 
                                 {/* Footnote Notice */}
-                                <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-[11px] leading-relaxed flex items-start gap-2">
+                                <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-900 text-[11px] leading-relaxed flex items-start gap-2">
                                     <Info className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
                                     <span>{t.form.footnote}</span>
                                 </div>
                             </div>
 
                             {/* Submit Button */}
-                            <div className="pt-4 text-center">
+                            <div className="pt-2 text-center">
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="inline-flex items-center justify-center gap-2 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-extrabold px-9 py-3.5 rounded-full text-sm uppercase tracking-wider transition-all shadow-md hover:shadow-lg hover:scale-[1.02] disabled:opacity-50 cursor-pointer"
+                                    className="inline-flex items-center justify-center gap-2 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-extrabold px-8 py-3 rounded-full text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md hover:shadow-lg hover:scale-[1.02] disabled:opacity-50 cursor-pointer"
                                 >
                                     {isSubmitting ? (
                                         <>
@@ -886,7 +846,7 @@ export default function Conference2026View() {
                                         </>
                                     ) : (
                                         <>
-                                            <Send className="w-4 h-4" />
+                                            <Send className="w-3.5 h-3.5" />
                                             <span>{t.form.submitBtn}</span>
                                         </>
                                     )}
@@ -1217,10 +1177,76 @@ export default function Conference2026View() {
                 )}
             </div>
 
+            {/* Institutional Partners & Sponsors Section (Moved down) */}
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-14 pt-10 border-t border-purple-100">
+                <div className="text-center mb-6">
+                    <span className="text-[11px] font-extrabold uppercase tracking-wider px-3.5 py-1 rounded-full bg-purple-100 text-[#60318e] inline-block mb-1.5">
+                        {isEn ? "Organizing Institutions & Donors" : "საორგანიზაციო ინსტიტუციები და პარტნიორები"}
+                    </span>
+                    <h3 className="text-base sm:text-lg font-black text-slate-900">
+                        {isEn ? "Partners & Supporting Organizations" : "მხარდამჭერი ორგანიზაციები და დონორები"}
+                    </h3>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+                    {/* IICE */}
+                    <div className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md transition-shadow">
+                        <div className="w-12 h-12 rounded-xl bg-purple-50 p-1.5 flex items-center justify-center mb-2">
+                            <img src="/logo.png" alt="IICE" className="w-full h-full object-contain" />
+                        </div>
+                        <span className="text-[10px] font-extrabold text-[#60318e] uppercase">IICE • 70 წელი</span>
+                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2">
+                            {isEn ? "R. Agladze Institute" : "რ. აგლაძის ინსტიტუტი"}
+                        </p>
+                    </div>
+
+                    {/* TSU */}
+                    <div className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md transition-shadow">
+                        <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mb-2 text-blue-700">
+                            <Landmark className="w-6 h-6" />
+                        </div>
+                        <span className="text-[10px] font-extrabold text-blue-700 uppercase">TSU • თსუ</span>
+                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2">
+                            {isEn ? "Tbilisi State University" : "თბილისის სახელმწიფო უნივერსიტეტი"}
+                        </p>
+                    </div>
+
+                    {/* TeSaU */}
+                    <div className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md transition-shadow">
+                        <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center mb-2 text-emerald-700">
+                            <GraduationCap className="w-6 h-6" />
+                        </div>
+                        <span className="text-[10px] font-extrabold text-emerald-700 uppercase">TeSaU • თელავი</span>
+                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2">
+                            {isEn ? "Telavi State University" : "თელავის სახელმწიფო უნივერსიტეტი"}
+                        </p>
+                    </div>
+
+                    {/* SRNSFG */}
+                    <div className="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md transition-shadow">
+                        <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center mb-2 text-amber-600">
+                            <Award className="w-6 h-6" />
+                        </div>
+                        <span className="text-[10px] font-extrabold text-amber-800 uppercase">გრანტის დონორი</span>
+                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2">
+                            {isEn ? "Rustaveli Foundation" : "რუსთაველის ეროვნული ფონდი"}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             {/* Success Confirmation Modal */}
             {successData && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in-up">
-                    <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 text-center relative border border-purple-100">
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-md animate-fade-in"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) setSuccessData(null);
+                    }}
+                >
+                    <div
+                        className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 text-center relative border border-purple-100 animate-scale-in"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
                             <CheckCircle2 className="w-10 h-10" />
                         </div>

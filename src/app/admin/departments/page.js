@@ -28,6 +28,17 @@ export default function AdminDepartmentsPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState('');
 
+    // Close modal on ESC key
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setEditingDept(null);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
     const loadDepartments = async () => {
         setIsLoading(true);
         try {
@@ -167,8 +178,16 @@ export default function AdminDepartmentsPage() {
 
             {/* Edit Modal */}
             {editingDept && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in-up">
-                    <div className="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-6 sm:p-8 relative border border-purple-100 max-h-[92vh] overflow-y-auto">
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/45 backdrop-blur-md animate-fade-in transition-all"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) setEditingDept(null);
+                    }}
+                >
+                    <div
+                        className="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-5 sm:p-8 relative border border-purple-100 max-h-[90vh] overflow-y-auto animate-scale-in"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <button
                             onClick={() => setEditingDept(null)}
                             className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 p-2 rounded-full hover:bg-slate-100 transition-colors"

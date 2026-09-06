@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import { LanguageProvider } from "../context/LanguageContext";
 import ScrollToTop from "../components/ScrollToTop";
 import PageTransition from "../components/PageTransition";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const googleSans = localFont({
