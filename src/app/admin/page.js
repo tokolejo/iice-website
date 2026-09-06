@@ -145,7 +145,7 @@ export default function AdminDashboardPage() {
                 <div>
                     <h1 className="text-2xl sm:text-3xl font-black text-gray-900 flex items-center gap-3">
                         <Activity className="w-7 h-7 text-[#60318e]" />
-                        მართვის პანელი (Overview)
+                        მართვის პორტალი
                     </h1>
                     <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">
                         თსუ რაფიელ აგლაძის ინსტიტუტის მონაცემთა და უსაფრთხოების მართვის ცენტრი

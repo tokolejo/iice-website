@@ -157,13 +157,13 @@ export default function AdminLayout({ children }) {
     const isConfManager = isAdmin || roles.includes('conference_manager');
 
     const navItems = [
-        { href: '/admin', label: 'მთავარი (Overview)', icon: LayoutDashboard },
+        { href: '/admin', label: 'მთავარი', icon: LayoutDashboard },
         ...(isConfManager ? [{ href: '/admin/conference', label: 'კონფერენცია 2026', icon: Calendar, badge: 'Registrations' }] : []),
-        ...(isDeptHead ? [{ href: '/admin/staff', label: 'თანამშრომლები (Staff)', icon: Users }] : []),
+        ...(isDeptHead ? [{ href: '/admin/staff', label: 'თანამშრომლები', icon: Users }] : []),
         ...(isAdmin ? [{ href: '/admin/departments', label: 'განყოფილებები', icon: Building2 }] : []),
-        ...(isEditor ? [{ href: '/admin/news', label: 'სიახლეები (News)', icon: Newspaper }] : []),
+        ...(isEditor ? [{ href: '/admin/news', label: 'სიახლეები', icon: Newspaper }] : []),
         ...(isSuperAdmin ? [{ href: '/admin/users', label: 'მომხმარებლები (RBAC)', icon: ShieldCheck }] : []),
-        ...(isAdmin ? [{ href: '/admin/audit', label: 'აუდიტის ლოგი (Audit)', icon: History }] : []),
+        ...(isSuperAdmin ? [{ href: '/admin/audit', label: 'აუდიტის ჟურნალი', icon: History }] : []),
     ];
 
     return (
@@ -178,7 +178,7 @@ export default function AdminLayout({ children }) {
                         </div>
                         <div>
                             <h2 className="font-black text-sm text-white tracking-wide">TSU IICE</h2>
-                            <p className="text-[10px] text-[#EBD3F8]/80 font-bold uppercase tracking-wider">Admin Portal</p>
+                            <p className="text-[10px] text-[#EBD3F8]/80 font-bold uppercase tracking-wider">მართვის პორტალი</p>
                         </div>
                     </Link>
                     <button
@@ -317,7 +317,7 @@ export default function AdminLayout({ children }) {
                     >
                         <Menu className="w-5 h-5" />
                     </button>
-                    <span className="text-xs font-black text-[#60318e] uppercase tracking-wider">IICE Admin</span>
+                    <span className="text-xs font-black text-[#60318e] uppercase tracking-wider">IICE პორტალი</span>
                     <button
                         onClick={handleSignOut}
                         className="text-red-500 p-1.5 hover:bg-red-50 rounded-lg text-xs font-bold"

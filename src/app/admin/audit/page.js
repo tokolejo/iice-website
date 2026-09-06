@@ -99,12 +99,40 @@ function getActionBadge(action = '') {
 export default function AdminAuditPage() {
     const [logs, setLogs] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+    const [accessChecked, setAccessChecked] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('ALL');
     const [timeRange, setTimeRange] = useState('all');
     const [selectedLog, setSelectedLog] = useState(null);
     const [pageSize, setPageSize] = useState(25);
     const [currentPage, setCurrentPage] = useState(1);
+
+    // Super admin access check
+    useEffect(() => {
+        async function checkAccess() {
+            const supabase = getSupabaseBrowserClient();
+            if (!supabase) {
+                setIsSuperAdmin(true); // local preview mode
+                setAccessChecked(true);
+                return;
+            }
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user?.email?.toLowerCase() === 'tokolejo@gmail.com') {
+                setIsSuperAdmin(true);
+            } else if (user) {
+                const { data: profile } = await supabase
+                    .from('user_profiles')
+                    .select('roles, role')
+                    .eq('id', user.id)
+                    .maybeSingle();
+                const roles = profile?.roles || (profile?.role ? [profile.role] : []);
+                setIsSuperAdmin(roles.includes('super_admin'));
+            }
+            setAccessChecked(true);
+        }
+        checkAccess();
+    }, []);
 
     const loadAuditLogs = async () => {
         setIsLoading(true);
@@ -274,6 +302,29 @@ export default function AdminAuditPage() {
         link.click();
         document.body.removeChild(link);
     };
+
+    // ── Access Gate ──────────────────────────────────────────────────────────
+    if (!accessChecked) {
+        return (
+            <div className="flex items-center justify-center min-h-64">
+                <div className="w-8 h-8 border-2 border-[#60318e] border-t-transparent rounded-full animate-spin" />
+            </div>
+        );
+    }
+
+    if (!isSuperAdmin) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-96 gap-4 text-center">
+                <div className="w-16 h-16 rounded-3xl bg-red-100 flex items-center justify-center">
+                    <Shield className="w-8 h-8 text-red-500" />
+                </div>
+                <div>
+                    <h2 className="text-xl font-black text-gray-900 mb-1">წვდომა შეზღუდულია</h2>
+                    <p className="text-sm text-gray-500 max-w-sm">აუდიტის ჟურნალი ხელმისაწვდომია მხოლოდ სუპერ ადმინისტრატორისთვის.</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6 animate-fade-in">

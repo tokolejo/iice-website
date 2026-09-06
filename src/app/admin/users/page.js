@@ -235,15 +235,17 @@ export default function AdminUsersPage() {
 
                 await recordAuditLog({
                     action: 'USER_ROLES_UPDATE',
-                    category: 'rbac',
+                    tableName: 'user_profiles',
                     recordId: selectedUser.id,
-                    recordTitle: selectedUser.email || selectedUser.full_name,
                     details: {
-                        email: selectedUser.email,
-                        roles: finalRoles,
+                        target_email: selectedUser.email,
+                        target_name: selectedUser.full_name || selectedUser.email,
+                        old_roles: selectedUser.roles || [selectedUser.role],
+                        new_roles: finalRoles,
                         primary_role: primaryRole,
                         department_id: deptToSave,
-                        is_active: modalIsActive
+                        is_active: modalIsActive,
+                        changed_by: 'super_admin'
                     },
                 });
             }
