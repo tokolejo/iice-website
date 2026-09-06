@@ -65,7 +65,6 @@ export async function GET(request) {
           roles: ['pending'],
           is_active: true,
         });
-      } else {
         // Returning user: preserve their roles and department assignment
         await supabase
           .from('user_profiles')
@@ -74,6 +73,33 @@ export async function GET(request) {
             full_name: fullName,
           })
           .eq('id', user.id);
+      }
+
+      // Record audit log for authentication
+      try {
+        const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+          request.headers.get('x-real-ip') ||
+          'unknown';
+        const userAgent = request.headers.get('user-agent') || 'unknown';
+
+        await supabase.from('audit_logs').insert([
+          {
+            user_email: user.email,
+            action: !existingProfile ? 'AUTH_REGISTER' : 'AUTH_SIGN_IN',
+            table_name: 'auth.users',
+            record_id: user.id,
+            details: {
+              email: user.email,
+              fullName,
+              isSuperAdmin,
+              ip,
+              userAgent: userAgent.slice(0, 160),
+            },
+            created_at: new Date().toISOString(),
+          }
+        ]);
+      } catch (logErr) {
+        console.warn('Auth callback audit log notice:', logErr);
       }
 
       return NextResponse.redirect(`${origin}${next}`);

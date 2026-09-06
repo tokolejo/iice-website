@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { getSupabaseBrowserClient } from '../../lib/supabase/client';
+import { recordAuditLog } from '../../lib/auditLogger';
 import {
     LayoutDashboard,
     Calendar,
@@ -99,6 +100,20 @@ export default function AdminLayout({ children }) {
     }, [pathname, isAuthPage, router]);
 
     const handleSignOut = async () => {
+        try {
+            if (user?.email) {
+                await recordAuditLog({
+                    userEmail: user.email,
+                    action: 'AUTH_SIGN_OUT',
+                    tableName: 'auth.users',
+                    recordId: user.id || null,
+                    details: { email: user.email, timestamp: new Date().toISOString() }
+                });
+            }
+        } catch (e) {
+            console.warn('Sign out audit log notice:', e);
+        }
+
         const supabase = getSupabaseBrowserClient();
         if (supabase) {
             await supabase.auth.signOut();

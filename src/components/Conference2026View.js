@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
 import { getSupabaseBrowserClient } from '../lib/supabase/client';
+import { recordAuditLog } from '../lib/auditLogger';
 import {
     Calendar,
     MapPin,
@@ -148,12 +149,12 @@ export default function Conference2026View() {
     };
 
     const thematicTopics = [
-        { id: '1', titleKa: '1. ნანოპროცესები და ნანოტექნოლოგიები', titleEn: '1. Nanoprocesses and Nanotechnologies' },
-        { id: '2', titleKa: '2. სასარგებლო წიაღისეულისა და მეორადი ნედლეულის გადამუშავების ფუნდამენტური და ტექნოლოგიური ასპექტები', titleEn: '2. Fundamental and Technological Aspects of Mineral and Secondary Raw Material Processing' },
-        { id: '3', titleKa: '3. მწვანე ქიმია', titleEn: '3. Green Chemistry' },
-        { id: '4', titleKa: '4. სამეცნიერო ინოვაციების პოპულარიზაცია და კომერციალიზაცია', titleEn: '4. Popularization and Commercialization of Scientific Innovations' },
-        { id: '5', titleKa: '5. სურსათის ქიმია და ხარისხი', titleEn: '5. Food Chemistry and Quality of Food' },
-        { id: '6', titleKa: '6. STEM+P: მეცნიერება, ინოვაცია და პოლიტიკა', titleEn: '6. STEM+P: Science, Innovation and Policy' },
+        { id: '1', titleKa: 'ნანოპროცესები და ნანოტექნოლოგიები', titleEn: 'Nanoprocesses and Nanotechnologies' },
+        { id: '2', titleKa: 'სასარგებლო წიაღისეულისა და მეორადი ნედლეულის გადამუშავების ფუნდამენტური და ტექნოლოგიური ასპექტები', titleEn: 'Fundamental and Technological Aspects of Mineral and Secondary Raw Material Processing' },
+        { id: '3', titleKa: 'მწვანე ქიმია', titleEn: 'Green Chemistry' },
+        { id: '4', titleKa: 'სამეცნიერო ინოვაციების პოპულარიზაცია და კომერციალიზაცია', titleEn: 'Popularization and Commercialization of Scientific Innovations' },
+        { id: '5', titleKa: 'სურსათის ქიმია და ხარისხი', titleEn: 'Food Chemistry and Quality of Food' },
+        { id: '6', titleKa: 'STEM+P: მეცნიერება, ინოვაცია და პოლიტიკა', titleEn: 'STEM+P: Science, Innovation and Policy' },
     ];
 
     const titulationOptions = [
@@ -191,94 +192,71 @@ export default function Conference2026View() {
         setIsSubmitting(true);
 
         try {
-            const supabase = getSupabaseBrowserClient();
-            let geoUrl = null;
-            let engUrl = null;
+            const fd = new FormData();
+            fd.append('firstName', formData.firstName);
+            fd.append('lastName', formData.lastName);
+            if (formData.birthDate) fd.append('birthDate', formData.birthDate);
+            fd.append('citizenship', formData.citizenship);
+            fd.append('affiliation', formData.affiliation);
+            fd.append('titulation', formData.titulation);
+            fd.append('gender', formData.gender);
+            fd.append('email', formData.email);
+            fd.append('isAttendingInPerson', String(formData.isAttendingInPerson));
+            fd.append('presentationTitle', formData.presentationTitle);
+            if (formData.coAuthors) fd.append('coAuthors', formData.coAuthors);
+            fd.append('presentationType', formData.presentationType);
 
-            if (supabase) {
-                // Upload GEO Abstract
-                if (geoFile) {
-                    const ext = geoFile.name.split('.').pop();
-                    const filePath = `geo_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${ext}`;
-                    const { error: uploadErr } = await supabase.storage
-                        .from('conference-abstracts')
-                        .upload(filePath, geoFile);
+            const participationRole = formData.rolePresentingAuthor && formData.roleCoAuthor
+                ? 'presenting_and_co_author'
+                : formData.rolePresentingAuthor
+                ? 'presenting_author'
+                : 'co_author';
+            fd.append('participationRole', participationRole);
+            fd.append('thematicTopic', formData.thematicTopic);
 
-                    if (!uploadErr) {
-                        const { data: { publicUrl } } = supabase.storage
-                            .from('conference-abstracts')
-                            .getPublicUrl(filePath);
-                        geoUrl = publicUrl;
-                    }
+            if (geoFile) fd.append('geoFile', geoFile);
+            if (engFile) fd.append('engFile', engFile);
+
+            const res = await fetch('/api/conference/register', {
+                method: 'POST',
+                body: fd
+            });
+
+            let assignedAbstractNumber = `IICE-2026-${Math.floor(100 + Math.random() * 900)}`;
+
+            if (res.ok) {
+                const resData = await res.json();
+                if (resData.abstractNumber) {
+                    assignedAbstractNumber = resData.abstractNumber;
                 }
-
-                // Upload ENG Abstract
-                if (engFile) {
-                    const ext = engFile.name.split('.').pop();
-                    const filePath = `eng_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${ext}`;
-                    const { error: uploadErr } = await supabase.storage
-                        .from('conference-abstracts')
-                        .upload(filePath, engFile);
-
-                    if (!uploadErr) {
-                        const { data: { publicUrl } } = supabase.storage
-                            .from('conference-abstracts')
-                            .getPublicUrl(filePath);
-                        engUrl = publicUrl;
-                    }
-                }
-
-                const participationRole = formData.rolePresentingAuthor && formData.roleCoAuthor
-                    ? 'presenting_and_co_author'
-                    : formData.rolePresentingAuthor
-                    ? 'presenting_author'
-                    : 'co_author';
-
-                const { data, error } = await supabase
-                    .from('conference_registrations_2026')
-                    .insert([
-                        {
-                            first_name: formData.firstName,
-                            last_name: formData.lastName,
-                            birth_date: formData.birthDate || null,
-                            citizenship: formData.citizenship,
-                            affiliation: formData.affiliation,
-                            titulation: formData.titulation,
-                            gender: formData.gender,
-                            email: formData.email,
-                            is_attending_in_person: formData.isAttendingInPerson,
-                            presentation_title: formData.presentationTitle,
-                            co_authors: formData.coAuthors || null,
-                            presentation_type: formData.presentationType,
-                            participation_role: participationRole,
-                            thematic_topic: formData.thematicTopic,
-                            abstract_file_geo_url: geoUrl,
-                            abstract_file_eng_url: engUrl,
-                        }
-                    ])
-                    .select('abstract_number')
-                    .single();
-
-                if (error) {
-                    console.warn('Supabase insert notice:', error);
-                    const fallbackCode = `IICE-2026-${Math.floor(100 + Math.random() * 900)}`;
-                    setSuccessData({
-                        abstractNumber: fallbackCode,
-                        name: `${formData.firstName} ${formData.lastName}`,
-                    });
-                } else {
-                    setSuccessData({
-                        abstractNumber: data?.abstract_number || `IICE-2026-${Math.floor(100 + Math.random() * 900)}`,
-                        name: `${formData.firstName} ${formData.lastName}`,
-                    });
-                }
-            } else {
-                const fallbackCode = `IICE-2026-${Math.floor(100 + Math.random() * 900)}`;
                 setSuccessData({
-                    abstractNumber: fallbackCode,
+                    abstractNumber: assignedAbstractNumber,
                     name: `${formData.firstName} ${formData.lastName}`,
                 });
+            } else {
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.error || 'რეგისტრაცია ვერ მოხერხდა');
             }
+
+            // Trigger audit logging for conference participant registration
+            recordAuditLog({
+                userEmail: formData.email,
+                action: 'CONFERENCE_REGISTER',
+                tableName: 'conference_participants_2026',
+                recordId: assignedAbstractNumber,
+                details: {
+                    abstractNumber: assignedAbstractNumber,
+                    fullName: `${formData.firstName} ${formData.lastName}`,
+                    email: formData.email,
+                    affiliation: formData.affiliation,
+                    citizenship: formData.citizenship,
+                    presentationTitle: formData.presentationTitle,
+                    presentationType: formData.presentationType,
+                    thematicTopic: formData.thematicTopic,
+                    hasGeoFile: !!geoUrl,
+                    hasEngFile: !!engUrl,
+                }
+            });
 
             // Reset form fields
             setFormData({
@@ -321,48 +299,48 @@ export default function Conference2026View() {
             <title>{isEn ? "3rd International Scientific Conference 2026 | TSU IICE" : "III საერთაშორისო სამეცნიერო კონფერენცია 2026 | TSU IICE"}</title>
             <meta name="description" content={isEn ? "3rd International Scientific Conference 2026 dedicated to the 70th anniversary of IICE." : "მე-3 საერთაშორისო სამეცნიერო კონფერენცია 2026 ეძღვნება რაფიელ აგლაძის ინსტიტუტის 70 წლისთავს."} />
 
-            {/* Hero Header Section - High-Contrast Royal Purple with Ambient Glow */}
-            <div className="relative bg-gradient-to-b from-[#180327] via-[#2f0d46] to-[#1c062c] text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 shadow-xl overflow-hidden">
+            {/* Hero Header Section - High-Contrast Royal Purple with Ambient Glow (Compact & Refined) */}
+            <div className="relative bg-gradient-to-b from-[#180327] via-[#2f0d46] to-[#1c062c] text-white py-8 sm:py-12 lg:py-14 px-4 sm:px-6 lg:px-8 shadow-xl overflow-hidden">
                 {/* Decorative radial mesh light */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(173,73,225,0.22),transparent_70%)] pointer-events-none"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(173,73,225,0.18),transparent_70%)] pointer-events-none"></div>
 
-                <div className="max-w-5xl mx-auto text-center relative z-10">
-                    <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs sm:text-sm font-extrabold bg-gradient-to-r from-purple-500/25 to-amber-500/25 text-amber-200 border border-amber-400/40 mb-6 backdrop-blur-md shadow-md">
-                        <Sparkles className="w-4 h-4 text-amber-300" />
+                <div className="max-w-4xl mx-auto text-center relative z-10">
+                    <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-[11px] sm:text-xs font-extrabold bg-gradient-to-r from-purple-500/25 to-amber-500/25 text-amber-200 border border-amber-400/35 mb-3 backdrop-blur-md shadow-xs">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                         <span>{t.badge}</span>
                     </div>
 
-                    <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-white mb-4 leading-snug tracking-tight max-w-3xl mx-auto drop-shadow-sm">
+                    <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-black text-white mb-3 leading-snug tracking-tight max-w-2xl mx-auto drop-shadow-xs">
                         {t.title}
                     </h1>
 
                     {/* 70 Years Commemorative Banner */}
-                    <div className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-500/15 via-amber-400/25 to-amber-500/15 text-amber-200 py-2.5 px-5 rounded-2xl border border-amber-300/40 shadow-md mb-6 max-w-3xl backdrop-blur-md">
-                        <Award className="w-5 h-5 text-amber-400 flex-shrink-0" />
-                        <span className="text-xs sm:text-sm font-bold text-amber-100 leading-snug">
+                    <div className="inline-flex items-center gap-2.5 bg-gradient-to-r from-amber-500/15 via-amber-400/20 to-amber-500/15 text-amber-200 py-1.5 px-4 rounded-xl border border-amber-300/30 shadow-xs mb-3.5 max-w-2xl backdrop-blur-md">
+                        <Award className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                        <span className="text-[11px] sm:text-xs font-bold text-amber-100 leading-snug">
                             {t.anniversary}
                         </span>
                     </div>
 
                     {/* Dates & Venues Pills */}
-                    <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 text-xs font-bold mb-6">
-                        <div className="flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-2xl backdrop-blur-md border border-white/20 shadow-xs">
-                            <Calendar className="w-4 h-4 text-amber-300" />
+                    <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] sm:text-xs font-bold mb-3.5">
+                        <div className="flex items-center gap-1.5 bg-white/10 text-white px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/15 shadow-xs">
+                            <Calendar className="w-3.5 h-3.5 text-amber-300" />
                             <span>{t.datesText}</span>
                         </div>
-                        <div className="flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-2xl backdrop-blur-md border border-white/20 shadow-xs">
-                            <MapPin className="w-4 h-4 text-amber-300" />
+                        <div className="flex items-center gap-1.5 bg-white/10 text-white px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/15 shadow-xs">
+                            <MapPin className="w-3.5 h-3.5 text-amber-300" />
                             <span>{t.venuesText}</span>
                         </div>
                     </div>
 
                     {/* Mandatory Grant Notice & Free Participation */}
-                    <div className="max-w-3xl mx-auto space-y-2.5 text-xs mb-6">
-                        <div className="bg-white/10 text-purple-100 px-4 py-2.5 rounded-2xl border border-white/15 backdrop-blur-md shadow-xs leading-relaxed flex items-center justify-center gap-2">
-                            <Landmark className="w-4 h-4 text-amber-300 flex-shrink-0" />
+                    <div className="max-w-2xl mx-auto space-y-2 text-[11px] mb-4">
+                        <div className="bg-white/10 text-purple-100 px-3.5 py-1.5 rounded-xl border border-white/15 backdrop-blur-md shadow-xs leading-relaxed flex items-center justify-center gap-2">
+                            <Landmark className="w-3.5 h-3.5 text-amber-300 flex-shrink-0" />
                             <span><strong>{t.grantNotice}</strong></span>
                         </div>
-                        <div className="inline-flex items-center gap-2 bg-emerald-500/25 text-emerald-200 font-extrabold px-3.5 py-1 rounded-full border border-emerald-400/40 shadow-xs">
+                        <div className="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-200 font-extrabold px-3 py-1 rounded-full border border-emerald-400/35 shadow-xs">
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                             <span>{t.freeNotice}</span>
                         </div>
@@ -375,9 +353,9 @@ export default function Conference2026View() {
                                 setActiveTab('registration');
                                 document.getElementById('tabs-navigation')?.scrollIntoView({ behavior: 'smooth' });
                             }}
-                            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#AD49E1] to-[#7A1CAC] hover:from-[#bd5cf0] hover:to-[#8c25c2] text-white font-extrabold px-7 py-3 rounded-full text-xs sm:text-sm shadow-md hover:shadow-lg hover:scale-105 transition-all cursor-pointer"
+                            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#AD49E1] to-[#7A1CAC] hover:from-[#bd5cf0] hover:to-[#8c25c2] text-white font-extrabold px-5 py-2.5 rounded-full text-xs shadow-md hover:shadow-lg hover:scale-102 transition-all cursor-pointer"
                         >
-                            <Send className="w-4 h-4" />
+                            <Send className="w-3.5 h-3.5" />
                             <span>{isEn ? "Go to Registration Form ↓" : "რეგისტრაცია & აბსტრაქტის ატვირთვა ↓"}</span>
                         </button>
                     </div>
@@ -442,7 +420,7 @@ export default function Conference2026View() {
 
                 {/* 1. REGISTRATION FORM TAB (Compact & Elegant) */}
                 {activeTab === 'registration' && (
-                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-5 sm:p-7 md:p-8 animate-fade-in-up">
+                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-5 sm:p-7 md:p-8 animate-fade-in">
                         <div className="text-center max-w-2xl mx-auto mb-6">
                             <h2 className="text-lg sm:text-xl font-black text-[#60318e] mb-1">
                                 {t.form.heading}
@@ -858,7 +836,7 @@ export default function Conference2026View() {
 
                 {/* 2. THEMATIC TOPICS TAB */}
                 {activeTab === 'topics' && (
-                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in-up space-y-6">
+                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in space-y-6">
                         <h2 className="text-xl sm:text-2xl font-black text-[#60318e]">
                             {isEn ? "Conference Thematic Topics (6 Sections)" : "კონფერენციის თემატური მიმართულებები (6 სექცია)"}
                         </h2>
@@ -866,7 +844,7 @@ export default function Conference2026View() {
                             {thematicTopics.map((top, idx) => (
                                 <div key={top.id} className="p-5 rounded-2xl border border-purple-100 bg-slate-50/60 hover:bg-purple-50/50 transition-all flex items-start gap-3.5">
                                     <div className="w-8 h-8 rounded-full bg-[#60318e] text-white flex items-center justify-center font-black text-xs flex-shrink-0 shadow-xs">
-                                        0{idx + 1}
+                                        {idx + 1}
                                     </div>
                                     <div>
                                         <h4 className="font-extrabold text-sm text-gray-900 leading-snug">
@@ -881,7 +859,7 @@ export default function Conference2026View() {
 
                 {/* 3. PRELIMINARY SCHEDULE TAB */}
                 {activeTab === 'schedule' && (
-                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in-up space-y-8">
+                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in space-y-8">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-purple-100 pb-4">
                             <h2 className="text-xl sm:text-2xl font-black text-[#60318e]">
                                 {isEn ? "Preliminary Program Schedule 2026" : "კონფერენციის წინასწარი პროგრამა 2026"}
@@ -955,7 +933,7 @@ export default function Conference2026View() {
 
                 {/* 3.1 ORGANIZERS TAB */}
                 {activeTab === 'organizers' && (
-                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in-up space-y-8">
+                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in space-y-8">
                         <div>
                             <h2 className="text-xl sm:text-2xl font-black text-[#60318e] mb-2">
                                 {isEn ? "Organizing Committee & Supporting Institutions" : "საორგანიზაციო ინსტიტუციები და კომიტეტი"}
@@ -1061,7 +1039,7 @@ export default function Conference2026View() {
 
                 {/* 4. DOWNLOADS TAB */}
                 {activeTab === 'downloads' && (
-                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in-up space-y-6">
+                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in space-y-6">
                         <div>
                             <h2 className="text-xl sm:text-2xl font-black text-[#60318e] mb-1">
                                 {isEn ? "Download Center" : "ფაილების ჩამოტვირთვა"}
@@ -1129,7 +1107,7 @@ export default function Conference2026View() {
 
                 {/* 5. VENUES & TRANSPORT TAB */}
                 {activeTab === 'venues' && (
-                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in-up space-y-6">
+                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in space-y-6">
                         <h2 className="text-xl sm:text-2xl font-black text-[#60318e]">
                             {isEn ? "Venues & Transportation Information" : "ლოკაციები და ტრანსპორტირება"}
                         </h2>
@@ -1178,11 +1156,8 @@ export default function Conference2026View() {
             </div>
 
             {/* Institutional Partners & Sponsors Section (Moved down) */}
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-14 pt-10 border-t border-purple-100">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-14 pt-8 border-t border-purple-100">
                 <div className="text-center mb-6">
-                    <span className="text-[11px] font-extrabold uppercase tracking-wider px-3.5 py-1 rounded-full bg-purple-100 text-[#60318e] inline-block mb-1.5">
-                        {isEn ? "Organizing Institutions & Donors" : "საორგანიზაციო ინსტიტუციები და პარტნიორები"}
-                    </span>
                     <h3 className="text-base sm:text-lg font-black text-slate-900">
                         {isEn ? "Partners & Supporting Organizations" : "მხარდამჭერი ორგანიზაციები და დონორები"}
                     </h3>

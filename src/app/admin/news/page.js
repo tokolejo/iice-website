@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { getSupabaseBrowserClient } from '../../../lib/supabase/client';
-import { logAudit } from '../../../lib/supabase/admin';
+import { recordAuditLog } from '../../../lib/auditLogger';
 import { newsData as staticNews } from '../../../data/newsData';
 import RichTextEditor from '../../../components/RichTextEditor';
+import AdminModal from '../../../components/admin/AdminModal';
 import {
     Newspaper,
     Search,
@@ -192,11 +193,11 @@ export default function AdminNewsPage() {
 
                     if (error) throw error;
 
-                    await logAudit({
-                        action: 'UPDATE_NEWS',
+                    await recordAuditLog({
+                        action: 'NEWS_UPDATE',
                         tableName: 'news',
                         recordId: editingNews.id,
-                        details: { title: formData.titleKa },
+                        details: { title: formData.titleKa, status: formData.status },
                     });
                 } else {
                     payload.published_at = new Date().toISOString();
@@ -208,11 +209,11 @@ export default function AdminNewsPage() {
 
                     if (error) throw error;
 
-                    await logAudit({
-                        action: 'CREATE_NEWS',
+                    await recordAuditLog({
+                        action: 'NEWS_CREATE',
                         tableName: 'news',
                         recordId: data?.id,
-                        details: { title: formData.titleKa },
+                        details: { title: formData.titleKa, status: formData.status },
                     });
                 }
             }
@@ -234,8 +235,8 @@ export default function AdminNewsPage() {
             const supabase = getSupabaseBrowserClient();
             if (supabase) {
                 await supabase.from('news').delete().eq('id', itemToDelete.id);
-                await logAudit({
-                    action: 'DELETE_NEWS',
+                await recordAuditLog({
+                    action: 'NEWS_DELETE',
                     tableName: 'news',
                     recordId: itemToDelete.id,
                     details: { title: itemToDelete.title_ka },
@@ -249,7 +250,7 @@ export default function AdminNewsPage() {
     };
 
     return (
-        <div className="space-y-6 animate-fade-in-up">
+        <div className="space-y-6 animate-fade-in">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
@@ -388,48 +389,42 @@ export default function AdminNewsPage() {
                 </div>
             </div>
 
-            {/* Edit / Create News Modal */}
-            {isEditModalOpen && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/45 backdrop-blur-md animate-fade-in transition-all"
-                    onClick={(e) => {
-                        if (e.target === e.currentTarget) setIsEditModalOpen(false);
-                    }}
-                >
-                    <div
-                        className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full p-5 sm:p-8 relative border border-purple-100 max-h-[90vh] overflow-y-auto animate-scale-in"
-                        onClick={(e) => e.stopPropagation()}
-                    >
+            {/* Edit / Create News Modal via Portal AdminModal */}
+            <AdminModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                title={editingNews ? 'სიახლის რედაქტირება' : 'ახალი სიახლის დამატება'}
+                subtitle="შეიყვანეთ ინფორმაცია და დააფორმატეთ ტექსტი TipTap ედითორით"
+                icon={Newspaper}
+                maxWidth="max-w-3xl"
+                footer={
+                    <>
                         <button
+                            type="button"
                             onClick={() => setIsEditModalOpen(false)}
-                            className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 p-2 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
-                            aria-label="დახურვა"
+                            className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-5 py-2.5 rounded-xl transition-colors cursor-pointer text-xs sm:text-sm"
                         >
-                            <X className="w-5 h-5" />
+                            გაუქმება
                         </button>
+                        <button
+                            type="submit"
+                            form="news-form"
+                            disabled={isSaving}
+                            className="bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold px-6 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg cursor-pointer disabled:opacity-50 text-xs sm:text-sm"
+                        >
+                            {isSaving ? 'ინახება...' : 'შენახვა'}
+                        </button>
+                    </>
+                }
+            >
+                {saveError && (
+                    <div className="mb-5 p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-2.5">
+                        <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                        <span className="font-semibold">{saveError}</span>
+                    </div>
+                )}
 
-                        <div className="flex items-center gap-3 mb-5">
-                            <div className="w-10 h-10 rounded-2xl bg-purple-100 text-[#60318e] flex items-center justify-center shadow-xs">
-                                <Newspaper className="w-5 h-5" />
-                            </div>
-                            <div>
-                                <h2 className="text-xl sm:text-2xl font-black text-gray-900">
-                                    {editingNews ? 'სიახლის რედაქტირება' : 'ახალი სიახლის დამატება'}
-                                </h2>
-                                <p className="text-xs text-gray-500 font-medium">
-                                    შეიყვანეთ ინფორმაცია და დააფორმატეთ ტექსტი TipTap ედითორით
-                                </p>
-                            </div>
-                        </div>
-
-                        {saveError && (
-                            <div className="mb-5 p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm flex items-center gap-2.5">
-                                <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                                <span className="font-semibold">{saveError}</span>
-                            </div>
-                        )}
-
-                        <form onSubmit={handleSave} className="space-y-5 text-xs sm:text-sm">
+                <form id="news-form" onSubmit={handleSave} className="space-y-5 text-xs sm:text-sm">
                             {/* Georgian Section */}
                             <div className="bg-slate-50/70 p-4 sm:p-5 rounded-2xl border border-slate-200/80 space-y-4">
                                 <div className="flex items-center gap-2 pb-2 border-b border-slate-200">
@@ -531,63 +526,41 @@ export default function AdminNewsPage() {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsEditModalOpen(false)}
-                                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-2xl transition-colors cursor-pointer text-xs sm:text-sm"
-                                >
-                                    გაუქმება
-                                </button>
-                                <button
-                                    type="submit"
-                                    disabled={isSaving}
-                                    className="flex-1 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold py-3 rounded-2xl transition-all shadow-md hover:shadow-lg cursor-pointer disabled:opacity-50 text-xs sm:text-sm"
-                                >
-                                    {isSaving ? 'ინახება...' : 'შენახვა'}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+                </form>
+            </AdminModal>
 
-            {/* Delete Modal */}
-            {itemToDelete && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/45 backdrop-blur-md animate-fade-in transition-all"
-                    onClick={(e) => {
-                        if (e.target === e.currentTarget) setItemToDelete(null);
-                    }}
-                >
-                    <div
-                        className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border border-red-100 animate-scale-in"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-4">
-                            <Trash2 className="w-6 h-6" />
-                        </div>
-                        <h3 className="text-lg font-black text-gray-900 mb-2">სიახლის წაშლა</h3>
-                        <p className="text-xs text-gray-500 mb-6">
-                            ნამდვილად გსურთ <strong>{itemToDelete.title_ka}</strong>-ის წაშლა?
-                        </p>
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => setItemToDelete(null)}
-                                className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition-colors cursor-pointer"
-                            >
-                                გაუქმება
-                            </button>
-                            <button
-                                onClick={handleDelete}
-                                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-xs transition-colors cursor-pointer"
-                            >
-                                წაშლა
-                            </button>
-                        </div>
-                    </div>
+            {/* Delete Modal via Portal AdminModal */}
+            <AdminModal
+                isOpen={Boolean(itemToDelete)}
+                onClose={() => setItemToDelete(null)}
+                title="სიახლის წაშლა"
+                icon={Trash2}
+                maxWidth="max-w-sm"
+                footer={
+                    <>
+                        <button
+                            type="button"
+                            onClick={() => setItemToDelete(null)}
+                            className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition-colors cursor-pointer"
+                        >
+                            გაუქმება
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleDelete}
+                            className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-xs transition-colors cursor-pointer shadow-xs"
+                        >
+                            წაშლა
+                        </button>
+                    </>
+                }
+            >
+                <div className="text-center py-2">
+                    <p className="text-xs sm:text-sm text-gray-600">
+                        ნამდვილად გსურთ <strong>{itemToDelete?.title_ka}</strong>-ის წაშლა ბაზიდან?
+                    </p>
                 </div>
-            )}
+            </AdminModal>
         </div>
     );
 }

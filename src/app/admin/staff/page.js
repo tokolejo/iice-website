@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { getSupabaseBrowserClient } from '../../../lib/supabase/client';
-import { logAudit } from '../../../lib/supabase/admin';
+import { recordAuditLog } from '../../../lib/auditLogger';
+import AdminModal from '../../../components/admin/AdminModal';
 import { staffData, departmentsData } from '../../../data';
 import {
     Users,
@@ -414,11 +415,11 @@ export default function AdminStaffPage() {
 
                     if (error) throw error;
 
-                    await logAudit({
-                        action: 'UPDATE_STAFF',
+                    await recordAuditLog({
+                        action: 'STAFF_UPDATE',
                         tableName: 'staff_members',
                         recordId: editingMember.id,
-                        details: { name: `${formData.firstNameKa} ${formData.lastNameKa}` },
+                        details: { name: `${formData.firstNameKa} ${formData.lastNameKa}`, positionKa: formData.positionKa, departmentId: formData.departmentId },
                     });
                 } else {
                     const { data, error } = await supabase
@@ -429,11 +430,11 @@ export default function AdminStaffPage() {
 
                     if (error) throw error;
 
-                    await logAudit({
-                        action: 'CREATE_STAFF',
+                    await recordAuditLog({
+                        action: 'STAFF_CREATE',
                         tableName: 'staff_members',
                         recordId: data?.id,
-                        details: { name: `${formData.firstNameKa} ${formData.lastNameKa}` },
+                        details: { name: `${formData.firstNameKa} ${formData.lastNameKa}`, positionKa: formData.positionKa, departmentId: formData.departmentId },
                     });
                 }
             }
@@ -462,8 +463,8 @@ export default function AdminStaffPage() {
             const supabase = getSupabaseBrowserClient();
             if (supabase) {
                 await supabase.from('staff_members').delete().eq('id', itemToDelete.id);
-                await logAudit({
-                    action: 'DELETE_STAFF',
+                await recordAuditLog({
+                    action: 'STAFF_DELETE',
                     tableName: 'staff_members',
                     recordId: itemToDelete.id,
                     details: { name: `${itemToDelete.first_name_ka} ${itemToDelete.last_name_ka}` },
@@ -477,7 +478,7 @@ export default function AdminStaffPage() {
     };
 
     return (
-        <div className="space-y-6 animate-fade-in-up">
+        <div className="space-y-6 animate-fade-in">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
@@ -741,40 +742,42 @@ export default function AdminStaffPage() {
                 )}
             </div>
 
-            {/* Create / Edit Staff Modal */}
-            {isEditModalOpen && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/45 backdrop-blur-md animate-fade-in transition-all"
-                    onClick={(e) => {
-                        if (e.target === e.currentTarget) setIsEditModalOpen(false);
-                    }}
-                >
-                    <div
-                        className="bg-white text-gray-900 rounded-3xl shadow-2xl max-w-2xl w-full p-5 sm:p-8 max-h-[90vh] overflow-y-auto relative border border-purple-100 animate-scale-in"
-                        onClick={(e) => e.stopPropagation()}
-                    >
+            {/* Create / Edit Staff Modal via Portal AdminModal */}
+            <AdminModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                title={editingMember ? 'თანამშრომლის რედაქტირება' : 'ახალი თანამშრომლის დამატება'}
+                subtitle="შეიყვანეთ მონაცემები ქართულ და ინგლისურ ენებზე"
+                icon={User}
+                maxWidth="max-w-2xl"
+                footer={
+                    <>
                         <button
+                            type="button"
                             onClick={() => setIsEditModalOpen(false)}
-                            className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 p-2 rounded-full hover:bg-slate-100 cursor-pointer"
+                            className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-5 py-2.5 rounded-xl transition-colors cursor-pointer text-xs sm:text-sm"
                         >
-                            <X className="w-5 h-5" />
+                            გაუქმება
                         </button>
+                        <button
+                            type="submit"
+                            form="staff-form"
+                            disabled={isSaving}
+                            className="bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold px-6 py-2.5 rounded-xl transition-colors shadow-md cursor-pointer disabled:opacity-50 text-xs sm:text-sm"
+                        >
+                            {isSaving ? 'ინახება...' : 'შენახვა'}
+                        </button>
+                    </>
+                }
+            >
+                {saveError && (
+                    <div className="mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm font-medium flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-600" />
+                        <span>{saveError}</span>
+                    </div>
+                )}
 
-                        <h2 className="text-xl sm:text-2xl font-black text-gray-900 mb-1">
-                            {editingMember ? 'თანამშრომლის რედაქტირება' : 'ახალი თანამშრომლის დამატება'}
-                        </h2>
-                        <p className="text-xs sm:text-sm text-gray-500 mb-6 font-medium">
-                            შეიყვანეთ მონაცემები ქართულ და ინგლისურ ენებზე
-                        </p>
-
-                        {saveError && (
-                            <div className="mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm font-medium flex items-center gap-2">
-                                <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-600" />
-                                <span>{saveError}</span>
-                            </div>
-                        )}
-
-                        <form onSubmit={handleSave} className="space-y-5 text-xs sm:text-sm">
+                <form id="staff-form" onSubmit={handleSave} className="space-y-5 text-xs sm:text-sm">
                             {/* Section: Names */}
                             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
                                 <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#60318e] flex items-center gap-1.5">
@@ -998,64 +1001,41 @@ export default function AdminStaffPage() {
                                 </label>
                             </div>
 
-                            {/* Actions */}
-                            <div className="flex gap-3 pt-4 border-t border-gray-200">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsEditModalOpen(false)}
-                                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl transition-colors cursor-pointer text-xs sm:text-sm"
-                                >
-                                    გაუქმება
-                                </button>
-                                <button
-                                    type="submit"
-                                    disabled={isSaving}
-                                    className="flex-1 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold py-3 rounded-xl transition-colors shadow-md cursor-pointer disabled:opacity-50 text-xs sm:text-sm"
-                                >
-                                    {isSaving ? 'ინახება...' : 'შენახვა'}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+                </form>
+            </AdminModal>
 
-            {/* Delete Modal */}
-            {itemToDelete && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/45 backdrop-blur-md animate-fade-in transition-all"
-                    onClick={(e) => {
-                        if (e.target === e.currentTarget) setItemToDelete(null);
-                    }}
-                >
-                    <div
-                        className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border border-red-100 animate-scale-in"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-4">
-                            <Trash2 className="w-6 h-6" />
-                        </div>
-                        <h3 className="text-lg font-black text-gray-900 mb-2">თანამშრომლის წაშლა</h3>
-                        <p className="text-xs text-gray-500 mb-6">
-                            ნამდვილად გსურთ <strong>{itemToDelete.first_name_ka} {itemToDelete.last_name_ka}</strong>-ის წაშლა?
-                        </p>
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => setItemToDelete(null)}
-                                className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition-colors cursor-pointer"
-                            >
-                                გაუქმება
-                            </button>
-                            <button
-                                onClick={handleDelete}
-                                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-xs transition-colors cursor-pointer"
-                            >
-                                წაშლა
-                            </button>
-                        </div>
-                    </div>
+            {/* Delete Modal via Portal AdminModal */}
+            <AdminModal
+                isOpen={Boolean(itemToDelete)}
+                onClose={() => setItemToDelete(null)}
+                title="თანამშრომლის წაშლა"
+                icon={Trash2}
+                maxWidth="max-w-sm"
+                footer={
+                    <>
+                        <button
+                            type="button"
+                            onClick={() => setItemToDelete(null)}
+                            className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition-colors cursor-pointer"
+                        >
+                            გაუქმება
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleDelete}
+                            className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-xs transition-colors cursor-pointer shadow-xs"
+                        >
+                            წაშლა
+                        </button>
+                    </>
+                }
+            >
+                <div className="text-center py-2">
+                    <p className="text-xs sm:text-sm text-gray-600">
+                        ნამდვილად გსურთ <strong>{itemToDelete?.first_name_ka} {itemToDelete?.last_name_ka}</strong>-ის წაშლა?
+                    </p>
                 </div>
-            )}
+            </AdminModal>
         </div>
     );
 }

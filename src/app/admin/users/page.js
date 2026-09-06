@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { getSupabaseBrowserClient } from '../../../lib/supabase/client';
-import { logAudit } from '../../../lib/supabase/admin';
+import { recordAuditLog } from '../../../lib/auditLogger';
+import AdminModal from '../../../components/admin/AdminModal';
 import { departmentsData } from '../../../data';
 import {
     ShieldCheck,
@@ -232,10 +233,11 @@ export default function AdminUsersPage() {
 
                 if (error) throw error;
 
-                await logAudit({
-                    action: 'UPDATE_USER_ROLES',
-                    tableName: 'user_profiles',
+                await recordAuditLog({
+                    action: 'USER_ROLES_UPDATE',
+                    category: 'rbac',
                     recordId: selectedUser.id,
+                    recordTitle: selectedUser.email || selectedUser.full_name,
                     details: {
                         email: selectedUser.email,
                         roles: finalRoles,
@@ -274,7 +276,7 @@ export default function AdminUsersPage() {
     };
 
     return (
-        <div className="space-y-6 animate-fade-in-up">
+        <div className="space-y-6 animate-fade-in">
             <div>
                 <h1 className="text-2xl sm:text-3xl font-black text-gray-900 flex items-center gap-3">
                     <ShieldCheck className="w-7 h-7 text-[#60318e]" />
@@ -430,158 +432,134 @@ export default function AdminUsersPage() {
             </div>
 
             {/* Multi-Role Assignment Modal */}
-            {isRoleModalOpen && selectedUser && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/45 backdrop-blur-md animate-fade-in transition-all"
-                    onClick={(e) => {
-                        if (e.target === e.currentTarget) setIsRoleModalOpen(false);
-                    }}
-                >
-                    <div
-                        className="bg-white rounded-3xl max-w-xl w-full p-5 sm:p-7 shadow-2xl border border-purple-100 overflow-y-auto max-h-[90vh] animate-scale-in"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        {/* Modal Header */}
-                        <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-4">
-                            <div>
-                                <h3 className="text-lg font-black text-gray-900 flex items-center gap-2">
-                                    <Key className="w-5 h-5 text-[#60318e]" />
-                                    როლებისა და წვდომების მინიჭება
-                                </h3>
-                                <p className="text-xs text-gray-500 mt-0.5">
-                                    მომხმარებელი: <strong className="text-gray-800">{selectedUser.full_name || selectedUser.email}</strong> ({selectedUser.email})
-                                </p>
-                            </div>
-                            <button
-                                onClick={() => setIsRoleModalOpen(false)}
-                                className="p-1 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100"
-                            >
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
+            <AdminModal
+                isOpen={isRoleModalOpen && !!selectedUser}
+                onClose={() => setIsRoleModalOpen(false)}
+                title="როლებისა და წვდომების მინიჭება"
+                subtitle={selectedUser ? `მომხმარებელი: ${selectedUser.full_name || selectedUser.email} (${selectedUser.email})` : ''}
+                icon={Key}
+                maxWidth="max-w-xl"
+                footer={
+                    <div className="flex items-center justify-between w-full">
+                        <button
+                            type="button"
+                            onClick={() => setModalRoles([])}
+                            className="text-[11px] font-bold text-red-600 hover:text-red-700 hover:underline cursor-pointer"
+                        >
+                            ყველა როლის ჩამორთმევა (Pending)
+                        </button>
 
-                        {modalError && (
-                            <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
-                                <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                                <span>{modalError}</span>
-                            </div>
-                        )}
-
-                        {/* Roles Selection (Checkboxes) */}
-                        <div className="space-y-3 mb-5">
-                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                მონიშნეთ უფლებამოსილებები (შესაძლებელია რამდენიმეს არჩევა):
-                            </label>
-
-                            {AVAILABLE_ROLES.map((roleItem) => {
-                                const isChecked = modalRoles.includes(roleItem.id);
-                                return (
-                                    <div
-                                        key={roleItem.id}
-                                        onClick={() => toggleRole(roleItem.id)}
-                                        className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 ${
-                                            isChecked
-                                                ? 'bg-purple-50/70 border-[#AD49E1] shadow-xs'
-                                                : 'bg-white border-gray-200 hover:border-purple-200 hover:bg-slate-50'
-                                        }`}
-                                    >
-                                        <div className={`w-5 h-5 rounded-lg border mt-0.5 flex items-center justify-center transition-colors ${
-                                            isChecked ? 'bg-[#60318e] border-[#60318e] text-white' : 'border-gray-300 bg-white'
-                                        }`}>
-                                            {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2">
-                                                <roleItem.icon className="w-4 h-4 text-[#60318e]" />
-                                                <span className="text-xs font-extrabold text-gray-900">{roleItem.name}</span>
-                                            </div>
-                                            <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">{roleItem.desc}</p>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-
-                        {/* Department Selection (Shown only when Department Head is checked) */}
-                        {modalRoles.includes('department_head') && (
-                            <div className="mb-5 p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 animate-fade-in">
-                                <label className="block text-xs font-bold text-emerald-900 mb-1 flex items-center gap-1.5">
-                                    <Building2 className="w-4 h-4 text-emerald-700" />
-                                    განყოფილების არჩევა (ხელმძღვანელისთვის):
-                                </label>
-                                <p className="text-[11px] text-emerald-700 mb-2">
-                                    მომხმარებელი შეძლებს მხოლოდ ამ განყოფილების თანამშრომლების დამატებასა და რედაქტირებას.
-                                </p>
-                                <select
-                                    value={modalDeptId}
-                                    onChange={(e) => setModalDeptId(e.target.value)}
-                                    className="w-full text-xs font-bold p-2.5 rounded-xl border border-emerald-300 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                                >
-                                    <option value="">-- აირჩიეთ განყოფილება --</option>
-                                    {departments.map((dept) => (
-                                        <option key={dept.id} value={dept.id}>
-                                            {dept.name_ka || dept.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        )}
-
-                        {/* Active Status Checkbox */}
-                        <div className="mb-6 p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-                            <div>
-                                <span className="text-xs font-bold text-gray-800">ანგარიშის სტატუსი</span>
-                                <p className="text-[11px] text-gray-500">მონიშნეთ ანგარიშის აქტიურობისთვის (გამორთვა დაბლოკავს წვდომას)</p>
-                            </div>
-                            <input
-                                type="checkbox"
-                                checked={modalIsActive}
-                                onChange={(e) => setModalIsActive(e.target.checked)}
-                                className="w-4 h-4 accent-[#60318e] cursor-pointer"
-                            />
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                        <div className="flex items-center gap-2">
                             <button
                                 type="button"
-                                onClick={() => setModalRoles([])}
-                                className="text-[11px] font-bold text-red-600 hover:text-red-700 hover:underline cursor-pointer"
+                                onClick={() => setIsRoleModalOpen(false)}
+                                className="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
                             >
-                                ყველა როლის ჩამორთმევა (Pending)
+                                გაუქმება
                             </button>
-
-                            <div className="flex items-center gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsRoleModalOpen(false)}
-                                    className="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
-                                >
-                                    გაუქმება
-                                </button>
-                                <button
-                                    type="button"
-                                    disabled={isSaving}
-                                    onClick={handleSaveRoles}
-                                    className="px-5 py-2 rounded-xl text-xs font-bold bg-[#60318e] hover:bg-[#4a2470] text-white shadow-md transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
-                                >
-                                    {isSaving ? (
-                                        <>
-                                            <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                            <span>ინახება...</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Check className="w-4 h-4" />
-                                            <span>შენახვა</span>
-                                        </>
-                                    )}
-                                </button>
-                            </div>
+                            <button
+                                type="button"
+                                disabled={isSaving}
+                                onClick={handleSaveRoles}
+                                className="px-5 py-2 rounded-xl text-xs font-bold bg-[#60318e] hover:bg-[#4a2470] text-white shadow-md transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                            >
+                                {isSaving ? (
+                                    <>
+                                        <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                        <span>ინახება...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Check className="w-4 h-4" />
+                                        <span>შენახვა</span>
+                                    </>
+                                )}
+                            </button>
                         </div>
                     </div>
+                }
+            >
+                {modalError && (
+                    <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                        <span>{modalError}</span>
+                    </div>
+                )}
+
+                {/* Roles Selection (Checkboxes) */}
+                <div className="space-y-3 mb-5">
+                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                        მონიშნეთ უფლებამოსილებები (შესაძლებელია რამდენიმეს არჩევა):
+                    </label>
+
+                    {AVAILABLE_ROLES.map((roleItem) => {
+                        const isChecked = modalRoles.includes(roleItem.id);
+                        return (
+                            <div
+                                key={roleItem.id}
+                                onClick={() => toggleRole(roleItem.id)}
+                                className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 ${
+                                    isChecked
+                                        ? 'bg-purple-50/70 border-[#AD49E1] shadow-xs'
+                                        : 'bg-white border-gray-200 hover:border-purple-200 hover:bg-slate-50'
+                                }`}
+                            >
+                                <div className={`w-5 h-5 rounded-lg border mt-0.5 flex items-center justify-center transition-colors ${
+                                    isChecked ? 'bg-[#60318e] border-[#60318e] text-white' : 'border-gray-300 bg-white'
+                                }`}>
+                                    {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                                </div>
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2">
+                                        <roleItem.icon className="w-4 h-4 text-[#60318e]" />
+                                        <span className="text-xs font-extrabold text-gray-900">{roleItem.name}</span>
+                                    </div>
+                                    <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">{roleItem.desc}</p>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
-            )}
+
+                {/* Department Selection (Shown only when Department Head is checked) */}
+                {modalRoles.includes('department_head') && (
+                    <div className="mb-5 p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 animate-fade-in">
+                        <label className="block text-xs font-bold text-emerald-900 mb-1 flex items-center gap-1.5">
+                            <Building2 className="w-4 h-4 text-emerald-700" />
+                            განყოფილების არჩევა (ხელმძღვანელისთვის):
+                        </label>
+                        <p className="text-[11px] text-emerald-700 mb-2">
+                            მომხმარებელი შეძლებს მხოლოდ ამ განყოფილების თანამშრომლების დამატებასა და რედაქტირებას.
+                        </p>
+                        <select
+                            value={modalDeptId}
+                            onChange={(e) => setModalDeptId(e.target.value)}
+                            className="w-full text-xs font-bold p-2.5 rounded-xl border border-emerald-300 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        >
+                            <option value="">-- აირჩიეთ განყოფილება --</option>
+                            {departments.map((dept) => (
+                                <option key={dept.id} value={dept.id}>
+                                    {dept.name_ka || dept.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
+
+                {/* Active Status Checkbox */}
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <span className="text-xs font-bold text-gray-800">ანგარიშის სტატუსი</span>
+                        <p className="text-[11px] text-gray-500">მონიშნეთ ანგარიშის აქტიურობისთვის (გამორთვა დაბლოკავს წვდომას)</p>
+                    </div>
+                    <input
+                        type="checkbox"
+                        checked={modalIsActive}
+                        onChange={(e) => setModalIsActive(e.target.checked)}
+                        className="w-4 h-4 accent-[#60318e] cursor-pointer"
+                    />
+                </div>
+            </AdminModal>
         </div>
     );
 }
