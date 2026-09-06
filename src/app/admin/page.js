@@ -28,9 +28,10 @@ import {
 export default function AdminDashboardPage() {
     const [stats, setStats] = useState({
         conferenceCount: 0,
-        staffCount: staffData.length,
-        departmentsCount: departmentsData.length,
-        newsCount: 42,
+        staffCount: 0,
+        departmentsCount: 0,
+        newsCount: 0,
+        usersCount: 0,
     });
     const [recentRegistrations, setRecentRegistrations] = useState([]);
     const [recentActivity, setRecentActivity] = useState([]);
@@ -46,6 +47,13 @@ export default function AdminDashboardPage() {
                     setIsConnected(false);
                     setIsLoading(false);
                     // Mock recent activity for local preview
+                    setStats({
+                        conferenceCount: 0,
+                        staffCount: staffData.length,
+                        departmentsCount: departmentsData.length,
+                        newsCount: 0,
+                        usersCount: 2,
+                    });
                     setRecentActivity([
                         { id: '1', action: 'AUTH_SIGN_IN', user_email: 'tokolejo@gmail.com', created_at: new Date().toISOString() },
                         { id: '2', action: 'CONFERENCE_REGISTER', user_email: 'anonymous', details: { applicant: 'გიორგი მაისურაძე' }, created_at: new Date(Date.now() - 1800000).toISOString() },
@@ -78,6 +86,11 @@ export default function AdminDashboardPage() {
                     .from('news')
                     .select('id', { count: 'exact', head: true });
 
+                // Fetch Users count
+                const { count: uCount } = await supabase
+                    .from('user_profiles')
+                    .select('id', { count: 'exact', head: true });
+
                 // Fetch Recent Audit Activity
                 const { data: auditData } = await supabase
                     .from('audit_logs')
@@ -86,10 +99,11 @@ export default function AdminDashboardPage() {
                     .limit(6);
 
                 setStats({
-                    conferenceCount: confCount || 0,
-                    staffCount: sCount || staffData.length,
-                    departmentsCount: dCount || departmentsData.length,
-                    newsCount: nCount || 42,
+                    conferenceCount: typeof confCount === 'number' ? confCount : 0,
+                    staffCount: typeof sCount === 'number' ? sCount : staffData.length,
+                    departmentsCount: typeof dCount === 'number' ? dCount : departmentsData.length,
+                    newsCount: typeof nCount === 'number' ? nCount : 0,
+                    usersCount: typeof uCount === 'number' ? uCount : 0,
                 });
 
                 if (confData) setRecentRegistrations(confData);
