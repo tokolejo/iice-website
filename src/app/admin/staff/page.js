@@ -18,7 +18,8 @@ import {
     Filter,
     Camera,
     Building2,
-    Lock
+    Lock,
+    ArrowUpDown
 } from 'lucide-react';
 
 export default function AdminStaffPage() {
@@ -130,6 +131,7 @@ export default function AdminStaffPage() {
                         is_active: true,
                     };
                 }));
+            }
             // Check current user role & assigned department
             const { data: { user: currentUser } } = await supabase.auth.getUser();
             if (currentUser) {
@@ -177,8 +179,11 @@ export default function AdminStaffPage() {
         !userRoles.includes('super_admin') &&
         !userRoles.includes('admin');
 
-    const filteredList = useMemo(() => {
-        return staffList.filter(s => {
+    const [sortBy, setSortBy] = useState('order_asc');
+    const [visibleCount, setVisibleCount] = useState(20);
+
+    const sortedAndFilteredList = useMemo(() => {
+        const filtered = staffList.filter(s => {
             const fullName = `${s.first_name_ka || ''} ${s.last_name_ka || ''} ${s.first_name_en || ''} ${s.last_name_en || ''}`.toLowerCase();
             const matchesSearch =
                 fullName.includes(searchQuery.toLowerCase()) ||
@@ -191,7 +196,36 @@ export default function AdminStaffPage() {
 
             return matchesSearch && matchesDept;
         });
-    }, [staffList, searchQuery, filterDept, isRestrictedHead, userDeptId]);
+
+        return [...filtered].sort((a, b) => {
+            if (sortBy === 'order_asc') {
+                return (a.order_index ?? 9999) - (b.order_index ?? 9999);
+            }
+            if (sortBy === 'name_asc') {
+                const nameA = `${a.first_name_ka || ''} ${a.last_name_ka || ''}`.trim();
+                const nameB = `${b.first_name_ka || ''} ${b.last_name_ka || ''}`.trim();
+                return nameA.localeCompare(nameB, 'ka');
+            }
+            if (sortBy === 'name_desc') {
+                const nameA = `${a.first_name_ka || ''} ${a.last_name_ka || ''}`.trim();
+                const nameB = `${b.first_name_ka || ''} ${b.last_name_ka || ''}`.trim();
+                return nameB.localeCompare(nameA, 'ka');
+            }
+            if (sortBy === 'active_first') {
+                return (b.is_active !== false ? 1 : 0) - (a.is_active !== false ? 1 : 0);
+            }
+            if (sortBy === 'honored_first') {
+                const scoreA = (a.is_council_member ? 2 : 0) + (a.is_management ? 1 : 0);
+                const scoreB = (b.is_council_member ? 2 : 0) + (b.is_management ? 1 : 0);
+                return scoreB - scoreA;
+            }
+            return 0;
+        });
+    }, [staffList, searchQuery, filterDept, isRestrictedHead, userDeptId, sortBy]);
+
+    const visibleList = useMemo(() => {
+        return sortedAndFilteredList.slice(0, visibleCount);
+    }, [sortedAndFilteredList, visibleCount]);
 
     const openCreateModal = () => {
         if (isRestrictedHead && !userDeptId) {
@@ -460,38 +494,56 @@ export default function AdminStaffPage() {
                 </div>
             )}
 
-            {/* Filters */}
+            {/* Filters & Sorting Bar */}
             <div className="bg-white rounded-2xl p-4 border border-purple-100 shadow-sm flex flex-col md:flex-row gap-3 items-center">
                 <div className="relative flex-1 w-full">
-                    <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+                    <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3 pointer-events-none" />
                     <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="ძიება: სახელი, გვარი, პოზიცია, იმეილი..."
-                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] text-gray-900 bg-white"
                     />
                 </div>
 
-                {isRestrictedHead ? (
-                    <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-800 whitespace-nowrap">
-                        <Building2 className="w-4 h-4 text-emerald-600" />
-                        <span>განყოფილება: {userDeptName || 'თქვენი განყოფილება'}</span>
+                <div className="flex flex-wrap sm:flex-nowrap gap-2.5 w-full md:w-auto">
+                    {isRestrictedHead ? (
+                        <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-800 whitespace-nowrap">
+                            <Building2 className="w-4 h-4 text-emerald-600" />
+                            <span>განყოფილება: {userDeptName || 'თქვენი განყოფილება'}</span>
+                        </div>
+                    ) : (
+                        <select
+                            value={filterDept}
+                            onChange={(e) => setFilterDept(e.target.value)}
+                            className="px-3 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white text-gray-900 font-medium w-full sm:w-56"
+                        >
+                            <option value="All">ყველა განყოფილება</option>
+                            {departments.map((d) => (
+                                <option key={d.id || d.slug} value={d.id || d.slug}>
+                                    {d.name_ka || d.name}
+                                </option>
+                            ))}
+                        </select>
+                    )}
+
+                    {/* Sorting Dropdown */}
+                    <div className="relative w-full sm:w-56">
+                        <ArrowUpDown className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-3 pointer-events-none" />
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="w-full pl-8 pr-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white text-gray-900"
+                        >
+                            <option value="order_asc">სორტირება: რიგითობით</option>
+                            <option value="name_asc">სორტირება: სახელი (ა - ჰ)</option>
+                            <option value="name_desc">სორტირება: სახელი (ჰ - ა)</option>
+                            <option value="active_first">სორტირება: ჯერ აქტიურები</option>
+                            <option value="honored_first">სორტირება: ხელმძღვანელობა</option>
+                        </select>
                     </div>
-                ) : (
-                    <select
-                        value={filterDept}
-                        onChange={(e) => setFilterDept(e.target.value)}
-                        className="px-3 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white w-full md:w-64"
-                    >
-                        <option value="All">ყველა განყოფილება</option>
-                        {departments.map((d) => (
-                            <option key={d.id || d.slug} value={d.id || d.slug}>
-                                {d.name_ka || d.name}
-                            </option>
-                        ))}
-                    </select>
-                )}
+                </div>
             </div>
 
             {/* Staff Table */}
@@ -500,6 +552,7 @@ export default function AdminStaffPage() {
                     <table className="w-full text-left text-xs">
                         <thead className="bg-slate-50 text-gray-600 font-bold border-b border-slate-200 uppercase tracking-wider">
                             <tr>
+                                <th className="py-3.5 px-4 w-12 text-center">#</th>
                                 <th className="py-3.5 px-4">ფოტო</th>
                                 <th className="py-3.5 px-4">სახელი, გვარი</th>
                                 <th className="py-3.5 px-4">თანამდებობა</th>
@@ -511,14 +564,17 @@ export default function AdminStaffPage() {
                         <tbody className="divide-y divide-slate-100">
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan={6} className="py-12 text-center text-gray-400">
+                                    <td colSpan={7} className="py-12 text-center text-gray-400">
                                         <div className="w-6 h-6 border-2 border-[#60318e] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
                                         იტვირთება პერსონალი...
                                     </td>
                                 </tr>
-                            ) : filteredList.length > 0 ? (
-                                filteredList.map((member) => (
+                            ) : visibleList.length > 0 ? (
+                                visibleList.map((member, idx) => (
                                     <tr key={member.id} className="hover:bg-purple-50/40 transition-colors">
+                                        <td className="py-3 px-4 text-center font-mono font-bold text-gray-400 text-[11px]">
+                                            {member.order_index ?? idx + 1}
+                                        </td>
                                         <td className="py-3 px-4">
                                             <div className="w-10 h-10 rounded-xl overflow-hidden bg-purple-50 border border-purple-100 flex items-center justify-center">
                                                 {member.photo_url ? (
@@ -533,7 +589,7 @@ export default function AdminStaffPage() {
                                             </div>
                                         </td>
                                         <td className="py-3 px-4">
-                                            <div className="font-bold text-gray-900">
+                                            <div className="font-bold text-gray-900 text-sm">
                                                 {member.first_name_ka} {member.last_name_ka}
                                             </div>
                                             {member.first_name_en && (
@@ -541,17 +597,39 @@ export default function AdminStaffPage() {
                                                     {member.first_name_en} {member.last_name_en}
                                                 </div>
                                             )}
+                                            {(member.is_management || member.is_council_member) && (
+                                                <div className="flex gap-1 mt-1">
+                                                    {member.is_management && (
+                                                        <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200">
+                                                            ხელმძღვანელი
+                                                        </span>
+                                                    )}
+                                                    {member.is_council_member && (
+                                                        <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200">
+                                                            სამეცნიერო საბჭო
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
                                         </td>
-                                        <td className="py-3 px-4 text-gray-700 max-w-xs truncate font-medium">
-                                            {member.position_ka}
+                                        <td className="py-3 px-4 text-gray-700 max-w-xs font-medium">
+                                            <div className="line-clamp-1">{member.position_ka}</div>
+                                            {member.scientific_degree_ka && (
+                                                <span className="text-[11px] text-purple-700 font-semibold block">
+                                                    {member.scientific_degree_ka}
+                                                </span>
+                                            )}
                                         </td>
                                         <td className="py-3 px-4 text-gray-500">
                                             {member.email ? (
-                                                <a href={`mailto:${member.email}`} className="text-[#60318e] hover:underline truncate block">
+                                                <a href={`mailto:${member.email}`} className="text-[#60318e] hover:underline truncate block font-medium">
                                                     {member.email}
                                                 </a>
                                             ) : (
                                                 <span className="text-gray-300">—</span>
+                                            )}
+                                            {member.phone && (
+                                                <span className="text-[11px] text-gray-400 block">{member.phone}</span>
                                             )}
                                         </td>
                                         <td className="py-3 px-4 text-center whitespace-nowrap">
@@ -589,7 +667,7 @@ export default function AdminStaffPage() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={6} className="py-12 text-center text-gray-500">
+                                    <td colSpan={7} className="py-12 text-center text-gray-500">
                                         <div className="flex flex-col items-center justify-center gap-2">
                                             <Search className="w-8 h-8 text-gray-300 mb-1" />
                                             <p className="font-semibold text-xs">მითითებული პარამეტრით თანამშრომელი ვერ მოიძებნა</p>
@@ -611,6 +689,40 @@ export default function AdminStaffPage() {
                         </tbody>
                     </table>
                 </div>
+
+                {/* Pagination / View More Footer */}
+                {sortedAndFilteredList.length > 20 && (
+                    <div className="p-4 sm:p-5 bg-slate-50/80 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <div className="text-xs font-semibold text-gray-600">
+                            ნაჩვენებია <span className="font-extrabold text-gray-900">{visibleList.length}</span> / <span className="font-extrabold text-gray-900">{sortedAndFilteredList.length}</span> თანამშრომელი
+                        </div>
+                        <div className="flex items-center gap-2">
+                            {visibleCount < sortedAndFilteredList.length ? (
+                                <>
+                                    <button
+                                        onClick={() => setVisibleCount(p => p + 20)}
+                                        className="bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold px-4 py-2 rounded-xl text-xs shadow-sm hover:shadow transition-all cursor-pointer flex items-center gap-1.5"
+                                    >
+                                        <span>მეტის ნახვა (+20)</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setVisibleCount(sortedAndFilteredList.length)}
+                                        className="bg-white hover:bg-slate-100 text-gray-700 border border-gray-300 font-bold px-3.5 py-2 rounded-xl text-xs transition-all cursor-pointer"
+                                    >
+                                        <span>ყველას ნახვა</span>
+                                    </button>
+                                </>
+                            ) : (
+                                <button
+                                    onClick={() => setVisibleCount(20)}
+                                    className="bg-white hover:bg-slate-100 text-[#60318e] border border-purple-200 font-bold px-3.5 py-2 rounded-xl text-xs transition-all cursor-pointer"
+                                >
+                                    <span>შეკუმშვა (20-მდე)</span>
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Create / Edit Staff Modal */}

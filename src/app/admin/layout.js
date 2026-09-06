@@ -31,7 +31,8 @@ export default function AdminLayout({ children }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-    const isAuthPage = pathname === '/admin/login' || pathname === '/admin/pending';
+    const cleanPath = pathname?.replace(/\/+$/, '') || '';
+    const isAuthPage = cleanPath === '/admin/login' || cleanPath === '/admin/pending';
 
     useEffect(() => {
         if (isAuthPage) {
@@ -53,6 +54,8 @@ export default function AdminLayout({ children }) {
                 const { data: { user: currentUser } } = await supabase.auth.getUser();
 
                 if (!currentUser) {
+                    setUser(null);
+                    setIsLoading(false);
                     router.push('/admin/login');
                     return;
                 }
@@ -97,6 +100,7 @@ export default function AdminLayout({ children }) {
         if (supabase) {
             await supabase.auth.signOut();
         }
+        setUser(null);
         router.push('/admin/login');
     };
 
@@ -111,6 +115,18 @@ export default function AdminLayout({ children }) {
                 <div className="flex flex-col items-center gap-3">
                     <div className="w-10 h-10 border-3 border-[#60318e] border-t-transparent rounded-full animate-spin"></div>
                     <span className="text-xs font-bold text-[#60318e] tracking-wider">იტვირთება ადმინ პანელი...</span>
+                </div>
+            </div>
+        );
+    }
+
+    // If not authenticated, do not show sidebar
+    if (!user) {
+        return (
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-3">
+                    <div className="w-10 h-10 border-3 border-[#60318e] border-t-transparent rounded-full animate-spin"></div>
+                    <span className="text-xs font-bold text-[#60318e] tracking-wider">გადამისამართება შესვლის გვერდზე...</span>
                 </div>
             </div>
         );

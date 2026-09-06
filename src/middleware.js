@@ -49,7 +49,7 @@ export async function middleware(request) {
     // 1. Not logged in
     if (!user) {
       if (!isLoginPage) {
-        const loginUrl = new URL('/admin/login/', request.url);
+        const loginUrl = new URL('/admin/login', request.url);
         loginUrl.searchParams.set('next', pathname);
         return NextResponse.redirect(loginUrl);
       }
@@ -61,7 +61,7 @@ export async function middleware(request) {
 
     // If on login page and already authenticated
     if (isLoginPage) {
-      return NextResponse.redirect(new URL('/admin/', request.url));
+      return NextResponse.redirect(new URL('/admin', request.url));
     }
 
     // Check user profile and roles
