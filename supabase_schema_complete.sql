@@ -2796,7 +2796,7 @@ ON CONFLICT DO NOTHING;
 -- 5. Conference 2026 Registrations Table
 CREATE TABLE IF NOT EXISTS public.conference_registrations_2026 (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    abstract_number TEXT UNIQUE NOT NULL,
+    abstract_number TEXT UNIQUE,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     birth_date DATE,
@@ -2875,6 +2875,17 @@ CREATE TRIGGER on_auth_user_created
 AFTER INSERT ON auth.users
 FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
+-- Retroactively sync any users who already signed in before running this script
+INSERT INTO public.user_profiles (id, email, full_name, role)
+SELECT 
+    id, 
+    email, 
+    COALESCE(raw_user_meta_data->>'full_name', raw_user_meta_data->>'name', email),
+    CASE WHEN LOWER(email) = 'tokolejo@gmail.com' THEN 'super_admin' ELSE 'pending' END
+FROM auth.users
+ON CONFLICT (id) DO UPDATE 
+SET role = CASE WHEN LOWER(EXCLUDED.email) = 'tokolejo@gmail.com' THEN 'super_admin' ELSE public.user_profiles.role END;
+
 -- 7. Audit Logs Table
 CREATE TABLE IF NOT EXISTS public.audit_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -2903,6 +2914,9 @@ CREATE POLICY "Public Upload Access" ON storage.objects FOR INSERT WITH CHECK (t
 
 DROP POLICY IF EXISTS "Public Update Access" ON storage.objects;
 CREATE POLICY "Public Update Access" ON storage.objects FOR UPDATE USING (true);
+
+DROP POLICY IF EXISTS "Public Delete Access" ON storage.objects;
+CREATE POLICY "Public Delete Access" ON storage.objects FOR DELETE USING (true);
 
 -- 9. Row Level Security (RLS) Configuration
 ALTER TABLE public.departments ENABLE ROW LEVEL SECURITY;
