@@ -45,9 +45,8 @@ export async function getDynamicNews() {
             return staticNews;
         }
 
-        const dynamicItems = data.map(mapNewsRowToModel);
-        // Combine dynamic items with static items that don't collide
-        return [...dynamicItems, ...staticNews.filter(sn => !dynamicItems.some(di => String(di.id) === String(sn.id) || di.slug === sn.slug))];
+        // თუ Supabase-ში სიახლეები არის, მხოლოდ ისინი დაბრუნდეს (სტატიკური ამოვარდება)
+        return data.map(mapNewsRowToModel);
     } catch (err) {
         console.warn('Error fetching dynamic news, using static data:', err);
         return staticNews;
