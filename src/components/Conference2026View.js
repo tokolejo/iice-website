@@ -280,7 +280,7 @@ export default function Conference2026View() {
             setEngFile(null);
         } catch (err) {
             console.error('Submission error:', err);
-            setSubmitError(isEn ? "An unexpected error occurred. Please try again." : "დაფიქსირდა შეცდომა. გთხოვთ სცადოთ თავიდან.");
+            setSubmitError(err.message || (isEn ? "An unexpected error occurred. Please try again." : "დაფიქსირდა შეცდომა. გთხოვთ სცადოთ თავიდან."));
         } finally {
             setIsSubmitting(false);
         }

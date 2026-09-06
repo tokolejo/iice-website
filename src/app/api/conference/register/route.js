@@ -23,7 +23,11 @@ export async function POST(request) {
 
         const firstName = formData.get('firstName') || '';
         const lastName = formData.get('lastName') || '';
-        const birthDate = formData.get('birthDate') || null;
+        const rawBirthDate = formData.get('birthDate');
+        const birthDate = rawBirthDate && typeof rawBirthDate === 'string' && rawBirthDate.trim() !== ''
+            ? rawBirthDate.trim()
+            : null;
+
         const citizenship = formData.get('citizenship') || '';
         const affiliation = formData.get('affiliation') || '';
         const titulation = formData.get('titulation') || '';
@@ -41,14 +45,14 @@ export async function POST(request) {
 
         if (!firstName || !lastName || !email || !affiliation || !presentationTitle) {
             return NextResponse.json({
-                error: 'სავალდებულო ველები არ არის შევსებული'
+                error: 'სავალდებულო ველები (*): სახელი, გვარი, ელ-ფოსტა, ორგანიზაცია და მოხსენების სათაური არ არის შევსებული.'
             }, { status: 400 });
         }
 
         const supabase = getClient();
+        const fallbackCode = `IICE-2026-${Math.floor(100 + Math.random() * 900)}`;
+
         if (!supabase) {
-            // Local fallback simulation
-            const fallbackCode = `IICE-2026-${Math.floor(100 + Math.random() * 900)}`;
             return NextResponse.json({
                 success: true,
                 abstractNumber: fallbackCode,
@@ -59,18 +63,7 @@ export async function POST(request) {
         let geoUrl = null;
         let engUrl = null;
 
-        // Ensure storage bucket exists
-        try {
-            const { data: buckets } = await supabase.storage.listBuckets();
-            const bucketExists = buckets?.some(b => b.name === 'conference-abstracts');
-            if (!bucketExists) {
-                await supabase.storage.createBucket('conference-abstracts', { public: true });
-            }
-        } catch (bErr) {
-            console.warn('Storage bucket check notice:', bErr.message);
-        }
-
-        // Upload GEO File
+        // Try file uploads safely
         if (geoFile && typeof geoFile === 'object' && geoFile.name && geoFile.size > 0) {
             try {
                 const ext = geoFile.name.split('.').pop() || 'docx';
@@ -87,13 +80,14 @@ export async function POST(request) {
                         .from('conference-abstracts')
                         .getPublicUrl(path);
                     geoUrl = publicUrl;
+                } else {
+                    console.warn('GEO file upload warning:', upErr.message);
                 }
             } catch (err) {
-                console.warn('Upload GEO file error:', err);
+                console.warn('Upload GEO file exception:', err.message);
             }
         }
 
-        // Upload ENG File
         if (engFile && typeof engFile === 'object' && engFile.name && engFile.size > 0) {
             try {
                 const ext = engFile.name.split('.').pop() || 'docx';
@@ -110,9 +104,11 @@ export async function POST(request) {
                         .from('conference-abstracts')
                         .getPublicUrl(path);
                     engUrl = publicUrl;
+                } else {
+                    console.warn('ENG file upload warning:', upErr.message);
                 }
             } catch (err) {
-                console.warn('Upload ENG file error:', err);
+                console.warn('Upload ENG file exception:', err.message);
             }
         }
 
@@ -137,33 +133,49 @@ export async function POST(request) {
             created_at: new Date().toISOString()
         };
 
-        const { data, error } = await supabase
+        let assignedCode = fallbackCode;
+        let regId = null;
+
+        // Try insert with returning select
+        const insertWithSelect = await supabase
             .from('conference_registrations_2026')
             .insert([insertPayload])
-            .select('*')
-            .single();
+            .select('id, abstract_number')
+            .maybeSingle();
 
-        if (error) {
-            console.error('Conference DB insert error:', error);
-            throw error;
+        if (insertWithSelect.error) {
+            console.warn('Insert with select failed, trying direct insert:', insertWithSelect.error.message);
+            // Fallback: If RLS blocks SELECT on returning row for anon, execute pure INSERT
+            const pureInsert = await supabase
+                .from('conference_registrations_2026')
+                .insert([insertPayload]);
+
+            if (pureInsert.error) {
+                console.error('Database registration insert error:', pureInsert.error);
+                return NextResponse.json({
+                    error: `ბაზაში ჩაწერის შეცდომა: ${pureInsert.error.message}`
+                }, { status: 500 });
+            }
+        } else if (insertWithSelect.data) {
+            regId = insertWithSelect.data.id;
+            if (insertWithSelect.data.abstract_number) {
+                assignedCode = insertWithSelect.data.abstract_number;
+            }
         }
 
-        const assignedCode = data?.abstract_number || `IICE-2026-${Math.floor(100 + Math.random() * 900)}`;
-
-        // Capture client IP and User Agent for audit
+        // Capture client IP and User Agent for audit log
         const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
             request.headers.get('x-real-ip') ||
             'unknown';
         const userAgent = request.headers.get('user-agent') || 'unknown';
 
-        // Record audit log
         try {
             await supabase.from('audit_logs').insert([
                 {
                     user_email: email,
                     action: 'CONFERENCE_REGISTER',
                     table_name: 'conference_registrations_2026',
-                    record_id: data?.id ? String(data.id) : null,
+                    record_id: regId ? String(regId) : assignedCode,
                     details: {
                         abstractNumber: assignedCode,
                         applicant: `${firstName} ${lastName}`,
@@ -180,14 +192,14 @@ export async function POST(request) {
                 }
             ]);
         } catch (auditErr) {
-            console.warn('Conference audit log error:', auditErr.message);
+            console.warn('Conference audit log notice:', auditErr.message);
         }
 
         return NextResponse.json({
             success: true,
             abstractNumber: assignedCode,
             name: `${firstName} ${lastName}`,
-            id: data?.id
+            id: regId
         });
     } catch (err) {
         console.error('Conference registration route error:', err);
