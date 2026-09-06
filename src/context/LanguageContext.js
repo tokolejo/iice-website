@@ -8,19 +8,13 @@ export const LanguageProvider = ({ children }) => {
     const [language, setLanguage] = useState('ka'); // Default is Georgian
 
     useEffect(() => {
-        // Check local storage for saved preference on mount
+        // Strict Georgian ('ka') default when site loads
         const savedLang = localStorage.getItem('iice-lang');
-        if (savedLang) {
+        if (savedLang === 'en' || savedLang === 'ka') {
             setLanguage(savedLang);
         } else {
-            // Check browser language
-            const browserLang = typeof navigator !== 'undefined' ? (navigator.language || navigator.userLanguage) : null;
-            if (browserLang) {
-                const isGeorgian = browserLang.toLowerCase().startsWith('ka');
-                const defaultLang = isGeorgian ? 'ka' : 'en';
-                setLanguage(defaultLang);
-                localStorage.setItem('iice-lang', defaultLang);
-            }
+            setLanguage('ka');
+            localStorage.setItem('iice-lang', 'ka');
         }
     }, []);
 

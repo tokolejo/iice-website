@@ -102,7 +102,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="overflow-x-clip" suppressHydrationWarning>
+    <html lang="ka" className="overflow-x-clip" suppressHydrationWarning>
       <body
         className={`${googleSans.variable} antialiased min-h-screen flex flex-col bg-slate-50 overflow-x-clip`}
       >
