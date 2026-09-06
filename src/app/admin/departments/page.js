@@ -168,104 +168,125 @@ export default function AdminDepartmentsPage() {
             {/* Edit Modal */}
             {editingDept && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in-up">
-                    <div className="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-6 sm:p-8 relative border border-purple-100 max-h-[90vh] overflow-y-auto">
+                    <div className="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-6 sm:p-8 relative border border-purple-100 max-h-[92vh] overflow-y-auto">
                         <button
                             onClick={() => setEditingDept(null)}
-                            className="absolute top-5 right-5 text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-slate-100"
+                            className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 p-2 rounded-full hover:bg-slate-100 transition-colors"
                         >
                             <X className="w-5 h-5" />
                         </button>
 
-                        <h2 className="text-xl font-black text-gray-900 mb-2">
-                            განყოფილების რედაქტირება
-                        </h2>
-                        <p className="text-xs text-gray-500 mb-6">
-                            განაახლეთ განყოფილების სახელი და აღწერა
-                        </p>
+                        <div className="flex items-center gap-3 mb-5">
+                            <div className="w-10 h-10 rounded-2xl bg-purple-100 text-[#60318e] flex items-center justify-center">
+                                <Building2 className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <h2 className="text-xl sm:text-2xl font-black text-gray-900">
+                                    განყოფილების რედაქტირება
+                                </h2>
+                                <p className="text-xs text-gray-500 font-medium">
+                                    განაახლეთ განყოფილების დასახელება და აღწერა
+                                </p>
+                            </div>
+                        </div>
 
                         {saveError && (
-                            <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
-                                <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                                <span>{saveError}</span>
+                            <div className="mb-5 p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-2.5">
+                                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                                <span className="font-semibold">{saveError}</span>
                             </div>
                         )}
 
-                        <form onSubmit={handleSave} className="space-y-4 text-xs">
+                        <form onSubmit={handleSave} className="space-y-4 text-sm">
                             <div>
-                                <label className="block font-bold text-gray-700 mb-1">დასახელება (ქართულად) *</label>
+                                <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">
+                                    დასახელება (ქართულად) *
+                                </label>
                                 <input
                                     type="text"
                                     required
                                     value={formData.nameKa}
                                     onChange={(e) => setFormData(p => ({ ...p, nameKa: e.target.value }))}
-                                    className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] focus:border-transparent transition-all shadow-sm"
                                 />
                             </div>
 
                             <div>
-                                <label className="block font-bold text-gray-700 mb-1">Name (English) *</label>
+                                <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">
+                                    Name (English) *
+                                </label>
                                 <input
                                     type="text"
                                     required
                                     value={formData.nameEn}
                                     onChange={(e) => setFormData(p => ({ ...p, nameEn: e.target.value }))}
-                                    className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] focus:border-transparent transition-all shadow-sm"
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
-                                    <label className="block font-bold text-gray-700 mb-1">Slug (URL)</label>
+                                    <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">
+                                        Slug (URL მისამართი)
+                                    </label>
                                     <input
                                         type="text"
                                         value={formData.slug}
                                         onChange={(e) => setFormData(p => ({ ...p, slug: e.target.value }))}
-                                        className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] font-mono"
+                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-mono font-medium text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] focus:border-transparent transition-all shadow-sm"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block font-bold text-gray-700 mb-1">რიგითი ნომერი (Order Index)</label>
+                                    <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">
+                                        რიგითი ნომერი (Order)
+                                    </label>
                                     <input
                                         type="number"
                                         value={formData.orderIndex}
                                         onChange={(e) => setFormData(p => ({ ...p, orderIndex: e.target.value }))}
-                                        className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] focus:border-transparent transition-all shadow-sm"
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block font-bold text-gray-700 mb-1">აღწერა (ქართულად)</label>
+                                <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">
+                                    აღწერა (ქართულად)
+                                </label>
                                 <textarea
                                     rows={4}
                                     value={formData.descriptionKa}
                                     onChange={(e) => setFormData(p => ({ ...p, descriptionKa: e.target.value }))}
-                                    className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                    placeholder="დაწერეთ განყოფილების საქმიანობის მოკლე აღწერა..."
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] focus:border-transparent transition-all shadow-sm leading-relaxed"
                                 />
                             </div>
 
                             <div>
-                                <label className="block font-bold text-gray-700 mb-1">Description (English)</label>
+                                <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">
+                                    Description (English)
+                                </label>
                                 <textarea
                                     rows={4}
                                     value={formData.descriptionEn}
                                     onChange={(e) => setFormData(p => ({ ...p, descriptionEn: e.target.value }))}
-                                    className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                    placeholder="Department description in English..."
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] focus:border-transparent transition-all shadow-sm leading-relaxed"
                                 />
                             </div>
 
-                            <div className="flex gap-3 pt-4 border-t border-gray-100">
+                            <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
                                 <button
                                     type="button"
                                     onClick={() => setEditingDept(null)}
-                                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl transition-colors cursor-pointer"
+                                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-2xl transition-colors cursor-pointer text-sm"
                                 >
                                     გაუქმება
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={isSaving}
-                                    className="flex-1 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold py-2.5 rounded-xl transition-colors shadow-md cursor-pointer disabled:opacity-50"
+                                    className="flex-1 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold py-3 rounded-2xl transition-all shadow-md hover:shadow-lg cursor-pointer disabled:opacity-50 text-sm"
                                 >
                                     {isSaving ? 'ინახება...' : 'შენახვა'}
                                 </button>

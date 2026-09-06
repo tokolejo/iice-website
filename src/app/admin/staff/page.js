@@ -616,237 +616,261 @@ export default function AdminStaffPage() {
             {/* Create / Edit Staff Modal */}
             {isEditModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in-up">
-                    <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto relative border border-purple-100">
+                    <div className="bg-white text-gray-900 rounded-3xl shadow-2xl max-w-2xl w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto relative border border-purple-100">
                         <button
                             onClick={() => setIsEditModalOpen(false)}
-                            className="absolute top-5 right-5 text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-slate-100"
+                            className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 p-2 rounded-full hover:bg-slate-100 cursor-pointer"
                         >
                             <X className="w-5 h-5" />
                         </button>
 
-                        <h2 className="text-xl font-black text-gray-900 mb-2">
+                        <h2 className="text-xl sm:text-2xl font-black text-gray-900 mb-1">
                             {editingMember ? 'თანამშრომლის რედაქტირება' : 'ახალი თანამშრომლის დამატება'}
                         </h2>
-                        <p className="text-xs text-gray-500 mb-6">
-                            შეიყვანეთ ინფორმაცია ქართულ და ინგლისურ ენებზე
+                        <p className="text-xs sm:text-sm text-gray-500 mb-6 font-medium">
+                            შეიყვანეთ მონაცემები ქართულ და ინგლისურ ენებზე
                         </p>
 
                         {saveError && (
-                            <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
-                                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                            <div className="mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm font-medium flex items-center gap-2">
+                                <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-600" />
                                 <span>{saveError}</span>
                             </div>
                         )}
 
-                        <form onSubmit={handleSave} className="space-y-4 text-xs">
-                            {/* Names */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label className="block font-bold text-gray-700 mb-1">სახელი (ქართულად) *</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        value={formData.firstNameKa}
-                                        onChange={(e) => setFormData(p => ({ ...p, firstNameKa: e.target.value }))}
-                                        className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
-                                    />
+                        <form onSubmit={handleSave} className="space-y-5 text-xs sm:text-sm">
+                            {/* Section: Names */}
+                            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+                                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#60318e]">
+                                    👤 პერსონალური ინფორმაცია
+                                </span>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="block font-bold text-gray-800 mb-1">სახელი (ქართულად) *</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={formData.firstNameKa}
+                                            onChange={(e) => setFormData(p => ({ ...p, firstNameKa: e.target.value }))}
+                                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-medium text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#60318e] focus:border-[#60318e] placeholder:text-gray-400"
+                                            placeholder="მაგ: გიორგი"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block font-bold text-gray-800 mb-1">გვარი (ქართულად) *</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={formData.lastNameKa}
+                                            onChange={(e) => setFormData(p => ({ ...p, lastNameKa: e.target.value }))}
+                                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-medium text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#60318e] focus:border-[#60318e] placeholder:text-gray-400"
+                                            placeholder="მაგ: ბერიძე"
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="block font-bold text-gray-700 mb-1">გვარი (ქართულად) *</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        value={formData.lastNameKa}
-                                        onChange={(e) => setFormData(p => ({ ...p, lastNameKa: e.target.value }))}
-                                        className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
-                                    />
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="block font-bold text-gray-800 mb-1">First Name (English)</label>
+                                        <input
+                                            type="text"
+                                            value={formData.firstNameEn}
+                                            onChange={(e) => setFormData(p => ({ ...p, firstNameEn: e.target.value }))}
+                                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-medium text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#60318e] focus:border-[#60318e] placeholder:text-gray-400"
+                                            placeholder="e.g. Giorgi"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block font-bold text-gray-800 mb-1">Last Name (English)</label>
+                                        <input
+                                            type="text"
+                                            value={formData.lastNameEn}
+                                            onChange={(e) => setFormData(p => ({ ...p, lastNameEn: e.target.value }))}
+                                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-medium text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#60318e] focus:border-[#60318e] placeholder:text-gray-400"
+                                            placeholder="e.g. Beridze"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label className="block font-bold text-gray-700 mb-1">First Name (English)</label>
-                                    <input
-                                        type="text"
-                                        value={formData.firstNameEn}
-                                        onChange={(e) => setFormData(p => ({ ...p, firstNameEn: e.target.value }))}
-                                        className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
-                                    />
+                            {/* Section: Position & Department */}
+                            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+                                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#60318e]">
+                                    💼 თანამდებობა და განყოფილება
+                                </span>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="block font-bold text-gray-800 mb-1">თანამდებობა (ქართულად) *</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={formData.positionKa}
+                                            onChange={(e) => setFormData(p => ({ ...p, positionKa: e.target.value }))}
+                                            placeholder="მაგ: მთავარი მეცნიერი თანამშრომელი"
+                                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-medium text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#60318e] focus:border-[#60318e] placeholder:text-gray-400"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block font-bold text-gray-800 mb-1">Position (English)</label>
+                                        <input
+                                            type="text"
+                                            value={formData.positionEn}
+                                            onChange={(e) => setFormData(p => ({ ...p, positionEn: e.target.value }))}
+                                            placeholder="e.g. Principal Researcher"
+                                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-medium text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#60318e] focus:border-[#60318e] placeholder:text-gray-400"
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="block font-bold text-gray-700 mb-1">Last Name (English)</label>
-                                    <input
-                                        type="text"
-                                        value={formData.lastNameEn}
-                                        onChange={(e) => setFormData(p => ({ ...p, lastNameEn: e.target.value }))}
-                                        className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
-                                    />
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="block font-bold text-gray-800 mb-1">განყოფილება</label>
+                                        {isRestrictedHead ? (
+                                            <div className="p-3 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-900 font-bold text-xs sm:text-sm flex items-center gap-2">
+                                                <Building2 className="w-4 h-4 text-emerald-700 flex-shrink-0" />
+                                                <span>{userDeptName || 'თქვენი განყოფილება'} (მიმაგრებულია ავტომატურად)</span>
+                                            </div>
+                                        ) : (
+                                            <select
+                                                value={formData.departmentId}
+                                                onChange={(e) => setFormData(p => ({ ...p, departmentId: e.target.value }))}
+                                                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-bold text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#60318e] focus:border-[#60318e]"
+                                            >
+                                                <option value="">(არცერთი)</option>
+                                                {departments.map((d) => (
+                                                    <option key={d.id || d.slug} value={d.id || d.slug}>
+                                                        {d.name_ka || d.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <label className="block font-bold text-gray-800 mb-1">ელ-ფოსტა</label>
+                                        <input
+                                            type="email"
+                                            value={formData.email}
+                                            onChange={(e) => setFormData(p => ({ ...p, email: e.target.value }))}
+                                            placeholder="example@tsu.ge"
+                                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-medium text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#60318e] focus:border-[#60318e] placeholder:text-gray-400"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* Position & Department */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label className="block font-bold text-gray-700 mb-1">თანამდებობა (ქართულად) *</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        value={formData.positionKa}
-                                        onChange={(e) => setFormData(p => ({ ...p, positionKa: e.target.value }))}
-                                        placeholder="მაგ: მთავარი მეცნიერი თანამშრომელი"
-                                        className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block font-bold text-gray-700 mb-1">Position (English)</label>
-                                    <input
-                                        type="text"
-                                        value={formData.positionEn}
-                                        onChange={(e) => setFormData(p => ({ ...p, positionEn: e.target.value }))}
-                                        placeholder="e.g., Principal Researcher"
-                                        className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
-                                    />
+                            {/* Section: Photos & Files */}
+                            <div className="p-4 rounded-2xl bg-purple-50/50 border border-purple-100 space-y-3">
+                                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#60318e]">
+                                    📁 ფოტო და CV დოკუმენტი
+                                </span>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block font-bold text-gray-800 mb-1">პროფილის ფოტო</label>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(e) => setAvatarFile(e.target.files?.[0] || null)}
+                                            className="w-full text-xs text-gray-800 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#60318e] file:text-white hover:file:bg-[#7A1CAC] file:cursor-pointer cursor-pointer"
+                                        />
+                                        {formData.photoUrl && !avatarFile && (
+                                            <span className="text-[11px] text-gray-500 font-medium block mt-1.5 truncate">
+                                                მიმდინარე: {formData.photoUrl}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <div>
+                                        <label className="block font-bold text-gray-800 mb-1">CV ფაილი (PDF)</label>
+                                        <input
+                                            type="file"
+                                            accept=".pdf"
+                                            onChange={(e) => setCvFile(e.target.files?.[0] || null)}
+                                            className="w-full text-xs text-gray-800 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#60318e] file:text-white hover:file:bg-[#7A1CAC] file:cursor-pointer cursor-pointer"
+                                        />
+                                        {formData.cvFileUrl && !cvFile && (
+                                            <span className="text-[11px] text-gray-500 font-medium block mt-1.5 truncate">
+                                                მიმდინარე: {formData.cvFileUrl}
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label className="block font-bold text-gray-700 mb-1">განყოფილება</label>
-                                    {isRestrictedHead ? (
-                                        <div className="p-2.5 rounded-xl border border-emerald-200 bg-emerald-50/70 text-emerald-800 font-bold text-xs flex items-center gap-2">
-                                            <Building2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                                            <span>{userDeptName || 'თქვენი განყოფილება'} (მიმაგრებულია ავტომატურად)</span>
-                                        </div>
-                                    ) : (
-                                        <select
-                                            value={formData.departmentId}
-                                            onChange={(e) => setFormData(p => ({ ...p, departmentId: e.target.value }))}
-                                            className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
-                                        >
-                                            <option value="">(არცერთი)</option>
-                                            {departments.map((d) => (
-                                                <option key={d.id || d.slug} value={d.id || d.slug}>
-                                                    {d.name_ka || d.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    )}
-                                </div>
-                                <div>
-                                    <label className="block font-bold text-gray-700 mb-1">ელ-ფოსტა</label>
-                                    <input
-                                        type="email"
-                                        value={formData.email}
-                                        onChange={(e) => setFormData(p => ({ ...p, email: e.target.value }))}
-                                        placeholder="example@tsu.ge"
-                                        className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
-                                    />
+                            {/* Section: Academic Links */}
+                            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+                                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#60318e]">
+                                    🔗 სამეცნიერო პროფილები & ბმულები
+                                </span>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="block font-bold text-gray-800 mb-1">Google Scholar URL</label>
+                                        <input
+                                            type="url"
+                                            value={formData.googleScholarUrl}
+                                            onChange={(e) => setFormData(p => ({ ...p, googleScholarUrl: e.target.value }))}
+                                            placeholder="https://scholar.google.com/..."
+                                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-medium text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#60318e] focus:border-[#60318e] placeholder:text-gray-400"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block font-bold text-gray-800 mb-1">ORCID / Scopus URL</label>
+                                        <input
+                                            type="url"
+                                            value={formData.orcidUrl}
+                                            onChange={(e) => setFormData(p => ({ ...p, orcidUrl: e.target.value }))}
+                                            placeholder="https://orcid.org/..."
+                                            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-medium text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#60318e] focus:border-[#60318e] placeholder:text-gray-400"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* Photo & CV File Upload */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 bg-purple-50/40 rounded-2xl border border-purple-100">
-                                <div>
-                                    <label className="block font-bold text-gray-700 mb-1">პროფილის ფოტო</label>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) => setAvatarFile(e.target.files?.[0] || null)}
-                                        className="text-[11px] text-gray-600 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-[#60318e] file:text-white cursor-pointer"
-                                    />
-                                    {formData.photoUrl && !avatarFile && (
-                                        <span className="text-[10px] text-gray-400 block mt-1 truncate">
-                                            მიმდინარე: {formData.photoUrl}
-                                        </span>
-                                    )}
-                                </div>
-
-                                <div>
-                                    <label className="block font-bold text-gray-700 mb-1">CV ფაილი (PDF)</label>
-                                    <input
-                                        type="file"
-                                        accept=".pdf"
-                                        onChange={(e) => setCvFile(e.target.files?.[0] || null)}
-                                        className="text-[11px] text-gray-600 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-[#60318e] file:text-white cursor-pointer"
-                                    />
-                                    {formData.cvFileUrl && !cvFile && (
-                                        <span className="text-[10px] text-gray-400 block mt-1 truncate">
-                                            მიმდინარე: {formData.cvFileUrl}
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* Academic Links */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label className="block font-bold text-gray-700 mb-1">Google Scholar URL</label>
-                                    <input
-                                        type="url"
-                                        value={formData.googleScholarUrl}
-                                        onChange={(e) => setFormData(p => ({ ...p, googleScholarUrl: e.target.value }))}
-                                        placeholder="https://scholar.google.com/..."
-                                        className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block font-bold text-gray-700 mb-1">ORCID / Scopus URL</label>
-                                    <input
-                                        type="url"
-                                        value={formData.orcidUrl}
-                                        onChange={(e) => setFormData(p => ({ ...p, orcidUrl: e.target.value }))}
-                                        placeholder="https://orcid.org/..."
-                                        className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Toggles */}
-                            <div className="flex flex-wrap gap-4 pt-2">
-                                <label className="inline-flex items-center gap-2 cursor-pointer font-bold text-gray-700">
+                            {/* Section: Toggles */}
+                            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-wrap gap-5">
+                                <label className="inline-flex items-center gap-2 cursor-pointer font-bold text-gray-800 text-xs sm:text-sm">
                                     <input
                                         type="checkbox"
                                         checked={formData.isActive}
                                         onChange={(e) => setFormData(p => ({ ...p, isActive: e.target.checked }))}
-                                        className="text-[#60318e] rounded"
+                                        className="w-4 h-4 accent-[#60318e] rounded cursor-pointer"
                                     />
                                     <span>აქტიური</span>
                                 </label>
 
-                                <label className="inline-flex items-center gap-2 cursor-pointer font-bold text-gray-700">
+                                <label className="inline-flex items-center gap-2 cursor-pointer font-bold text-gray-800 text-xs sm:text-sm">
                                     <input
                                         type="checkbox"
                                         checked={formData.isManagement}
                                         onChange={(e) => setFormData(p => ({ ...p, isManagement: e.target.checked }))}
-                                        className="text-[#60318e] rounded"
+                                        className="w-4 h-4 accent-[#60318e] rounded cursor-pointer"
                                     />
                                     <span>დირექცია (Administration)</span>
                                 </label>
 
-                                <label className="inline-flex items-center gap-2 cursor-pointer font-bold text-gray-700">
+                                <label className="inline-flex items-center gap-2 cursor-pointer font-bold text-gray-800 text-xs sm:text-sm">
                                     <input
                                         type="checkbox"
                                         checked={formData.isCouncilMember}
                                         onChange={(e) => setFormData(p => ({ ...p, isCouncilMember: e.target.checked }))}
-                                        className="text-[#60318e] rounded"
+                                        className="w-4 h-4 accent-[#60318e] rounded cursor-pointer"
                                     />
                                     <span>სამეცნიერო საბჭოს წევრი</span>
                                 </label>
                             </div>
 
                             {/* Actions */}
-                            <div className="flex gap-3 pt-4 border-t border-gray-100">
+                            <div className="flex gap-3 pt-4 border-t border-gray-200">
                                 <button
                                     type="button"
                                     onClick={() => setIsEditModalOpen(false)}
-                                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl transition-colors cursor-pointer"
+                                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl transition-colors cursor-pointer text-xs sm:text-sm"
                                 >
                                     გაუქმება
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={isSaving}
-                                    className="flex-1 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold py-2.5 rounded-xl transition-colors shadow-md cursor-pointer disabled:opacity-50"
+                                    className="flex-1 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold py-3 rounded-xl transition-colors shadow-md cursor-pointer disabled:opacity-50 text-xs sm:text-sm"
                                 >
                                     {isSaving ? 'ინახება...' : 'შენახვა'}
                                 </button>

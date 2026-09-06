@@ -84,6 +84,7 @@ export default function Conference2026View() {
             registration: isEn ? "Registration & Submission" : "რეგისტრაცია და აბსტრაქტი",
             topics: isEn ? "Thematic Topics (6)" : "თემატური სექციები (6)",
             schedule: isEn ? "Program Schedule" : "კონფერენციის პროგრამა",
+            organizers: isEn ? "Organizers & Partners" : "ორგანიზატორები და პარტნიორები",
             downloads: isEn ? "Download Center" : "ფაილების ჩამოტვირთვა",
             venues: isEn ? "Venues & Transport" : "ლოკაციები და ტრანსპორტი",
         },
@@ -307,95 +308,153 @@ export default function Conference2026View() {
             <title>{isEn ? "3rd International Scientific Conference 2026 | TSU IICE" : "III საერთაშორისო სამეცნიერო კონფერენცია 2026 | TSU IICE"}</title>
             <meta name="description" content={isEn ? "3rd International Scientific Conference 2026 dedicated to the 70th anniversary of IICE." : "მე-3 საერთაშორისო სამეცნიერო კონფერენცია 2026 ეძღვნება რაფიელ აგლაძის ინსტიტუტის 70 წლისთავს."} />
 
-            {/* Top 4 Logos Institutional Grid Banner */}
-            <div className="bg-white border-b border-purple-100 py-4 px-4 sm:px-6 lg:px-8 shadow-xs">
-                <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 items-center justify-items-center text-center">
-                    {/* 1. TSU */}
-                    <div className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-slate-50 transition-colors w-full">
-                        <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-900 font-black text-sm">
-                            თსუ
-                        </div>
-                        <span className="text-[10px] sm:text-xs font-bold text-gray-800 leading-tight">
-                            {isEn ? "Tbilisi State University" : "თბილისის სახელმწიფო უნივერსიტეტი"}
-                        </span>
-                    </div>
+            {/* Hero Header Section - High-Contrast Royal Purple with Ambient Glow */}
+            <div className="relative bg-gradient-to-b from-[#180327] via-[#2f0d46] to-[#1c062c] text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 shadow-xl overflow-hidden">
+                {/* Decorative radial mesh light */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(173,73,225,0.22),transparent_70%)] pointer-events-none"></div>
 
-                    {/* 2. IICE (With 70th Anniversary Badge) */}
-                    <div className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-slate-50 transition-colors w-full relative">
-                        <div className="relative">
-                            <img src="/logo.png" alt="IICE Logo" className="w-12 h-12 object-contain" />
-                            <span className="absolute -top-1.5 -right-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-full shadow-xs uppercase tracking-tighter">
-                                70 წელი
-                            </span>
-                        </div>
-                        <span className="text-[10px] sm:text-xs font-bold text-[#60318e] leading-tight">
-                            {isEn ? "R. Agladze Institute (70 Years)" : "რ. აგლაძის ინსტიტუტი (70 წელი)"}
-                        </span>
-                    </div>
-
-                    {/* 3. Telavi State University */}
-                    <div className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-slate-50 transition-colors w-full">
-                        <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-800 font-black text-xs">
-                            თესაუ
-                        </div>
-                        <span className="text-[10px] sm:text-xs font-bold text-gray-800 leading-tight">
-                            {isEn ? "Telavi State University" : "თელავის სახელმწიფო უნივერსიტეტი"}
-                        </span>
-                    </div>
-
-                    {/* 4. Shota Rustaveli Foundation */}
-                    <div className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-slate-50 transition-colors w-full">
-                        <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-900 font-black text-xs">
-                            SRNSFG
-                        </div>
-                        <span className="text-[10px] sm:text-xs font-bold text-gray-800 leading-tight">
-                            {isEn ? "Rustaveli Science Foundation" : "რუსთაველის სამეცნიერო ფონდი"}
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            {/* Hero Header Section */}
-            <div className="relative bg-gradient-to-r from-[#2e0d42] via-[#60318e] to-[#7A1CAC] text-white py-14 sm:py-20 px-4 sm:px-6 lg:px-8 shadow-md overflow-hidden">
                 <div className="max-w-5xl mx-auto text-center relative z-10">
-                    <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-extrabold bg-white/15 text-[#EBD3F8] border border-white/20 mb-5 backdrop-blur-sm shadow-xs">
-                        <Sparkles className="w-4 h-4 text-[#AD49E1]" />
-                        {t.badge}
-                    </span>
+                    <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs sm:text-sm font-extrabold bg-gradient-to-r from-purple-500/25 to-amber-500/25 text-amber-200 border border-amber-400/40 mb-6 backdrop-blur-md shadow-md">
+                        <Sparkles className="w-4 h-4 text-amber-300" />
+                        <span>{t.badge}</span>
+                    </div>
 
-                    <h1 className="text-xl sm:text-2xl md:text-4xl font-black mb-4 leading-tight tracking-tight max-w-4xl mx-auto">
+                    <h1 className="text-2xl sm:text-3xl md:text-5xl font-black text-white mb-6 leading-tight tracking-tight max-w-4xl mx-auto drop-shadow-md">
                         {t.title}
                     </h1>
 
-                    <p className="text-xs sm:text-sm md:text-base font-bold text-amber-300 max-w-3xl mx-auto mb-6 bg-amber-400/10 py-2 px-4 rounded-2xl border border-amber-300/30">
-                        ✨ {t.anniversary}
-                    </p>
+                    {/* 70 Years Commemorative Banner */}
+                    <div className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-500/15 via-amber-400/25 to-amber-500/15 text-amber-200 py-3 px-6 rounded-2xl border border-amber-300/40 shadow-md mb-8 max-w-3xl backdrop-blur-md">
+                        <Award className="w-6 h-6 text-amber-400 flex-shrink-0" />
+                        <span className="text-xs sm:text-sm md:text-base font-bold text-amber-100 leading-snug">
+                            {t.anniversary}
+                        </span>
+                    </div>
 
-                    <div className="flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm font-semibold mb-6">
-                        <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-md border border-white/10">
-                            <Calendar className="w-4 h-4 text-[#EBD3F8]" />
+                    {/* Dates & Venues Pills */}
+                    <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs sm:text-sm font-bold mb-8">
+                        <div className="flex items-center gap-2.5 bg-white/10 text-white px-5 py-2.5 rounded-2xl backdrop-blur-md border border-white/20 shadow-sm">
+                            <Calendar className="w-4 h-4 text-amber-300" />
                             <span>{t.datesText}</span>
                         </div>
-                        <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-md border border-white/10">
-                            <MapPin className="w-4 h-4 text-[#EBD3F8]" />
+                        <div className="flex items-center gap-2.5 bg-white/10 text-white px-5 py-2.5 rounded-2xl backdrop-blur-md border border-white/20 shadow-sm">
+                            <MapPin className="w-4 h-4 text-amber-300" />
                             <span>{t.venuesText}</span>
                         </div>
                     </div>
 
-                    {/* Mandatory Grant Notice & Free participation badge */}
-                    <div className="max-w-3xl mx-auto space-y-2 text-[11px] sm:text-xs">
-                        <div className="bg-white/10 text-purple-100 px-4 py-2 rounded-xl border border-white/15 backdrop-blur-sm">
+                    {/* Mandatory Grant Notice & Free Participation */}
+                    <div className="max-w-3xl mx-auto space-y-3 text-xs mb-8">
+                        <div className="bg-white/10 text-purple-100 px-5 py-3 rounded-2xl border border-white/15 backdrop-blur-md shadow-sm leading-relaxed">
                             🏛️ <strong>{t.grantNotice}</strong>
                         </div>
-                        <div className="inline-block bg-emerald-500/20 text-emerald-200 font-extrabold px-3.5 py-1 rounded-full border border-emerald-400/40">
-                            ✓ {t.freeNotice}
+                        <div className="inline-flex items-center gap-2 bg-emerald-500/25 text-emerald-200 font-extrabold px-4 py-1.5 rounded-full border border-emerald-400/40 shadow-xs">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                            <span>{t.freeNotice}</span>
+                        </div>
+                    </div>
+
+                    {/* Quick Call to Action */}
+                    <div>
+                        <button
+                            onClick={() => {
+                                setActiveTab('registration');
+                                document.getElementById('tabs-navigation')?.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#AD49E1] to-[#7A1CAC] hover:from-[#bd5cf0] hover:to-[#8c25c2] text-white font-extrabold px-8 py-3.5 rounded-full text-xs sm:text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all cursor-pointer"
+                        >
+                            <Send className="w-4 h-4" />
+                            <span>{isEn ? "Go to Registration Form ↓" : "რეგისტრაცია & აბსტრაქტის ატვირთვა ↓"}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Institutional Organizers & Partners Section - Sleek Executive Showcase */}
+            <div className="bg-white border-b border-purple-100/80 py-10 px-4 sm:px-6 lg:px-8 shadow-xs">
+                <div className="max-w-6xl mx-auto">
+                    <div className="text-center mb-8">
+                        <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#60318e] bg-purple-100/70 px-3.5 py-1 rounded-full border border-purple-200 inline-block mb-2">
+                            {isEn ? "Organizing Institutions & Grant Support" : "საორგანიზაციო ინსტიტუციები და მხარდამჭერები"}
+                        </span>
+                        <h3 className="text-lg sm:text-xl font-black text-gray-900">
+                            {isEn ? "Co-Organizers & Partner Universities" : "ორგანიზატორები და პარტნიორი უნივერსიტეტები"}
+                        </h3>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                        {/* 1. TSU */}
+                        <div className="bg-slate-50 p-5 rounded-3xl border border-purple-100 shadow-sm hover:shadow-md transition-all flex flex-col items-center text-center group hover:border-[#AD49E1]/40">
+                            <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-900 font-black text-xl mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                                🏛️
+                            </div>
+                            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 mb-2">
+                                {isEn ? "Co-Organizer" : "თანაორგანიზატორი"}
+                            </span>
+                            <h4 className="font-extrabold text-sm text-gray-900 leading-snug mb-1">
+                                {isEn ? "Ivane Javakhishvili Tbilisi State University" : "თბილისის სახელმწიფო უნივერსიტეტი (თსუ)"}
+                            </h4>
+                            <p className="text-[11px] text-gray-500 font-medium">
+                                {isEn ? "First National University of Georgia" : "ივანე ჯავახიშვილის სახელობის თსუ"}
+                            </p>
+                        </div>
+
+                        {/* 2. IICE (70 Years Lead) */}
+                        <div className="bg-purple-50/40 p-5 rounded-3xl border-2 border-amber-400/50 shadow-sm hover:shadow-md transition-all flex flex-col items-center text-center relative overflow-hidden group">
+                            <div className="absolute -right-8 top-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white text-[9px] font-black py-0.5 px-8 rotate-45 shadow-xs uppercase tracking-wider">
+                                70 წელი
+                            </div>
+                            <div className="w-16 h-16 rounded-2xl bg-white border border-purple-100 p-2 flex items-center justify-center mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                                <img src="/logo.png" alt="IICE Logo" className="w-full h-full object-contain" />
+                            </div>
+                            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 mb-2 border border-amber-300">
+                                {isEn ? "Lead Organizer • 70 Years" : "მთავარი ორგანიზატორი • 70 წელი"}
+                            </span>
+                            <h4 className="font-extrabold text-sm text-[#60318e] leading-snug mb-1">
+                                {isEn ? "R. Agladze Institute (IICE)" : "რაფიელ აგლაძის ინსტიტუტი (IICE)"}
+                            </h4>
+                            <p className="text-[11px] text-gray-500 font-medium">
+                                {isEn ? "Institute of Inorganic Chemistry & Electrochemistry" : "არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
+                            </p>
+                        </div>
+
+                        {/* 3. TeSaU */}
+                        <div className="bg-slate-50 p-5 rounded-3xl border border-purple-100 shadow-sm hover:shadow-md transition-all flex flex-col items-center text-center group hover:border-[#AD49E1]/40">
+                            <div className="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-800 font-black text-xl mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                                🎓
+                            </div>
+                            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 mb-2">
+                                {isEn ? "Host University (Telavi)" : "მასპინძელი უნივერსიტეტი (თელავი)"}
+                            </span>
+                            <h4 className="font-extrabold text-sm text-gray-900 leading-snug mb-1">
+                                {isEn ? "Telavi State University (TeSaU)" : "თელავის სახელმწიფო უნივერსიტეტი"}
+                            </h4>
+                            <p className="text-[11px] text-gray-500 font-medium">
+                                {isEn ? "Iakob Gogebashvili Telavi State University" : "იაკობ გოგებაშვილის სახელობის თესაუ"}
+                            </p>
+                        </div>
+
+                        {/* 4. SRNSFG */}
+                        <div className="bg-slate-50 p-5 rounded-3xl border border-purple-100 shadow-sm hover:shadow-md transition-all flex flex-col items-center text-center group hover:border-[#AD49E1]/40">
+                            <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-900 font-black text-xl mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                                🏛️
+                            </div>
+                            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 mb-2">
+                                {isEn ? "Grant Donor (ISE-26-286)" : "გრანტის დონორი (ISE-26-286)"}
+                            </span>
+                            <h4 className="font-extrabold text-sm text-gray-900 leading-snug mb-1">
+                                {isEn ? "Rustaveli National Science Foundation" : "რუსთაველის სამეცნიერო ფონდი"}
+                            </h4>
+                            <p className="text-[11px] text-gray-500 font-medium">
+                                {isEn ? "Shota Rustaveli Science Foundation of Georgia" : "შოთა რუსთაველის ეროვნული სამეცნიერო ფონდი"}
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Sticky Navigation Tabs */}
-            <div className="sticky top-20 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
+            <div id="tabs-navigation" className="sticky top-20 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto scrollbar-none">
                     <div className="flex space-x-1 sm:space-x-2 py-3 min-w-max">
                         {Object.entries(t.tabs).map(([key, label]) => (
@@ -411,6 +470,7 @@ export default function Conference2026View() {
                                 {key === 'registration' && <Send className="w-3.5 h-3.5" />}
                                 {key === 'topics' && <Tag className="w-3.5 h-3.5" />}
                                 {key === 'schedule' && <Clock className="w-3.5 h-3.5" />}
+                                {key === 'organizers' && <Building2 className="w-3.5 h-3.5" />}
                                 {key === 'downloads' && <Download className="w-3.5 h-3.5" />}
                                 {key === 'venues' && <MapPin className="w-3.5 h-3.5" />}
                                 {label}
@@ -926,6 +986,112 @@ export default function Conference2026View() {
                                 <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200">
                                     <strong className="text-emerald-900">15:00 – 20:00:</strong> {isEn ? "Social program & Gala Dinner (18:00–20:00)" : "სოციალური პროგრამა და საზეიმო ვახშამი (18:00–20:00)"}
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* 3.1 ORGANIZERS TAB */}
+                {activeTab === 'organizers' && (
+                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in-up space-y-8">
+                        <div>
+                            <h2 className="text-xl sm:text-2xl font-black text-[#60318e] mb-2">
+                                {isEn ? "Organizing Committee & Supporting Institutions" : "საორგანიზაციო ინსტიტუციები და კომიტეტი"}
+                            </h2>
+                            <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">
+                                {isEn
+                                    ? "The 3rd International Scientific Conference 2026 is organized jointly by Georgia's leading scientific and educational institutions, supported by the Shota Rustaveli National Science Foundation."
+                                    : "მე-3 საერთაშორისო სამეცნიერო კონფერენცია 2026 იმართება საქართველოს წამყვანი სამეცნიერო და საგანმანათლებლო დაწესებულებების პარტნიორობით, შოთა რუსთაველის საქართველოს ეროვნული სამეცნიერო ფონდის მხარდაჭერით."}
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* IICE */}
+                            <div className="p-6 rounded-3xl border-2 border-amber-400/40 bg-purple-50/30 space-y-3">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-14 h-14 rounded-2xl bg-white p-2 border border-purple-100 shadow-xs flex items-center justify-center">
+                                        <img src="/logo.png" alt="IICE" className="w-full h-full object-contain" />
+                                    </div>
+                                    <div>
+                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+                                            მთავარი ორგანიზატორი • 70 წელი
+                                        </span>
+                                        <h4 className="font-extrabold text-sm text-gray-900 mt-1">
+                                            {isEn ? "R. Agladze Institute of Inorganic Chemistry & Electrochemistry" : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
+                                        </h4>
+                                    </div>
+                                </div>
+                                <p className="text-xs text-gray-600 leading-relaxed">
+                                    {isEn
+                                        ? "Founded in 1956. Over seven decades of pioneer research in applied electrochemistry, mineral processing, nanomaterials, and green energy."
+                                        : "დაარსდა 1956 წელს. 7 ათწლეულის განმავლობაში ინსტიტუტი არის მოწინავე სამეცნიერო ცენტრი გამოყენებით ელექტროქიმიაში, წიაღისეულის გადამუშავებასა და ნანოტექნოლოგიებში."}
+                                </p>
+                            </div>
+
+                            {/* TSU */}
+                            <div className="p-6 rounded-3xl border border-purple-100 bg-slate-50/60 space-y-3">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 shadow-xs flex items-center justify-center text-2xl">
+                                        🏛️
+                                    </div>
+                                    <div>
+                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800">
+                                            თანაორგანიზატორი
+                                        </span>
+                                        <h4 className="font-extrabold text-sm text-gray-900 mt-1">
+                                            {isEn ? "Ivane Javakhishvili Tbilisi State University (TSU)" : "ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტი"}
+                                        </h4>
+                                    </div>
+                                </div>
+                                <p className="text-xs text-gray-600 leading-relaxed">
+                                    {isEn
+                                        ? "The first national university in the Caucasus, fostering scientific excellence, higher education, and international collaboration."
+                                        : "პირველი ეროვნული უნივერსიტეტი კავკასიაში, ქართული საუნივერსიტეტო განათლებისა და მეცნიერების მთავარი კერა."}
+                                </p>
+                            </div>
+
+                            {/* TeSaU */}
+                            <div className="p-6 rounded-3xl border border-purple-100 bg-slate-50/60 space-y-3">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 shadow-xs flex items-center justify-center text-2xl">
+                                        🎓
+                                    </div>
+                                    <div>
+                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                                            მასპინძელი უნივერსიტეტი
+                                        </span>
+                                        <h4 className="font-extrabold text-sm text-gray-900 mt-1">
+                                            {isEn ? "Iakob Gogebashvili Telavi State University (TeSaU)" : "იაკობ გოგებაშვილის სახელობის თელავის სახელმწიფო უნივერსიტეტი"}
+                                        </h4>
+                                    </div>
+                                </div>
+                                <p className="text-xs text-gray-600 leading-relaxed">
+                                    {isEn
+                                        ? "Host institution in Kakheti region, providing state-of-the-art auditoriums for sectional meetings, discussions, and academic exchange."
+                                        : "კახეთის რეგიონის წამყვანი საგანმანათლებლო ცენტრი, რომელიც მასპინძლობს კონფერენციის სექციურ სხდომებს, დისკუსიებსა და შემაჯამებელ ღონისძიებას."}
+                                </p>
+                            </div>
+
+                            {/* SRNSFG */}
+                            <div className="p-6 rounded-3xl border border-purple-100 bg-slate-50/60 space-y-3">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 shadow-xs flex items-center justify-center text-2xl">
+                                        📜
+                                    </div>
+                                    <div>
+                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900">
+                                            გრანტის დონორი და მხარდამჭერი
+                                        </span>
+                                        <h4 className="font-extrabold text-sm text-gray-900 mt-1">
+                                            {isEn ? "Shota Rustaveli National Science Foundation" : "შოთა რუსთაველის საქართველოს ეროვნული სამეცნიერო ფონდი"}
+                                        </h4>
+                                    </div>
+                                </div>
+                                <p className="text-xs text-gray-600 leading-relaxed">
+                                    {isEn
+                                        ? "Grant project ISE-26-286. Supporting the dissemination of high-level scientific findings and international cooperation in Georgia."
+                                        : "საგრანტო პროექტი ISE-26-286. უზრუნველყოფს სამეცნიერო კვლევების პოპულარიზაციას, საერთაშორისო ინტეგრაციასა და ახალგაზრდა მეცნიერთა ჩართულობას."}
+                                </p>
                             </div>
                         </div>
                     </div>

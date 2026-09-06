@@ -12,14 +12,7 @@
 
 :root {
   --background: #f8fafc;
-  --foreground: #4a5568;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f172a;
-    --foreground: #f8fafc;
-  }
+  --foreground: #1e293b;
 }
 
 @layer base {
@@ -41,8 +34,20 @@
   h4,
   h5,
   h6 {
-    color: var(--color-primary);
+    color: inherit;
     font-weight: 700;
+  }
+
+  input,
+  textarea,
+  select {
+    color: #0f172a;
+    background-color: #ffffff;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #94a3b8;
   }
 }
 

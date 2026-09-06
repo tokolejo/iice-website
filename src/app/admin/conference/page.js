@@ -366,74 +366,74 @@ export default function AdminConferencePage() {
             {/* Details Modal */}
             {selectedReg && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in-up">
-                    <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto relative border border-purple-100">
+                    <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 sm:p-8 max-h-[92vh] overflow-y-auto relative border border-purple-100">
                         <button
                             onClick={() => setSelectedReg(null)}
-                            className="absolute top-5 right-5 text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-slate-100"
+                            className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 p-2 rounded-full hover:bg-slate-100 transition-colors"
                         >
                             <X className="w-5 h-5" />
                         </button>
 
                         <div className="flex items-center gap-3 mb-6">
-                            <span className="font-mono text-sm font-black text-[#60318e] bg-purple-50 px-3 py-1.5 rounded-xl border border-purple-200">
+                            <span className="font-mono text-sm font-black text-[#60318e] bg-purple-50 px-3.5 py-1.5 rounded-xl border border-purple-200">
                                 {selectedReg.abstract_number}
                             </span>
-                            <span className="text-xs text-gray-400">
+                            <span className="text-xs font-semibold text-gray-500">
                                 {new Date(selectedReg.created_at).toLocaleString('ka-GE')}
                             </span>
                         </div>
 
-                        <h2 className="text-xl font-black text-gray-900 mb-1">
+                        <h2 className="text-2xl font-black text-gray-900 mb-1">
                             {selectedReg.first_name} {selectedReg.last_name}
                         </h2>
-                        <p className="text-xs text-[#AD49E1] font-bold mb-6">
+                        <p className="text-sm text-[#7A1CAC] font-bold mb-6">
                             {selectedReg.affiliation} ({selectedReg.citizenship})
                         </p>
 
-                        <div className="space-y-4 text-xs">
-                            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
-                                <h4 className="font-bold text-[#60318e] text-[11px] uppercase tracking-wider">
+                        <div className="space-y-4 text-sm">
+                            <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                                <h4 className="font-bold text-[#60318e] text-xs uppercase tracking-wider">
                                     მოხსენების დეტალები
                                 </h4>
-                                <p className="text-sm font-extrabold text-gray-900">
+                                <p className="text-base font-extrabold text-gray-900 leading-snug">
                                     {selectedReg.presentation_title}
                                 </p>
                                 {selectedReg.co_authors && (
-                                    <p className="text-gray-600">
-                                        <strong>თანაავტორები:</strong> {selectedReg.co_authors}
+                                    <p className="text-sm text-gray-700">
+                                        <strong className="text-gray-900">თანაავტორები:</strong> {selectedReg.co_authors}
                                     </p>
                                 )}
                                 <div className="flex flex-wrap gap-2 pt-2">
-                                    <span className="bg-white px-2.5 py-1 rounded-lg border border-slate-200 font-semibold">
+                                    <span className="bg-white px-3 py-1.5 rounded-xl border border-slate-200 font-bold text-xs text-gray-800 shadow-sm">
                                         ტიპი: {selectedReg.presentation_type}
                                     </span>
-                                    <span className="bg-white px-2.5 py-1 rounded-lg border border-slate-200 font-semibold">
+                                    <span className="bg-white px-3 py-1.5 rounded-xl border border-slate-200 font-bold text-xs text-gray-800 shadow-sm">
                                         როლი: {selectedReg.participation_role}
                                     </span>
-                                    <span className="bg-white px-2.5 py-1 rounded-lg border border-slate-200 font-semibold">
+                                    <span className="bg-white px-3 py-1.5 rounded-xl border border-slate-200 font-bold text-xs text-gray-800 shadow-sm">
                                         თემატიკა: {selectedReg.thematic_topic}
                                     </span>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div className="p-3.5 rounded-xl bg-purple-50/50 border border-purple-100">
-                                    <span className="text-gray-400 block text-[10px] uppercase font-bold">ელ-ფოსტა</span>
-                                    <a href={`mailto:${selectedReg.email}`} className="text-xs font-bold text-[#60318e] hover:underline">
+                                <div className="p-4 rounded-2xl bg-purple-50/50 border border-purple-100">
+                                    <span className="text-gray-500 block text-xs uppercase font-bold mb-1">ელ-ფოსტა</span>
+                                    <a href={`mailto:${selectedReg.email}`} className="text-sm font-extrabold text-[#60318e] hover:underline break-all">
                                         {selectedReg.email}
                                     </a>
                                 </div>
-                                <div className="p-3.5 rounded-xl bg-purple-50/50 border border-purple-100">
-                                    <span className="text-gray-400 block text-[10px] uppercase font-bold">ხარისხი / სქესი</span>
-                                    <span className="text-xs font-bold text-gray-800">
+                                <div className="p-4 rounded-2xl bg-purple-50/50 border border-purple-100">
+                                    <span className="text-gray-500 block text-xs uppercase font-bold mb-1">ხარისხი / სქესი</span>
+                                    <span className="text-sm font-extrabold text-gray-800">
                                         {selectedReg.titulation} • {selectedReg.gender}
                                     </span>
                                 </div>
                             </div>
 
                             {/* Files */}
-                            <div className="p-4 rounded-2xl border border-purple-100 bg-purple-50/30">
-                                <h4 className="font-bold text-[#60318e] text-[11px] uppercase tracking-wider mb-3">
+                            <div className="p-5 rounded-2xl border border-purple-100 bg-purple-50/40">
+                                <h4 className="font-bold text-[#60318e] text-xs uppercase tracking-wider mb-3">
                                     ატვირთული თეზისები
                                 </h4>
                                 <div className="flex flex-wrap gap-3">
@@ -442,13 +442,13 @@ export default function AdminConferencePage() {
                                             href={selectedReg.abstract_file_geo_url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 bg-[#60318e] text-white font-bold px-3.5 py-2 rounded-xl text-xs hover:bg-[#7A1CAC] transition-colors"
+                                            className="inline-flex items-center gap-2 bg-[#60318e] text-white font-bold px-4 py-2.5 rounded-xl text-xs hover:bg-[#7A1CAC] transition-colors shadow-sm"
                                         >
-                                            <Download className="w-3.5 h-3.5" />
+                                            <Download className="w-4 h-4" />
                                             <span>ქართული თეზისი (GEO)</span>
                                         </a>
                                     ) : (
-                                        <span className="text-gray-400 text-xs">ქართული თეზისი არ არის ატვირთული</span>
+                                        <span className="text-gray-500 text-xs font-medium">ქართული თეზისი არ არის ატვირთული</span>
                                     )}
 
                                     {selectedReg.abstract_file_eng_url ? (
@@ -456,13 +456,13 @@ export default function AdminConferencePage() {
                                             href={selectedReg.abstract_file_eng_url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 bg-[#60318e] text-white font-bold px-3.5 py-2 rounded-xl text-xs hover:bg-[#7A1CAC] transition-colors"
+                                            className="inline-flex items-center gap-2 bg-[#60318e] text-white font-bold px-4 py-2.5 rounded-xl text-xs hover:bg-[#7A1CAC] transition-colors shadow-sm"
                                         >
-                                            <Download className="w-3.5 h-3.5" />
+                                            <Download className="w-4 h-4" />
                                             <span>ინგლისური თეზისი (ENG)</span>
                                         </a>
                                     ) : (
-                                        <span className="text-gray-400 text-xs">ინგლისური თეზისი არ არის ატვირთული</span>
+                                        <span className="text-gray-500 text-xs font-medium">ინგლისური თეზისი არ არის ატვირთული</span>
                                     )}
                                 </div>
                             </div>
@@ -471,7 +471,7 @@ export default function AdminConferencePage() {
                         <div className="mt-6 text-right">
                             <button
                                 onClick={() => setSelectedReg(null)}
-                                className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-5 py-2.5 rounded-xl text-xs transition-colors cursor-pointer"
+                                className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-6 py-2.5 rounded-2xl text-sm transition-colors cursor-pointer"
                             >
                                 დახურვა
                             </button>
