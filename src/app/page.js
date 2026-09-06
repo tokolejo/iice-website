@@ -12,6 +12,17 @@ import { getDynamicDepartments, getDynamicStaff } from '../lib/supabase/staff';
 import ScrollReveal from '../components/ScrollReveal';
 import NewsCard from '../components/NewsCard';
 import NewsModal from '../components/NewsModal';
+import {
+  Sparkles,
+  Award,
+  Calendar,
+  MapPin,
+  CheckCircle2,
+  ArrowRight,
+  Clock,
+  Landmark,
+  Download
+} from 'lucide-react';
 
 // Specific icons setup for the 5 grid
 const getIconForDepartment = (id) => {
@@ -101,48 +112,47 @@ export default function Home() {
       </section>
 
       {/* 2026 Conference High-Priority Featured Banner / Hero Card */}
-      <section className="relative z-20 -mt-4 sm:-mt-6 mb-4 px-4 sm:px-6 lg:px-8 max-w-[1500px] mx-auto w-full">
+      <section className="relative z-20 -mt-4 sm:-mt-6 mb-6 px-4 sm:px-6 lg:px-8 max-w-[1500px] mx-auto w-full">
         <ScrollReveal direction="up" duration={700}>
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#200533] via-[#48126b] to-[#60318e] p-6 sm:p-8 lg:p-10 text-white shadow-2xl border border-purple-300/30">
-            {/* Decorative background glow */}
-            <div className="absolute -right-16 -top-16 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
-            <div className="absolute -left-16 -bottom-16 w-72 h-72 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#150325] via-[#2d0a44] to-[#4a146e] p-6 sm:p-8 lg:p-10 text-white shadow-2xl border border-purple-400/25 ring-1 ring-white/10">
+            {/* Ambient Background Glows */}
+            <div className="absolute -right-16 -top-16 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
+            <div className="absolute -left-16 -bottom-16 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
 
-            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-              <div className="max-w-4xl space-y-4">
-                {/* Badge */}
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black tracking-wide bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-md">
-                  <span>🌟</span>
+            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+              {/* Left Column: Academic & Event Narrative */}
+              <div className="max-w-3xl space-y-4">
+                {/* Status Badge Pill */}
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black tracking-wide bg-gradient-to-r from-amber-400/20 via-purple-500/20 to-amber-400/10 text-amber-300 border border-amber-400/40 shadow-sm backdrop-blur-md">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-300 flex-shrink-0 animate-pulse" />
                   <span>
                     {language === 'en'
                       ? '3rd International Scientific Conference 2026'
-                      : '2026 წლის საერთაშორისო კონფერენცია'}
+                      : '2026 წლის საერთაშორისო სამეცნიერო კონფერენცია'}
                   </span>
                 </div>
 
                 {/* Title */}
-                <h2 className="text-base sm:text-xl md:text-2xl lg:text-3xl font-black text-white leading-snug tracking-tight">
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-white leading-snug tracking-tight drop-shadow-sm">
                   {language === 'en'
                     ? '3rd International Scientific Conference: "Modern Trends in Chemistry, Chemical Technologies and Related Fields: Green Energy Prospects, Ecological Sustainability, Food Safety. 2026"'
                     : 'მე-3 საერთაშორისო სამეცნიერო კონფერენცია: „თანამედროვე ტენდენციები ქიმიაში, ქიმიურ ტექნოლოგიებსა და მომიჯნავე დარგებში: მწვანე ენერგეტიკის პერსპექტივები, ეკოლოგიური მდგრადობა, სურსათის უვნებელობა. 2026“'}
                 </h2>
 
-                {/* Anniversary Note */}
-                <div className="inline-flex items-center gap-2 bg-amber-400/15 border border-amber-300/40 text-amber-200 text-xs sm:text-sm font-bold px-4 py-2 rounded-2xl">
-                  <span>✨</span>
-                  <span>
+                {/* 70th Anniversary Commemorative Card */}
+                <div className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-transparent border-l-4 border-amber-400 rounded-r-2xl py-2 px-4 backdrop-blur-sm">
+                  <Award className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm font-bold text-amber-200 leading-snug">
                     {language === 'en'
-                      ? 'Dedicated to the 70th anniversary of the founding of Rafael Agladze Institute of Inorganic Chemistry and Electrochemistry'
-                      : 'ეძღვნება რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის დაარსების 70 წელს'}
+                      ? 'Dedicated to the 70th anniversary of the founding of Rafael Agladze Institute of Inorganic Chemistry and Electrochemistry (1956–2026)'
+                      : 'ეძღვნება რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის დაარსების 70 წლისთავს (1956–2026)'}
                   </span>
                 </div>
 
-                {/* Dates & Venues & Grant */}
-                <div className="flex flex-wrap items-center gap-3 pt-1 text-xs sm:text-sm font-semibold text-purple-100">
-                  <div className="flex items-center gap-2 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/10 backdrop-blur-sm">
-                    <svg className="w-4 h-4 text-amber-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
+                {/* Key Metrics & Details Chips */}
+                <div className="flex flex-wrap items-center gap-2.5 pt-1 text-xs font-semibold text-purple-100">
+                  <div className="flex items-center gap-2 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/15 backdrop-blur-md shadow-xs">
+                    <Calendar className="w-4 h-4 text-amber-300 flex-shrink-0" />
                     <span>
                       {language === 'en'
                         ? 'November 25–27, 2026'
@@ -150,44 +160,73 @@ export default function Home() {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/10 backdrop-blur-sm">
-                    <svg className="w-4 h-4 text-amber-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
+                  <div className="flex items-center gap-2 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/15 backdrop-blur-md shadow-xs">
+                    <MapPin className="w-4 h-4 text-amber-300 flex-shrink-0" />
                     <span>
                       {language === 'en'
                         ? 'Tbilisi (TSU) & Telavi (Telavi State University)'
-                        : 'თბილისი (თსუ) & თელავი (თელავის სახელმწიფო უნივერსიტეტი)'}
+                        : 'თბილისი (თსუ) & თელავი (თესაუ)'}
                     </span>
                   </div>
 
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
-                    ✓ {language === 'en' ? 'Free Participation' : 'მონაწილეობა უფასოა'}
-                  </span>
+                  <div className="flex items-center gap-2 bg-emerald-500/20 text-emerald-200 px-3.5 py-1.5 rounded-xl border border-emerald-400/30 backdrop-blur-md shadow-xs">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    <span>
+                      {language === 'en' ? 'Free Participation' : 'მონაწილეობა უფასოა'}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 bg-white/10 text-purple-200 px-3.5 py-1.5 rounded-xl border border-white/15 backdrop-blur-md shadow-xs">
+                    <Landmark className="w-4 h-4 text-amber-300 flex-shrink-0" />
+                    <span>
+                      {language === 'en' ? 'Rustaveli Foundation ISE-26-286' : 'შოთა რუსთაველის ფონდი [ISE-26-286]'}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              {/* CTA Action Button */}
-              <div className="flex-shrink-0 pt-2 lg:pt-0">
-                <Link
-                  href="/conference-2026"
-                  className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-white text-[#60318e] hover:bg-[#EBD3F8] font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group/btn"
-                >
-                  <span>
-                    {language === 'en'
-                      ? 'Conference Details & Registration'
-                      : 'კონფერენციის პროგრამა და რეგისტრაცია'}
-                  </span>
-                  <svg
-                    className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+              {/* Right Column: Executive Interactive Action Card */}
+              <div className="flex-shrink-0 w-full lg:w-80 bg-white/[0.08] backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 shadow-2xl flex flex-col justify-between gap-4">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/40">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                      {language === 'en' ? 'Call for Abstracts' : 'მიღება აქტიურია'}
+                    </span>
+                    <span className="text-[10px] font-bold text-purple-200 bg-purple-500/20 px-2.5 py-1 rounded-full border border-purple-400/30">
+                      6 {language === 'en' ? 'Sections' : 'სექცია'}
+                    </span>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center gap-1.5 text-xs text-amber-300 font-bold mb-0.5">
+                      <Clock className="w-3.5 h-3.5 text-amber-400" />
+                      <span>{language === 'en' ? 'Submission Deadline' : 'აბსტრაქტის მიღების ბოლო ვადა'}</span>
+                    </div>
+                    <p className="text-lg font-black text-white">
+                      {language === 'en' ? 'October 10, 2026' : '10 ოქტომბერი, 2026'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-2 pt-1 border-t border-white/10">
+                  <Link
+                    href="/conference-2026"
+                    className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg hover:shadow-amber-400/30 transition-all duration-200 group/btn cursor-pointer"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </Link>
+                    <span>{language === 'en' ? 'Register & Details' : 'ვრცლად & რეგისტრაცია'}</span>
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  </Link>
+
+                  <a
+                    href="/conference-2026/Abstract-template GEO.doc"
+                    download
+                    className="inline-flex items-center justify-center gap-2 w-full py-2 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-[11px] font-bold transition-colors border border-white/15"
+                  >
+                    <Download className="w-3.5 h-3.5 text-amber-300" />
+                    <span>{language === 'en' ? 'Abstract Template (.DOC)' : 'აბსტრაქტის შაბლონი (.DOC)'}</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>

@@ -17,7 +17,12 @@ import {
     Check,
     AlertCircle,
     User,
-    Key
+    Key,
+    Crown,
+    Shield,
+    Newspaper,
+    GraduationCap,
+    Clock
 } from 'lucide-react';
 
 const AVAILABLE_ROLES = [
@@ -26,35 +31,35 @@ const AVAILABLE_ROLES = [
         name: 'სუპერ ადმინისტრატორი (Super Admin)',
         desc: 'სრული შეუზღუდავი წვდომა სისტემის ყველა მოდულზე და როლების მართვაზე',
         badgeClass: 'bg-amber-100 text-amber-900 border border-amber-300',
-        icon: '👑',
+        icon: Crown,
     },
     {
         id: 'admin',
         name: 'ზოგადი ადმინისტრატორი (Admin)',
         desc: 'სრული წვდომა საიტის მართვაზე (სიახლეები, თანამშრომლები, განყოფილებები, კონფერენცია)',
         badgeClass: 'bg-purple-100 text-purple-900 border border-purple-300',
-        icon: '🛡️',
+        icon: Shield,
     },
     {
         id: 'editor',
         name: 'სიახლეების რედაქტორი (News Editor)',
         desc: 'სიახლეებისა და მედია მასალების შექმნა, რედაქტირება და გამოქვეყნება (/admin/news)',
         badgeClass: 'bg-blue-100 text-blue-900 border border-blue-300',
-        icon: '📰',
+        icon: Newspaper,
     },
     {
         id: 'department_head',
         name: 'განყოფილების ხელმძღვანელი (Department Head)',
         desc: 'მხოლოდ საკუთარი განყოფილების თანამშრომლების მართვა, პროფილების დამატება/შეცვლა (/admin/staff)',
         badgeClass: 'bg-emerald-100 text-emerald-900 border border-emerald-300',
-        icon: '🏢',
+        icon: Building2,
     },
     {
         id: 'conference_manager',
         name: 'კონფერენციის მენეჯერი (Conference Manager)',
         desc: 'კონფერენცია 2026-ის რეგისტრირებული მონაწილეებისა და თეზისების მართვა (/admin/conference)',
         badgeClass: 'bg-indigo-100 text-indigo-900 border border-indigo-300',
-        icon: '🎓',
+        icon: GraduationCap,
     },
 ];
 
@@ -329,12 +334,14 @@ export default function AdminUsersPage() {
                                             <td className="py-3.5 px-4">
                                                 <div className="flex flex-wrap gap-1.5 items-center">
                                                     {isSuperAdminUser ? (
-                                                        <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-900 border border-amber-300">
-                                                            👑 Super Admin
+                                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-900 border border-amber-300">
+                                                            <Crown className="w-3 h-3 text-amber-600" />
+                                                            <span>Super Admin</span>
                                                         </span>
                                                     ) : userRoles.length === 0 || (userRoles.length === 1 && userRoles[0] === 'pending') ? (
-                                                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
-                                                            ⏳ მოლოდინში (უფლებების გარეშე)
+                                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                                                            <Clock className="w-3 h-3 text-slate-400" />
+                                                            <span>მოლოდინში (უფლებების გარეშე)</span>
                                                         </span>
                                                     ) : (
                                                         userRoles.map(r => {
@@ -346,12 +353,14 @@ export default function AdminUsersPage() {
                                                                     </span>
                                                                 );
                                                             }
+                                                            const RoleIcon = roleInfo.icon;
                                                             return (
                                                                 <span
                                                                     key={r}
-                                                                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${roleInfo.badgeClass}`}
+                                                                    className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${roleInfo.badgeClass}`}
                                                                 >
-                                                                    {roleInfo.icon} {roleInfo.name.split(' ')[0]}
+                                                                    <RoleIcon className="w-3 h-3" />
+                                                                    <span>{roleInfo.name.split(' ')[0]}</span>
                                                                     {r === 'department_head' && (u.departments?.name_ka || u.department_id) && (
                                                                         <span className="ml-1 text-[9px] font-normal opacity-80">
                                                                             ({u.departments?.name_ka || 'მიმაგრებული'})
@@ -464,7 +473,7 @@ export default function AdminUsersPage() {
                                         </div>
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2">
-                                                <span className="text-sm">{roleItem.icon}</span>
+                                                <roleItem.icon className="w-4 h-4 text-[#60318e]" />
                                                 <span className="text-xs font-extrabold text-gray-900">{roleItem.name}</span>
                                             </div>
                                             <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">{roleItem.desc}</p>

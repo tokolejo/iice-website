@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { Download } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
 const directors = [
@@ -171,7 +172,7 @@ export default function HistoryPage() {
                             </h4>
                             <div className="flex flex-col gap-4">
                                 <a href="https://iice.ge/wp-content/uploads/2026/documents/eleqtrochemistry-skola.docx" target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 p-3 bg-[#EBD3F8]/30 text-[#60318e] rounded-lg hover:bg-[#EBD3F8]/50 transition-colors text-sm font-semibold">
-                                    <span className="text-base">📥</span>
+                                    <Download className="w-4 h-4 flex-shrink-0 text-[#60318e] mt-1" />
                                     <span>{isEn ? 'Stages of development of the electrochemical scientific school in Georgia (DOCX)' : 'საქართველოში ელექტროქიმიური სამეცნიერო სკოლის განვითარების ეტაპები (DOCX)'}</span>
                                 </a>
                                 <div className="border-t border-slate-100 my-2"></div>

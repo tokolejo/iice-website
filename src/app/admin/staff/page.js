@@ -19,7 +19,10 @@ import {
     Camera,
     Building2,
     Lock,
-    ArrowUpDown
+    ArrowUpDown,
+    User,
+    Briefcase,
+    Link as LinkIcon
 } from 'lucide-react';
 
 export default function AdminStaffPage() {
@@ -677,9 +680,10 @@ export default function AdminStaffPage() {
                                                         setSearchQuery('');
                                                         setFilterDept('All');
                                                     }}
-                                                    className="mt-2 text-[11px] font-bold text-[#60318e] hover:text-[#7A1CAC] bg-purple-50 px-3 py-1.5 rounded-xl transition-colors cursor-pointer border border-purple-200"
+                                                    className="mt-2 text-[11px] font-bold text-[#60318e] hover:text-[#7A1CAC] bg-purple-50 px-3 py-1.5 rounded-xl transition-colors cursor-pointer border border-purple-200 inline-flex items-center gap-1"
                                                 >
-                                                    ფილტრის გასუფთავება ✕
+                                                    <span>ფილტრის გასუფთავება</span>
+                                                    <X className="w-3 h-3" />
                                                 </button>
                                             )}
                                         </div>
@@ -753,8 +757,9 @@ export default function AdminStaffPage() {
                         <form onSubmit={handleSave} className="space-y-5 text-xs sm:text-sm">
                             {/* Section: Names */}
                             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
-                                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#60318e]">
-                                    👤 პერსონალური ინფორმაცია
+                                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#60318e] flex items-center gap-1.5">
+                                    <User className="w-3.5 h-3.5 text-[#60318e]" />
+                                    პერსონალური ინფორმაცია
                                 </span>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     <div>
@@ -807,8 +812,9 @@ export default function AdminStaffPage() {
 
                             {/* Section: Position & Department */}
                             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
-                                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#60318e]">
-                                    💼 თანამდებობა და განყოფილება
+                                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#60318e] flex items-center gap-1.5">
+                                    <Briefcase className="w-3.5 h-3.5 text-[#60318e]" />
+                                    თანამდებობა და განყოფილება
                                 </span>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     <div>
@@ -872,8 +878,9 @@ export default function AdminStaffPage() {
 
                             {/* Section: Photos & Files */}
                             <div className="p-4 rounded-2xl bg-purple-50/50 border border-purple-100 space-y-3">
-                                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#60318e]">
-                                    📁 ფოტო და CV დოკუმენტი
+                                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#60318e] flex items-center gap-1.5">
+                                    <UploadCloud className="w-3.5 h-3.5 text-[#60318e]" />
+                                    ფოტო და CV დოკუმენტი
                                 </span>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
@@ -910,8 +917,9 @@ export default function AdminStaffPage() {
 
                             {/* Section: Academic Links */}
                             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
-                                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#60318e]">
-                                    🔗 სამეცნიერო პროფილები & ბმულები
+                                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#60318e] flex items-center gap-1.5">
+                                    <LinkIcon className="w-3.5 h-3.5 text-[#60318e]" />
+                                    სამეცნიერო პროფილები & ბმულები
                                 </span>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     <div>

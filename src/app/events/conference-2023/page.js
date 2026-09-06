@@ -132,7 +132,7 @@ export default function Conference2023() {
             topic: isEn 
                 ? "Introductory course in impedance spectroscopy and its usefulness in studying sensing interfaces"
                 : "იმპედანს-სპექტროსკოპიის საფუძვლები და მისი გამოყენება სენსორული ინტერფეისების კვლევაში",
-            flag: "🇩🇪"
+            country: isEn ? "Germany" : "გერმანია"
         },
         {
             name: "Dr. Matteo Gerlini",
@@ -140,7 +140,7 @@ export default function Conference2023() {
             topic: isEn
                 ? "International cooperation as a tool to improve educational pattern: the International Nuclear Security Education Network experience"
                 : "საერთაშორისო თანამშრომლობა საგანმანათლებლო მოდელის გასაუმჯობესებლად: INSEN-ის გამოცდილება",
-            flag: "🇮🇹"
+            country: isEn ? "Italy" : "იტალია"
         },
         {
             name: "Prof. Dr. Arkadiusz Modrzejewski",
@@ -148,7 +148,7 @@ export default function Conference2023() {
             topic: isEn
                 ? "Publication strategy: how to publish the scientific article being a young scholar"
                 : "საგამომცემლო სტრატეგია: როგორ გამოვაქვეყნოთ სამეცნიერო სტატია ახალგაზრდა მეცნიერმა",
-            flag: "🇵🇱"
+            country: isEn ? "Poland" : "პოლონეთი"
         },
         {
             name: "Prof. Dr. Sylwia M. Mrozowska",
@@ -156,7 +156,7 @@ export default function Conference2023() {
             topic: isEn
                 ? "Transferable skills for early-career researchers: Challenges and Recommendations"
                 : "ტრანსფერული უნარები ახალგაზრდა მკვლევრებისთვის: გამოწვევები და რეკომენდაციები",
-            flag: "🇵🇱"
+            country: isEn ? "Poland" : "პოლონეთი"
         },
         {
             name: "Dr. Venko Beschkov",
@@ -164,7 +164,7 @@ export default function Conference2023() {
             topic: isEn
                 ? "Carbon dioxide recycling in fuel cell application"
                 : "ნახშირორჟანგის რეციკლირება სათბობ ელემენტებში გამოყენებისათვის",
-            flag: "🇧🇬"
+            country: isEn ? "Bulgaria" : "ბულგარეთი"
         },
         {
             name: "Prof. Dr. Eldar Ismailov",
@@ -172,7 +172,7 @@ export default function Conference2023() {
             topic: isEn
                 ? "Catalytic hydrogenation of carbon dioxide: Achievements and prospects"
                 : "ნახშირორჟანგის კატალიზური ჰიდრირება: მიღწევები და პერსპექტივები",
-            flag: "🇦🇿"
+            country: isEn ? "Azerbaijan" : "აზერბაიჯანი"
         },
         {
             name: "Dr. Marina Nalbandyan",
@@ -180,7 +180,7 @@ export default function Conference2023() {
             topic: isEn
                 ? "Modern methods of assessing the impact of air/water/soil pollution on human health"
                 : "გარემოს დაბინძურების ზეგავლენის შეფასების თანამედროვე მეთოდები ადამიანის ჯანმრთელობაზე",
-            flag: "🇦🇲"
+            country: isEn ? "Armenia" : "სომხეთი"
         },
         {
             name: "Dr. Merab Kutsia",
@@ -188,7 +188,7 @@ export default function Conference2023() {
             topic: isEn
                 ? "Intellectual property – from Idea to Innovation"
                 : "ინტელექტუალური საკუთრება – იდეიდან ინოვაციამდე",
-            flag: "🇬🇪"
+            country: isEn ? "Georgia" : "საქართველო"
         },
         {
             name: "Levan Jioshvili",
@@ -196,7 +196,7 @@ export default function Conference2023() {
             topic: isEn
                 ? "Technology Transfer in Georgia: Problems and Opportunities"
                 : "ტექნოლოგიების ტრანსფერი საქართველოში: პრობლემები და შესაძლებლობები",
-            flag: "🇬🇪"
+            country: isEn ? "Georgia" : "საქართველო"
         }
     ];
 
@@ -394,7 +394,10 @@ export default function Conference2023() {
                                     <div key={idx} className="p-5 bg-slate-50 rounded-xl border border-slate-200 flex flex-col justify-between hover:border-purple-200 hover:shadow-md transition-all">
                                         <div>
                                             <div className="flex items-center justify-between mb-2">
-                                                <span className="text-base">{sp.flag}</span>
+                                                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#60318e] bg-purple-100/70 px-2.5 py-0.5 rounded-full border border-purple-200">
+                                                    <MapPin className="w-3 h-3 text-[#AD49E1]" />
+                                                    {sp.country}
+                                                </span>
                                             </div>
                                             <h4 className="font-bold text-slate-800 text-sm md:text-base text-[#60318e] mb-1">
                                                 {sp.name}

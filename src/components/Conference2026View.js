@@ -63,7 +63,7 @@ export default function Conference2026View() {
     const [copied, setCopied] = useState(false);
 
     const t = {
-        badge: isEn ? "🌟 3rd International Scientific Conference 2026" : "🌟 2026 წლის საერთაშორისო კონფერენცია",
+        badge: isEn ? "3rd International Scientific Conference 2026" : "2026 წლის საერთაშორისო კონფერენცია",
         title: isEn
             ? "3rd International Scientific Conference: “Modern Trends in Chemistry, Chemical Technologies and Related Fields: Green Energy Prospects, Ecological Sustainability, Food Safety. 2026”"
             : "მე-3 საერთაშორისო სამეცნიერო კონფერენცია: „თანამედროვე ტენდენციები ქიმიაში, ქიმიურ ტექნოლოგიებსა და მომიჯნავე დარგებში: მწვანე ენერგეტიკის პერსპექტივები, ეკოლოგიური მდგრადობა, სურსათის უვნებელობა. 2026“",
@@ -345,8 +345,9 @@ export default function Conference2026View() {
 
                     {/* Mandatory Grant Notice & Free Participation */}
                     <div className="max-w-3xl mx-auto space-y-3 text-xs mb-8">
-                        <div className="bg-white/10 text-purple-100 px-5 py-3 rounded-2xl border border-white/15 backdrop-blur-md shadow-sm leading-relaxed">
-                            🏛️ <strong>{t.grantNotice}</strong>
+                        <div className="bg-white/10 text-purple-100 px-5 py-3 rounded-2xl border border-white/15 backdrop-blur-md shadow-sm leading-relaxed flex items-center justify-center gap-2">
+                            <Landmark className="w-4 h-4 text-amber-300 flex-shrink-0" />
+                            <span><strong>{t.grantNotice}</strong></span>
                         </div>
                         <div className="inline-flex items-center gap-2 bg-emerald-500/25 text-emerald-200 font-extrabold px-4 py-1.5 rounded-full border border-emerald-400/40 shadow-xs">
                             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
@@ -385,8 +386,8 @@ export default function Conference2026View() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                         {/* 1. TSU */}
                         <div className="bg-slate-50 p-5 rounded-3xl border border-purple-100 shadow-sm hover:shadow-md transition-all flex flex-col items-center text-center group hover:border-[#AD49E1]/40">
-                            <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-900 font-black text-xl mb-3 shadow-xs group-hover:scale-105 transition-transform">
-                                🏛️
+                            <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                                <Landmark className="w-8 h-8 text-blue-700" />
                             </div>
                             <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 mb-2">
                                 {isEn ? "Co-Organizer" : "თანაორგანიზატორი"}
@@ -420,8 +421,8 @@ export default function Conference2026View() {
 
                         {/* 3. TeSaU */}
                         <div className="bg-slate-50 p-5 rounded-3xl border border-purple-100 shadow-sm hover:shadow-md transition-all flex flex-col items-center text-center group hover:border-[#AD49E1]/40">
-                            <div className="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-800 font-black text-xl mb-3 shadow-xs group-hover:scale-105 transition-transform">
-                                🎓
+                            <div className="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                                <GraduationCap className="w-8 h-8 text-emerald-700" />
                             </div>
                             <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 mb-2">
                                 {isEn ? "Host University (Telavi)" : "მასპინძელი უნივერსიტეტი (თელავი)"}
@@ -436,8 +437,8 @@ export default function Conference2026View() {
 
                         {/* 4. SRNSFG */}
                         <div className="bg-slate-50 p-5 rounded-3xl border border-purple-100 shadow-sm hover:shadow-md transition-all flex flex-col items-center text-center group hover:border-[#AD49E1]/40">
-                            <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-900 font-black text-xl mb-3 shadow-xs group-hover:scale-105 transition-transform">
-                                🏛️
+                            <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center mb-3 shadow-xs group-hover:scale-105 transition-transform">
+                                <Award className="w-8 h-8 text-amber-600" />
                             </div>
                             <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 mb-2">
                                 {isEn ? "Grant Donor (ISE-26-286)" : "გრანტის დონორი (ISE-26-286)"}
@@ -865,8 +866,9 @@ export default function Conference2026View() {
                                 </div>
 
                                 {/* Footnote Notice */}
-                                <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-[11px] leading-relaxed">
-                                    ℹ️ {t.form.footnote}
+                                <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-[11px] leading-relaxed flex items-start gap-2">
+                                    <Info className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                                    <span>{t.form.footnote}</span>
                                 </div>
                             </div>
 
@@ -1031,8 +1033,8 @@ export default function Conference2026View() {
                             {/* TSU */}
                             <div className="p-6 rounded-3xl border border-purple-100 bg-slate-50/60 space-y-3">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 shadow-xs flex items-center justify-center text-2xl">
-                                        🏛️
+                                    <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 shadow-xs flex items-center justify-center">
+                                        <Landmark className="w-7 h-7 text-blue-700" />
                                     </div>
                                     <div>
                                         <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800">
@@ -1053,8 +1055,8 @@ export default function Conference2026View() {
                             {/* TeSaU */}
                             <div className="p-6 rounded-3xl border border-purple-100 bg-slate-50/60 space-y-3">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 shadow-xs flex items-center justify-center text-2xl">
-                                        🎓
+                                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 shadow-xs flex items-center justify-center">
+                                        <GraduationCap className="w-7 h-7 text-emerald-700" />
                                     </div>
                                     <div>
                                         <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
@@ -1075,8 +1077,8 @@ export default function Conference2026View() {
                             {/* SRNSFG */}
                             <div className="p-6 rounded-3xl border border-purple-100 bg-slate-50/60 space-y-3">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 shadow-xs flex items-center justify-center text-2xl">
-                                        📜
+                                    <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 shadow-xs flex items-center justify-center">
+                                        <Award className="w-7 h-7 text-amber-600" />
                                     </div>
                                     <div>
                                         <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900">

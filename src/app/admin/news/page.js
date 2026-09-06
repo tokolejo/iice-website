@@ -360,9 +360,10 @@ export default function AdminNewsPage() {
                                             {searchQuery && (
                                                 <button
                                                     onClick={() => setSearchQuery('')}
-                                                    className="mt-2 text-[11px] font-bold text-[#60318e] hover:text-[#7A1CAC] bg-purple-50 px-3 py-1.5 rounded-xl transition-colors cursor-pointer border border-purple-200"
+                                                    className="mt-2 text-[11px] font-bold text-[#60318e] hover:text-[#7A1CAC] bg-purple-50 px-3 py-1.5 rounded-xl transition-colors cursor-pointer border border-purple-200 inline-flex items-center gap-1"
                                                 >
-                                                    ძებნის გასუფთავება ✕
+                                                    <span>ძებნის გასუფთავება</span>
+                                                    <X className="w-3 h-3" />
                                                 </button>
                                             )}
                                         </div>

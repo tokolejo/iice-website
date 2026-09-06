@@ -9,18 +9,32 @@
 -- (Prevents search_path hijacking attacks on SECURITY DEFINER functions)
 -- ------------------------------------------------------------------------------
 
-ALTER FUNCTION public.generate_abstract_number_2026() SET search_path = public;
-ALTER FUNCTION public.handle_new_user() SET search_path = public;
-ALTER FUNCTION public.update_updated_at_column() SET search_path = public;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid WHERE n.nspname = 'public' AND p.proname = 'generate_abstract_number_2026') THEN
+    ALTER FUNCTION public.generate_abstract_number_2026() SET search_path = public;
+  END IF;
+  IF EXISTS (SELECT 1 FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid WHERE n.nspname = 'public' AND p.proname = 'handle_new_user') THEN
+    ALTER FUNCTION public.handle_new_user() SET search_path = public;
+  END IF;
+  IF EXISTS (SELECT 1 FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid WHERE n.nspname = 'public' AND p.proname = 'update_updated_at_column') THEN
+    ALTER FUNCTION public.update_updated_at_column() SET search_path = public;
+  END IF;
+END $$;
 
 -- ------------------------------------------------------------------------------
 -- 2. REVOKE PUBLIC & DIRECT RPC EXECUTION ON AUTH HOOK FUNCTIONS
 -- (handle_new_user should only be executed by auth trigger, not via REST RPC)
 -- ------------------------------------------------------------------------------
 
-REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM PUBLIC;
-REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM anon;
-REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM authenticated;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_proc p JOIN pg_namespace n ON p.pronamespace = n.oid WHERE n.nspname = 'public' AND p.proname = 'handle_new_user') THEN
+    REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM PUBLIC;
+    REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM anon;
+    REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM authenticated;
+  END IF;
+END $$;
 
 -- ------------------------------------------------------------------------------
 -- 3. FIX OVERLY PERMISSIVE RLS POLICIES (USING (true) / WITH CHECK (true))

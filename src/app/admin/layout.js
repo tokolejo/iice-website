@@ -18,7 +18,10 @@ import {
     X,
     ChevronRight,
     Sparkles,
-    UserCircle
+    UserCircle,
+    Crown,
+    Shield,
+    GraduationCap
 } from 'lucide-react';
 
 export default function AdminLayout({ children }) {
@@ -185,43 +188,48 @@ export default function AdminLayout({ children }) {
                         </div>
                     </div>
                     {/* Role Badges */}
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1.5">
                         {isSuperAdmin ? (
-                            <span className="inline-block text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40">
-                                👑 Super Admin
+                            <span className="inline-flex items-center gap-1 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 border border-amber-400/40">
+                                <Crown className="w-2.5 h-2.5 text-amber-300" />
+                                <span>Super Admin</span>
                             </span>
                         ) : (
                             roles.map((r) => {
                                 if (r === 'admin') {
                                     return (
-                                        <span key={r} className="inline-block text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-purple-400/20 text-[#EBD3F8] border border-purple-400/40">
-                                            🛡️ Admin
+                                        <span key={r} className="inline-flex items-center gap-1 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-purple-400/20 text-[#EBD3F8] border border-purple-400/40">
+                                            <Shield className="w-2.5 h-2.5 text-[#EBD3F8]" />
+                                            <span>Admin</span>
                                         </span>
                                     );
                                 }
                                 if (r === 'editor') {
                                     return (
-                                        <span key={r} className="inline-block text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-blue-400/20 text-blue-200 border border-blue-400/40">
-                                            📰 Editor
+                                        <span key={r} className="inline-flex items-center gap-1 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-blue-400/20 text-blue-200 border border-blue-400/40">
+                                            <Newspaper className="w-2.5 h-2.5 text-blue-200" />
+                                            <span>Editor</span>
                                         </span>
                                     );
                                 }
                                 if (r === 'department_head') {
                                     return (
-                                        <span key={r} className="inline-block text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-200 border border-emerald-400/40">
-                                            🏢 Dept Head
+                                        <span key={r} className="inline-flex items-center gap-1 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-emerald-400/20 text-emerald-200 border border-emerald-400/40">
+                                            <Building2 className="w-2.5 h-2.5 text-emerald-200" />
+                                            <span>Dept Head</span>
                                         </span>
                                     );
                                 }
                                 if (r === 'conference_manager') {
                                     return (
-                                        <span key={r} className="inline-block text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-indigo-400/20 text-indigo-200 border border-indigo-400/40">
-                                            🎓 Conf Mgr
+                                        <span key={r} className="inline-flex items-center gap-1 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-indigo-400/20 text-indigo-200 border border-indigo-400/40">
+                                            <GraduationCap className="w-2.5 h-2.5 text-indigo-200" />
+                                            <span>Conf Mgr</span>
                                         </span>
                                     );
                                 }
                                 return (
-                                    <span key={r} className="inline-block text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-white/10 text-white/70">
+                                    <span key={r} className="inline-block text-[9px] font-bold uppercase px-2 py-0.5 rounded-md bg-white/10 text-white/70">
                                         {r}
                                     </span>
                                 );
