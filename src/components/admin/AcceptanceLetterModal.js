@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Printer, Copy, Check, X, Globe, Award, Download, FileText } from 'lucide-react';
+import { Printer, Copy, Check, X, Globe, Award, Download, FileText, Mail } from 'lucide-react';
 import { toast } from './AdminToast';
 import { getTopicLabel } from '../../lib/conferenceConstants';
 
-export default function AcceptanceLetterModal({ isOpen, onClose, registration }) {
+export default function AcceptanceLetterModal({ isOpen, onClose, registration, onSendEmail }) {
     const [lang, setLang] = useState('ka');
     const [isCopied, setIsCopied] = useState(false);
 
@@ -140,6 +140,21 @@ Email: iice@tsu.ge | Web: https://iice.tsu.ge/events/conference-2026`
                             <Printer className="w-4 h-4" />
                             <span className="hidden sm:inline">ბეჭდვა / PDF</span>
                         </button>
+
+                        {/* Send via Email Button */}
+                        {onSendEmail && (
+                            <button
+                                onClick={() => {
+                                    onSendEmail(registration, lang);
+                                    onClose();
+                                }}
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors shadow-sm cursor-pointer"
+                                title="მეილზე გაგზავნა"
+                            >
+                                <Mail className="w-4 h-4" />
+                                <span className="hidden sm:inline">📧 მეილზე გაგზავნა</span>
+                            </button>
+                        )}
 
                         {/* Close Button */}
                         <button

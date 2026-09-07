@@ -13,6 +13,7 @@ import {
 } from '../../../lib/conferenceConstants';
 import AdminModal from '../../../components/admin/AdminModal';
 import AcceptanceLetterModal from '../../../components/admin/AcceptanceLetterModal';
+import EmailModal from '../../../components/admin/EmailModal';
 import {
     Calendar,
     Search,
@@ -103,6 +104,11 @@ export default function AdminConferencePage() {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
     const [isLetterModalOpen, setIsLetterModalOpen] = useState(false);
+
+    // Email Modal state
+    const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+    const [emailRecipients, setEmailRecipients] = useState([]);
+    const [emailPreset, setEmailPreset] = useState('custom');
 
     // Status update state
     const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
@@ -584,6 +590,23 @@ export default function AdminConferencePage() {
         return registrations.filter(r => selectedIds.has(r.id));
     }, [registrations, selectedIds]);
 
+    const handleOpenEmailForRecipient = (reg, preset = 'custom') => {
+        if (!reg) return;
+        setEmailRecipients([reg]);
+        setEmailPreset(preset);
+        setIsEmailModalOpen(true);
+    };
+
+    const handleOpenEmailForSelected = () => {
+        if (selectedList.length === 0) {
+            toast('გთხოვთ მონიშნოთ მინიმუმ ერთი მონაწილე', 'error');
+            return;
+        }
+        setEmailRecipients(selectedList);
+        setEmailPreset('custom');
+        setIsEmailModalOpen(true);
+    };
+
     return (
         <div className="space-y-6 animate-fade-in">
             {/* Header & Export Actions */}
@@ -768,6 +791,16 @@ export default function AdminConferencePage() {
                     </div>
 
                     <div className="flex items-center gap-2 flex-wrap">
+                        {/* Bulk Email */}
+                        <button
+                            onClick={handleOpenEmailForSelected}
+                            className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
+                            title="მონიშნულებისთვის მეილის გაგზავნა"
+                        >
+                            <Mail className="w-3.5 h-3.5" />
+                            <span>მეილის გაგზავნა ({selectedIds.size})</span>
+                        </button>
+
                         {/* Bulk ZIP */}
                         <button
                             onClick={() => handleBulkDownloadZip(selectedList)}
@@ -992,6 +1025,14 @@ export default function AdminConferencePage() {
                                                     </button>
 
                                                     <button
+                                                        onClick={() => handleOpenEmailForRecipient(reg)}
+                                                        className="p-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-purple-600 hover:text-white transition-colors cursor-pointer"
+                                                        title="მეილის გაგზავნა"
+                                                    >
+                                                        <Mail className="w-3.5 h-3.5" />
+                                                    </button>
+
+                                                    <button
                                                         onClick={() => setSelectedReg(reg)}
                                                         className="p-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-[#60318e] hover:text-white transition-colors cursor-pointer"
                                                         title="სრული დეტალები"
@@ -1059,6 +1100,14 @@ export default function AdminConferencePage() {
                                 >
                                     <Printer className="w-3.5 h-3.5" />
                                     <span>მიღების წერილი</span>
+                                </button>
+                                <button
+                                    onClick={() => handleOpenEmailForRecipient(selectedReg)}
+                                    className="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-600 text-[#60318e] hover:text-white border border-purple-200 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                                    title="მეილის მიწერა"
+                                >
+                                    <Mail className="w-3.5 h-3.5" />
+                                    <span>მეილის მიწერა</span>
                                 </button>
                             </div>
                         )}
@@ -1414,6 +1463,17 @@ export default function AdminConferencePage() {
                 isOpen={isLetterModalOpen}
                 onClose={() => setIsLetterModalOpen(false)}
                 registration={selectedReg}
+                onSendEmail={(reg, lang) => {
+                    handleOpenEmailForRecipient(reg, lang === 'en' ? 'acceptance_en' : 'acceptance_ka');
+                }}
+            />
+
+            {/* Conference Email Dispatcher Modal */}
+            <EmailModal
+                isOpen={isEmailModalOpen}
+                onClose={() => setIsEmailModalOpen(false)}
+                recipients={emailRecipients}
+                initialTemplate={emailPreset}
             />
 
             {/* Delete Confirmation Modal */}

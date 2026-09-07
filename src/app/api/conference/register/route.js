@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdminClient } from '../../../../lib/supabase/admin';
 import { createClient } from '@supabase/supabase-js';
+import { sendRegistrationConfirmationEmail } from '../../../../lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -176,6 +177,27 @@ export async function POST(request) {
             'unknown';
         const userAgent = request.headers.get('user-agent') || 'unknown';
 
+        // Trigger automated confirmation email to the applicant
+        let emailResult = null;
+        try {
+            emailResult = await sendRegistrationConfirmationEmail({
+                email,
+                first_name: firstName,
+                last_name: lastName,
+                titulation,
+                abstract_number: assignedCode,
+                presentation_title: presentationTitle,
+                thematic_topic: thematicTopic,
+                presentation_type: presentationType,
+                is_attending_in_person: isAttendingInPerson,
+                affiliation,
+                co_authors: coAuthors,
+            });
+        } catch (mailErr) {
+            console.warn('Registration confirmation email notice:', mailErr.message);
+            emailResult = { success: false, error: mailErr.message };
+        }
+
         try {
             await supabase.from('audit_logs').insert([
                 {
@@ -192,6 +214,8 @@ export async function POST(request) {
                         thematicTopic,
                         hasGeoFile: !!geoUrl,
                         hasEngFile: !!engUrl,
+                        emailSent: emailResult?.success ?? false,
+                        emailProvider: emailResult?.provider ?? 'none',
                         ip,
                         userAgent: userAgent.slice(0, 160)
                     },
@@ -206,7 +230,8 @@ export async function POST(request) {
             success: true,
             abstractNumber: assignedCode,
             name: `${firstName} ${lastName}`,
-            id: regId
+            id: regId,
+            emailSent: emailResult?.success ?? false
         });
     } catch (err) {
         console.error('Conference registration route error:', err);
