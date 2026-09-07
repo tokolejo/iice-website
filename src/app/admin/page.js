@@ -28,12 +28,15 @@ import {
     BarChart3,
     PieChart,
     Sparkles,
-    Loader2
+    Loader2,
+    ShieldCheck
 } from 'lucide-react';
 import { exportDatabaseBackup } from '../../lib/backupService';
 import { toast } from '../../components/admin/AdminToast';
 
 export default function AdminDashboardPage() {
+    const [roles, setRoles] = useState(['admin']);
+    const [userEmail, setUserEmail] = useState('');
     const [stats, setStats] = useState({
         conferenceCount: 0,
         staffCount: 0,
@@ -99,6 +102,36 @@ export default function AdminDashboardPage() {
                 }
 
                 setIsConnected(true);
+
+                // Fetch current user & roles
+                let currentRoles = ['admin'];
+                try {
+                    const { data: { user: currentUser } } = await supabase.auth.getUser();
+                    if (currentUser) {
+                        const email = currentUser.email || '';
+                        setUserEmail(email);
+                        if (email.toLowerCase() === 'tokolejo@gmail.com') {
+                            currentRoles = ['super_admin'];
+                        } else {
+                            const { data: profile } = await supabase
+                                .from('user_profiles')
+                                .select('role, roles')
+                                .eq('id', currentUser.id)
+                                .maybeSingle();
+
+                            if (Array.isArray(profile?.roles) && profile.roles.length > 0) {
+                                currentRoles = profile.roles;
+                            } else if (profile?.role) {
+                                currentRoles = [profile.role];
+                            } else {
+                                currentRoles = ['pending'];
+                            }
+                        }
+                        setRoles(currentRoles);
+                    }
+                } catch (userErr) {
+                    console.warn('Dashboard user profile read notice:', userErr);
+                }
 
                 // Fetch Conference Registrations count, recent, and analytics rows
                 const { data: confData, count: confCount } = await supabase
@@ -245,6 +278,12 @@ export default function AdminDashboardPage() {
         return { color: 'bg-purple-50 text-[#60318e] border-purple-200', label: act };
     };
 
+    const isSuperAdmin = roles.includes('super_admin') || userEmail.toLowerCase() === 'tokolejo@gmail.com';
+    const isAdmin = isSuperAdmin || roles.includes('admin');
+    const isConfManager = isAdmin || roles.includes('conference_manager');
+    const isDeptHead = isAdmin || roles.includes('department_head');
+    const isEditor = isAdmin || roles.includes('editor');
+
     return (
         <div className="space-y-8 animate-fade-in">
             {/* Header & Status */}
@@ -267,87 +306,117 @@ export default function AdminDashboardPage() {
                 </div>
             </div>
 
-            {/* Compact KPI Metric Cards */}
+            {/* Compact KPI Metric Cards (Role-Filtered) */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                <Link
-                    href="/admin/conference"
-                    className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
-                >
-                    <div className="min-w-0">
-                        <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
-                            კონფერენცია 2026
-                        </span>
-                        <div className="flex items-baseline gap-1.5 mt-0.5">
-                            <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
-                                {stats.conferenceCount}
+                {isConfManager && (
+                    <Link
+                        href="/admin/conference"
+                        className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
+                    >
+                        <div className="min-w-0">
+                            <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
+                                კონფერენცია 2026
                             </span>
-                            <span className="text-[10px] text-gray-400 font-medium truncate">თეზისი</span>
+                            <div className="flex items-baseline gap-1.5 mt-0.5">
+                                <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
+                                    {stats.conferenceCount}
+                                </span>
+                                <span className="text-[10px] text-gray-400 font-medium truncate">თეზისი</span>
+                            </div>
                         </div>
-                    </div>
-                    <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
-                        <Calendar className="w-4 h-4" />
-                    </div>
-                </Link>
+                        <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
+                            <Calendar className="w-4 h-4" />
+                        </div>
+                    </Link>
+                )}
 
-                <Link
-                    href="/admin/staff"
-                    className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
-                >
-                    <div className="min-w-0">
-                        <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
-                            თანამშრომლები
-                        </span>
-                        <div className="flex items-baseline gap-1.5 mt-0.5">
-                            <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
-                                {stats.staffCount}
+                {isDeptHead && (
+                    <Link
+                        href="/admin/staff"
+                        className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
+                    >
+                        <div className="min-w-0">
+                            <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
+                                თანამშრომლები
                             </span>
-                            <span className="text-[10px] text-gray-400 font-medium truncate">მეცნიერი</span>
+                            <div className="flex items-baseline gap-1.5 mt-0.5">
+                                <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
+                                    {stats.staffCount}
+                                </span>
+                                <span className="text-[10px] text-gray-400 font-medium truncate">მეცნიერი</span>
+                            </div>
                         </div>
-                    </div>
-                    <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
-                        <Users className="w-4 h-4" />
-                    </div>
-                </Link>
+                        <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
+                            <Users className="w-4 h-4" />
+                        </div>
+                    </Link>
+                )}
 
-                <Link
-                    href="/admin/departments"
-                    className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
-                >
-                    <div className="min-w-0">
-                        <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
-                            განყოფილებები
-                        </span>
-                        <div className="flex items-baseline gap-1.5 mt-0.5">
-                            <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
-                                {stats.departmentsCount}
+                {isAdmin && (
+                    <Link
+                        href="/admin/departments"
+                        className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
+                    >
+                        <div className="min-w-0">
+                            <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
+                                განყოფილებები
                             </span>
-                            <span className="text-[10px] text-gray-400 font-medium truncate">მიმართულება</span>
+                            <div className="flex items-baseline gap-1.5 mt-0.5">
+                                <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
+                                    {stats.departmentsCount}
+                                </span>
+                                <span className="text-[10px] text-gray-400 font-medium truncate">მიმართულება</span>
+                            </div>
                         </div>
-                    </div>
-                    <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
-                        <Building2 className="w-4 h-4" />
-                    </div>
-                </Link>
+                        <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
+                            <Building2 className="w-4 h-4" />
+                        </div>
+                    </Link>
+                )}
 
-                <Link
-                    href="/admin/news"
-                    className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
-                >
-                    <div className="min-w-0">
-                        <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
-                            სიახლეები
-                        </span>
-                        <div className="flex items-baseline gap-1.5 mt-0.5">
-                            <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
-                                {stats.newsCount}
+                {isEditor && (
+                    <Link
+                        href="/admin/news"
+                        className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
+                    >
+                        <div className="min-w-0">
+                            <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
+                                სიახლეები
                             </span>
-                            <span className="text-[10px] text-gray-400 font-medium truncate">სტატია</span>
+                            <div className="flex items-baseline gap-1.5 mt-0.5">
+                                <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
+                                    {stats.newsCount}
+                                </span>
+                                <span className="text-[10px] text-gray-400 font-medium truncate">სტატია</span>
+                            </div>
                         </div>
-                    </div>
-                    <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
-                        <Newspaper className="w-4 h-4" />
-                    </div>
-                </Link>
+                        <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
+                            <Newspaper className="w-4 h-4" />
+                        </div>
+                    </Link>
+                )}
+
+                {isSuperAdmin && (
+                    <Link
+                        href="/admin/users"
+                        className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
+                    >
+                        <div className="min-w-0">
+                            <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
+                                მომხმარებლები
+                            </span>
+                            <div className="flex items-baseline gap-1.5 mt-0.5">
+                                <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
+                                    {stats.usersCount}
+                                </span>
+                                <span className="text-[10px] text-gray-400 font-medium truncate">პროფილი</span>
+                            </div>
+                        </div>
+                        <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
+                            <ShieldCheck className="w-4 h-4" />
+                        </div>
+                    </Link>
+                )}
             </div>
 
             {/* Analytics & Visual Charts Section */}
@@ -523,178 +592,226 @@ export default function AdminDashboardPage() {
                 </div>
             </div>
 
-            {/* Quick Actions Bar */}
+            {/* Quick Actions Bar (Role-Filtered) */}
             <div className="bg-gradient-to-r from-[#2e0d42] to-[#60318e] rounded-3xl p-6 sm:p-8 text-white shadow-lg">
-                <h3 className="text-lg font-black mb-1.5">სწრაფი მოქმედებები</h3>
-                <p className="text-xs text-purple-100/80 mb-5">მართეთ ინსტიტუტის მონაცემები, კონფერენციის განაცხადები და წვდომები ერთი ადგილიდან</p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-                    <Link
-                        href="/admin/conference"
-                        className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 px-3.5 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm"
-                    >
-                        <Calendar className="w-4 h-4 text-[#EBD3F8]" />
-                        <span>2026-ის თეზისები</span>
-                    </Link>
-
-                    <Link
-                        href="/admin/staff?action=new"
-                        className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 px-3.5 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm"
-                    >
-                        <UserPlus className="w-4 h-4 text-[#EBD3F8]" />
-                        <span>თანამშრომელი</span>
-                    </Link>
-
-                    <Link
-                        href="/admin/news"
-                        className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 px-3.5 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm"
-                    >
-                        <FileText className="w-4 h-4 text-[#EBD3F8]" />
-                        <span>სიახლის დამატება</span>
-                    </Link>
-
-                    <Link
-                        href="/admin/audit"
-                        className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 px-3.5 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm"
-                    >
-                        <History className="w-4 h-4 text-[#EBD3F8]" />
-                        <span>აუდიტის ჟურნალი</span>
-                    </Link>
-
-                    <button
-                        onClick={() => handleQuickBackup('json')}
-                        disabled={isExportingBackup}
-                        className="flex items-center gap-2.5 bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 border border-amber-400/30 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all backdrop-blur-sm cursor-pointer disabled:opacity-50"
-                        title="ბაზის სრული JSON Snapshot"
-                    >
-                        {isExportingBackup ? <Loader2 className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
-                        <span>ბაზის JSON</span>
-                    </button>
-
-                    <button
-                        onClick={() => handleQuickBackup('sql')}
-                        disabled={isExportingBackup}
-                        className="flex items-center gap-2.5 bg-emerald-400/20 hover:bg-emerald-400/30 text-emerald-200 border border-emerald-400/30 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all backdrop-blur-sm cursor-pointer disabled:opacity-50"
-                        title="ბაზის SQL DUMP Script"
-                    >
-                        {isExportingBackup ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileCode className="w-4 h-4" />}
-                        <span>ბაზის SQL</span>
-                    </button>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+                    <div>
+                        <h3 className="text-lg font-black mb-0.5">სწრაფი მოქმედებები</h3>
+                        <p className="text-xs text-purple-100/80">
+                            თქვენი უფლებებისა და როლის შესაბამისი სამუშაო ხელსაწყოები
+                        </p>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-[11px] font-bold text-purple-200 border border-white/10 w-fit">
+                        <span>როლი:</span>
+                        <span className="text-white uppercase">{roles.join(', ')}</span>
+                    </div>
                 </div>
-            </div>
 
-            {/* Two Column Layout: Recent Registrations & Live Audit Stream */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* Recent Registrations (7 cols) */}
-                <div className="lg:col-span-7 bg-white rounded-3xl p-6 border border-purple-100 shadow-sm">
-                    <div className="flex items-center justify-between mb-5">
-                        <div>
-                            <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
-                                <GraduationCap className="w-5 h-5 text-[#60318e]" />
-                                ბოლოს რეგისტრირებული თეზისები (2026)
-                            </h3>
-                            <p className="text-xs text-gray-500 mt-0.5">უახლესი საკონფერენციო განაცხადები</p>
-                        </div>
+                <div className="flex flex-wrap gap-3">
+                    {isConfManager && (
                         <Link
                             href="/admin/conference"
-                            className="text-xs font-bold text-[#60318e] hover:text-[#7A1CAC] bg-purple-50 px-3 py-1.5 rounded-xl border border-purple-100 transition-colors"
+                            className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 px-4 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm shadow-xs"
                         >
-                            ყველა →
+                            <Calendar className="w-4 h-4 text-[#EBD3F8]" />
+                            <span>2026-ის თეზისები</span>
                         </Link>
-                    </div>
-
-                    {recentRegistrations.length > 0 ? (
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left text-xs">
-                                <thead className="bg-slate-50 text-gray-600 font-bold border-b border-slate-200 uppercase tracking-wider">
-                                    <tr>
-                                        <th className="py-2.5 px-3">#</th>
-                                        <th className="py-2.5 px-3">ავტორი</th>
-                                        <th className="py-2.5 px-3">მოხსენების სათაური</th>
-                                        <th className="py-2.5 px-3 text-right">თარიღი</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-100">
-                                    {recentRegistrations.map((reg) => (
-                                        <tr key={reg.id} className="hover:bg-purple-50/30 transition-colors">
-                                            <td className="py-2.5 px-3 font-mono font-bold text-[#60318e]">
-                                                {reg.abstract_number}
-                                            </td>
-                                            <td className="py-2.5 px-3 font-semibold text-gray-900">
-                                                {reg.first_name} {reg.last_name}
-                                            </td>
-                                            <td className="py-2.5 px-3 text-gray-600 max-w-[200px] truncate" title={reg.presentation_title}>
-                                                {reg.presentation_title}
-                                            </td>
-                                            <td className="py-2.5 px-3 text-gray-400 text-right whitespace-nowrap">
-                                                {new Date(reg.created_at).toLocaleDateString('ka-GE')}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                        <div className="p-8 text-center text-gray-400 text-xs bg-slate-50 rounded-2xl">
-                            ჯერჯერობით რეგისტრაციები არ არის დაფიქსირებული.
-                        </div>
                     )}
-                </div>
 
-                {/* Live Activity Stream (5 cols) */}
-                <div className="lg:col-span-5 bg-white rounded-3xl p-6 border border-purple-100 shadow-sm">
-                    <div className="flex items-center justify-between mb-5">
-                        <div>
-                            <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
-                                <History className="w-5 h-5 text-[#60318e]" />
-                                უახლესი აქტივობა (Audit Feed)
-                            </h3>
-                            <p className="text-xs text-gray-500 mt-0.5">ავტორიზაცია და სისტემური ცვლილებები</p>
-                        </div>
+                    {isDeptHead && (
+                        <Link
+                            href="/admin/staff?action=new"
+                            className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 px-4 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm shadow-xs"
+                        >
+                            <UserPlus className="w-4 h-4 text-[#EBD3F8]" />
+                            <span>თანამშრომელი</span>
+                        </Link>
+                    )}
+
+                    {isEditor && (
+                        <Link
+                            href="/admin/news"
+                            className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 px-4 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm shadow-xs"
+                        >
+                            <FileText className="w-4 h-4 text-[#EBD3F8]" />
+                            <span>სიახლის დამატება</span>
+                        </Link>
+                    )}
+
+                    {isAdmin && (
+                        <Link
+                            href="/admin/departments"
+                            className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 px-4 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm shadow-xs"
+                        >
+                            <Building2 className="w-4 h-4 text-[#EBD3F8]" />
+                            <span>განყოფილებები</span>
+                        </Link>
+                    )}
+
+                    {isSuperAdmin && (
+                        <Link
+                            href="/admin/users"
+                            className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 px-4 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm shadow-xs"
+                        >
+                            <ShieldCheck className="w-4 h-4 text-[#EBD3F8]" />
+                            <span>მომხმარებლები (RBAC)</span>
+                        </Link>
+                    )}
+
+                    {isSuperAdmin && (
                         <Link
                             href="/admin/audit"
-                            className="text-xs font-bold text-[#60318e] hover:text-[#7A1CAC] bg-purple-50 px-3 py-1.5 rounded-xl border border-purple-100 transition-colors"
+                            className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 px-4 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm shadow-xs"
                         >
-                            ჟურნალი →
+                            <History className="w-4 h-4 text-[#EBD3F8]" />
+                            <span>აუდიტის ჟურნალი</span>
                         </Link>
-                    </div>
+                    )}
 
-                    {recentActivity.length > 0 ? (
-                        <div className="space-y-3">
-                            {recentActivity.map((act) => {
-                                const badge = getActivityBadge(act.action);
-                                return (
-                                    <div
-                                        key={act.id}
-                                        className="p-3 rounded-2xl bg-slate-50 hover:bg-purple-50/50 border border-slate-100 hover:border-purple-100 transition-colors flex items-start justify-between gap-3 text-xs"
-                                    >
-                                        <div className="space-y-1 min-w-0">
-                                            <div className="flex items-center gap-1.5 flex-wrap">
-                                                <span className={`px-2 py-0.5 rounded-md border text-[10px] font-bold ${badge.color}`}>
-                                                    {badge.label}
-                                                </span>
-                                                <span className="font-bold text-gray-900 truncate">
-                                                    {act.user_email || 'anonymous'}
-                                                </span>
-                                            </div>
-                                            <p className="text-[11px] text-gray-500 truncate">
-                                                {act.details?.applicant || act.details?.name_ka || act.details?.title_ka || act.action}
-                                            </p>
-                                        </div>
-                                        <span className="text-[10px] font-medium text-gray-400 whitespace-nowrap mt-0.5">
-                                            {new Date(act.created_at).toLocaleTimeString('ka-GE', { hour: '2-digit', minute: '2-digit' })}
-                                        </span>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    ) : (
-                        <div className="p-8 text-center text-gray-400 text-xs bg-slate-50 rounded-2xl">
-                            აქტივობა ჯერ არ არის დაფიქსირებული.
-                        </div>
+                    {isAdmin && (
+                        <>
+                            <button
+                                onClick={() => handleQuickBackup('json')}
+                                disabled={isExportingBackup}
+                                className="flex items-center gap-2.5 bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 border border-amber-400/30 px-4 py-3 rounded-2xl text-xs font-bold transition-all backdrop-blur-sm cursor-pointer disabled:opacity-50 shadow-xs"
+                                title="ბაზის სრული JSON Snapshot"
+                            >
+                                {isExportingBackup ? <Loader2 className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
+                                <span>ბაზის JSON</span>
+                            </button>
+
+                            <button
+                                onClick={() => handleQuickBackup('sql')}
+                                disabled={isExportingBackup}
+                                className="flex items-center gap-2.5 bg-emerald-400/20 hover:bg-emerald-400/30 text-emerald-200 border border-emerald-400/30 px-4 py-3 rounded-2xl text-xs font-bold transition-all backdrop-blur-sm cursor-pointer disabled:opacity-50 shadow-xs"
+                                title="ბაზის SQL DUMP Script"
+                            >
+                                {isExportingBackup ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileCode className="w-4 h-4" />}
+                                <span>ბაზის SQL</span>
+                            </button>
+                        </>
                     )}
                 </div>
             </div>
+
+            {/* Two Column Layout: Recent Registrations & Live Audit Stream based on permissions */}
+            {(isConfManager || isSuperAdmin) && (
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    {/* Recent Registrations */}
+                    {isConfManager && (
+                        <div className={`${isSuperAdmin ? 'lg:col-span-7' : 'lg:col-span-12'} bg-white rounded-3xl p-6 border border-purple-100 shadow-sm`}>
+                            <div className="flex items-center justify-between mb-5">
+                                <div>
+                                    <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                                        <GraduationCap className="w-5 h-5 text-[#60318e]" />
+                                        ბოლოს რეგისტრირებული თეზისები (2026)
+                                    </h3>
+                                    <p className="text-xs text-gray-500 mt-0.5">უახლესი საკონფერენციო განაცხადები</p>
+                                </div>
+                                <Link
+                                    href="/admin/conference"
+                                    className="text-xs font-bold text-[#60318e] hover:text-[#7A1CAC] bg-purple-50 px-3 py-1.5 rounded-xl border border-purple-100 transition-colors"
+                                >
+                                    ყველა →
+                                </Link>
+                            </div>
+
+                            {recentRegistrations.length > 0 ? (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left text-xs">
+                                        <thead className="bg-slate-50 text-gray-600 font-bold border-b border-slate-200 uppercase tracking-wider">
+                                            <tr>
+                                                <th className="py-2.5 px-3">#</th>
+                                                <th className="py-2.5 px-3">ავტორი</th>
+                                                <th className="py-2.5 px-3">მოხსენების სათაური</th>
+                                                <th className="py-2.5 px-3 text-right">თარიღი</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-100">
+                                            {recentRegistrations.map((reg) => (
+                                                <tr key={reg.id} className="hover:bg-purple-50/30 transition-colors">
+                                                    <td className="py-2.5 px-3 font-mono font-bold text-[#60318e]">
+                                                        {reg.abstract_number}
+                                                    </td>
+                                                    <td className="py-2.5 px-3 font-semibold text-gray-900">
+                                                        {reg.first_name} {reg.last_name}
+                                                    </td>
+                                                    <td className="py-2.5 px-3 text-gray-600 max-w-[200px] truncate" title={reg.presentation_title}>
+                                                        {reg.presentation_title}
+                                                    </td>
+                                                    <td className="py-2.5 px-3 text-gray-400 text-right whitespace-nowrap">
+                                                        {new Date(reg.created_at).toLocaleDateString('ka-GE')}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <div className="p-8 text-center text-gray-400 text-xs bg-slate-50 rounded-2xl">
+                                    ჯერჯერობით რეგისტრაციები არ არის დაფიქსირებული.
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Live Activity Stream (5 cols) */}
+                    {isSuperAdmin && (
+                        <div className={`${isConfManager ? 'lg:col-span-5' : 'lg:col-span-12'} bg-white rounded-3xl p-6 border border-purple-100 shadow-sm`}>
+                            <div className="flex items-center justify-between mb-5">
+                                <div>
+                                    <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                                        <History className="w-5 h-5 text-[#60318e]" />
+                                        უახლესი აქტივობა (Audit Feed)
+                                    </h3>
+                                    <p className="text-xs text-gray-500 mt-0.5">ავტორიზაცია და სისტემური ცვლილებები</p>
+                                </div>
+                                <Link
+                                    href="/admin/audit"
+                                    className="text-xs font-bold text-[#60318e] hover:text-[#7A1CAC] bg-purple-50 px-3 py-1.5 rounded-xl border border-purple-100 transition-colors"
+                                >
+                                    ჟურნალი →
+                                </Link>
+                            </div>
+
+                            {recentActivity.length > 0 ? (
+                                <div className="space-y-3">
+                                    {recentActivity.map((act) => {
+                                        const badge = getActivityBadge(act.action);
+                                        return (
+                                            <div
+                                                key={act.id}
+                                                className="p-3 rounded-2xl bg-slate-50 hover:bg-purple-50/50 border border-slate-100 hover:border-purple-100 transition-colors flex items-start justify-between gap-3 text-xs"
+                                            >
+                                                <div className="space-y-1 min-w-0">
+                                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                                        <span className={`px-2 py-0.5 rounded-md border text-[10px] font-bold ${badge.color}`}>
+                                                            {badge.label}
+                                                        </span>
+                                                        <span className="font-bold text-gray-900 truncate">
+                                                            {act.user_email || 'anonymous'}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-[11px] text-gray-500 truncate">
+                                                        {act.details?.applicant || act.details?.name_ka || act.details?.title_ka || act.action}
+                                                    </p>
+                                                </div>
+                                                <span className="text-[10px] font-medium text-gray-400 whitespace-nowrap mt-0.5">
+                                                    {new Date(act.created_at).toLocaleTimeString('ka-GE', { hour: '2-digit', minute: '2-digit' })}
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <div className="p-8 text-center text-gray-400 text-xs bg-slate-50 rounded-2xl">
+                                    აქტივობა ჯერ არ არის დაფიქსირებული.
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

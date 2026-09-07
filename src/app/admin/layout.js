@@ -376,20 +376,22 @@ export default function AdminLayout({ children }) {
                             </kbd>
                         </button>
 
-                        {/* Quick Backup Trigger */}
-                        <button
-                            onClick={handleQuickBackup}
-                            disabled={isBackingUp}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#60318e] text-xs font-bold transition-colors cursor-pointer border border-purple-200 disabled:opacity-50"
-                            title="მონაცემთა ბაზის Snapshot"
-                        >
-                            {isBackingUp ? (
-                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            ) : (
-                                <Database className="w-3.5 h-3.5 text-[#AD49E1]" />
-                            )}
-                            <span>ბაზის ბექაფი</span>
-                        </button>
+                        {/* Quick Backup Trigger (Admins only) */}
+                        {isAdmin && (
+                            <button
+                                onClick={handleQuickBackup}
+                                disabled={isBackingUp}
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#60318e] text-xs font-bold transition-colors cursor-pointer border border-purple-200 disabled:opacity-50"
+                                title="მონაცემთა ბაზის Snapshot"
+                            >
+                                {isBackingUp ? (
+                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                    <Database className="w-3.5 h-3.5 text-[#AD49E1]" />
+                                )}
+                                <span>ბაზის ბექაფი</span>
+                            </button>
+                        )}
                     </div>
                 </header>
 
@@ -430,6 +432,7 @@ export default function AdminLayout({ children }) {
                 isOpen={isCommandPaletteOpen}
                 onClose={() => setIsCommandPaletteOpen(false)}
                 userEmail={user?.email || 'admin'}
+                roles={roles}
             />
 
             {/* Toast Notifications */}

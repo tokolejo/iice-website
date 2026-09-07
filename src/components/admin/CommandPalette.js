@@ -26,7 +26,7 @@ import {
     Loader2
 } from 'lucide-react';
 
-export default function CommandPalette({ isOpen, onClose, userEmail = 'admin' }) {
+export default function CommandPalette({ isOpen, onClose, userEmail = 'admin', roles = ['admin'] }) {
     const router = useRouter();
     const [query, setQuery] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -34,51 +34,59 @@ export default function CommandPalette({ isOpen, onClose, userEmail = 'admin' })
     const [isSearching, setIsSearching] = useState(false);
     const inputRef = useRef(null);
 
-    // Static Navigation & Actions
+    const isSuperAdmin = roles.includes('super_admin') || userEmail.toLowerCase() === 'tokolejo@gmail.com';
+    const isAdmin = isSuperAdmin || roles.includes('admin');
+    const isConfManager = isAdmin || roles.includes('conference_manager');
+    const isDeptHead = isAdmin || roles.includes('department_head');
+    const isEditor = isAdmin || roles.includes('editor');
+
+    // Static Navigation & Actions based on roles
     const staticActions = [
         // Navigation
         { id: 'nav-dash', title: 'მთავარი პანელი (Dashboard)', category: 'ნავიგაცია', icon: LayoutDashboard, action: () => router.push('/admin') },
-        { id: 'nav-conf', title: 'კონფერენცია 2026 (რეგისტრაციები & აბსტრაქტები)', category: 'ნავიგაცია', icon: Calendar, action: () => router.push('/admin/conference') },
-        { id: 'nav-staff', title: 'თანამშრომელთა სია (Staff Directory)', category: 'ნავიგაცია', icon: Users, action: () => router.push('/admin/staff') },
-        { id: 'nav-dept', title: 'განყოფილებები (Departments)', category: 'ნავიგაცია', icon: Building2, action: () => router.push('/admin/departments') },
-        { id: 'nav-news', title: 'სიახლეების მართვა (News)', category: 'ნავიგაცია', icon: Newspaper, action: () => router.push('/admin/news') },
-        { id: 'nav-users', title: 'მომხმარებლები & როლები (RBAC)', category: 'ნავიგაცია', icon: ShieldCheck, action: () => router.push('/admin/users') },
-        { id: 'nav-audit', title: 'უსაფრთხოების აუდიტის ჟურნალი (Audit Logs)', category: 'ნავიგაცია', icon: History, action: () => router.push('/admin/audit') },
+        ...(isConfManager ? [{ id: 'nav-conf', title: 'კონფერენცია 2026 (რეგისტრაციები & აბსტრაქტები)', category: 'ნავიგაცია', icon: Calendar, action: () => router.push('/admin/conference') }] : []),
+        ...(isDeptHead ? [{ id: 'nav-staff', title: 'თანამშრომელთა სია (Staff Directory)', category: 'ნავიგაცია', icon: Users, action: () => router.push('/admin/staff') }] : []),
+        ...(isAdmin ? [{ id: 'nav-dept', title: 'განყოფილებები (Departments)', category: 'ნავიგაცია', icon: Building2, action: () => router.push('/admin/departments') }] : []),
+        ...(isEditor ? [{ id: 'nav-news', title: 'სიახლეების მართვა (News)', category: 'ნავიგაცია', icon: Newspaper, action: () => router.push('/admin/news') }] : []),
+        ...(isSuperAdmin ? [{ id: 'nav-users', title: 'მომხმარებლები & როლები (RBAC)', category: 'ნავიგაცია', icon: ShieldCheck, action: () => router.push('/admin/users') }] : []),
+        ...(isSuperAdmin ? [{ id: 'nav-audit', title: 'უსაფრთხოების აუდიტის ჟურნალი (Audit Logs)', category: 'ნავიგაცია', icon: History, action: () => router.push('/admin/audit') }] : []),
         { id: 'nav-public', title: 'საჯარო ვებსაიტის გახსნა (Public Site)', category: 'ნავიგაცია', icon: ExternalLink, action: () => window.open('/', '_blank') },
         
         // Fast Commands
-        {
-            id: 'act-backup-json',
-            title: 'მონაცემთა ბაზის სრული ბექაფი (JSON Snapshot)',
-            category: 'სწრაფი მოქმედება',
-            icon: Database,
-            action: async () => {
-                toast('ბექაფის მომზადება დაიწყო...', 'info');
-                try {
-                    await exportDatabaseBackup({ format: 'json', userEmail });
-                    toast('მონაცემთა ბაზის JSON Snapshot წარმატებით ჩამოიტვირთა!', 'success');
-                } catch (e) {
-                    toast('ბექაფის ექსპორტი ვერ მოხერხდა: ' + e.message, 'error');
+        ...(isAdmin ? [
+            {
+                id: 'act-backup-json',
+                title: 'მონაცემთა ბაზის სრული ბექაფი (JSON Snapshot)',
+                category: 'სწრაფი მოქმედება',
+                icon: Database,
+                action: async () => {
+                    toast('ბექაფის მომზადება დაიწყო...', 'info');
+                    try {
+                        await exportDatabaseBackup({ format: 'json', userEmail });
+                        toast('მონაცემთა ბაზის JSON Snapshot წარმატებით ჩამოიტვირთა!', 'success');
+                    } catch (e) {
+                        toast('ბექაფის ექსპორტი ვერ მოხერხდა: ' + e.message, 'error');
+                    }
+                }
+            },
+            {
+                id: 'act-backup-sql',
+                title: 'მონაცემთა ბაზის SQL DUMP Script (აღსადგენად)',
+                category: 'სწრაფი მოქმედება',
+                icon: FileCode,
+                action: async () => {
+                    toast('SQL სკრიპტის მომზადება დაიწყო...', 'info');
+                    try {
+                        await exportDatabaseBackup({ format: 'sql', userEmail });
+                        toast('მონაცემთა ბაზის SQL DUMP წარმატებით ჩამოიტვირთა!', 'success');
+                    } catch (e) {
+                        toast('SQL ექსპორტი ვერ მოხერხდა: ' + e.message, 'error');
+                    }
                 }
             }
-        },
-        {
-            id: 'act-backup-sql',
-            title: 'მონაცემთა ბაზის SQL DUMP Script (აღსადგენად)',
-            category: 'სწრაფი მოქმედება',
-            icon: FileCode,
-            action: async () => {
-                toast('SQL სკრიპტის მომზადება დაიწყო...', 'info');
-                try {
-                    await exportDatabaseBackup({ format: 'sql', userEmail });
-                    toast('მონაცემთა ბაზის SQL DUMP წარმატებით ჩამოიტვირთა!', 'success');
-                } catch (e) {
-                    toast('SQL ექსპორტი ვერ მოხერხდა: ' + e.message, 'error');
-                }
-            }
-        },
-        { id: 'act-add-news', title: 'ახალი სიახლის დამატება', category: 'სწრაფი მოქმედება', icon: PlusCircle, action: () => router.push('/admin/news') },
-        { id: 'act-add-staff', title: 'ახალი თანამშრომლის დამატება', category: 'სწრაფი მოქმედება', icon: UserPlus, action: () => router.push('/admin/staff') },
+        ] : []),
+        ...(isEditor ? [{ id: 'act-add-news', title: 'ახალი სიახლის დამატება', category: 'სწრაფი მოქმედება', icon: PlusCircle, action: () => router.push('/admin/news') }] : []),
+        ...(isDeptHead ? [{ id: 'act-add-staff', title: 'ახალი თანამშრომლის დამატება', category: 'სწრაფი მოქმედება', icon: UserPlus, action: () => router.push('/admin/staff') }] : []),
     ];
 
     // Focus input on open
