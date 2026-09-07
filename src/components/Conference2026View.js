@@ -346,14 +346,128 @@ export default function Conference2026View() {
             <title>{isEn ? "3rd International Scientific Conference 2026 | TSU IICE" : "III საერთაშორისო სამეცნიერო კონფერენცია 2026 | TSU IICE"}</title>
             <meta name="description" content={isEn ? "3rd International Scientific Conference 2026 dedicated to the 70th anniversary of IICE." : "მე-3 საერთაშორისო სამეცნიერო კონფერენცია 2026 ეძღვნება რაფიელ აგლაძის ინსტიტუტის 70 წლისთავს."} />
 
-            {/* Conference Official Cover Banner */}
-            <div className="w-full bg-white border-b border-purple-100 shadow-xs overflow-hidden">
-                <div className="max-w-[1700px] mx-auto">
-                    <img
-                        src="/conference-2026/conference2026-cover.jpg"
-                        alt={isEn ? "3rd International Scientific Conference 2026" : "III საერთაშორისო სამეცნიერო კონფერენცია 2026"}
-                        className="w-full h-auto block select-none"
-                    />
+            {/* Custom Modern Conference Header Banner - Institute Theme & Bilingual */}
+            <div className="relative bg-gradient-to-b from-[#180327] via-[#2a0845] to-[#1a042e] text-white py-10 sm:py-12 lg:py-14 px-4 sm:px-6 lg:px-10 shadow-2xl overflow-hidden border-b border-purple-900/40">
+                {/* Ambient radial glow lighting */}
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#AD49E1]/15 rounded-full blur-3xl pointer-events-none animate-pulse duration-1000"></div>
+                <div className="absolute bottom-0 right-1/4 w-[450px] h-[450px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_35%,rgba(173,73,225,0.18),transparent_60%)] pointer-events-none"></div>
+
+                <div className="max-w-[1600px] mx-auto relative z-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+                        
+                        {/* Left Column: Academic & Conference Identity (7 cols) */}
+                        <div className="lg:col-span-7 space-y-4 text-center lg:text-left">
+                            
+                            {/* Top Badge */}
+                            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black tracking-wide bg-gradient-to-r from-purple-500/25 to-emerald-500/25 text-purple-200 border border-purple-400/30 backdrop-blur-md shadow-xs">
+                                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                                <span>{t.badge}</span>
+                            </div>
+
+                            {/* Main Heading */}
+                            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[30px] font-black text-white leading-snug tracking-tight drop-shadow-sm">
+                                {isEn ? (
+                                    <>
+                                        <span>3rd International Scientific Conference: </span>
+                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-emerald-300 to-purple-200">
+                                            “Modern Trends in Chemistry, Chemical Technologies and Related Fields: Green Energy Prospects, Ecological Sustainability, Food Safety. 2026”
+                                        </span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span>მე-3 საერთაშორისო სამეცნიერო კონფერენცია: </span>
+                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-emerald-300 to-purple-200">
+                                            „თანამედროვე ტენდენციები ქიმიაში, ქიმიურ ტექნოლოგიებსა და მომიჯნავე დარგებში: მწვანე ენერგეტიკის პერსპექტივები, ეკოლოგიური მდგრადობა, სურსათის უვნებელობა. 2026“
+                                        </span>
+                                    </>
+                                )}
+                            </h1>
+
+                            {/* Key Thematic Focus Badges (Green Energy, Eco, Chem Tech, Food Safety) */}
+                            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-0.5">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-[11px] font-bold shadow-2xs">
+                                    <span>⚡ {isEn ? "Green Energy Prospects" : "მწვანე ენერგეტიკა"}</span>
+                                </span>
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-[11px] font-bold shadow-2xs">
+                                    <span>🌿 {isEn ? "Ecological Sustainability" : "ეკოლოგიური მდგრადობა"}</span>
+                                </span>
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-purple-500/20 border border-purple-400/30 text-purple-200 text-[11px] font-bold shadow-2xs">
+                                    <span>🧪 {isEn ? "Chemical Technologies" : "ქიმიური ტექნოლოგიები"}</span>
+                                </span>
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-purple-500/20 border border-purple-400/30 text-purple-200 text-[11px] font-bold shadow-2xs">
+                                    <span>🛡️ {isEn ? "Food Safety" : "სურსათის უვნებელობა"}</span>
+                                </span>
+                            </div>
+
+                            {/* 70th Anniversary Commemorative Ribbon */}
+                            <div className="inline-flex items-center gap-2.5 bg-gradient-to-r from-amber-500/20 via-purple-500/20 to-amber-500/20 border-l-4 border-amber-400 rounded-r-2xl py-2 px-4 shadow-sm border-y border-r border-amber-300/30 backdrop-blur-md max-w-2xl text-left">
+                                <Award className="w-5 h-5 text-amber-300 flex-shrink-0" />
+                                <span className="text-xs sm:text-[13px] font-bold text-amber-100 leading-snug">
+                                    {t.anniversary}
+                                </span>
+                            </div>
+
+                            {/* Dates & Venues Pills */}
+                            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-0.5 text-xs">
+                                <div className="flex items-center gap-2 bg-white/10 text-white px-3.5 py-1.5 rounded-xl backdrop-blur-md border border-white/15 shadow-xs">
+                                    <Calendar className="w-4 h-4 text-amber-300 flex-shrink-0" />
+                                    <span className="font-bold">{t.datesText}</span>
+                                </div>
+                                <div className="flex items-center gap-2 bg-white/10 text-white px-3.5 py-1.5 rounded-xl backdrop-blur-md border border-white/15 shadow-xs">
+                                    <MapPin className="w-4 h-4 text-amber-300 flex-shrink-0" />
+                                    <span className="font-bold">{t.venuesText}</span>
+                                </div>
+                            </div>
+
+                            {/* CTA Action Buttons */}
+                            <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-3">
+                                <button
+                                    onClick={() => {
+                                        setActiveTab('registration');
+                                        document.getElementById('tabs-navigation')?.scrollIntoView({ behavior: 'smooth' });
+                                    }}
+                                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#AD49E1] to-[#7A1CAC] hover:from-[#bd5cf0] hover:to-[#8c25c2] text-white font-extrabold px-6 py-2.5 rounded-full text-xs shadow-lg hover:shadow-purple-500/30 hover:scale-[1.02] transition-all cursor-pointer"
+                                >
+                                    <Send className="w-3.5 h-3.5" />
+                                    <span>{isEn ? "Go to Registration Form ↓" : "რეგისტრაცია და აბსტრაქტი ↓"}</span>
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setActiveTab('downloads');
+                                        document.getElementById('tabs-navigation')?.scrollIntoView({ behavior: 'smooth' });
+                                    }}
+                                    className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold px-5 py-2.5 rounded-full text-xs border border-white/20 backdrop-blur-md shadow-xs transition-all cursor-pointer"
+                                >
+                                    <Download className="w-3.5 h-3.5" />
+                                    <span>{isEn ? "Templates (DOCX)" : "შაბლონების ჩამოტვირთვა"}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Right Column: High-Impact 70th Anniversary Emblem with Institute Building (5 cols) */}
+                        <div className="lg:col-span-5 flex flex-col items-center justify-center relative">
+                            {/* Glowing Aura backdrop */}
+                            <div className="absolute w-72 h-72 sm:w-88 sm:h-88 bg-gradient-to-tr from-[#AD49E1]/30 via-purple-500/20 to-emerald-400/20 rounded-full blur-2xl pointer-events-none animate-float-blob-slow"></div>
+
+                            <div className="relative group transition-all duration-500 hover:scale-105">
+                                {/* The Clean Cropped 70th Emblem with the Institute Building inside the '0' */}
+                                <img
+                                    src="/conference-2026/iice-70-anniversary-emblem.png"
+                                    alt="70th Anniversary Emblem - R. Agladze Institute of Inorganic Chemistry and Electrochemistry"
+                                    className="w-full max-w-[420px] sm:max-w-[480px] lg:max-w-[520px] h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)] select-none"
+                                />
+                            </div>
+
+                            {/* Sub-caption below emblem */}
+                            <div className="mt-2 text-center">
+                                <span className="inline-block text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-purple-200/90 bg-white/10 px-4 py-1 rounded-full border border-white/15 backdrop-blur-md shadow-xs">
+                                    {isEn ? "1956 – 2026 • 70 Years Anniversary Edition" : "1956 – 2026 • 70 წლის საიუბილეო გამოცემა"}
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
