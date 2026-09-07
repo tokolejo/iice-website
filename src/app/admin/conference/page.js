@@ -30,10 +30,8 @@ import {
     Printer,
     Loader2,
     UploadCloud,
-    Award,
     Archive
 } from 'lucide-react';
-import AcceptanceLetterModal from '../../../components/admin/AcceptanceLetterModal';
 import { toast } from '../../../components/admin/AdminToast';
 
 export const STATUS_CONFIG = {
@@ -96,12 +94,9 @@ export default function AdminConferencePage() {
     const [selectedReg, setSelectedReg] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
-    const [isAcceptanceLetterOpen, setIsAcceptanceLetterOpen] = useState(false);
-    const [letterReg, setLetterReg] = useState(null);
 
-    // Status & Note update state
+    // Status update state
     const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
-    const [editNotes, setEditNotes] = useState('');
 
     // File & ZIP action state
     const [downloadingFile, setDownloadingFile] = useState(null);
@@ -231,15 +226,12 @@ export default function AdminConferencePage() {
         }
     };
 
-    // Update status and reviewer notes
-    const handleUpdateStatus = async (regId, newStatus, notes = null) => {
+    // Update status
+    const handleUpdateStatus = async (regId, newStatus) => {
         setIsUpdatingStatus(true);
         try {
             const supabase = getSupabaseBrowserClient();
             const updatePayload = { status: newStatus };
-            if (notes !== null) {
-                updatePayload.reviewer_notes = notes;
-            }
 
             if (supabase) {
                 const { error } = await supabase
@@ -247,7 +239,12 @@ export default function AdminConferencePage() {
                     .update(updatePayload)
                     .eq('id', regId);
 
-                if (error) throw error;
+                if (error) {
+                    if (error.message?.includes("'status' column") || error.code === 'PGRST204') {
+                        throw new Error("Supabase-ის ცხრილში 'status' სვეტი ჯერ არ არის დამატებული. გთხოვთ გაუშვათ SQL ბრძანება: ALTER TABLE public.conference_registrations_2026 ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'pending';");
+                    }
+                    throw error;
+                }
             }
 
             setRegistrations(prev => prev.map(r => r.id === regId ? { ...r, ...updatePayload } : r));
@@ -269,7 +266,7 @@ export default function AdminConferencePage() {
             }
         } catch (err) {
             console.error('Status update error:', err);
-            toast('სტატუსის განახლება ვერ მოხერხდა: ' + err.message, 'error');
+            toast('სტატუსის განახლება ვერ მოხერხდა: ' + err.message, 'error', 6000);
         } finally {
             setIsUpdatingStatus(false);
         }
@@ -433,7 +430,6 @@ export default function AdminConferencePage() {
         const headers = [
             'Abstract Number (თეზისის #)',
             'Status (სტატუსი)',
-            'Reviewer Notes (შენიშვნა)',
             'Registration Date (რეგისტრაციის თარიღი)',
             'First Name (სახელი)',
             'Last Name (გვარი)',
@@ -458,7 +454,6 @@ export default function AdminConferencePage() {
             return [
                 r.abstract_number || '',
                 st.labelKa,
-                r.reviewer_notes || '',
                 new Date(r.created_at).toLocaleString('ka-GE'),
                 r.first_name || '',
                 r.last_name || '',
@@ -937,18 +932,6 @@ export default function AdminConferencePage() {
 
                                             <td className="py-3.5 px-4 text-right whitespace-nowrap">
                                                 <div className="flex items-center justify-end gap-1.5">
-                                                    {/* Acceptance Letter Modal Trigger */}
-                                                    <button
-                                                        onClick={() => {
-                                                            setLetterReg(reg);
-                                                            setIsAcceptanceLetterOpen(true);
-                                                        }}
-                                                        className="p-1.5 rounded-lg bg-slate-100 text-[#60318e] hover:bg-[#60318e] hover:text-white transition-colors cursor-pointer"
-                                                        title="მოწვევის / მიღების წერილი"
-                                                    >
-                                                        <Award className="w-3.5 h-3.5" />
-                                                    </button>
-
                                                     {/* Single Participant Export */}
                                                     <button
                                                         onClick={() => exportParticipants([reg], 'csv')}
@@ -959,10 +942,7 @@ export default function AdminConferencePage() {
                                                     </button>
 
                                                     <button
-                                                        onClick={() => {
-                                                            setSelectedReg(reg);
-                                                            setEditNotes(reg.reviewer_notes || '');
-                                                        }}
+                                                        onClick={() => setSelectedReg(reg)}
                                                         className="p-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-[#60318e] hover:text-white transition-colors cursor-pointer"
                                                         title="სრული დეტალები"
                                                     >
@@ -1009,16 +989,6 @@ export default function AdminConferencePage() {
                         {selectedReg && (
                             <div className="flex items-center gap-2">
                                 <button
-                                    onClick={() => {
-                                        setLetterReg(selectedReg);
-                                        setIsAcceptanceLetterOpen(true);
-                                    }}
-                                    className="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#60318e] border border-purple-200 text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
-                                >
-                                    <Award className="w-3.5 h-3.5" />
-                                    <span>მოწვევის წერილი</span>
-                                </button>
-                                <button
                                     onClick={() => exportParticipants([selectedReg], 'csv')}
                                     className="px-3 py-1.5 rounded-xl border border-gray-200 bg-white hover:bg-purple-50 text-xs font-bold text-gray-700 flex items-center gap-1.5 cursor-pointer"
                                 >
@@ -1045,61 +1015,30 @@ export default function AdminConferencePage() {
             >
                 {selectedReg && (
                     <div className="space-y-5 text-xs text-gray-700">
-                        {/* Academic Review & Status Management Card */}
-                        <div className="p-4 rounded-2xl bg-white border-2 border-purple-200 shadow-xs space-y-3">
-                            <div className="flex items-center justify-between">
-                                <span className="text-xs font-extrabold text-[#60318e] uppercase tracking-wider flex items-center gap-1.5">
-                                    <Award className="w-4 h-4" />
-                                    <span>რეცენზირების სტატუსი & გადაწყვეტილება</span>
+                        {/* Status Management Card */}
+                        <div className="p-4 rounded-2xl bg-white border-2 border-purple-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div>
+                                <span className="text-xs font-extrabold text-[#60318e] uppercase tracking-wider block">
+                                    თეზისის სტატუსი
                                 </span>
-                                <button
-                                    onClick={() => {
-                                        setLetterReg(selectedReg);
-                                        setIsAcceptanceLetterOpen(true);
-                                    }}
-                                    className="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-[#60318e] font-bold text-[11px] flex items-center gap-1 cursor-pointer border border-purple-200 transition-colors"
-                                >
-                                    <Award className="w-3.5 h-3.5" />
-                                    <span>მოწვევის წერილი</span>
-                                </button>
+                                <p className="text-[11px] text-slate-500 mt-0.5">
+                                    აირჩიეთ განაცხადის მიმდინარე გადაწყვეტილება
+                                </p>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label className="text-[11px] font-bold text-slate-600 block mb-1">სტატუსის შეცვლა:</label>
-                                    <select
-                                        value={selectedReg.status || 'pending'}
-                                        onChange={(e) => handleUpdateStatus(selectedReg.id, e.target.value, editNotes)}
-                                        disabled={isUpdatingStatus}
-                                        className="w-full px-3 py-2 rounded-xl border border-purple-200 bg-purple-50/50 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
-                                    >
-                                        <option value="pending">⏳ მოლოდინში (Pending)</option>
-                                        <option value="accepted_oral">✅ მიღებულია (ზეპირი მოხსენება)</option>
-                                        <option value="accepted_poster">📌 მიღებულია (სასტენდო მოხსენება)</option>
-                                        <option value="revision_needed">⚠️ საჭიროებს გადამუშავებას (Revision)</option>
-                                        <option value="rejected">❌ უარყოფილია (Rejected)</option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label className="text-[11px] font-bold text-slate-600 block mb-1">რეცენზენტის შენიშვნა:</label>
-                                    <div className="flex gap-1.5">
-                                        <input
-                                            type="text"
-                                            value={editNotes}
-                                            onChange={(e) => setEditNotes(e.target.value)}
-                                            placeholder="მაგ. მიღებულია სექციაში #2..."
-                                            className="flex-1 px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
-                                        />
-                                        <button
-                                            onClick={() => handleUpdateStatus(selectedReg.id, selectedReg.status || 'pending', editNotes)}
-                                            disabled={isUpdatingStatus}
-                                            className="px-3 py-1.5 rounded-xl bg-[#60318e] hover:bg-[#4a2470] text-white text-xs font-bold transition-colors cursor-pointer disabled:opacity-50"
-                                        >
-                                            {isUpdatingStatus ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'შენახვა'}
-                                        </button>
-                                    </div>
-                                </div>
+                            <div className="w-full sm:w-72">
+                                <select
+                                    value={selectedReg.status || 'pending'}
+                                    onChange={(e) => handleUpdateStatus(selectedReg.id, e.target.value)}
+                                    disabled={isUpdatingStatus}
+                                    className="w-full px-3.5 py-2.5 rounded-xl border border-purple-300 bg-purple-50/50 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#AD49E1] cursor-pointer"
+                                >
+                                    <option value="pending">⏳ მოლოდინში (Pending)</option>
+                                    <option value="accepted_oral">✅ მიღებულია (ზეპირი მოხსენება)</option>
+                                    <option value="accepted_poster">📌 მიღებულია (სასტენდო მოხსენება)</option>
+                                    <option value="revision_needed">⚠️ საჭიროებს გადამუშავებას (Revision)</option>
+                                    <option value="rejected">❌ უარყოფილია (Rejected)</option>
+                                </select>
                             </div>
                         </div>
 
@@ -1404,16 +1343,6 @@ export default function AdminConferencePage() {
                     </p>
                 )}
             </AdminModal>
-
-            {/* Acceptance Letter Modal */}
-            <AcceptanceLetterModal
-                isOpen={isAcceptanceLetterOpen}
-                onClose={() => {
-                    setIsAcceptanceLetterOpen(false);
-                    setLetterReg(null);
-                }}
-                registration={letterReg}
-            />
         </div>
     );
 }
