@@ -534,8 +534,8 @@ export default function Conference2026View() {
                             <div className="relative group transition-all duration-500 hover:scale-105">
                                 {/* The Clean Cropped 70th Emblem with the Institute Building inside the '0' */}
                                 <Image
-                                    src="/conference-2026/anniversary-70.png"
-                                    alt="70th Anniversary Emblem - R. Agladze Institute of Inorganic Chemistry and Electrochemistry"
+                                    src={isEn ? "/conference-2026/iice-70-clean-eng.png" : "/conference-2026/iice-70-clean-geo.png"}
+                                    alt={isEn ? "70th Anniversary Emblem - R. Agladze Institute of Inorganic Chemistry and Electrochemistry" : "70 წლის საიუბილეო ემბლემა - რაფიელ აგლაძის ინსტიტუტი"}
                                     width={520}
                                     height={260}
                                     priority

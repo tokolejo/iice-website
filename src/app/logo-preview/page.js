@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -6,14 +6,44 @@ import { ArrowLeft, Sparkles, Download, ExternalLink, Check, FlaskConical, Build
 
 const VERSIONS = [
     {
+        id: 'v1-geo',
+        category: 'ოფიციალური არჩევანი (საიტზე აქტიური)',
+        titleKa: 'ვერსია 1A: სუფთა მედალიონი — ქართული („იიცე“)',
+        titleEn: 'Version 1A: Clean Academic Ring — Georgian ("იიცე")',
+        badgeKa: 'ოფიციალურად არჩეული ვერსია • ქართული',
+        badgeEn: 'OFFICIAL CHOSEN VERSION • GEORGIAN',
+        descKa: 'სრულიად სუფთა და აკადემიური წრე: ზემოთ "იიცე", ქვემოთ "1956 — 2026", ლენტზე "70 წლის იუბილე". ცენტრში ინსტიტუტის რეალური შენობა და მწვანე ნაძვები.',
+        descEn: 'Completely clean and minimalist circular medallion: "იიცე" at top, "1956 — 2026" at bottom, and "70 წლის იუბილე" on ribbon. Authentic building in center.',
+        imgSrc: '/conference-2026/iice-70-clean-geo.png',
+        downloadName: 'iice-70-clean-geo.png',
+        lang: 'ka',
+        buildingType: 'რეალური ფოტო ნაძვებით',
+        hasChem: false
+    },
+    {
+        id: 'v1-eng',
+        category: 'ოფიციალური არჩევანი (საიტზე აქტიური)',
+        titleKa: 'ვერსია 1B: სუფთა მედალიონი — ინგლისური („IICE“)',
+        titleEn: 'Version 1B: Clean Academic Ring — English ("IICE")',
+        badgeKa: 'ოფიციალურად არჩეული ვერსია • ინგლისური',
+        badgeEn: 'OFFICIAL CHOSEN VERSION • ENGLISH',
+        descKa: 'ინგლისურენოვანი სუფთა საიუბილეო ემბლემა: ზემოთ "IICE", ქვემოთ "1956 — 2026", ლენტზე "70 YEARS ANNIVERSARY". სიმეტრიული და აკადემიური საერთაშორისო ვერსია.',
+        descEn: 'International minimalist jubilee emblem: "IICE" at top, "1956 — 2026" at bottom, "70 YEARS ANNIVERSARY" on ribbon. Symmetrical and academic.',
+        imgSrc: '/conference-2026/iice-70-clean-eng.png',
+        downloadName: 'iice-70-clean-eng.png',
+        lang: 'en',
+        buildingType: 'რეალური ფოტო ნაძვებით',
+        hasChem: false
+    },
+    {
         id: 'v3-arch-chem',
-        category: 'ქიმიური კოლბებით (ახალი)',
+        category: 'სხვა ვარიანტები (არქივი)',
         titleKa: 'ვერსია 3A: არქიტექტურული შენობის ნახატით + ქიმიური კოლბები',
         titleEn: 'Version 3A: Architectural Building Drawing + Chemical Flasks',
-        badgeKa: 'თქვენი ახალი სურათით • ტოპ არჩევანი',
-        badgeEn: 'USER UPLOADED BUILDING • TOP CHOICE',
-        descKa: 'თქვენ მიერ ახლახან გამოგზავნილი არქიტექტურული შენობის ხაზობრივი ნახატი "0"-ში. "7"-ის ძირში დამატებულია დახვეწილი კრისტალური ქიმიური კოლბები, ხოლო ლოგოს მარჯვენა მხარე სრულიად სუფთა და დაუფარავია.',
-        descEn: 'Features the architectural building line drawing you just uploaded inside the "0". At the base of the "7", elegant crystal chemical flasks add scientific flair without covering any part of the logo or building.',
+        badgeKa: 'არქიტექტურული ნახატით',
+        badgeEn: 'ARCHITECTURAL DRAWING',
+        descKa: 'არქიტექტურული შენობის ხაზობრივი ნახატი "0"-ში. "7"-ის ძირში დამატებულია დახვეწილი კრისტალური ქიმიური კოლბები, ხოლო ლოგოს მარჯვენა მხარე სრულიად სუფთა და დაუფარავია.',
+        descEn: 'Features the architectural building line drawing inside the "0". At the base of the "7", crystal chemical flasks add scientific flair without covering any part of the logo or building.',
         imgSrc: '/conference-2026/iice-70-arch-chem.png',
         downloadName: 'iice-70-arch-chem.png',
         lang: 'en',
@@ -22,7 +52,7 @@ const VERSIONS = [
     },
     {
         id: 'v3-real-chem',
-        category: 'ქიმიური კოლბებით (ახალი)',
+        category: 'სხვა ვარიანტები (არქივი)',
         titleKa: 'ვერსია 3B: რეალური შენობის ფოტოთი + ქიმიური კოლბები',
         titleEn: 'Version 3B: Real Building with Trees + Chemical Flasks',
         badgeKa: 'რეალური შენობა + კოლბები',
@@ -36,38 +66,8 @@ const VERSIONS = [
         hasChem: true
     },
     {
-        id: 'v1-geo',
-        category: 'სუფთა აკადემიური მედალიონი',
-        titleKa: 'ვერსია 1A: სუფთა მედალიონი — ქართული („იიცე“)',
-        titleEn: 'Version 1A: Clean Academic Ring — Georgian ("იიცე")',
-        badgeKa: 'ქართული გამოცემა • სუფთა წრე',
-        badgeEn: 'GEORGIAN EDITION • CLEAN RING',
-        descKa: 'სრულიად სუფთა წრე ყოველგვარი დამატებითი დეტალის გარეშე. ზემოთ "იიცე", ქვემოთ "1956 — 2026", ლენტზე "70 წლის იუბილე". ცენტრში რეალური შენობა და ნაძვები.',
-        descEn: 'Completely clean and minimalist circular medallion: "იიცე" at top, "1956 — 2026" at bottom, and "70 წლის იუბილე" on ribbon. Authentic building in center.',
-        imgSrc: '/conference-2026/iice-70-clean-geo.png',
-        downloadName: 'iice-70-clean-geo.png',
-        lang: 'ka',
-        buildingType: 'რეალური ფოტო ნაძვებით',
-        hasChem: false
-    },
-    {
-        id: 'v1-eng',
-        category: 'სუფთა აკადემიური მედალიონი',
-        titleKa: 'ვერსია 1B: სუფთა მედალიონი — ინგლისური („IICE“)',
-        titleEn: 'Version 1B: Clean Academic Ring — English ("IICE")',
-        badgeKa: 'საერთაშორისო ვერსია • სუფთა წრე',
-        badgeEn: 'INTERNATIONAL • CLEAN RING',
-        descKa: 'ინგლისურენოვანი სუფთა საიუბილეო ემბლემა: ზემოთ "IICE", ქვემოთ "1956 — 2026", ლენტზე "70 YEARS ANNIVERSARY". სიმეტრიული და აკადემიური.',
-        descEn: 'International minimalist jubilee emblem: "IICE" at top, "1956 — 2026" at bottom, "70 YEARS ANNIVERSARY" on ribbon. Symmetrical and academic.',
-        imgSrc: '/conference-2026/iice-70-clean-eng.png',
-        downloadName: 'iice-70-clean-eng.png',
-        lang: 'en',
-        buildingType: 'რეალური ფოტო ნაძვებით',
-        hasChem: false
-    },
-    {
         id: 'v2-curve',
-        category: 'ელექტროქიმიური მრუდით',
+        category: 'სხვა ვარიანტები (არქივი)',
         titleKa: 'ვერსია 2: ელექტროქიმიური ვოლტამპეროგრამით ცაში',
         titleEn: 'Version 2: Electrochemical Voltammetry Curve in Sky',
         badgeKa: 'აგლაძის ელექტროქიმია',
@@ -83,7 +83,7 @@ const VERSIONS = [
 ];
 
 export default function LogoPreviewPage() {
-    const [selectedId, setSelectedId] = useState('v3-arch-chem');
+    const [selectedId, setSelectedId] = useState('v1-geo');
     const [bgPreview, setBgPreview] = useState('white');
 
     const active = VERSIONS.find(v => v.id === selectedId) || VERSIONS[0];
@@ -144,15 +144,15 @@ export default function LogoPreviewPage() {
             <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
                 {/* Intro Title */}
                 <div className="text-center max-w-3xl mx-auto mb-8">
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-100/80 border border-purple-200 text-[#60318e] text-xs font-black uppercase tracking-wider mb-3">
-                        <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                        <span>შენობის 2 ვარიანტი • ქიმიური კოლბები 7-ის ძირში • ლოგოს დაფარვის გარეშე</span>
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/80 border border-emerald-200 text-emerald-800 text-xs font-black uppercase tracking-wider mb-3">
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>დამტკიცებულია • ვერსია 1A (ქართული) და 1B (ინგლისური) საიტზე აქტიურია</span>
                     </div>
                     <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
-                        საიუბილეო ლოგოს შედარება
+                        70 წლის საიუბილეო ოფიციალური ემბლემა
                     </h1>
                     <p className="mt-2 text-xs sm:text-sm text-slate-600 font-medium leading-relaxed max-w-2xl mx-auto">
-                        თქვენი მოთხოვნის შესაბამისად: ქიმიური კოლბები განთავსებულია მარცხნივ, „7“-ის ძირში. ლოგოს მარჯვენა მხარე სრულიად სუფთაა და არაფერი არ ფარავს.
+                        არჩეულია სუფთა აკადემიური მედალიონი: ქართულ ენაზე 1A („იიცე“) და ინგლისურ ენაზე 1B („IICE“). ორივე ვერსია უკვე ინტეგრირებულია მთავარ გვერდზე და კონფერენცია 2026-ის განყოფილებაში.
                     </p>
                 </div>
 

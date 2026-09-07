@@ -122,12 +122,12 @@ export default function Home() {
           <ScrollReveal direction="right" duration={800} delay={200} className="w-full md:w-5/12 relative hidden md:flex items-center justify-center">
             <div className="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-white/95 via-purple-50/70 to-indigo-50/90 shadow-xl border-2 border-purple-200/80 backdrop-blur-sm transform hover:scale-105 transition-all duration-500 flex flex-col items-center justify-center group">
               <Image 
-                src="/conference-2026/anniversary-70.png" 
-                alt="70th Anniversary Rafael Agladze Institute" 
-                width={320}
-                height={180}
+                src={language === 'en' ? "/conference-2026/iice-70-clean-eng.png" : "/conference-2026/iice-70-clean-geo.png"} 
+                alt={language === 'en' ? "70th Anniversary Rafael Agladze Institute" : "რაფიელ აგლაძის ინსტიტუტის 70 წლის იუბილე"} 
+                width={360}
+                height={200}
                 priority
-                className="w-full max-w-[320px] h-auto object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105" 
+                className="w-full max-w-[340px] h-auto object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105" 
               />
             </div>
             {/* Decorative elements */}
