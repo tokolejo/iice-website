@@ -410,11 +410,11 @@ export default function Conference2026View() {
             <meta name="description" content={isEn ? "3rd International Scientific Conference 2026 dedicated to the 70th anniversary of IICE." : "მე-3 საერთაშორისო სამეცნიერო კონფერენცია 2026 ეძღვნება რაფიელ აგლაძის ინსტიტუტის 70 წლისთავს."} />
 
             {/* Custom Modern Conference Header Banner - Institute Theme & Bilingual */}
-            <div className="relative bg-gradient-to-b from-[#180327] via-[#2a0845] to-[#1a042e] text-white py-10 sm:py-12 lg:py-14 px-4 sm:px-6 lg:px-10 shadow-2xl overflow-hidden border-b border-purple-900/40">
-                {/* Ambient radial glow lighting */}
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#AD49E1]/15 rounded-full blur-3xl pointer-events-none animate-pulse duration-1000"></div>
-                <div className="absolute bottom-0 right-1/4 w-[450px] h-[450px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_35%,rgba(173,73,225,0.18),transparent_60%)] pointer-events-none"></div>
+            <div className="relative animated-gradient-bg overflow-hidden border-b border-purple-100/80 py-10 sm:py-12 lg:py-14 px-4 sm:px-6 lg:px-10 shadow-xs">
+                {/* Ambient soft background blobs like main page */}
+                <div className="absolute -top-20 -right-20 w-72 h-72 bg-purple-200/40 rounded-full blur-3xl animate-float-blob-slow pointer-events-none"></div>
+                <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-indigo-200/30 rounded-full blur-3xl animate-float-blob-reverse pointer-events-none"></div>
+                <div className="absolute top-1/2 left-1/3 w-40 h-40 bg-pink-100/20 rounded-full blur-3xl animate-float-blob pointer-events-none"></div>
 
                 <div className="max-w-[1600px] mx-auto relative z-10">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
@@ -423,24 +423,23 @@ export default function Conference2026View() {
                         <div className="lg:col-span-7 space-y-4 text-center lg:text-left">
                             
                             {/* Top Badge */}
-                            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black tracking-wide bg-gradient-to-r from-purple-500/25 to-emerald-500/25 text-purple-200 border border-purple-400/30 backdrop-blur-md shadow-xs">
-                                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                            <div className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide bg-purple-100/80 text-[#60318e] border border-purple-200/60 shadow-xs">
                                 <span>{t.badge}</span>
                             </div>
 
                             {/* Main Heading */}
-                            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[30px] font-black text-white leading-snug tracking-tight drop-shadow-sm">
+                            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[30px] font-extrabold text-[#60318e] leading-snug tracking-tight drop-shadow-xs">
                                 {isEn ? (
                                     <>
-                                        <span>3rd International Scientific Conference: </span>
-                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-emerald-300 to-purple-200">
+                                        <span className="block text-[#60318e]">3rd International Scientific Conference:</span>
+                                        <span className="block text-[#7A1CAC] mt-1.5">
                                             “Modern Trends in Chemistry, Chemical Technologies and Related Fields: Green Energy Prospects, Ecological Sustainability, Food Safety. 2026”
                                         </span>
                                     </>
                                 ) : (
                                     <>
-                                        <span>მე-3 საერთაშორისო სამეცნიერო კონფერენცია: </span>
-                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-emerald-300 to-purple-200">
+                                        <span className="block text-[#60318e]">მე-3 საერთაშორისო სამეცნიერო კონფერენცია:</span>
+                                        <span className="block text-[#7A1CAC] mt-1.5">
                                             „თანამედროვე ტენდენციები ქიმიაში, ქიმიურ ტექნოლოგიებსა და მომიჯნავე დარგებში: მწვანე ენერგეტიკის პერსპექტივები, ეკოლოგიური მდგრადობა, სურსათის უვნებელობა. 2026“
                                         </span>
                                     </>
@@ -449,54 +448,54 @@ export default function Conference2026View() {
 
                             {/* Key Thematic Focus Badges (Green Energy, Eco, Chem Tech, Food Safety) */}
                             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-0.5">
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-[11px] font-bold shadow-2xs">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/90 border border-purple-200 text-slate-700 text-xs font-semibold shadow-xs">
                                     <span>⚡ {isEn ? "Green Energy Prospects" : "მწვანე ენერგეტიკა"}</span>
                                 </span>
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-[11px] font-bold shadow-2xs">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/90 border border-purple-200 text-slate-700 text-xs font-semibold shadow-xs">
                                     <span>🌿 {isEn ? "Ecological Sustainability" : "ეკოლოგიური მდგრადობა"}</span>
                                 </span>
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-purple-500/20 border border-purple-400/30 text-purple-200 text-[11px] font-bold shadow-2xs">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/90 border border-purple-200 text-slate-700 text-xs font-semibold shadow-xs">
                                     <span>🧪 {isEn ? "Chemical Technologies" : "ქიმიური ტექნოლოგიები"}</span>
                                 </span>
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-purple-500/20 border border-purple-400/30 text-purple-200 text-[11px] font-bold shadow-2xs">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/90 border border-purple-200 text-slate-700 text-xs font-semibold shadow-xs">
                                     <span>🛡️ {isEn ? "Food Safety" : "სურსათის უვნებელობა"}</span>
                                 </span>
                             </div>
 
                             {/* 70th Anniversary Commemorative Ribbon */}
-                            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-400/25 via-purple-500/25 to-amber-400/20 border-l-4 border-amber-400 rounded-2xl py-2.5 px-4 shadow-md border border-amber-300/40 backdrop-blur-md max-w-2xl text-left ring-1 ring-amber-400/30">
-                                <Award className="w-5 h-5 text-amber-300 flex-shrink-0" />
-                                <span className="text-xs sm:text-sm font-black text-amber-200 leading-snug tracking-tight">
+                            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-100/90 via-amber-50 to-purple-50/50 border-l-4 border-amber-500 rounded-2xl py-3 px-4 shadow-sm border border-amber-300/70 ring-1 ring-amber-400/20 max-w-2xl text-left">
+                                <Award className="w-5 h-5 text-amber-600 flex-shrink-0" />
+                                <span className="text-xs sm:text-sm font-black text-amber-950 leading-snug tracking-tight">
                                     {t.anniversary}
                                 </span>
                             </div>
 
                             {/* Dates & Venues & Deadline Pills */}
                             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-1 text-xs">
-                                <div className="flex items-center gap-2 bg-gradient-to-r from-amber-400/20 to-purple-500/25 text-white px-4 py-2 rounded-xl backdrop-blur-md border border-amber-300/40 shadow-sm font-black">
+                                <div className="flex items-center gap-2 bg-gradient-to-r from-[#60318e] to-[#7A1CAC] text-white px-4 py-2 rounded-xl shadow-sm font-bold">
                                     <Calendar className="w-4 h-4 text-amber-300 flex-shrink-0" />
                                     <span>{t.datesText}</span>
                                 </div>
-                                <div className="flex items-center gap-2 bg-white/10 text-white px-3.5 py-2 rounded-xl backdrop-blur-md border border-white/15 shadow-xs font-semibold">
-                                    <MapPin className="w-4 h-4 text-amber-300 flex-shrink-0" />
+                                <div className="flex items-center gap-2 bg-white px-3.5 py-2 rounded-xl border border-purple-200 shadow-xs text-slate-700 font-semibold">
+                                    <MapPin className="w-4 h-4 text-[#60318e] flex-shrink-0" />
                                     <span>{t.venuesText}</span>
                                 </div>
-                                <div className="flex items-center gap-2 bg-emerald-500/20 text-emerald-200 px-3.5 py-2 rounded-xl backdrop-blur-md border border-emerald-400/30 shadow-xs font-bold">
-                                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                                <div className="flex items-center gap-2 bg-emerald-50 text-emerald-800 px-3.5 py-2 rounded-xl border border-emerald-200 shadow-xs font-bold">
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                                     <span>{t.deadlineText}</span>
                                 </div>
                             </div>
 
                             {/* Rustaveli Foundation Grant Support Callout with Official Logo */}
-                            <div className="flex items-center gap-3 bg-white/10 text-purple-100 p-2.5 rounded-2xl border border-white/15 backdrop-blur-md max-w-2xl text-left text-xs">
+                            <div className="flex items-center gap-3 bg-white/90 text-slate-700 p-2.5 rounded-2xl border border-purple-200/80 shadow-xs max-w-2xl text-left text-xs">
                                 <Image 
                                     src="/conference-2026/rustaveli-logo.png" 
                                     alt="Shota Rustaveli National Science Foundation" 
                                     width={32} 
                                     height={32} 
-                                    className="w-8 h-8 object-contain rounded-lg bg-white p-0.5 flex-shrink-0 shadow-xs" 
+                                    className="w-8 h-8 object-contain rounded-lg bg-white p-0.5 flex-shrink-0 shadow-xs border border-slate-100" 
                                 />
-                                <span className="text-[11px] sm:text-xs font-medium leading-tight text-white/95">
+                                <span className="text-[11px] sm:text-xs font-medium leading-tight text-slate-700">
                                     {t.grantNotice}
                                 </span>
                             </div>
@@ -508,7 +507,7 @@ export default function Conference2026View() {
                                         setActiveTab('registration');
                                         document.getElementById('tabs-navigation')?.scrollIntoView({ behavior: 'smooth' });
                                     }}
-                                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#AD49E1] to-[#7A1CAC] hover:from-[#bd5cf0] hover:to-[#8c25c2] text-white font-extrabold px-6 py-2.5 rounded-full text-xs shadow-lg hover:shadow-purple-500/30 hover:scale-[1.02] transition-all cursor-pointer"
+                                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#60318e] to-[#7A1CAC] hover:from-[#7A1CAC] hover:to-[#AD49E1] text-white font-extrabold px-6 py-2.5 rounded-full text-xs sm:text-sm shadow-md hover:shadow-lg hover:scale-[1.02] transition-all cursor-pointer"
                                 >
                                     <Send className="w-3.5 h-3.5" />
                                     <span>{isEn ? "Go to Registration Form ↓" : "რეგისტრაცია და აბსტრაქტი ↓"}</span>
@@ -518,7 +517,7 @@ export default function Conference2026View() {
                                         setActiveTab('schedule');
                                         document.getElementById('tabs-navigation')?.scrollIntoView({ behavior: 'smooth' });
                                     }}
-                                    className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold px-5 py-2.5 rounded-full text-xs border border-white/20 backdrop-blur-md shadow-xs transition-all cursor-pointer"
+                                    className="inline-flex items-center gap-2 bg-white/90 hover:bg-white text-[#60318e] font-bold px-5 py-2.5 rounded-full text-xs sm:text-sm border border-purple-200 shadow-xs hover:shadow-sm transition-all cursor-pointer"
                                 >
                                     <Clock className="w-3.5 h-3.5" />
                                     <span>{isEn ? "Preliminary Program" : "კონფერენციის პროგრამა"}</span>
@@ -528,10 +527,7 @@ export default function Conference2026View() {
 
                         {/* Right Column: High-Impact 70th Anniversary Emblem with Institute Building (5 cols) */}
                         <div className="lg:col-span-5 flex flex-col items-center justify-center relative">
-                            {/* Glowing Aura backdrop */}
-                            <div className="absolute w-72 h-72 sm:w-88 sm:h-88 bg-gradient-to-tr from-[#AD49E1]/30 via-purple-500/20 to-emerald-400/20 rounded-full blur-2xl pointer-events-none animate-float-blob-slow"></div>
-
-                            <div className="relative group transition-all duration-500 hover:scale-105">
+                            <div className="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-white/95 via-purple-50/70 to-indigo-50/90 shadow-xl border-2 border-purple-200/80 backdrop-blur-sm transform hover:scale-105 transition-all duration-500 flex flex-col items-center justify-center group">
                                 {/* The Clean Cropped 70th Emblem with the Institute Building inside the '0' */}
                                 <Image
                                     src={isEn ? "/conference-2026/iice-70-clean-eng.png" : "/conference-2026/iice-70-clean-geo.png"}
@@ -539,9 +535,12 @@ export default function Conference2026View() {
                                     width={520}
                                     height={260}
                                     priority
-                                    className="w-full max-w-[420px] sm:max-w-[480px] lg:max-w-[520px] h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)] select-none"
+                                    className="w-full max-w-[420px] sm:max-w-[480px] lg:max-w-[520px] h-auto object-contain drop-shadow-xl select-none"
                                 />
                             </div>
+                            {/* Decorative elements */}
+                            <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-purple-200/50 rounded-full z-[-1] blur-xl animate-float-blob pointer-events-none"></div>
+                            <div className="absolute -top-4 -right-4 w-28 h-28 bg-indigo-100/60 rounded-full z-[-1] blur-xl animate-float-blob-reverse pointer-events-none"></div>
                         </div>
 
                     </div>
