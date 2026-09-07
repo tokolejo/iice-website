@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 import { 
     FileText, 
@@ -11,13 +11,28 @@ import {
     Users, 
     GraduationCap, 
     Building2,
-    CheckCircle2
+    CheckCircle2,
+    Sparkles,
+    Award,
+    ChevronLeft,
+    ChevronRight,
+    Tag
 } from 'lucide-react';
 
 export default function Conference2023() {
     const { language } = useLanguage();
     const isEn = language === 'en';
     const [activeTab, setActiveTab] = useState('materials');
+    const tabsContainerRef = useRef(null);
+
+    const scrollTabs = (direction) => {
+        if (tabsContainerRef.current) {
+            tabsContainerRef.current.scrollBy({
+                left: direction === 'left' ? -240 : 240,
+                behavior: 'smooth'
+            });
+        }
+    };
 
     const t = {
         title: isEn ? "2nd International Scientific Conference" : "II საერთაშორისო სამეცნიერო კონფერენცია",
@@ -204,53 +219,97 @@ export default function Conference2023() {
         <div className="bg-slate-50 min-h-screen pb-16 w-full overflow-hidden flex flex-col">
             <title>{isEn ? '2nd International Scientific Conference 2023 | IICE' : 'II საერთაშორისო სამეცნიერო კონფერენცია 2023 | IICE'}</title>
 
-            {/* Hero Section - Exact text sizes and styling from 2016 */}
-            <div className="bg-[#60318e] text-white pt-10 pb-14 md:pt-14 md:pb-20 relative overflow-hidden shadow-md w-full flex-shrink-0">
-                <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black mb-4 animate-fade-in-up leading-snug text-white max-w-4xl mx-auto">
+            {/* Hero Header Section - Matching Royal Purple Gradient & Badges */}
+            <div className="relative bg-gradient-to-b from-[#180327] via-[#2f0d46] to-[#1c062c] text-white py-10 sm:py-14 lg:py-16 px-4 sm:px-6 lg:px-8 shadow-xl overflow-hidden w-full flex-shrink-0">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(173,73,225,0.18),transparent_70%)] pointer-events-none"></div>
+
+                <div className="max-w-4xl mx-auto text-center relative z-10">
+                    <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-extrabold bg-gradient-to-r from-purple-500/25 to-amber-500/25 text-amber-200 border border-amber-400/35 mb-3 backdrop-blur-md shadow-xs">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                        <span>{isEn ? "2nd International Scientific Conference 2023" : "2023 წლის საერთაშორისო კონფერენცია"}</span>
+                    </div>
+
+                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white mb-3.5 leading-snug tracking-tight max-w-4xl mx-auto drop-shadow-xs">
                         {t.title}
                     </h1>
-                    <p className="text-sm sm:text-base md:text-lg font-semibold text-purple-100 max-w-3xl mx-auto mb-5 animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.1s' }}>
+
+                    <p className="text-sm sm:text-base md:text-lg font-semibold text-purple-100 max-w-3xl mx-auto mb-4 leading-relaxed">
                         {t.subtitle}
                     </p>
-                    <p className="text-xs sm:text-sm text-purple-100/90 max-w-2xl mx-auto animate-fade-in-up leading-relaxed" style={{ animationDelay: '0.2s' }}>
-                        {t.description}
-                    </p>
-                    
-                    <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-10 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 text-white">
-                            <Calendar size={20} className="text-purple-200" />
-                            <span className="font-semibold">{t.date}</span>
+
+                    {/* Commemorative Banner */}
+                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/15 via-amber-400/20 to-amber-500/15 text-amber-200 py-2 px-4 rounded-xl border border-amber-300/30 shadow-xs mb-5 max-w-3xl backdrop-blur-md">
+                        <Award className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                        <span className="text-xs sm:text-sm font-bold text-amber-100 leading-snug">
+                            {t.description}
+                        </span>
+                    </div>
+
+                    {/* Dates & Venues Pills */}
+                    <div className="flex flex-wrap items-center justify-center gap-2.5 text-xs font-bold">
+                        <div className="flex items-center gap-1.5 bg-white/10 text-white px-3.5 py-2 rounded-xl backdrop-blur-md border border-white/15 shadow-xs">
+                            <Calendar className="w-4 h-4 text-amber-300" />
+                            <span>{t.date}</span>
                         </div>
-                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 text-white">
-                            <MapPin size={20} className="text-purple-200" />
-                            <span className="font-semibold">{t.location}</span>
+                        <div className="flex items-center gap-1.5 bg-white/10 text-white px-3.5 py-2 rounded-xl backdrop-blur-md border border-white/15 shadow-xs">
+                            <MapPin className="w-4 h-4 text-amber-300" />
+                            <span>{t.location}</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Main Content Area */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20 w-full mb-10 text-center">
-                <div className="bg-white rounded-2xl shadow-xl p-6 md:p-12 border border-gray-100">
-                    
-                    {/* Thematic Tabs Navigation - Clean Grid without any scrollbar */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1.5 p-1.5 bg-slate-100/90 rounded-2xl border border-slate-200 mb-12 w-full max-w-5xl mx-auto">
+            {/* Sticky Navigation Tabs with Chevron Scroll */}
+            <div id="tabs-navigation" className="sticky top-16 xl:top-20 z-40 bg-white/95 backdrop-blur-md border-b border-purple-100 shadow-xs">
+                <div className="max-w-6xl mx-auto px-2 sm:px-6 lg:px-8 flex items-center relative py-2">
+                    <button
+                        type="button"
+                        onClick={() => scrollTabs('left')}
+                        className="p-1.5 sm:p-2 rounded-xl bg-purple-50 hover:bg-[#60318e] text-[#60318e] hover:text-white transition-colors flex-shrink-0 cursor-pointer shadow-xs mr-1 flex items-center justify-center border border-purple-100"
+                        aria-label="Scroll Tabs Left"
+                    >
+                        <ChevronLeft className="w-4 h-4" />
+                    </button>
+
+                    <div
+                        ref={tabsContainerRef}
+                        className="flex space-x-1 sm:space-x-2 py-1 overflow-x-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden scroll-smooth flex-grow justify-start md:justify-center"
+                    >
                         {Object.entries(t.tabs).map(([key, label]) => (
                             <button
                                 key={key}
                                 onClick={() => setActiveTab(key)}
-                                className={`w-full py-2.5 px-1 sm:px-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 text-center flex items-center justify-center ${
+                                className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer whitespace-nowrap flex-shrink-0 interactive-tap ${
                                     activeTab === key
                                         ? 'bg-[#60318e] text-white shadow-md font-extrabold'
-                                        : 'text-slate-600 hover:text-[#60318e] hover:bg-white'
+                                        : 'text-slate-600 hover:text-[#60318e] hover:bg-purple-50/60'
                                 }`}
                             >
-                                {label}
+                                {key === 'materials' && <FileText className="w-3.5 h-3.5" />}
+                                {key === 'about' && <BookOpen className="w-3.5 h-3.5" />}
+                                {key === 'speakers' && <Users className="w-3.5 h-3.5" />}
+                                {key === 'school' && <GraduationCap className="w-3.5 h-3.5" />}
+                                {key === 'committees' && <Building2 className="w-3.5 h-3.5" />}
+                                {key === 'venue' && <MapPin className="w-3.5 h-3.5" />}
+                                <span>{label}</span>
                             </button>
                         ))}
                     </div>
+
+                    <button
+                        type="button"
+                        onClick={() => scrollTabs('right')}
+                        className="p-1.5 sm:p-2 rounded-xl bg-purple-50 hover:bg-[#60318e] text-[#60318e] hover:text-white transition-colors flex-shrink-0 cursor-pointer shadow-xs ml-1 flex items-center justify-center border border-purple-100"
+                        aria-label="Scroll Tabs Right"
+                    >
+                        <ChevronRight className="w-4 h-4" />
+                    </button>
+                </div>
+            </div>
+
+            {/* Main Content Area */}
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+                <div className="bg-white rounded-3xl shadow-xl p-6 md:p-10 border border-slate-100">
 
                     {/* Tab 1: Publications & Documents */}
                     {activeTab === 'materials' && (
