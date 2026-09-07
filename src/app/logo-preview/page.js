@@ -2,68 +2,95 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Sparkles, Download, ExternalLink, Check } from 'lucide-react';
+import { ArrowLeft, Sparkles, Download, ExternalLink, Check, FlaskConical, Building2 } from 'lucide-react';
 
 const VERSIONS = [
     {
+        id: 'v3-arch-chem',
+        category: 'ქიმიური კოლბებით (ახალი)',
+        titleKa: 'ვერსია 3A: არქიტექტურული შენობის ნახატით + ქიმიური კოლბები',
+        titleEn: 'Version 3A: Architectural Building Drawing + Chemical Flasks',
+        badgeKa: 'თქვენი ახალი სურათით • ტოპ არჩევანი',
+        badgeEn: 'USER UPLOADED BUILDING • TOP CHOICE',
+        descKa: 'თქვენ მიერ ახლახან გამოგზავნილი არქიტექტურული შენობის ხაზობრივი ნახატი "0"-ში. "7"-ის ძირში დამატებულია დახვეწილი კრისტალური ქიმიური კოლბები, ხოლო ლოგოს მარჯვენა მხარე სრულიად სუფთა და დაუფარავია.',
+        descEn: 'Features the architectural building line drawing you just uploaded inside the "0". At the base of the "7", elegant crystal chemical flasks add scientific flair without covering any part of the logo or building.',
+        imgSrc: '/conference-2026/iice-70-arch-chem.png',
+        downloadName: 'iice-70-arch-chem.png',
+        lang: 'en',
+        buildingType: 'არქიტექტურული ნახატი',
+        hasChem: true
+    },
+    {
+        id: 'v3-real-chem',
+        category: 'ქიმიური კოლბებით (ახალი)',
+        titleKa: 'ვერსია 3B: რეალური შენობის ფოტოთი + ქიმიური კოლბები',
+        titleEn: 'Version 3B: Real Building with Trees + Chemical Flasks',
+        badgeKa: 'რეალური შენობა + კოლბები',
+        badgeEn: 'REAL BUILDING + FLASKS',
+        descKa: 'ინსტიტუტის რეალური ფერადი შენობა და მწვანე ნაძვები "0"-ში. "7"-ის ძირში ქიმიური ლაბორატორიის კოლბები და ბუშტუკები, ლოგოსა და შენობის გადაფარვის გარეშე.',
+        descEn: 'Authentic color photograph of the institute building with green pine trees inside the "0", paired with crystal chemical flasks at the foot of "7", with zero obstruction on the logo ring.',
+        imgSrc: '/conference-2026/iice-70-real-chem.png',
+        downloadName: 'iice-70-real-chem.png',
+        lang: 'en',
+        buildingType: 'რეალური ფოტო ნაძვებით',
+        hasChem: true
+    },
+    {
         id: 'v1-geo',
-        titleKa: 'ვერსია 1A: სუფთა აკადემიური მედალიონი — ქართული („იიცე“)',
+        category: 'სუფთა აკადემიური მედალიონი',
+        titleKa: 'ვერსია 1A: სუფთა მედალიონი — ქართული („იიცე“)',
         titleEn: 'Version 1A: Clean Academic Ring — Georgian ("იიცე")',
-        badgeKa: 'რეკომენდებული #1 • სუფთა წრე',
-        badgeEn: 'RECOMMENDED #1 • CLEAN CIRCLE',
-        descKa: 'სრულიად თავისუფალი ყოველგვარი გადამფარავი ორბიტებისა და თავთავებისგან. "0"-ის შიგნით ინსტიტუტის რეალური შენობა და ნაძვები, ზემოთ "იიცე", ქვემოთ "1956 — 2026", ლენტზე "70 წლის იუბილე".',
-        descEn: 'Completely free of overlapping orbits and wheat. Authentic building with pine trees inside the "0", "იიცე" at top, "1956 — 2026" at bottom, and Georgian ribbon.',
+        badgeKa: 'ქართული გამოცემა • სუფთა წრე',
+        badgeEn: 'GEORGIAN EDITION • CLEAN RING',
+        descKa: 'სრულიად სუფთა წრე ყოველგვარი დამატებითი დეტალის გარეშე. ზემოთ "იიცე", ქვემოთ "1956 — 2026", ლენტზე "70 წლის იუბილე". ცენტრში რეალური შენობა და ნაძვები.',
+        descEn: 'Completely clean and minimalist circular medallion: "იიცე" at top, "1956 — 2026" at bottom, and "70 წლის იუბილე" on ribbon. Authentic building in center.',
         imgSrc: '/conference-2026/iice-70-clean-geo.png',
         downloadName: 'iice-70-clean-geo.png',
-        lang: 'ka'
+        lang: 'ka',
+        buildingType: 'რეალური ფოტო ნაძვებით',
+        hasChem: false
     },
     {
         id: 'v1-eng',
-        titleKa: 'ვერსია 1B: სუფთა აკადემიური მედალიონი — ინგლისური („IICE“)',
+        category: 'სუფთა აკადემიური მედალიონი',
+        titleKa: 'ვერსია 1B: სუფთა მედალიონი — ინგლისური („IICE“)',
         titleEn: 'Version 1B: Clean Academic Ring — English ("IICE")',
         badgeKa: 'საერთაშორისო ვერსია • სუფთა წრე',
-        badgeEn: 'INTERNATIONAL • CLEAN CIRCLE',
-        descKa: 'ინგლისურენოვანი ოფიციალური საიუბილეო ემბლემა: ზემოთ "IICE" (თსუ-ს გარეშე), ქვემოთ "1956 — 2026", ლენტზე "70 YEARS ANNIVERSARY". სუფთა, სიმეტრიული და დახვეწილი.',
-        descEn: 'Official international jubilee emblem: "IICE" at top (no TSU), "1956 — 2026" at bottom, and "70 YEARS ANNIVERSARY" ribbon. Symmetrical and pristine.',
+        badgeEn: 'INTERNATIONAL • CLEAN RING',
+        descKa: 'ინგლისურენოვანი სუფთა საიუბილეო ემბლემა: ზემოთ "IICE", ქვემოთ "1956 — 2026", ლენტზე "70 YEARS ANNIVERSARY". სიმეტრიული და აკადემიური.',
+        descEn: 'International minimalist jubilee emblem: "IICE" at top, "1956 — 2026" at bottom, "70 YEARS ANNIVERSARY" on ribbon. Symmetrical and academic.',
         imgSrc: '/conference-2026/iice-70-clean-eng.png',
         downloadName: 'iice-70-clean-eng.png',
-        lang: 'en'
+        lang: 'en',
+        buildingType: 'რეალური ფოტო ნაძვებით',
+        hasChem: false
     },
     {
         id: 'v2-curve',
-        titleKa: 'ვერსია 2: ინსტიტუტის ელექტროქიმიური ვოლტამპეროგრამით',
-        titleEn: 'Version 2: Electrochemical Voltammetry Curve Edition',
-        badgeKa: 'სამეცნიერო იდენტობა • აგლაძის სკოლა',
-        badgeEn: 'SCIENTIFIC IDENTITY • VOLTAMMETRY',
-        descKa: 'იგივე სუფთა წრიული სილუეტი, სადაც შენობის თავზე ცაში ნაზად არის ინტეგრირებული ინსტიტუტის ოფიციალური ლოგოს ციკლური ვოლტამპეროგრამა (გადამფარავი ორბიტების გარეშე).',
-        descEn: 'Clean circular silhouette subtly integrating the official cyclic voltammetry curve in the sky above the building, with zero overlapping orbits.',
+        category: 'ელექტროქიმიური მრუდით',
+        titleKa: 'ვერსია 2: ელექტროქიმიური ვოლტამპეროგრამით ცაში',
+        titleEn: 'Version 2: Electrochemical Voltammetry Curve in Sky',
+        badgeKa: 'აგლაძის ელექტროქიმია',
+        badgeEn: 'ELECTROCHEMISTRY CURVE',
+        descKa: 'სუფთა წრიული სილუეტი, სადაც შენობის თავზე ცაში ნაზად არის ინტეგრირებული ინსტიტუტის ლოგოს ციკლური ვოლტამპეროგრამა, ყოველგვარი გადამფარავი ორბიტების გარეშე.',
+        descEn: 'Clean circular ring subtly tracing the official cyclic voltammetry curve in the sky above the building, without any external orbital clutter.',
         imgSrc: '/conference-2026/iice-70-clean-curve.png',
         downloadName: 'iice-70-clean-curve.png',
-        lang: 'en'
-    },
-    {
-        id: 'v1-stars',
-        titleKa: 'ვერსია 1C: აკადემიური რკალი ოქროს საიუბილეო ვარსკვლავებით',
-        titleEn: 'Version 1C: Academic Ring with Jubilee Stars',
-        badgeKa: 'აკადემიური პრესტიჟი • ვარსკვლავები',
-        badgeEn: 'ACADEMIC PRESTIGE • STARS',
-        descKa: 'რკალის გასწვრივ ჩამწკრივებული ნაზი ოქროსფერი ვარსკვლავები, რაც ხაზს უსვამს ინსტიტუტის 70-წლიან უწყვეტ სამეცნიერო წარმატებას.',
-        descEn: 'Delicate gold stars aligned along the inner rim celebrating 70 years of continuous scientific excellence.',
-        imgSrc: '/conference-2026/iice-70-clean-stars.png',
-        downloadName: 'iice-70-clean-stars.png',
-        lang: 'en'
+        lang: 'en',
+        buildingType: 'რეალური ფოტო ნაძვებით',
+        hasChem: false
     }
 ];
 
 export default function LogoPreviewPage() {
-    const [selectedId, setSelectedId] = useState('v1-geo');
+    const [selectedId, setSelectedId] = useState('v3-arch-chem');
     const [bgPreview, setBgPreview] = useState('white');
 
     const active = VERSIONS.find(v => v.id === selectedId) || VERSIONS[0];
 
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
-            {/* Top Navigation Bar */}
+            {/* Top Sticky Navigation */}
             <header className="sticky top-0 z-50 bg-white/95 border-b border-purple-100 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -76,7 +103,7 @@ export default function LogoPreviewPage() {
                         </Link>
                         <div className="h-4 w-px bg-purple-200 hidden sm:block"></div>
                         <span className="text-xs font-black uppercase tracking-wider text-[#AD49E1] hidden sm:inline">
-                            IICE 70th Anniversary Logo Options
+                            IICE 70th Anniversary Logo Showcase
                         </span>
                     </div>
 
@@ -113,19 +140,19 @@ export default function LogoPreviewPage() {
                 </div>
             </header>
 
-            {/* Main Stage */}
+            {/* Main Content */}
             <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
                 {/* Intro Title */}
-                <div className="text-center max-w-2xl mx-auto mb-8">
+                <div className="text-center max-w-3xl mx-auto mb-8">
                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-100/80 border border-purple-200 text-[#60318e] text-xs font-black uppercase tracking-wider mb-3">
                         <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                        <span>ახალი დახვეწილი ვერსიები • ორბიტების გარეშე</span>
+                        <span>შენობის 2 ვარიანტი • ქიმიური კოლბები 7-ის ძირში • ლოგოს დაფარვის გარეშე</span>
                     </div>
                     <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
-                        საიუბილეო ლოგოს ახალი ვარიანტები
+                        საიუბილეო ლოგოს შედარება
                     </h1>
-                    <p className="mt-2 text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
-                        გადამფარავი ქიმიური ორბიტებისა და თავთავის გარეშე. სუფთა წრიული აკადემიური მედალიონი, რეალური შენობა და ნაძვები.
+                    <p className="mt-2 text-xs sm:text-sm text-slate-600 font-medium leading-relaxed max-w-2xl mx-auto">
+                        თქვენი მოთხოვნის შესაბამისად: ქიმიური კოლბები განთავსებულია მარცხნივ, „7“-ის ძირში. ლოგოს მარჯვენა მხარე სრულიად სუფთაა და არაფერი არ ფარავს.
                     </p>
                 </div>
 
@@ -153,15 +180,25 @@ export default function LogoPreviewPage() {
                 {/* Big Active Showcase Card */}
                 <div className="bg-white rounded-3xl border border-purple-100 shadow-xl overflow-hidden mb-12">
                     {/* Top Info Bar */}
-                    <div className="p-6 pb-2 sm:px-10 flex flex-wrap items-center justify-between gap-3 border-b border-purple-50">
+                    <div className="p-6 pb-4 sm:px-10 flex flex-wrap items-center justify-between gap-3 border-b border-purple-50">
                         <div>
-                            <span className="inline-block text-[11px] font-black px-3 py-1 rounded-full uppercase tracking-wider bg-amber-400 text-slate-950 mb-1">
-                                {active.badgeKa}
-                            </span>
+                            <div className="flex items-center gap-2 mb-1">
+                                <span className="text-[11px] font-black px-3 py-1 rounded-full uppercase tracking-wider bg-amber-400 text-slate-950">
+                                    {active.badgeKa}
+                                </span>
+                                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-purple-100 text-[#60318e]">
+                                    🏛️ {active.buildingType}
+                                </span>
+                                {active.hasChem && (
+                                    <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                                        🧪 ქიმიური კოლბებით
+                                    </span>
+                                )}
+                            </div>
                             <h2 className="text-lg sm:text-2xl font-black text-slate-900">
                                 {active.titleKa}
                             </h2>
-                            <p className="text-xs text-slate-500 mt-1 max-w-xl">
+                            <p className="text-xs text-slate-500 mt-1 max-w-2xl">
                                 {active.descKa}
                             </p>
                         </div>
@@ -169,7 +206,7 @@ export default function LogoPreviewPage() {
                             <a
                                 href={active.imgSrc}
                                 download={active.downloadName}
-                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-xs shadow-md hover:scale-105 transition-all"
+                                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-xs shadow-md hover:scale-105 transition-all"
                             >
                                 <Download className="w-3.5 h-3.5" />
                                 <span>გადმოწერა (გამჭვირვალე PNG)</span>
@@ -178,7 +215,7 @@ export default function LogoPreviewPage() {
                                 href={active.imgSrc}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="p-2 rounded-xl border border-purple-200 text-[#60318e] hover:bg-purple-50 transition-all"
+                                className="p-2.5 rounded-xl border border-purple-200 text-[#60318e] hover:bg-purple-50 transition-all"
                                 title="გახსნა სრული ზომით"
                             >
                                 <ExternalLink className="w-4 h-4" />
@@ -186,8 +223,8 @@ export default function LogoPreviewPage() {
                         </div>
                     </div>
 
-                    {/* Emblem Showcase Area */}
-                    <div className={`relative w-full min-h-[380px] sm:min-h-[440px] md:min-h-[480px] flex items-center justify-center p-8 transition-colors duration-300 ${
+                    {/* Emblem Showcase Display Area */}
+                    <div className={`relative w-full min-h-[400px] sm:min-h-[460px] md:min-h-[500px] flex items-center justify-center p-8 transition-colors duration-300 ${
                         bgPreview === 'white' 
                             ? 'bg-white' 
                             : bgPreview === 'slate' 
@@ -198,7 +235,7 @@ export default function LogoPreviewPage() {
                             <img
                                 src={active.imgSrc}
                                 alt={active.titleKa}
-                                className="w-full h-auto max-h-[420px] object-contain filter drop-shadow-xl select-none"
+                                className="w-full h-auto max-h-[440px] object-contain filter drop-shadow-xl select-none"
                             />
                         </div>
                     </div>
@@ -237,18 +274,18 @@ export default function LogoPreviewPage() {
                     </div>
                 </div>
 
-                {/* Comparison Grid */}
+                {/* Direct Comparison Gallery: Both Buildings Side-by-Side */}
                 <div className="mt-12">
                     <div className="text-center mb-8">
                         <h2 className="text-xl sm:text-2xl font-black text-slate-900">
-                            ყველა ახალი ვერსიის შედარება
+                            შენობების შედარება: არქიტექტურული ნახატი vs რეალური ფოტო
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                            დააკლიკეთ ნებისმიერ ბარათს ზედა დიდ ეკრანზე სანახავად
+                            დააკლიკეთ ნებისმიერ ბარათს ზედა დიდ ეკრანზე გადასართავად
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {VERSIONS.map((v) => {
                             const isSel = v.id === selectedId;
                             return (
@@ -258,7 +295,7 @@ export default function LogoPreviewPage() {
                                         setSelectedId(v.id);
                                         window.scrollTo({ top: 180, behavior: 'smooth' });
                                     }}
-                                    className={`bg-white rounded-2xl p-4 border cursor-pointer transition-all duration-300 flex flex-col justify-between group ${
+                                    className={`bg-white rounded-2xl p-5 border cursor-pointer transition-all duration-300 flex flex-col justify-between group ${
                                         isSel
                                             ? 'ring-2 ring-[#60318e] border-[#60318e] shadow-xl scale-[1.02]'
                                             : 'border-purple-100 shadow-sm hover:shadow-md hover:border-purple-300'
@@ -266,20 +303,23 @@ export default function LogoPreviewPage() {
                                 >
                                     <div>
                                         <div className="flex items-center justify-between mb-2">
-                                            <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
+                                            <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full ${
                                                 isSel ? 'bg-[#60318e] text-white' : 'bg-purple-100 text-[#60318e]'
                                             }`}>
                                                 {v.badgeKa.split('•')[0]}
                                             </span>
                                             {isSel && <Check className="w-4 h-4 text-[#60318e]" />}
                                         </div>
-                                        <h3 className="font-bold text-xs leading-snug group-hover:text-[#60318e] transition-colors">
+                                        <h3 className="font-bold text-sm leading-snug group-hover:text-[#60318e] transition-colors">
                                             {v.titleKa}
                                         </h3>
+                                        <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                                            {v.descKa}
+                                        </p>
                                     </div>
 
                                     {/* Preview Image */}
-                                    <div className="relative w-full h-[180px] my-3 rounded-xl overflow-hidden bg-slate-50 flex items-center justify-center p-3 border border-slate-100">
+                                    <div className="relative w-full h-[220px] my-3 rounded-xl overflow-hidden bg-slate-50 flex items-center justify-center p-3 border border-slate-100">
                                         <img
                                             src={v.imgSrc}
                                             alt={v.titleKa}
@@ -299,7 +339,7 @@ export default function LogoPreviewPage() {
                                             title="ჩამოტვირთვა"
                                             className="p-1 rounded-md text-slate-400 hover:text-[#60318e] hover:bg-purple-50 transition-all"
                                         >
-                                            <Download className="w-3.5 h-3.5" />
+                                            <Download className="w-4 h-4" />
                                         </a>
                                     </div>
                                 </div>
@@ -308,13 +348,13 @@ export default function LogoPreviewPage() {
                     </div>
                 </div>
 
-                {/* Decision / Next Steps Box */}
+                {/* Final Decision Banner */}
                 <div className="mt-16 p-8 rounded-3xl text-center bg-gradient-to-r from-[#60318e] to-[#7A1CAC] text-white shadow-xl">
                     <h3 className="text-xl sm:text-2xl font-black mb-2">
-                        რომელი ვერსია დავაყენოთ საიტზე?
+                        რომელი შენობის ვერსია მოგწონთ უფრო მეტად?
                     </h3>
                     <p className="text-xs sm:text-sm text-purple-100 max-w-xl mx-auto mb-6">
-                        მითხარით სასურველი ვარიანტი (მაგ. ვერსია 1A ქართული თუ 1B ინგლისური) და მე მას დაუყოვნებლივ ჩავაშენებ მთავარ გვერდზე და კონფერენციის ჰედერში!
+                        ვერსია 3A (არქიტექტურული ხაზობრივი ნახატით) თუ ვერსია 3B (რეალური ფერადი ფოტოთი და ნაძვებით)? დაასახელეთ და მას დაუყოვნებლივ დავაყენებ საიტზე!
                     </p>
                     <div className="flex items-center justify-center gap-3">
                         <Link
