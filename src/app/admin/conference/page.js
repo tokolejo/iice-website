@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { getSupabaseBrowserClient } from '../../../lib/supabase/client';
 import { recordAuditLog } from '../../../lib/auditLogger';
+import { getTopicLabel } from '../../../lib/conferenceConstants';
 import AdminModal from '../../../components/admin/AdminModal';
 import {
     Calendar,
@@ -357,7 +358,9 @@ export default function AdminConferencePage() {
                 (reg.affiliation && reg.affiliation.toLowerCase().includes(searchQuery.toLowerCase())) ||
                 (reg.presentation_title && reg.presentation_title.toLowerCase().includes(searchQuery.toLowerCase()));
 
-            const matchesTopic = filterTopic === 'All' || reg.thematic_topic === filterTopic;
+            const matchesTopic = filterTopic === 'All' ||
+                reg.thematic_topic === filterTopic ||
+                getTopicLabel(reg.thematic_topic) === filterTopic;
             const matchesType = filterType === 'All' || reg.presentation_type === filterType;
             const matchesAttendance = filterAttendance === 'All' ||
                 (filterAttendance === 'in_person' && reg.is_attending_in_person) ||
@@ -467,7 +470,7 @@ export default function AdminConferencePage() {
                 r.co_authors || '',
                 r.presentation_type || '',
                 r.participation_role || '',
-                r.thematic_topic || '',
+                getTopicLabel(r.thematic_topic),
                 r.abstract_file_geo_url || '',
                 r.abstract_file_eng_url || ''
             ];
@@ -815,6 +818,7 @@ export default function AdminConferencePage() {
                                 <th className="py-3.5 px-4 whitespace-nowrap">თეზისის #</th>
                                 <th className="py-3.5 px-4 whitespace-nowrap">მონაწილე</th>
                                 <th className="py-3.5 px-4 whitespace-nowrap">ორგანიზაცია</th>
+                                <th className="py-3.5 px-4 whitespace-nowrap">თემატიკა</th>
                                 <th className="py-3.5 px-4 whitespace-nowrap">მოხსენების სათაური</th>
                                 <th className="py-3.5 px-4 whitespace-nowrap">ფორმატი</th>
                                 <th className="py-3.5 px-4 whitespace-nowrap">სტატუსი</th>
@@ -825,7 +829,7 @@ export default function AdminConferencePage() {
                         <tbody className="divide-y divide-slate-100">
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan={9} className="py-14 text-center text-gray-400">
+                                    <td colSpan={10} className="py-14 text-center text-gray-400">
                                         <div className="w-6 h-6 border-2 border-[#60318e] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
                                         იტვირთება მონაწილეები...
                                     </td>
@@ -862,6 +866,15 @@ export default function AdminConferencePage() {
 
                                             <td className="py-3.5 px-4 text-gray-700 max-w-[170px] truncate" title={reg.affiliation}>
                                                 {reg.affiliation}
+                                            </td>
+
+                                            <td className="py-3.5 px-4 whitespace-nowrap">
+                                                <span
+                                                    className="inline-block max-w-[200px] truncate font-medium text-purple-900 bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-100 text-[11px]"
+                                                    title={getTopicLabel(reg.thematic_topic)}
+                                                >
+                                                    {getTopicLabel(reg.thematic_topic)}
+                                                </span>
                                             </td>
 
                                             <td className="py-3.5 px-4 text-gray-800 max-w-xs truncate font-medium" title={reg.presentation_title}>
@@ -965,7 +978,7 @@ export default function AdminConferencePage() {
                                 })
                             ) : (
                                 <tr>
-                                    <td colSpan={9} className="py-14 text-center text-gray-400">
+                                    <td colSpan={10} className="py-14 text-center text-gray-400">
                                         მოთხოვნილი პარამეტრებით მონაწილეები ვერ მოიძებნა.
                                     </td>
                                 </tr>
@@ -1296,7 +1309,7 @@ export default function AdminConferencePage() {
                                 </div>
                                 <div>
                                     <span className="text-gray-400 block text-[10px] uppercase font-bold">თემატური მიმართულება</span>
-                                    <span className="font-semibold text-[#60318e] block mt-0.5">{selectedReg.thematic_topic || '—'}</span>
+                                    <span className="font-semibold text-[#60318e] block mt-0.5">{getTopicLabel(selectedReg.thematic_topic)}</span>
                                 </div>
                             </div>
                         </div>

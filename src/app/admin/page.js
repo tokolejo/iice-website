@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getSupabaseBrowserClient } from '../../lib/supabase/client';
+import { getTopicLabel } from '../../lib/conferenceConstants';
 import { staffData, departmentsData } from '../../data';
 import {
     Calendar,
@@ -199,7 +200,7 @@ export default function AdminDashboardPage() {
                     let pending = 0, accepted = 0, revision = 0, rejected = 0;
 
                     confData.forEach(r => {
-                        const t = r.thematic_topic || 'სხვა';
+                        const t = getTopicLabel(r.thematic_topic);
                         topicCounts[t] = (topicCounts[t] || 0) + 1;
                         totalTopics++;
 

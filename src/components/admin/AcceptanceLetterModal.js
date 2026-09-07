@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Printer, Copy, Check, X, Globe, Award, Download, FileText } from 'lucide-react';
 import { toast } from './AdminToast';
+import { getTopicLabel } from '../../lib/conferenceConstants';
 
 export default function AcceptanceLetterModal({ isOpen, onClose, registration }) {
     const [lang, setLang] = useState('ka');
@@ -40,7 +41,7 @@ On behalf of the Scientific and Organizing Committee of the International Scient
 
 has been officially reviewed and ACCEPTED for inclusion in the conference program as an:
 >> ${presentationTypeStr} <<
-Under the thematic topic: "${reg.thematic_topic || 'General'}"
+Under the thematic topic: "${getTopicLabel(reg.thematic_topic, 'en')}"
 
 The conference will take place in Tbilisi, Georgia, on September 24-26, 2026.
 You are cordially invited to present your research findings and participate in the academic sessions.
@@ -67,7 +68,7 @@ Email: iice@tsu.ge | Web: https://iice.tsu.ge/events/conference-2026`
 
 ოფიციალურად განხილულ და მიღებულ იქნა კონფერენციის სამეცნიერო პროგრამაში:
 >> ${presentationTypeStr} <<
-სექცია: „${reg.thematic_topic || 'ზოგადი'}“
+სექცია: „${getTopicLabel(reg.thematic_topic, 'ka')}“
 
 კონფერენცია გაიმართება ქ. თბილისში, 2026 წლის 24-26 სექტემბერს.
 მოხარული ვიქნებით თქვენი მობრძანებით და კონფერენციის მუშაობაში მონაწილეობის მიღებით.
@@ -209,7 +210,7 @@ Email: iice@tsu.ge | Web: https://iice.tsu.ge/events/conference-2026`
                                     {isEn ? 'Format:' : 'ფორმატი:'} <span className="text-slate-800 font-extrabold">{presentationTypeStr}</span>
                                 </span>
                                 <span className="text-slate-600 font-medium">
-                                    {isEn ? 'Section:' : 'სექცია:'} <span className="text-slate-800 font-semibold">{reg.thematic_topic || 'N/A'}</span>
+                                    {isEn ? 'Section:' : 'სექცია:'} <span className="text-slate-800 font-semibold">{getTopicLabel(reg.thematic_topic, isEn ? 'en' : 'ka')}</span>
                                 </span>
                             </div>
                         </div>

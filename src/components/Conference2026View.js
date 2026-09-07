@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
 import { getSupabaseBrowserClient } from '../lib/supabase/client';
 import { recordAuditLog } from '../lib/auditLogger';
+import { CONFERENCE_TOPICS } from '../lib/conferenceConstants';
 import {
     Calendar,
     MapPin,
@@ -65,7 +66,7 @@ export default function Conference2026View() {
         presentationType: 'oral',
         rolePresentingAuthor: true,
         roleCoAuthor: false,
-        thematicTopic: '1',
+        thematicTopic: CONFERENCE_TOPICS[0].titleKa,
     });
 
     const [geoFile, setGeoFile] = useState(null);
@@ -148,14 +149,7 @@ export default function Conference2026View() {
         }
     };
 
-    const thematicTopics = [
-        { id: '1', titleKa: 'ნანოპროცესები და ნანოტექნოლოგიები', titleEn: 'Nanoprocesses and Nanotechnologies' },
-        { id: '2', titleKa: 'სასარგებლო წიაღისეულისა და მეორადი ნედლეულის გადამუშავების ფუნდამენტური და ტექნოლოგიური ასპექტები', titleEn: 'Fundamental and Technological Aspects of Mineral and Secondary Raw Material Processing' },
-        { id: '3', titleKa: 'მწვანე ქიმია', titleEn: 'Green Chemistry' },
-        { id: '4', titleKa: 'სამეცნიერო ინოვაციების პოპულარიზაცია და კომერციალიზაცია', titleEn: 'Popularization and Commercialization of Scientific Innovations' },
-        { id: '5', titleKa: 'სურსათის ქიმია და ხარისხი', titleEn: 'Food Chemistry and Quality of Food' },
-        { id: '6', titleKa: 'STEM+P: მეცნიერება, ინოვაცია და პოლიტიკა', titleEn: 'STEM+P: Science, Innovation and Policy' },
-    ];
+    const thematicTopics = CONFERENCE_TOPICS;
 
     const titulationOptions = [
         { value: 'prof', labelKa: 'პროფ.', labelEn: 'Prof.' },
@@ -326,7 +320,7 @@ export default function Conference2026View() {
                 presentationType: 'oral',
                 rolePresentingAuthor: true,
                 roleCoAuthor: false,
-                thematicTopic: '1',
+                thematicTopic: CONFERENCE_TOPICS[0].titleKa,
             });
             setGeoFile(null);
             setEngFile(null);
@@ -721,7 +715,7 @@ export default function Conference2026View() {
                                             className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white font-medium truncate"
                                         >
                                             {thematicTopics.map(top => (
-                                                <option key={top.id} value={top.id}>
+                                                <option key={top.id} value={top.titleKa}>
                                                     {isEn ? top.titleEn : top.titleKa}
                                                 </option>
                                             ))}
