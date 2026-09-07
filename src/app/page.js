@@ -129,9 +129,6 @@ export default function Home() {
                 priority
                 className="w-full max-w-[320px] h-auto object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105" 
               />
-              <div className="mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-100/90 border border-purple-200 text-[#60318e] text-xs font-black tracking-wider uppercase shadow-xs">
-                <span>{language === 'en' ? '70 Years of Scientific Excellence' : 'მეცნიერების სამსახურში 70 წელი'}</span>
-              </div>
             </div>
             {/* Decorative elements */}
             <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-purple-200/50 rounded-full z-[-1] blur-xl animate-float-blob"></div>

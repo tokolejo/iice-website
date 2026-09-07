@@ -542,13 +542,6 @@ export default function Conference2026View() {
                                     className="w-full max-w-[420px] sm:max-w-[480px] lg:max-w-[520px] h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)] select-none"
                                 />
                             </div>
-
-                            {/* Sub-caption below emblem */}
-                            <div className="mt-2 text-center">
-                                <span className="inline-block text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-purple-200/90 bg-white/10 px-4 py-1 rounded-full border border-white/15 backdrop-blur-md shadow-xs">
-                                    {isEn ? "70 Years Anniversary Edition" : "70 წლის საიუბილეო გამოცემა"}
-                                </span>
-                            </div>
                         </div>
 
                     </div>
