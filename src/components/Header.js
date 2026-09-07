@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '../context/LanguageContext';
@@ -16,7 +17,13 @@ export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [openMobileDropdowns, setOpenMobileDropdowns] = useState({});
     const [isScrolled, setIsScrolled] = useState(false);
+    const [mounted, setMounted] = useState(false);
     const pathname = usePathname();
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
 
     const isAboutActive = ['/history', '/mission', '/administration', '/scientific-council', '/statute', '/reports', '/studies-internships', '/important-projects', '/collaboration'].some(p => pathname === p);
     const isEventsActive = ['/events/conference-2023', '/events/conference-2016'].some(p => pathname === p || pathname.startsWith('/events/'));
@@ -46,13 +53,15 @@ export default function Header() {
     // Lock body scroll when mobile menu is open
     useEffect(() => {
         if (isMobileMenuOpen) {
+            const originalBodyOverflow = document.body.style.overflow;
+            const originalHtmlOverflow = document.documentElement.style.overflow;
             document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = '';
+            document.documentElement.style.overflow = 'hidden';
+            return () => {
+                document.body.style.overflow = originalBodyOverflow;
+                document.documentElement.style.overflow = originalHtmlOverflow;
+            };
         }
-        return () => {
-            document.body.style.overflow = '';
-        };
     }, [isMobileMenuOpen]);
 
     // Handle Escape key
@@ -211,56 +220,63 @@ export default function Header() {
 
                         {/* Mobile Hamburger Button */}
                         <button
-                            onClick={() => setIsMobileMenuOpen(true)}
-                            aria-label="მენიუს გახსნა"
+                            onClick={() => setIsMobileMenuOpen(prev => !prev)}
+                            aria-label={isMobileMenuOpen ? (language === 'ka' ? "მენიუს დახურვა" : "Close menu") : (language === 'ka' ? "მენიუს გახსნა" : "Open menu")}
                             aria-expanded={isMobileMenuOpen}
-                            className="lg:hidden text-white hover:text-purple-200 p-2 rounded-xl bg-white/10 hover:bg-white/15 transition-all interactive-tap"
+                            className="lg:hidden text-white hover:text-purple-200 p-2 rounded-xl bg-white/10 hover:bg-white/15 transition-all interactive-tap cursor-pointer"
                         >
-                            <Menu className="w-5 h-5" aria-hidden="true" />
+                            {isMobileMenuOpen ? (
+                                <X className="w-5 h-5" aria-hidden="true" />
+                            ) : (
+                                <Menu className="w-5 h-5" aria-hidden="true" />
+                            )}
                         </button>
                     </div>
                 </div>
             </div>
 
-            {/* ===== Modern Off-Canvas Mobile Drawer ===== */}
-            {isMobileMenuOpen && (
-                <div className="fixed inset-0 z-[100] lg:hidden flex justify-end">
+            {/* ===== Modern Off-Canvas Mobile Drawer (Portaled to document.body to prevent containing block & scroll bugs) ===== */}
+            {mounted && isMobileMenuOpen && typeof document !== 'undefined' && createPortal(
+                <div 
+                    className="fixed inset-0 z-[9999] lg:hidden flex justify-end"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label={language === 'ka' ? "მობილური ნავიგაციის მენიუ" : "Mobile navigation menu"}
+                >
                     {/* Backdrop */}
                     <div 
-                        className="fixed inset-0 bg-black/60 backdrop-blur-xs drawer-backdrop-enter"
+                        className="fixed inset-0 bg-black/65 backdrop-blur-xs drawer-backdrop-enter cursor-pointer"
                         onClick={() => setIsMobileMenuOpen(false)}
                         aria-hidden="true"
                     />
 
                     {/* Drawer Sheet */}
                     <div 
-                        role="dialog"
-                        aria-modal="true"
-                        aria-label="მობილური ნავიგაციის მენიუ"
-                        className="relative w-[85%] max-w-sm h-full bg-white shadow-2xl flex flex-col z-10 drawer-enter border-l border-purple-100"
+                        className="relative w-[85%] max-w-sm h-[100dvh] max-h-[100dvh] bg-white shadow-2xl flex flex-col z-10 drawer-enter border-l border-purple-100 overscroll-contain"
+                        onClick={(e) => e.stopPropagation()}
                     >
                         {/* Drawer Header */}
-                        <div className="flex items-center justify-between px-5 py-4 bg-[#2e0d42] text-white border-b border-purple-900/30">
+                        <div className="flex items-center justify-between px-5 py-4 bg-[#2e0d42] text-white border-b border-purple-900/30 flex-shrink-0">
                             <div className="flex items-center gap-2.5">
                                 <div className="w-8 h-8 rounded-lg bg-white/10 p-1 flex items-center justify-center relative">
                                     <Image src="/logo.png" alt="IICE" width={32} height={32} className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                    <h2 className="font-bold text-xs text-white">{language === 'ka' ? 'თსუ რ. აგლაძის ინსტიტუტი' : 'TSU IICE'}</h2>
-                                    <p className="text-[9px] text-purple-200/80">{language === 'ka' ? 'არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი' : 'Agladze Institute'}</p>
+                                    <h2 className="font-bold text-xs text-white leading-tight">{language === 'ka' ? 'თსუ რ. აგლაძის ინსტიტუტი' : 'TSU IICE'}</h2>
+                                    <p className="text-[9px] text-purple-200/80 leading-tight">{language === 'ka' ? 'არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი' : 'Agladze Institute'}</p>
                                 </div>
                             </div>
                             <button
                                 onClick={() => setIsMobileMenuOpen(false)}
                                 aria-label="მენიუს დახურვა"
-                                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors interactive-tap"
+                                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors interactive-tap cursor-pointer"
                             >
                                 <X className="w-4 h-4" aria-hidden="true" />
                             </button>
                         </div>
 
                         {/* Drawer Navigation Links */}
-                        <div className="flex-grow overflow-y-auto px-4 py-4 space-y-1 text-sm">
+                        <div className="flex-grow overflow-y-auto px-4 py-4 space-y-1 text-sm overscroll-contain [webkit-overflow-scrolling:touch]">
                             <Link 
                                 href="/" 
                                 onClick={() => setIsMobileMenuOpen(false)}
@@ -275,7 +291,7 @@ export default function Header() {
                             <div className="rounded-xl overflow-hidden border border-slate-100">
                                 <button
                                     onClick={() => toggleMobileDropdown('about')}
-                                    className="w-full flex items-center justify-between px-3.5 py-2.5 font-medium text-slate-800 hover:bg-purple-50/50 transition-colors text-left"
+                                    className="w-full flex items-center justify-between px-3.5 py-2.5 font-medium text-slate-800 hover:bg-purple-50/50 transition-colors text-left cursor-pointer"
                                 >
                                     <span className={isAboutActive ? 'text-[#60318e] font-bold' : ''}>{t.nav.about}</span>
                                     <ChevronDown aria-hidden="true" className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${openMobileDropdowns['about'] ? 'rotate-180 text-[#7A1CAC]' : ''}`} />
@@ -333,7 +349,7 @@ export default function Header() {
                             <div className="rounded-xl overflow-hidden border border-slate-100">
                                 <button
                                     onClick={() => toggleMobileDropdown('events')}
-                                    className="w-full flex items-center justify-between px-3.5 py-2.5 font-medium text-slate-800 hover:bg-purple-50/50 transition-colors text-left"
+                                    className="w-full flex items-center justify-between px-3.5 py-2.5 font-medium text-slate-800 hover:bg-purple-50/50 transition-colors text-left cursor-pointer"
                                 >
                                     <span className={isEventsActive ? 'text-[#60318e] font-bold' : ''}>{t.nav.events}</span>
                                     <ChevronDown aria-hidden="true" className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${openMobileDropdowns['events'] ? 'rotate-180 text-[#7A1CAC]' : ''}`} />
@@ -392,7 +408,7 @@ export default function Header() {
                         </div>
 
                         {/* Drawer Bottom Actions */}
-                        <div className="p-4 border-t border-slate-100 bg-slate-50/80">
+                        <div className="p-4 pb-[max(1rem,env(safe-area-inset-bottom))] border-t border-slate-100 bg-slate-50/90 flex-shrink-0">
                             <div className="flex items-center justify-between">
                                 <div className="text-xs font-semibold text-slate-500">
                                     {language === 'en' ? 'Language' : 'ენა'}:
@@ -400,7 +416,7 @@ export default function Header() {
                                 <div className="flex items-center border border-purple-200 bg-white rounded-full p-0.5 shadow-xs">
                                     <button
                                         onClick={() => toggleLanguage('ka')}
-                                        className={`px-3 py-1 rounded-full text-xs font-bold transition-all interactive-tap ${
+                                        className={`px-3 py-1 rounded-full text-xs font-bold transition-all interactive-tap cursor-pointer ${
                                             language === 'ka' ? 'bg-[#60318e] text-white shadow-xs' : 'text-slate-600 hover:text-purple-900'
                                         }`}
                                     >
@@ -408,7 +424,7 @@ export default function Header() {
                                     </button>
                                     <button
                                         onClick={() => toggleLanguage('en')}
-                                        className={`px-3 py-1 rounded-full text-xs font-bold transition-all interactive-tap ${
+                                        className={`px-3 py-1 rounded-full text-xs font-bold transition-all interactive-tap cursor-pointer ${
                                             language === 'en' ? 'bg-[#60318e] text-white shadow-xs' : 'text-slate-600 hover:text-purple-900'
                                         }`}
                                     >
@@ -418,7 +434,8 @@ export default function Header() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </header>
     );
