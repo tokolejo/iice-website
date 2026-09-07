@@ -18,7 +18,6 @@ import {
     Menu,
     X,
     ChevronRight,
-    Sparkles,
     UserCircle,
     Crown,
     Shield,

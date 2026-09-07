@@ -13,7 +13,6 @@ import ScrollReveal from '../components/ScrollReveal';
 import NewsCard from '../components/NewsCard';
 import NewsModal from '../components/NewsModal';
 import {
-  Sparkles,
   Award,
   Calendar,
   MapPin,
@@ -90,8 +89,7 @@ export default function Home() {
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row items-center justify-between gap-8 w-full relative z-10">
           {/* Text Content */}
           <ScrollReveal direction="left" duration={800} className="w-full md:w-1/2 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide bg-purple-100/80 text-[#60318e] mb-4 border border-purple-200/60 shadow-xs">
-              <Sparkles className="w-3.5 h-3.5 text-[#AD49E1]" />
+            <div className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide bg-purple-100/80 text-[#60318e] mb-4 border border-purple-200/60 shadow-xs">
               <span>{language === 'en' ? 'Scientific Research Institute' : 'სამეცნიერო-კვლევითი ინსტიტუტი'}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl tracking-tight font-extrabold text-[#60318e] drop-shadow-xs leading-[1.15]">
@@ -143,8 +141,7 @@ export default function Home() {
               {/* Left Column: Academic & Event Narrative */}
               <div className="max-w-3xl space-y-4">
                 {/* Status Badge Pill */}
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black tracking-wide bg-purple-100 text-[#60318e] border border-purple-200 shadow-xs">
-                  <Sparkles className="w-3.5 h-3.5 text-[#AD49E1] flex-shrink-0" />
+                <div className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-black tracking-wide bg-purple-100 text-[#60318e] border border-purple-200 shadow-xs">
                   <span>
                     {language === 'en'
                       ? '3rd International Scientific Conference 2026'

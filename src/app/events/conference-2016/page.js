@@ -9,7 +9,6 @@ import {
     MapPin, 
     Image as ImageIcon, 
     Presentation,
-    Sparkles,
     Award,
     ChevronLeft,
     ChevronRight,
@@ -94,8 +93,7 @@ export default function Conference2016() {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(173,73,225,0.18),transparent_70%)] pointer-events-none"></div>
 
                 <div className="max-w-4xl mx-auto text-center relative z-10">
-                    <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-extrabold bg-gradient-to-r from-purple-500/25 to-amber-500/25 text-amber-200 border border-amber-400/35 mb-3 backdrop-blur-md shadow-xs">
-                        <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                    <div className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-extrabold bg-gradient-to-r from-purple-500/25 to-amber-500/25 text-amber-200 border border-amber-400/35 mb-3 backdrop-blur-md shadow-xs">
                         <span>{t.badge}</span>
                     </div>
 

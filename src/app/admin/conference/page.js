@@ -25,7 +25,6 @@ import {
     ArrowUpDown,
     FileSpreadsheet,
     FileCode,
-    Sparkles,
     RefreshCw,
     Printer,
     Loader2,

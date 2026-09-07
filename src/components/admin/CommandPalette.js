@@ -22,7 +22,6 @@ import {
     X,
     ArrowRight,
     CornerDownLeft,
-    Sparkles,
     Loader2
 } from 'lucide-react';
 
@@ -248,7 +247,7 @@ export default function CommandPalette({ isOpen, onClose, userEmail = 'admin', r
                 <div className="flex-1 overflow-y-auto p-2 divide-y divide-slate-50">
                     {allItems.length === 0 ? (
                         <div className="p-8 text-center">
-                            <Sparkles className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                            <Search className="w-8 h-8 text-slate-300 mx-auto mb-2" />
                             <p className="text-xs font-bold text-slate-500">შედეგი არ მოიძებნა</p>
                             <p className="text-[11px] text-slate-400 mt-1">სცადეთ სხვა საძიებო სიტყვა</p>
                         </div>

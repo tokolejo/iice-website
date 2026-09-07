@@ -27,7 +27,6 @@ import {
     FileCode,
     BarChart3,
     PieChart,
-    Sparkles,
     Loader2,
     ShieldCheck
 } from 'lucide-react';
