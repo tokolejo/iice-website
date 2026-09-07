@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
 import { getSupabaseBrowserClient } from '../lib/supabase/client';
 import { recordAuditLog } from '../lib/auditLogger';
-import { CONFERENCE_TOPICS } from '../lib/conferenceConstants';
+import { CONFERENCE_TOPICS, INVITED_SPEAKERS } from '../lib/conferenceConstants';
 import {
     Calendar,
     MapPin,
@@ -31,10 +31,12 @@ import {
     Tag,
     ChevronLeft,
     ChevronRight,
+    ExternalLink,
     X
 } from 'lucide-react';
 
 export default function Conference2026View() {
+
     const { language } = useLanguage();
     const isEn = language === 'en';
 
@@ -78,41 +80,40 @@ export default function Conference2026View() {
     const [copied, setCopied] = useState(false);
 
     const t = {
-        badge: isEn ? "3rd International Scientific Conference 2026" : "2026 წლის საერთაშორისო კონფერენცია",
+        badge: isEn ? "3rd International Scientific Conference 2026" : "2026 წლის საერთაშორისო სამეცნიერო კონფერენცია",
         title: isEn
             ? "3rd International Scientific Conference: “Modern Trends in Chemistry, Chemical Technologies and Related Fields: Green Energy Prospects, Ecological Sustainability, Food Safety. 2026”"
             : "მე-3 საერთაშორისო სამეცნიერო კონფერენცია: „თანამედროვე ტენდენციები ქიმიაში, ქიმიურ ტექნოლოგიებსა და მომიჯნავე დარგებში: მწვანე ენერგეტიკის პერსპექტივები, ეკოლოგიური მდგრადობა, სურსათის უვნებელობა. 2026“",
         anniversary: isEn
-            ? "Dedicated to the 70th anniversary of the founding of Rafael Agladze Institute of Inorganic Chemistry and Electrochemistry (1956–2026)"
-            : "ეძღვნება რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის დაარსების 70 წელს (1956–2026)",
+            ? "Dedicated to the 70th anniversary of the founding of Rafael Agladze Institute of Inorganic Chemistry and Electrochemistry"
+            : "ეძღვნება რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის დაარსების 70 წლისთავს",
         datesText: isEn ? "November 25 – 27, 2026" : "25 – 27 ნოემბერი, 2026",
+        deadlineText: isEn ? "Abstract Submission Deadline: October 15, 2026" : "აბსტრაქტების მიღების ბოლო ვადა: 15 ოქტომბერი, 2026",
         venuesText: isEn
-            ? "Tbilisi (TSU) & Telavi (Telavi State University), Georgia"
-            : "თბილისი (თსუ) & თელავი (თელავის სახელმწიფო უნივერსიტეტი)",
+            ? "Tbilisi (TSU) & Telavi (TESAU), Georgia"
+            : "თბილისი (თსუ) & თელავი (თესაუ)",
         grantNotice: isEn
-            ? "This event was supported by Shota Rustaveli National Science Foundation of Georgia [Grant number ISE-26-286]"
+            ? "The event is supported by the Shota Rustaveli National Science Foundation of Georgia [Grant number ISE-26-286]"
             : "ღონისძიება ხორციელდება შოთა რუსთაველის საქართველოს ეროვნული სამეცნიერო ფონდის მხარდაჭერით [გრანტის ნომერი ISE-26-286]",
         freeNotice: isEn
             ? "No fee is charged to conference participants (Participation is Free)"
             : "კონფერენციაში მონაწილეობა უფასოა",
         tabs: {
             registration: isEn ? "Registration & Submission" : "რეგისტრაცია და აბსტრაქტი",
-            downloads: isEn ? "Download Center" : "ფაილების ჩამოტვირთვა",
-            topics: isEn ? "Thematic Topics (6)" : "თემატური სექციები (6)",
-            schedule: isEn ? "Program Schedule" : "კონფერენციის პროგრამა",
-            organizers: isEn ? "Organizers & Partners" : "ორგანიზატორები და პარტნიორები",
+            topics: isEn ? "Thematic Topics" : "თემატური მიმართულებები",
+            speakers: isEn ? "Invited Speakers" : "მოწვეული მომხსენებლები",
+            schedule: isEn ? "Preliminary Program" : "წინასწარი პროგრამა",
+            organizers: isEn ? "Organizing Institutions" : "საორგანიზაციო ინსტიტუციები",
             venues: isEn ? "Venues & Transport" : "ლოკაციები და ტრანსპორტი",
         },
         form: {
             heading: isEn ? "Conference Registration & Abstract Submission" : "კონფერენციის რეგისტრაცია და აბსტრაქტის ატვირთვა",
-            subheading: isEn
-                ? "Please fill in the form below. Fields marked with * are required."
-                : "გთხოვთ შეავსოთ ქვემოთ მოცემული ფორმა. *-ით მონიშნული ველები სავალდებულოა.",
+            subheading: "",
             firstName: isEn ? "First Name (სახელი)" : "სახელი",
             lastName: isEn ? "Last Name (გვარი)" : "გვარი",
             birthDate: isEn ? "Date of Birth (დაბადების თარიღი)" : "დაბადების თარიღი",
             citizenship: isEn ? "Citizenship (მოქალაქეობა)" : "მოქალაქეობა",
-            affiliation: isEn ? "Affiliation / Institution (აფილაცია - ინსტიტუტი/უნივერსიტეტი)" : "აფილაცია (ინსტიტუტი / უნივერსიტეტი / ორგანიზაცია)",
+            affiliation: isEn ? "Affiliation (Institute / University / Organization, Country)" : "აფილაცია (ინსტიტუტი / უნივერსიტეტი / ორგანიზაცია, ქვეყანა)",
             titulation: isEn ? "Titulation (მიმართვა / სამეცნიერო წოდება)" : "მიმართვა (სამეცნიერო ხარისხი / წოდება)",
             gender: isEn ? "Gender (გენდერი)" : "გენდერი",
             female: isEn ? "Female (მდედრობითი)" : "მდედრობითი",
@@ -128,12 +129,16 @@ export default function Conference2026View() {
             presentingAuthor: isEn ? "Presenting author (მომხსენებელი)" : "მომხსენებელი",
             coAuthor: isEn ? "Co-Author (თანაავტორი)" : "თანაავტორი",
             topic: isEn ? "Thematic topic (თემატური სექცია)" : "თემატური სექცია",
-            uploadAbstract: isEn ? "Upload Abstract (აბსტრაქტის ატვირთვა)" : "აბსტრაქტის ატვირთვა",
-            geoNotice: isEn ? "* GEO only for Georgian citizens (.doc, .docx)" : "* GEO მხოლოდ საქართველოს მოქალაქეებისათვის (.doc, .docx)",
-            engNotice: isEn ? "ENG Abstract (.doc, .docx)" : "ინგლისური აბსტრაქტი (.doc, .docx)",
+            uploadAbstract: isEn ? "Upload Abstract — Must be submitted in two languages: Georgian and English" : "აბსტრაქტის ატვირთვა — წარმოდგენილი უნდა იყოს ორ ენაზე: ქართულად და ინგლისურად",
+            geoNotice: isEn ? "Georgian Abstract (.doc, .docx)" : "თეზისი ქართულად (.doc, .docx)",
+            engNotice: isEn ? "English Abstract (.doc, .docx)" : "ინგლისური აბსტრაქტი (.doc, .docx)",
             footnote: isEn
-                ? "Note: After registration, you can still work on your registration form (edit it or upload Abstract), when logged in through Account."
-                : "შენიშვნა: რეგისტრაციის შემდეგ, თქვენ კვლავ შეგიძლიათ იმუშაოთ თქვენს რეგისტრაციის ფორმაზე (შეცვალოთ იგი ან ატვირთოთ აბსტრაქტი), თუ შეხვალთ სისტემაში საკუთარი პროფილიდან.",
+                ? "Note: The Organizing Committee will ensure the translation of abstracts submitted by foreign citizens."
+                : "შენიშვნა: უცხო ქვეყნის მოქალაქეების მიერ წარმოდგენილი აბსტრაქტების თარგმნას უზრუნველყოფს საორგანიზაციო კომიტეტი.",
+            posterNotice: isEn
+                ? "When preparing a poster, please note that the poster size is A0, and it is advisable to include a photo of the speaker."
+                : "პოსტერის მოსამზადებლად, გაითვალისწინეთ, პოსტერის ზომაა A0, სასურველია დატანილი იყოს მომხსენებლის ფოტო.",
+            downloadTemplatesHeading: isEn ? "Download Abstract Templates:" : "აბსტრაქტის შაბლონები ჩამოსატვირთად:",
             submitting: isEn ? "Submitting Registration..." : "მიმდინარეობს რეგისტრაცია...",
             submitBtn: isEn ? "Submit Registration →" : "რეგისტრაციის გაგზავნა →",
         },
@@ -173,13 +178,26 @@ export default function Conference2026View() {
             [name]: type === 'checkbox' ? checked : value
         }));
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitError('');
 
-        if (!formData.firstName || !formData.lastName || !formData.email || !formData.affiliation || !formData.presentationTitle) {
-            setSubmitError(isEn ? "Please fill in all required fields marked with *." : "გთხოვთ შეავსოთ ყველა სავალდებულო ველი (*).");
+        const missingFields = [];
+        if (!formData.firstName?.trim()) missingFields.push(isEn ? "First Name" : "სახელი");
+        if (!formData.lastName?.trim()) missingFields.push(isEn ? "Last Name" : "გვარი");
+        if (!formData.birthDate) missingFields.push(isEn ? "Date of Birth" : "დაბადების თარიღი");
+        if (!formData.citizenship?.trim()) missingFields.push(isEn ? "Citizenship" : "მოქალაქეობა");
+        if (!formData.affiliation?.trim()) missingFields.push(isEn ? "Affiliation" : "აფილაცია");
+        if (!formData.email?.trim()) missingFields.push(isEn ? "Email" : "ელ-ფოსტა");
+        if (!formData.presentationTitle?.trim()) missingFields.push(isEn ? "Presentation Title" : "მოხსენების სათაური");
+        if (!geoFile && !engFile) missingFields.push(isEn ? "Abstract file (.doc, .docx)" : "აბსტრაქტის ფაილი (.doc, .docx)");
+
+        if (missingFields.length > 0) {
+            setSubmitError(
+                isEn 
+                    ? `Please complete the following required fields: ${missingFields.join(', ')}.`
+                    : `გთხოვთ შეავსოთ შემდეგი სავალდებულო ველები: ${missingFields.join(', ')}.`
+            );
             return;
         }
 
@@ -401,23 +419,35 @@ export default function Conference2026View() {
                             </div>
 
                             {/* 70th Anniversary Commemorative Ribbon */}
-                            <div className="inline-flex items-center gap-2.5 bg-gradient-to-r from-amber-500/20 via-purple-500/20 to-amber-500/20 border-l-4 border-amber-400 rounded-r-2xl py-2 px-4 shadow-sm border-y border-r border-amber-300/30 backdrop-blur-md max-w-2xl text-left">
+                            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-400/25 via-purple-500/25 to-amber-400/20 border-l-4 border-amber-400 rounded-2xl py-2.5 px-4 shadow-md border border-amber-300/40 backdrop-blur-md max-w-2xl text-left ring-1 ring-amber-400/30">
                                 <Award className="w-5 h-5 text-amber-300 flex-shrink-0" />
-                                <span className="text-xs sm:text-[13px] font-bold text-amber-100 leading-snug">
+                                <span className="text-xs sm:text-sm font-black text-amber-200 leading-snug tracking-tight">
                                     {t.anniversary}
                                 </span>
                             </div>
 
-                            {/* Dates & Venues Pills */}
-                            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-0.5 text-xs">
-                                <div className="flex items-center gap-2 bg-white/10 text-white px-3.5 py-1.5 rounded-xl backdrop-blur-md border border-white/15 shadow-xs">
+                            {/* Dates & Venues & Deadline Pills */}
+                            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-1 text-xs">
+                                <div className="flex items-center gap-2 bg-gradient-to-r from-amber-400/20 to-purple-500/25 text-white px-4 py-2 rounded-xl backdrop-blur-md border border-amber-300/40 shadow-sm font-black">
                                     <Calendar className="w-4 h-4 text-amber-300 flex-shrink-0" />
-                                    <span className="font-bold">{t.datesText}</span>
+                                    <span>{t.datesText}</span>
                                 </div>
-                                <div className="flex items-center gap-2 bg-white/10 text-white px-3.5 py-1.5 rounded-xl backdrop-blur-md border border-white/15 shadow-xs">
+                                <div className="flex items-center gap-2 bg-white/10 text-white px-3.5 py-2 rounded-xl backdrop-blur-md border border-white/15 shadow-xs font-semibold">
                                     <MapPin className="w-4 h-4 text-amber-300 flex-shrink-0" />
-                                    <span className="font-bold">{t.venuesText}</span>
+                                    <span>{t.venuesText}</span>
                                 </div>
+                                <div className="flex items-center gap-2 bg-emerald-500/20 text-emerald-200 px-3.5 py-2 rounded-xl backdrop-blur-md border border-emerald-400/30 shadow-xs font-bold">
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                                    <span>{t.deadlineText}</span>
+                                </div>
+                            </div>
+
+                            {/* Rustaveli Foundation Grant Support Callout with Official Logo */}
+                            <div className="flex items-center gap-3 bg-white/10 text-purple-100 p-2.5 rounded-2xl border border-white/15 backdrop-blur-md max-w-2xl text-left text-xs">
+                                <img src="/conference-2026/rustaveli-logo.png" alt="Shota Rustaveli National Science Foundation" className="w-8 h-8 object-contain rounded-lg bg-white p-0.5 flex-shrink-0 shadow-xs" />
+                                <span className="text-[11px] sm:text-xs font-medium leading-tight text-white/95">
+                                    {t.grantNotice}
+                                </span>
                             </div>
 
                             {/* CTA Action Buttons */}
@@ -434,13 +464,13 @@ export default function Conference2026View() {
                                 </button>
                                 <button
                                     onClick={() => {
-                                        setActiveTab('downloads');
+                                        setActiveTab('schedule');
                                         document.getElementById('tabs-navigation')?.scrollIntoView({ behavior: 'smooth' });
                                     }}
                                     className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold px-5 py-2.5 rounded-full text-xs border border-white/20 backdrop-blur-md shadow-xs transition-all cursor-pointer"
                                 >
-                                    <Download className="w-3.5 h-3.5" />
-                                    <span>{isEn ? "Templates (DOCX)" : "შაბლონების ჩამოტვირთვა"}</span>
+                                    <Clock className="w-3.5 h-3.5" />
+                                    <span>{isEn ? "Preliminary Program" : "კონფერენციის პროგრამა"}</span>
                                 </button>
                             </div>
                         </div>
@@ -453,7 +483,7 @@ export default function Conference2026View() {
                             <div className="relative group transition-all duration-500 hover:scale-105">
                                 {/* The Clean Cropped 70th Emblem with the Institute Building inside the '0' */}
                                 <img
-                                    src="/conference-2026/iice-70-anniversary-emblem.png"
+                                    src="/conference-2026/anniversary-70.png"
                                     alt="70th Anniversary Emblem - R. Agladze Institute of Inorganic Chemistry and Electrochemistry"
                                     className="w-full max-w-[420px] sm:max-w-[480px] lg:max-w-[520px] h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)] select-none"
                                 />
@@ -462,7 +492,7 @@ export default function Conference2026View() {
                             {/* Sub-caption below emblem */}
                             <div className="mt-2 text-center">
                                 <span className="inline-block text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-purple-200/90 bg-white/10 px-4 py-1 rounded-full border border-white/15 backdrop-blur-md shadow-xs">
-                                    {isEn ? "1956 – 2026 • 70 Years Anniversary Edition" : "1956 – 2026 • 70 წლის საიუბილეო გამოცემა"}
+                                    {isEn ? "70 Years Anniversary Edition" : "70 წლის საიუბილეო გამოცემა"}
                                 </span>
                             </div>
                         </div>
@@ -502,9 +532,9 @@ export default function Conference2026View() {
                             >
                                 {key === 'registration' && <Send className="w-3.5 h-3.5" />}
                                 {key === 'topics' && <Tag className="w-3.5 h-3.5" />}
+                                {key === 'speakers' && <Users className="w-3.5 h-3.5" />}
                                 {key === 'schedule' && <Clock className="w-3.5 h-3.5" />}
                                 {key === 'organizers' && <Building2 className="w-3.5 h-3.5" />}
-                                {key === 'downloads' && <Download className="w-3.5 h-3.5" />}
                                 {key === 'venues' && <MapPin className="w-3.5 h-3.5" />}
                                 <span>{label}</span>
                             </button>
@@ -534,9 +564,6 @@ export default function Conference2026View() {
                             <h2 className="text-base sm:text-lg font-black text-[#60318e] mb-1">
                                 {t.form.heading}
                             </h2>
-                            <p className="text-[11px] text-slate-500 font-medium">
-                                {t.form.subheading}
-                            </p>
                         </div>
 
                         {submitError && (
@@ -586,23 +613,24 @@ export default function Conference2026View() {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                                    <div>
-                                        <label className="block font-bold text-slate-700 text-xs mb-1">
-                                            {t.form.birthDate}
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 items-end">
+                                    <div className="flex flex-col">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1 min-h-[32px] flex items-end">
+                                            <span>{t.form.birthDate} <span className="text-red-500">*</span></span>
                                         </label>
                                         <input
                                             type="date"
                                             name="birthDate"
+                                            required
                                             value={formData.birthDate}
                                             onChange={handleInputChange}
                                             className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
                                         />
                                     </div>
 
-                                    <div>
-                                        <label className="block font-bold text-slate-700 text-xs mb-1">
-                                            {t.form.citizenship} <span className="text-red-500">*</span>
+                                    <div className="flex flex-col">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1 min-h-[32px] flex items-end">
+                                            <span>{t.form.citizenship} <span className="text-red-500">*</span></span>
                                         </label>
                                         <input
                                             type="text"
@@ -615,9 +643,9 @@ export default function Conference2026View() {
                                         />
                                     </div>
 
-                                    <div>
-                                        <label className="block font-bold text-slate-700 text-xs mb-1">
-                                            {t.form.affiliation} <span className="text-red-500">*</span>
+                                    <div className="flex flex-col">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1 min-h-[32px] flex items-end leading-tight">
+                                            <span>{t.form.affiliation} <span className="text-red-500">*</span></span>
                                         </label>
                                         <input
                                             type="text"
@@ -625,7 +653,7 @@ export default function Conference2026View() {
                                             required
                                             value={formData.affiliation}
                                             onChange={handleInputChange}
-                                            placeholder={isEn ? "Institution / University" : "ინსტიტუტი / უნივერსიტეტი"}
+                                            placeholder={isEn ? "Institute / University / Organization, Country" : "ინსტიტუტი / უნივერსიტეტი / ორგანიზაცია, ქვეყანა"}
                                             className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
                                         />
                                     </div>
@@ -868,19 +896,26 @@ export default function Conference2026View() {
                             </div>
 
                             {/* 3. File Uploads (Strictly .doc, .docx - NO PDF) */}
-                            <div className="space-y-2.5 bg-purple-50/20 p-3 sm:p-4 rounded-2xl border border-purple-100/70">
-                                <h3 className="text-xs font-bold text-[#60318e] pb-1 border-b border-purple-100 flex items-center gap-2">
-                                    <UploadCloud className="w-3.5 h-3.5 text-[#AD49E1]" />
-                                    <span>{t.form.uploadAbstract}</span>
-                                </h3>
+                            <div className="space-y-3 bg-purple-50/20 p-3 sm:p-4 rounded-2xl border border-purple-100/70">
+                                <div className="pb-1 border-b border-purple-100">
+                                    <h3 className="text-xs font-bold text-[#60318e] flex items-center gap-2">
+                                        <UploadCloud className="w-3.5 h-3.5 text-[#AD49E1]" />
+                                        <span>{isEn ? "3. Upload Abstract" : "3. აბსტრაქტის ატვირთვა"}</span>
+                                    </h3>
+                                    <p className="text-[11px] text-purple-900 font-semibold mt-0.5">
+                                        {isEn 
+                                            ? "Must be submitted in two languages: Georgian and English" 
+                                            : "წარმოდგენილი უნდა იყოს ორ ენაზე: ქართულად და ინგლისურად"}
+                                    </p>
+                                </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                     <div className="border border-dashed border-purple-200 rounded-xl p-2.5 text-center bg-white hover:bg-purple-50/30 transition-colors relative">
                                         <label className="block font-bold text-slate-800 text-xs mb-0.5 cursor-pointer">
-                                            {isEn ? "Georgian Abstract (.doc, .docx)" : "თეზისი ქართულად (.doc, .docx)"}
-                                        </label>
-                                        <span className="text-[10px] text-purple-700 block mb-1.5 font-semibold">
                                             {t.form.geoNotice}
+                                        </label>
+                                        <span className="text-[10px] text-slate-500 block mb-1.5 font-medium">
+                                            {isEn ? "Only Word files (.doc, .docx)" : "მხოლოდ Word ფორმატი (.doc, .docx)"}
                                         </span>
                                         {!geoFile ? (
                                             <input
@@ -909,10 +944,10 @@ export default function Conference2026View() {
 
                                     <div className="border border-dashed border-purple-200 rounded-xl p-2.5 text-center bg-white hover:bg-purple-50/30 transition-colors relative">
                                         <label className="block font-bold text-slate-800 text-xs mb-0.5 cursor-pointer">
-                                            {isEn ? "English Abstract (.doc, .docx)" : "თეზისი ინგლისურად (.doc, .docx)"}
-                                        </label>
-                                        <span className="text-[10px] text-purple-700 block mb-1.5 font-semibold">
                                             {t.form.engNotice}
+                                        </label>
+                                        <span className="text-[10px] text-slate-500 block mb-1.5 font-medium">
+                                            {isEn ? "Only Word files (.doc, .docx)" : "მხოლოდ Word ფორმატი (.doc, .docx)"}
                                         </span>
                                         {!engFile ? (
                                             <input
@@ -940,10 +975,42 @@ export default function Conference2026View() {
                                     </div>
                                 </div>
 
-                                {/* Footnote Notice */}
-                                <div className="p-2.5 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-900 text-[11px] leading-relaxed flex items-start gap-2">
+                                {/* Abstract Templates Direct Download Box */}
+                                <div className="p-3 rounded-2xl bg-white border border-purple-200/90 flex flex-col sm:flex-row items-center justify-between gap-2.5 shadow-2xs">
+                                    <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
+                                        <FileText className="w-4 h-4 text-[#60318e]" />
+                                        <span>{t.form.downloadTemplatesHeading}</span>
+                                    </div>
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <a
+                                            href="/conference-2026/Abstract-template-GEO.doc"
+                                            download="Abstract-template GEO.doc"
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#60318e] font-bold text-[11px] border border-purple-200 transition-all shadow-2xs"
+                                        >
+                                            <Download className="w-3 h-3" />
+                                            <span>{isEn ? "Template GEO (.doc)" : "შაბლონი ქართული (.doc)"}</span>
+                                        </a>
+                                        <a
+                                            href="/conference-2026/Abstract-template-ENG.docx"
+                                            download="Abstract-template ENG.docx"
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#60318e] font-bold text-[11px] border border-purple-200 transition-all shadow-2xs"
+                                        >
+                                            <Download className="w-3 h-3" />
+                                            <span>{isEn ? "Template ENG (.docx)" : "შაბლონი ინგლისური (.docx)"}</span>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                {/* Poster Guidance Box */}
+                                <div className="p-2.5 rounded-xl bg-blue-50/90 border border-blue-200 text-blue-950 text-[11px] leading-relaxed flex items-start gap-2">
+                                    <Info className="w-3.5 h-3.5 text-blue-600 flex-shrink-0 mt-0.5" />
+                                    <span className="font-medium">{t.form.posterNotice}</span>
+                                </div>
+
+                                {/* Translation Footnote Notice */}
+                                <div className="p-2.5 rounded-xl bg-amber-50/90 border border-amber-200 text-amber-950 text-[11px] leading-relaxed flex items-start gap-2">
                                     <Info className="w-3.5 h-3.5 text-amber-600 flex-shrink-0 mt-0.5" />
-                                    <span>{t.form.footnote}</span>
+                                    <span className="font-medium">{t.form.footnote}</span>
                                 </div>
                             </div>
 
@@ -974,19 +1041,131 @@ export default function Conference2026View() {
                 {/* 2. THEMATIC TOPICS TAB */}
                 {activeTab === 'topics' && (
                     <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in space-y-6">
-                        <h2 className="text-xl sm:text-2xl font-black text-[#60318e]">
-                            {isEn ? "Conference Thematic Topics (6 Sections)" : "კონფერენციის თემატური მიმართულებები (6 სექცია)"}
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {thematicTopics.map((top, idx) => (
-                                <div key={top.id} className="p-5 rounded-2xl border border-purple-100 bg-slate-50/60 hover:bg-purple-50/50 transition-all flex items-start gap-3.5">
-                                    <div className="w-8 h-8 rounded-full bg-[#60318e] text-white flex items-center justify-center font-black text-xs flex-shrink-0 shadow-xs">
-                                        {idx + 1}
-                                    </div>
+                        <div>
+                            <h2 className="text-xl sm:text-2xl font-black text-[#60318e] mb-1">
+                                {isEn ? "Conference Thematic Topics" : "კონფერენციის თემატური მიმართულებები"}
+                            </h2>
+                            <p className="text-xs text-gray-500">
+                                {isEn
+                                    ? "Abstracts and oral/poster presentations are invited in the following scientific sections and subtopics:"
+                                    : "სამეცნიერო მოხსენებები და აბსტრაქტები მიიღება შემდეგ თემატურ სექციებსა და ქვემიმართულებებში:"}
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            {thematicTopics.map((top) => (
+                                <div
+                                    key={top.id}
+                                    className="p-5 sm:p-6 rounded-2xl border border-purple-100 bg-slate-50/50 hover:bg-purple-50/40 hover:border-purple-200 transition-all flex flex-col justify-between group shadow-2xs"
+                                >
                                     <div>
-                                        <h4 className="font-extrabold text-sm text-gray-900 leading-snug">
+                                        <div className="flex items-center gap-2.5 mb-2.5">
+                                            <span className="w-8 h-8 rounded-xl bg-[#60318e] text-white flex items-center justify-center font-black text-xs flex-shrink-0 shadow-xs">
+                                                {top.num}
+                                            </span>
+                                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#AD49E1] bg-purple-100/70 px-2.5 py-0.5 rounded-full">
+                                                {isEn ? `Section ${top.num}` : `სექცია ${top.num}`}
+                                            </span>
+                                        </div>
+
+                                        <h4 className="font-extrabold text-sm sm:text-base text-gray-900 leading-snug mb-3 group-hover:text-[#60318e] transition-colors">
                                             {isEn ? top.titleEn : top.titleKa}
                                         </h4>
+
+                                        {/* Subtopics List */}
+                                        {(isEn ? top.subtopicsEn : top.subtopicsKa)?.length > 0 && (
+                                            <div className="pt-2 border-t border-purple-100/80">
+                                                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
+                                                    {isEn ? "Subtopics & Directions:" : "ქვემიმართულებები:"}
+                                                </span>
+                                                <ul className="space-y-1.5">
+                                                    {(isEn ? top.subtopicsEn : top.subtopicsKa).map((sub, sIdx) => (
+                                                        <li key={sIdx} className="flex items-start gap-2 text-xs text-slate-700 leading-relaxed">
+                                                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                                                            <span>{sub}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* 2.1 INVITED SPEAKERS TAB */}
+                {activeTab === 'speakers' && (
+                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in space-y-6">
+                        <div>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 text-[#60318e] text-xs font-bold mb-2">
+                                <Users className="w-3.5 h-3.5 text-[#AD49E1]" />
+                                <span>{isEn ? "Keynote Lectures" : "პლენარული მოხსენებები"}</span>
+                            </div>
+                            <h2 className="text-xl sm:text-2xl font-black text-[#60318e] mb-1">
+                                {isEn ? "Invited Keynote Speakers" : "მოწვეული მომხსენებლები"}
+                            </h2>
+                            <p className="text-xs text-gray-500">
+                                {isEn
+                                    ? "Distinguished international scientists delivering keynote lectures at the 3rd International Scientific Conference 2026."
+                                    : "საერთაშორისო დონის მეცნიერები და მოწვეული მკვლევრები, რომლებიც წარადგენენ პლენარულ მოხსენებებს მე-3 საერთაშორისო კონფერენციაზე."}
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {INVITED_SPEAKERS.map((speaker) => (
+                                <div
+                                    key={speaker.id}
+                                    className="p-6 rounded-3xl border border-purple-100 bg-slate-50/40 hover:bg-purple-50/30 hover:border-purple-200 transition-all flex flex-col justify-between shadow-2xs space-y-4"
+                                >
+                                    <div className="space-y-3">
+                                        <div className="flex items-start gap-4">
+                                            {speaker.image ? (
+                                                <img
+                                                    src={speaker.image}
+                                                    alt={isEn ? speaker.nameEn : speaker.nameKa}
+                                                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-2 border-purple-200 shadow-sm flex-shrink-0 bg-white"
+                                                    onError={(e) => {
+                                                        e.currentTarget.style.display = 'none';
+                                                    }}
+                                                />
+                                            ) : (
+                                                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-[#60318e] to-[#AD49E1] text-white flex items-center justify-center font-black text-xl shadow-sm flex-shrink-0 border-2 border-purple-200">
+                                                    {speaker.initials}
+                                                </div>
+                                            )}
+                                            <div className="flex-1 min-w-0">
+                                                <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-purple-100 text-[#60318e] border border-purple-200 inline-block mb-1">
+                                                    {isEn ? speaker.countryEn : speaker.countryKa} • Keynote
+                                                </span>
+                                                <h3 className="font-extrabold text-sm sm:text-base text-gray-900 leading-snug">
+                                                    {isEn ? speaker.nameEn : speaker.nameKa}
+                                                </h3>
+                                                <p className="text-[11px] font-semibold text-purple-900 mt-0.5 line-clamp-2">
+                                                    {isEn ? speaker.roleEn : speaker.roleKa}
+                                                </p>
+                                                <p className="text-[11px] text-gray-500 mt-0.5">
+                                                    {isEn ? speaker.affiliationEn : speaker.affiliationKa}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Presentation topic box */}
+                                        <div className="p-3 rounded-xl bg-purple-50/80 border border-purple-200/80 text-xs">
+                                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#60318e] block mb-0.5 flex items-center gap-1">
+                                                <FileText className="w-3 h-3 text-[#AD49E1]" />
+                                                {isEn ? "Presentation Topic:" : "მოხსენების თემა:"}
+                                            </span>
+                                            <p className="font-bold text-gray-900 italic leading-snug">
+                                                „{isEn ? speaker.topicEn : speaker.topicKa}“
+                                            </p>
+                                        </div>
+
+                                        {/* Bio */}
+                                        <p className="text-xs text-gray-600 leading-relaxed">
+                                            {isEn ? speaker.bioEn : speaker.bioKa}
+                                        </p>
                                     </div>
                                 </div>
                             ))}
@@ -998,10 +1177,17 @@ export default function Conference2026View() {
                 {activeTab === 'schedule' && (
                     <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in space-y-8">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-purple-100 pb-4">
-                            <h2 className="text-xl sm:text-2xl font-black text-[#60318e]">
-                                {isEn ? "Preliminary Program Schedule 2026" : "კონფერენციის წინასწარი პროგრამა 2026"}
-                            </h2>
-                            <span className="text-xs font-bold text-[#AD49E1] bg-purple-50 px-3 py-1 rounded-full border border-purple-200">
+                            <div>
+                                <h2 className="text-xl sm:text-2xl font-black text-[#60318e]">
+                                    {isEn ? "Preliminary Program" : "კონფერენციის წინასწარი პროგრამა"}
+                                </h2>
+                                <p className="text-xs text-gray-500 mt-0.5">
+                                    {isEn
+                                        ? "Detailed preliminary schedule of plenary, sectional, and social events."
+                                        : "პლენარული, სექციური და სოციალური ღონისძიებების დეტალური წინასწარი განრიგი."}
+                                </p>
+                            </div>
+                            <span className="text-xs font-bold text-[#AD49E1] bg-purple-50 px-3 py-1 rounded-full border border-purple-200 self-start sm:self-auto">
                                 25–27 ნოემბერი, 2026
                             </span>
                         </div>
@@ -1010,23 +1196,54 @@ export default function Conference2026View() {
                         <div className="space-y-3">
                             <div className="flex items-center gap-2 text-sm font-black text-[#60318e]">
                                 <Landmark className="w-5 h-5 text-[#AD49E1]" />
-                                <h3>{isEn ? "Day 1: November 25 — Tbilisi (TSU Campus)" : "დღე 1: 25 ნოემბერი — თბილისი (თსუ)"}</h3>
+                                <h3>
+                                    {isEn
+                                        ? "Day 1: Wednesday, November 25 — Tbilisi (Ivane Javakhishvili Tbilisi State University)"
+                                        : "დღე 1: ოთხშაბათი, 25 ნოემბერი — თბილისი (ივ. ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტი)"}
+                                </h3>
                             </div>
                             <div className="space-y-2 text-xs border-l-2 border-purple-200 ml-2.5 pl-4">
                                 <div className="p-3 bg-purple-50/40 rounded-xl">
-                                    <strong className="text-[#60318e]">09:00 – 10:00:</strong> {isEn ? "Registration of participants" : "მონაწილეთა რეგისტრაცია"}
+                                    <strong className="text-[#60318e]">09:00 – 10:00:</strong>{" "}
+                                    {isEn ? "Registration of participants" : "მონაწილეთა რეგისტრაცია"}
                                 </div>
                                 <div className="p-3 bg-purple-50/40 rounded-xl">
-                                    <strong className="text-[#60318e]">10:00 – 10:30:</strong> {isEn ? "Welcome & opening remarks (Ministry of Education, TSU Administration, National Academy of Sciences)" : "მისალმება (განათლებისა და მეცნიერების სამინისტრო, თსუ ადმინისტრაცია, მეცნიერებათა ეროვნული აკადემია)"}
+                                    <strong className="text-[#60318e]">10:00 – 10:30:</strong>{" "}
+                                    {isEn
+                                        ? "Welcome remarks: Ministry of Education and Science of Georgia, TSU Administration, Georgian National Academy of Sciences, Foreign Guest"
+                                        : "მისალმება: საქართველოს განათლებისა და მეცნიერების სამინისტრო, თსუ ადმინისტრაცია, საქართველოს მეცნიერებათა ეროვნული აკადემია, უცხოელი სტუმარი"}
                                 </div>
                                 <div className="p-3 bg-purple-50/40 rounded-xl">
-                                    <strong className="text-[#60318e]">10:30 – 11:00:</strong> {isEn ? "Grigor Tatishvili (Director) — Institute Presentation & 70th Anniversary Video Collage" : "გრიგორ ტატიშვილი (დირექტორი) — მოხსენება და ინსტიტუტის 70 წლის საიუბილეო კოლაჟი/ვიდეო"}
+                                    <strong className="text-[#60318e]">10:30 – 11:00:</strong>{" "}
+                                    {isEn
+                                        ? "Grigor Tatishvili, Corresponding Member, Georgian National Academy of Sciences; Director, TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry"
+                                        : "გრიგორ ტატიშვილი, წევრ-კორესპონდენტი, საქართველოს მეცნიერებათა ეროვნული აკადემია; დირექტორი, თსუ რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
                                 </div>
                                 <div className="p-3 bg-purple-50/40 rounded-xl">
-                                    <strong className="text-[#60318e]">11:00 – 14:00:</strong> {isEn ? "Plenary presentations, Coffee break (Anniversary cake cutting) and Poster section" : "პლენარული მოხსენებები, ყავის შესვენება (საიუბილეო ტორტის გაჭრა) და პოსტერული სექცია"}
+                                    <strong className="text-[#60318e]">11:00 – 12:00:</strong>{" "}
+                                    {isEn ? "Plenary reports: Two speeches" : "პლენარული მოხსენებები: ორი მოხსენება"}
                                 </div>
-                                <div className="p-3 bg-amber-50/60 rounded-xl border border-amber-200">
-                                    <strong className="text-amber-900">15:30:</strong> {isEn ? "Departure to Telavi (Transport provided by the organizing committee)" : "გამგზავრება თელავში (ტრანსპორტს უზრუნველყოფენ ორგანიზატორები)"}
+                                <div className="p-3 bg-purple-50/40 rounded-xl">
+                                    <strong className="text-[#60318e]">12:00 – 12:30:</strong>{" "}
+                                    {isEn ? "Coffee break" : "შესვენება ყავაზე"}
+                                </div>
+                                <div className="p-3 bg-purple-50/40 rounded-xl">
+                                    <strong className="text-[#60318e]">12:30 – 14:00:</strong>{" "}
+                                    {isEn ? "Plenary reports: Two speeches" : "პლენარული მოხსენებები: ორი მოხსენება"}
+                                </div>
+                                <div className="p-3 bg-purple-50/40 rounded-xl">
+                                    <strong className="text-[#60318e]">10:00 – 14:00:</strong>{" "}
+                                    {isEn ? "Poster section (exhibition)" : "პოსტერული სექცია (გამოფენა)"}
+                                </div>
+                                <div className="p-3 bg-purple-50/40 rounded-xl">
+                                    <strong className="text-[#60318e]">14:00 – 15:00:</strong>{" "}
+                                    {isEn ? "Lunch (Refreshments)" : "ხემსი"}
+                                </div>
+                                <div className="p-3 bg-amber-50/80 rounded-xl border border-amber-200">
+                                    <strong className="text-amber-900">16:00:</strong>{" "}
+                                    {isEn
+                                        ? "Departure to Telavi (Free transportation provided by the organizing committee)"
+                                        : "გამგზავრება თელავში (ტრანსპორტს უზრუნველყოფენ ორგანიზატორები)"}
                                 </div>
                             </div>
                         </div>
@@ -1035,14 +1252,46 @@ export default function Conference2026View() {
                         <div className="space-y-3">
                             <div className="flex items-center gap-2 text-sm font-black text-[#60318e]">
                                 <GraduationCap className="w-5 h-5 text-[#AD49E1]" />
-                                <h3>{isEn ? "Day 2: November 26 — Telavi (Telavi State University)" : "დღე 2: 26 ნოემბერი — თელავი (თელავის უნივერსიტეტი)"}</h3>
+                                <h3>
+                                    {isEn
+                                        ? "Day 2: Thursday, November 26 — Telavi (Iakob Gogebashvili Telavi State University)"
+                                        : "დღე 2: ხუთშაბათი, 26 ნოემბერი — თელავი (ი. გოგებაშვილის სახელობის თელავის სახელმწიფო უნივერსიტეტი)"}
+                                </h3>
                             </div>
                             <div className="space-y-2 text-xs border-l-2 border-purple-200 ml-2.5 pl-4">
                                 <div className="p-3 bg-purple-50/40 rounded-xl">
-                                    <strong className="text-[#60318e]">09:30 – 10:00:</strong> {isEn ? "Registration" : "რეგისტრაცია"}
+                                    <strong className="text-[#60318e]">09:30 – 10:00:</strong>{" "}
+                                    {isEn ? "Registration" : "რეგისტრაცია"}
                                 </div>
                                 <div className="p-3 bg-purple-50/40 rounded-xl">
-                                    <strong className="text-[#60318e]">10:00 – 18:00:</strong> {isEn ? "Plenary and parallel sessions across all 6 thematic directions, poster exhibition-discussion, lunch and coffee breaks" : "პლენარული და პარალელური სექციები 6-ვე თემაზე, პოსტერული გამოფენა-განხილვა, სადილი და ყავის შესვენებები"}
+                                    <strong className="text-[#60318e]">10:00 – 12:00:</strong>{" "}
+                                    {isEn
+                                        ? "Plenary and parallel sections: Nanoprocesses & Nanotechnologies; Mineral Processing; Green Chemistry; Popularization of Innovations; Food Chemistry & Quality"
+                                        : "პლენარული და პარალელური სექციები: ნანოპროცესები და ნანოტექნოლოგიები, სასარგებლო წიაღისეულისა და მეორადი ნედლეულის გადამუშავება, მწვანე ქიმია, სამეცნიერო ინოვაციების პოპულარიზაცია, სურსათის ქიმია"}
+                                </div>
+                                <div className="p-3 bg-purple-50/40 rounded-xl">
+                                    <strong className="text-[#60318e]">12:00 – 13:00:</strong>{" "}
+                                    {isEn ? "Coffee break" : "შესვენება ყავაზე"}
+                                </div>
+                                <div className="p-3 bg-purple-50/40 rounded-xl">
+                                    <strong className="text-[#60318e]">12:00 – 13:30:</strong>{" "}
+                                    {isEn ? "Poster section (exhibition – discussion)" : "პოსტერული სექცია (გამოფენა-განხილვა)"}
+                                </div>
+                                <div className="p-3 bg-purple-50/40 rounded-xl">
+                                    <strong className="text-[#60318e]">13:30 – 15:00:</strong>{" "}
+                                    {isEn ? "Plenary and parallel sections" : "პლენარული და პარალელური სექციები"}
+                                </div>
+                                <div className="p-3 bg-purple-50/40 rounded-xl">
+                                    <strong className="text-[#60318e]">15:00 – 16:00:</strong>{" "}
+                                    {isEn ? "Lunch" : "სადილი"}
+                                </div>
+                                <div className="p-3 bg-purple-50/40 rounded-xl">
+                                    <strong className="text-[#60318e]">16:00 – 18:00:</strong>{" "}
+                                    {isEn ? "Plenary and parallel sections" : "პლენარული და პარალელური სექციები"}
+                                </div>
+                                <div className="p-3 bg-purple-50/40 rounded-xl">
+                                    <strong className="text-[#60318e]">10:00 – 17:00:</strong>{" "}
+                                    {isEn ? "Poster section (exhibition)" : "პოსტერული სექცია (გამოფენა)"}
                                 </div>
                             </div>
                         </div>
@@ -1051,18 +1300,70 @@ export default function Conference2026View() {
                         <div className="space-y-3">
                             <div className="flex items-center gap-2 text-sm font-black text-[#60318e]">
                                 <PartyPopper className="w-5 h-5 text-[#AD49E1]" />
-                                <h3>{isEn ? "Day 3: November 27 — Telavi (Closing & Gala Dinner)" : "დღე 3: 27 ნოემბერი — თელავი (დახურვა და საზეიმო ვახშამი)"}</h3>
+                                <h3>
+                                    {isEn
+                                        ? "Day 3: Friday, November 27 — Telavi (Iakob Gogebashvili Telavi State University)"
+                                        : "დღე 3: პარასკევი, 27 ნოემბერი — თელავი (ი. გოგებაშვილის სახელობის თელავის სახელმწიფო უნივერსიტეტი)"}
+                                </h3>
                             </div>
                             <div className="space-y-2 text-xs border-l-2 border-purple-200 ml-2.5 pl-4">
                                 <div className="p-3 bg-purple-50/40 rounded-xl">
-                                    <strong className="text-[#60318e]">10:00 – 13:00:</strong> {isEn ? "Section work" : "სექციური მუშაობა"}
+                                    <strong className="text-[#60318e]">09:30 – 10:00:</strong>{" "}
+                                    {isEn ? "Registration" : "რეგისტრაცია"}
                                 </div>
                                 <div className="p-3 bg-purple-50/40 rounded-xl">
-                                    <strong className="text-[#60318e]">13:30 – 14:00:</strong> {isEn ? "Closing of the conference & Presentation of certificates" : "ღონისძიების დახურვა და სერტიფიკატების გადაცემა"}
+                                    <strong className="text-[#60318e]">10:00 – 13:00:</strong>{" "}
+                                    {isEn ? "Plenary and parallel sections" : "პლენარული და პარალელური სექციები"}
                                 </div>
-                                <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200">
-                                    <strong className="text-emerald-900">15:00 – 20:00:</strong> {isEn ? "Social program & Gala Dinner (18:00–20:00)" : "სოციალური პროგრამა და საზეიმო ვახშამი (18:00–20:00)"}
+                                <div className="p-3 bg-purple-50/40 rounded-xl">
+                                    <strong className="text-[#60318e]">13:00 – 13:30:</strong>{" "}
+                                    {isEn ? "Lunch (Refreshments)" : "ხემსი"}
                                 </div>
+                                <div className="p-3 bg-purple-50/40 rounded-xl">
+                                    <strong className="text-[#60318e]">13:30 – 14:00:</strong>{" "}
+                                    {isEn
+                                        ? "Closing of the conference & Presentation of certificates (in-person and online participants)"
+                                        : "ღონისძიების დახურვა (სერტიფიკატების გადაცემა დამსწრეებს, სხვა მონაწილეებს ონლაინ)"}
+                                </div>
+                                <div className="p-3 bg-emerald-50/80 rounded-xl border border-emerald-200">
+                                    <strong className="text-emerald-900">15:00 – 20:00:</strong>{" "}
+                                    {isEn
+                                        ? "Social program & Gala Dinner (18:00 – 20:00)"
+                                        : "სოციალური პროგრამა და საზეიმო ვახშამი (18:00 – 20:00)"}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Program Direct Downloads Box */}
+                        <div className="p-5 rounded-2xl bg-purple-50/60 border border-purple-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div>
+                                <h4 className="font-extrabold text-sm text-[#60318e] flex items-center gap-2">
+                                    <Download className="w-4 h-4 text-[#AD49E1]" />
+                                    <span>{isEn ? "Download Preliminary Program Documents" : "პროგრამის დოკუმენტების ჩამოტვირთვა"}</span>
+                                </h4>
+                                <p className="text-xs text-gray-600 mt-0.5">
+                                    {isEn
+                                        ? "Save the complete preliminary program schedule in Microsoft Word format (.docx)"
+                                        : "ჩამოტვირთეთ კონფერენციის წინასწარი პროგრამა Word-ის ფორმატში (.docx)"}
+                                </p>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-2.5">
+                                <a
+                                    href="/conference-2026/Preliminary-Program-GEO.docx"
+                                    download="Preliminary-Program-GEO.docx"
+                                    className="inline-flex items-center gap-2 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold px-4 py-2 rounded-xl text-xs shadow-xs transition-colors cursor-pointer"
+                                >
+                                    <Download className="w-3.5 h-3.5" />
+                                    <span>{isEn ? "Program GEO (.docx)" : "პროგრამა ქართულად (.docx)"}</span>
+                                </a>
+                                <a
+                                    href="/conference-2026/Preliminary-Program-ENG.docx"
+                                    download="Preliminary-Program-ENG.docx"
+                                    className="inline-flex items-center gap-2 bg-white hover:bg-purple-50 text-[#60318e] font-bold px-4 py-2 rounded-xl text-xs border border-purple-300 shadow-xs transition-colors cursor-pointer"
+                                >
+                                    <Download className="w-3.5 h-3.5" />
+                                    <span>{isEn ? "Program ENG (.docx)" : "პროგრამა ინგლისურად (.docx)"}</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1070,185 +1371,193 @@ export default function Conference2026View() {
 
                 {/* 3.1 ORGANIZERS TAB */}
                 {activeTab === 'organizers' && (
-                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in space-y-8">
+                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in space-y-10">
                         <div>
                             <h2 className="text-xl sm:text-2xl font-black text-[#60318e] mb-2">
-                                {isEn ? "Organizing Committee & Supporting Institutions" : "საორგანიზაციო ინსტიტუციები და კომიტეტი"}
+                                {isEn ? "Organizing Institutions" : "საორგანიზაციო ინსტიტუციები"}
                             </h2>
                             <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">
                                 {isEn
-                                    ? "The 3rd International Scientific Conference 2026 is organized jointly by Georgia's leading scientific and educational institutions, supported by the Shota Rustaveli National Science Foundation."
-                                    : "მე-3 საერთაშორისო სამეცნიერო კონფერენცია 2026 იმართება საქართველოს წამყვანი სამეცნიერო და საგანმანათლებლო დაწესებულებების პარტნიორობით, შოთა რუსთაველის საქართველოს ეროვნული სამეცნიერო ფონდის მხარდაჭერით."}
+                                    ? "The 3rd International Scientific Conference 2026 is organized jointly by Georgia's leading universities and scientific research institutes."
+                                    : "მე-3 საერთაშორისო სამეცნიერო კონფერენცია 2026 იმართება საქართველოს წამყვანი უნივერსიტეტებისა და სამეცნიერო-კვლევითი ინსტიტუტების მიერ."}
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* IICE */}
-                            <div className="p-6 rounded-3xl border-2 border-amber-400/40 bg-purple-50/30 space-y-3">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-14 h-14 rounded-2xl bg-white p-2 border border-purple-100 shadow-xs flex items-center justify-center">
-                                        <img src="/logo.png" alt="IICE" className="w-full h-full object-contain" />
-                                    </div>
-                                    <div>
-                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
-                                            მთავარი ორგანიზატორი • 70 წელი
-                                        </span>
-                                        <h4 className="font-extrabold text-sm text-gray-900 mt-1">
-                                            {isEn ? "R. Agladze Institute of Inorganic Chemistry & Electrochemistry" : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
-                                        </h4>
-                                    </div>
-                                </div>
-                                <p className="text-xs text-gray-600 leading-relaxed">
-                                    {isEn
-                                        ? "Founded in 1956. Over seven decades of pioneer research in applied electrochemistry, mineral processing, nanomaterials, and green energy."
-                                        : "დაარსდა 1956 წელს. 7 ათწლეულის განმავლობაში ინსტიტუტი არის მოწინავე სამეცნიერო ცენტრი გამოყენებით ელექტროქიმიაში, წიაღისეულის გადამუშავებასა და ნანოტექნოლოგიებში."}
-                                </p>
-                            </div>
-
+                        {/* 3 Organizing Institutions */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {/* TSU */}
-                            <div className="p-6 rounded-3xl border border-purple-100 bg-slate-50/60 space-y-3">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 shadow-xs flex items-center justify-center">
-                                        <Landmark className="w-7 h-7 text-blue-700" />
-                                    </div>
-                                    <div>
-                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800">
-                                            თანაორგანიზატორი
-                                        </span>
-                                        <h4 className="font-extrabold text-sm text-gray-900 mt-1">
-                                            {isEn ? "Ivane Javakhishvili Tbilisi State University (TSU)" : "ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტი"}
-                                        </h4>
-                                    </div>
-                                </div>
-                                <p className="text-xs text-gray-600 leading-relaxed">
-                                    {isEn
-                                        ? "The first national university in the Caucasus, fostering scientific excellence, higher education, and international collaboration."
-                                        : "პირველი ეროვნული უნივერსიტეტი კავკასიაში, ქართული საუნივერსიტეტო განათლებისა და მეცნიერების მთავარი კერა."}
-                                </p>
-                            </div>
-
-                            {/* TeSaU */}
-                            <div className="p-6 rounded-3xl border border-purple-100 bg-slate-50/60 space-y-3">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 shadow-xs flex items-center justify-center">
-                                        <GraduationCap className="w-7 h-7 text-emerald-700" />
-                                    </div>
-                                    <div>
-                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                                            მასპინძელი უნივერსიტეტი
-                                        </span>
-                                        <h4 className="font-extrabold text-sm text-gray-900 mt-1">
-                                            {isEn ? "Iakob Gogebashvili Telavi State University (TeSaU)" : "იაკობ გოგებაშვილის სახელობის თელავის სახელმწიფო უნივერსიტეტი"}
-                                        </h4>
-                                    </div>
-                                </div>
-                                <p className="text-xs text-gray-600 leading-relaxed">
-                                    {isEn
-                                        ? "Host institution in Kakheti region, providing state-of-the-art auditoriums for sectional meetings, discussions, and academic exchange."
-                                        : "კახეთის რეგიონის წამყვანი საგანმანათლებლო ცენტრი, რომელიც მასპინძლობს კონფერენციის სექციურ სხდომებს, დისკუსიებსა და შემაჯამებელ ღონისძიებას."}
-                                </p>
-                            </div>
-
-                            {/* SRNSFG */}
-                            <div className="p-6 rounded-3xl border border-purple-100 bg-slate-50/60 space-y-3">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 shadow-xs flex items-center justify-center">
-                                        <Award className="w-7 h-7 text-amber-600" />
-                                    </div>
-                                    <div>
-                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900">
-                                            გრანტის დონორი და მხარდამჭერი
-                                        </span>
-                                        <h4 className="font-extrabold text-sm text-gray-900 mt-1">
-                                            {isEn ? "Shota Rustaveli National Science Foundation" : "შოთა რუსთაველის საქართველოს ეროვნული სამეცნიერო ფონდი"}
-                                        </h4>
-                                    </div>
-                                </div>
-                                <p className="text-xs text-gray-600 leading-relaxed">
-                                    {isEn
-                                        ? "Grant project ISE-26-286. Supporting the dissemination of high-level scientific findings and international cooperation in Georgia."
-                                        : "საგრანტო პროექტი ISE-26-286. უზრუნველყოფს სამეცნიერო კვლევების პოპულარიზაციას, საერთაშორისო ინტეგრაციასა და ახალგაზრდა მეცნიერთა ჩართულობას."}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* 4. DOWNLOADS TAB */}
-                {activeTab === 'downloads' && (
-                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in space-y-6">
-                        <div>
-                            <h2 className="text-xl sm:text-2xl font-black text-[#60318e] mb-1">
-                                {isEn ? "Download Center" : "ფაილების ჩამოტვირთვა"}
-                            </h2>
-                            <p className="text-xs text-gray-500">
-                                {isEn ? "Download abstract templates and preliminary program schedules." : "ჩამოტვირთეთ აბსტრაქტის შაბლონები და კონფერენციის წინასწარი პროგრამა."}
-                            </p>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {[
-                                {
-                                    name: "Abstract-template GEO.doc",
-                                    desc: isEn ? "Abstract Template (Georgian language)" : "აბსტრაქტის შაბლონი (ქართულ ენაზე)",
-                                    size: "186 KB",
-                                    fileUrl: "/conference-2026/Abstract-template%20GEO.doc",
-                                    badge: "GEO DOC",
-                                },
-                                {
-                                    name: "Abstract-template_ENG.docx",
-                                    desc: isEn ? "Abstract Template (English language)" : "აბსტრაქტის შაბლონი (ინგლისურ ენაზე)",
-                                    size: "311 KB",
-                                    fileUrl: "/conference-2026/Abstract-template_ENG.docx",
-                                    badge: "ENG DOCX",
-                                },
-                                {
-                                    name: "Preliminary Programm 2026 GEO.docx",
-                                    desc: isEn ? "Preliminary Program Schedule (GEO)" : "წინასწარი პროგრამა 2026 (ქართულად)",
-                                    size: "28 KB",
-                                    fileUrl: "/conference-2026/Preliminary%20Programm%202026%20GEO.docx",
-                                    badge: "PROGRAM GEO",
-                                },
-                                {
-                                    name: "Preliminary Programm 2026 ENG.docx",
-                                    desc: isEn ? "Preliminary Program Schedule (ENG)" : "წინასწარი პროგრამა 2026 (ინგლისურად)",
-                                    size: "27 KB",
-                                    fileUrl: "/conference-2026/Preliminary%20Programm%202026%20ENG.docx",
-                                    badge: "PROGRAM ENG",
-                                },
-                            ].map((doc, idx) => (
-                                <div key={idx} className="p-5 rounded-2xl border border-purple-100 bg-slate-50/60 hover:bg-purple-50/50 transition-all flex flex-col justify-between">
-                                    <div className="mb-4">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-[10px] font-mono font-bold bg-[#60318e] text-white px-2 py-0.5 rounded">
-                                                {doc.badge}
-                                            </span>
-                                            <span className="text-[10px] text-gray-500 font-semibold bg-white px-2 py-0.5 rounded-md border border-purple-100">
-                                                {doc.size}
-                                            </span>
+                            <div className="p-6 rounded-3xl border border-purple-100 bg-slate-50/50 hover:bg-purple-50/30 transition-all flex flex-col justify-between shadow-2xs group">
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="w-16 h-16 rounded-2xl bg-white p-2 border border-purple-100 shadow-xs flex items-center justify-center">
+                                            <img
+                                                src="/conference-2026/tsu-logo.png"
+                                                alt="TSU"
+                                                className="w-full h-full object-contain"
+                                            />
                                         </div>
-                                        <h4 className="font-extrabold text-xs sm:text-sm text-gray-900 mb-1">
-                                            {doc.name}
+                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-200">
+                                            {isEn ? "Co-Organizer" : "თანაორგანიზატორი"}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-extrabold text-sm text-gray-900 leading-snug group-hover:text-[#60318e] transition-colors">
+                                            {isEn
+                                                ? "Ivane Javakhishvili Tbilisi State University (TSU)"
+                                                : "ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტი (თსუ)"}
                                         </h4>
-                                        <p className="text-[11px] text-gray-500">
-                                            {doc.desc}
+                                        <p className="text-xs text-gray-600 mt-2 leading-relaxed">
+                                            {isEn
+                                                ? "First national university in the Caucasus, premier center for academic research, higher education, and international partnerships."
+                                                : "პირველი ეროვნული უნივერსიტეტი კავკასიაში, ქართული საუნივერსიტეტო განათლებისა და მეცნიერების მთავარი კერა."}
                                         </p>
                                     </div>
+                                </div>
+                                <div className="pt-4 mt-4 border-t border-purple-100">
                                     <a
-                                        href={doc.fileUrl}
-                                        download
-                                        className="inline-flex items-center justify-center gap-2 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold py-2 px-4 rounded-xl text-xs transition-colors shadow-xs"
+                                        href="https://www.tsu.ge"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 text-xs font-bold text-[#60318e] hover:text-[#7A1CAC] transition-colors"
                                     >
-                                        <Download className="w-3.5 h-3.5" />
-                                        <span>{isEn ? "Download File" : "ფაილის ჩამოტვირთვა"}</span>
+                                        <span>{isEn ? "Visit Official Website" : "ოფიციალური ვებ-გვერდი"}</span>
+                                        <ExternalLink className="w-3.5 h-3.5" />
                                     </a>
                                 </div>
-                            ))}
+                            </div>
+
+                            {/* IICE */}
+                            <div className="p-6 rounded-3xl border-2 border-amber-400/40 bg-purple-50/30 hover:bg-purple-50/60 transition-all flex flex-col justify-between shadow-2xs group">
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="w-16 h-16 rounded-2xl bg-white p-2 border border-purple-100 shadow-xs flex items-center justify-center">
+                                            <img
+                                                src="/logo.png"
+                                                alt="IICE"
+                                                className="w-full h-full object-contain"
+                                            />
+                                        </div>
+                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+                                            {isEn ? "Main Organizer • 70 Years" : "მთავარი ორგანიზატორი • 70 წელი"}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-extrabold text-sm text-gray-900 leading-snug group-hover:text-[#60318e] transition-colors">
+                                            {isEn
+                                                ? "TSU Rafael Agladze Institute of Inorganic Chemistry and Electrochemistry"
+                                                : "თსუ რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
+                                        </h4>
+                                        <p className="text-xs text-gray-600 mt-2 leading-relaxed">
+                                            {isEn
+                                                ? "Founded in 1956. Over 70 years of pioneer scientific advancements in applied electrochemistry, materials science, and clean technologies."
+                                                : "დაარსდა 1956 წელს. 7 ათწლეულის განმავლობაში ინსტიტუტი არის მოწინავე სამეცნიერო ცენტრი გამოყენებით ელექტროქიმიასა და ქიმიურ ტექნოლოგიებში."}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="pt-4 mt-4 border-t border-purple-100">
+                                    <Link
+                                        href="/"
+                                        className="inline-flex items-center gap-1.5 text-xs font-bold text-[#60318e] hover:text-[#7A1CAC] transition-colors"
+                                    >
+                                        <span>{isEn ? "Institute Portal" : "ინსტიტუტის გვერდი"}</span>
+                                        <ExternalLink className="w-3.5 h-3.5" />
+                                    </Link>
+                                </div>
+                            </div>
+
+                            {/* TESAU */}
+                            <div className="p-6 rounded-3xl border border-purple-100 bg-slate-50/50 hover:bg-purple-50/30 transition-all flex flex-col justify-between shadow-2xs group">
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="w-16 h-16 rounded-2xl bg-white p-2 border border-purple-100 shadow-xs flex items-center justify-center">
+                                            <img
+                                                src="/conference-2026/tesau-logo.png"
+                                                alt="TESAU"
+                                                className="w-full h-full object-contain"
+                                            />
+                                        </div>
+                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                            {isEn ? "Host University" : "მასპინძელი უნივერსიტეტი"}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-extrabold text-sm text-gray-900 leading-snug group-hover:text-[#60318e] transition-colors">
+                                            {isEn
+                                                ? "Iakob Gogebashvili Telavi State University (TESAU)"
+                                                : "იაკობ გოგებაშვილის სახელობის თელავის სახელმწიფო უნივერსიტეტი (თესაუ)"}
+                                        </h4>
+                                        <p className="text-xs text-gray-600 mt-2 leading-relaxed">
+                                            {isEn
+                                                ? "Leading university in Kakheti region, hosting conference sectional meetings, poster sessions, discussions, and academic exchange."
+                                                : "კახეთის რეგიონის წამყვანი საგანმანათლებლო ცენტრი, რომელიც მასპინძლობს კონფერენციის სექციურ სხდომებს, დისკუსიებსა და საზეიმო ღონისძიებას."}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="pt-4 mt-4 border-t border-purple-100">
+                                    <a
+                                        href="https://tesau.edu.ge"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 text-xs font-bold text-[#60318e] hover:text-[#7A1CAC] transition-colors"
+                                    >
+                                        <span>{isEn ? "Visit Official Website" : "ოფიციალური ვებ-გვერდი"}</span>
+                                        <ExternalLink className="w-3.5 h-3.5" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Separate Section: Supporters */}
+                        <div className="pt-8 border-t border-purple-100 space-y-4">
+                            <div>
+                                <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#AD49E1] bg-purple-100 px-3 py-1 rounded-full">
+                                    {isEn ? "Grant Donor & Supporter" : "გრანტის დონორი და მხარდამჭერი"}
+                                </span>
+                                <h3 className="text-lg sm:text-xl font-black text-[#60318e] mt-2">
+                                    {isEn ? "Supporters" : "მხარდამჭერები"}
+                                </h3>
+                            </div>
+
+                            <div className="p-6 sm:p-7 rounded-3xl border-2 border-purple-200 bg-gradient-to-r from-purple-50/50 via-white to-amber-50/30 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs">
+                                <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
+                                    <div className="w-24 h-24 rounded-2xl bg-white p-3 border border-purple-100 shadow-xs flex items-center justify-center flex-shrink-0">
+                                        <img
+                                            src="/conference-2026/rustaveli-logo.png"
+                                            alt="Shota Rustaveli National Science Foundation"
+                                            className="w-full h-full object-contain"
+                                        />
+                                    </div>
+                                    <div className="space-y-1.5 max-w-xl">
+                                        <h4 className="font-extrabold text-sm sm:text-base text-gray-900 leading-snug">
+                                            {isEn
+                                                ? "Shota Rustaveli National Science Foundation of Georgia (SRNSFG)"
+                                                : "შოთა რუსთაველის საქართველოს ეროვნული სამეცნიერო ფონდი"}
+                                        </h4>
+                                        <p className="text-xs font-bold text-[#60318e]">
+                                            {isEn ? "Grant Project ISE-26-286" : "საგრანტო პროექტი ISE-26-286"}
+                                        </p>
+                                        <p className="text-xs text-gray-600 leading-relaxed">
+                                            {isEn
+                                                ? "Supporting the promotion and popularization of cutting-edge scientific research, international integration, and active participation of young researchers."
+                                                : "უზრუნველყოფს მოწინავე სამეცნიერო კვლევების პოპულარიზაციას, საერთაშორისო ინტეგრაციასა და ახალგაზრდა მეცნიერთა აქტიურ ჩართულობას."}
+                                        </p>
+                                    </div>
+                                </div>
+                                <a
+                                    href="https://rustaveli.org.ge"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-xs transition-colors flex-shrink-0 cursor-pointer"
+                                >
+                                    <span>{isEn ? "Visit SRNSFG Website" : "ფონდის ვებ-გვერდი"}</span>
+                                    <ExternalLink className="w-3.5 h-3.5" />
+                                </a>
+                            </div>
                         </div>
                     </div>
                 )}
 
-                {/* 5. VENUES & TRANSPORT TAB */}
+                {/* 4. VENUES & TRANSPORT TAB */}
                 {activeTab === 'venues' && (
                     <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in space-y-6">
                         <h2 className="text-xl sm:text-2xl font-black text-[#60318e]">
@@ -1275,7 +1584,7 @@ export default function Conference2026View() {
                                     {isEn ? "Days 2 & 3 (Nov 26-27) • Telavi" : "დღეები 2 & 3 (26-27 ნოემბერი) • თელავი"}
                                 </span>
                                 <h4 className="font-black text-sm text-gray-900">
-                                    {isEn ? "Telavi State University (TESAU)" : "იაკობ გოგებაშვილის სახელობის თელავის სახელმწიფო უნივერსიტეტი"}
+                                    {isEn ? "Telavi State University (TESAU)" : "იაკობ გოგებაშვილის სახელობის თელავის სახელმწიფო უნივერსიტეტი (თესაუ)"}
                                 </h4>
                                 <p className="text-xs text-gray-600 leading-relaxed">
                                     {isEn
@@ -1290,66 +1599,84 @@ export default function Conference2026View() {
                             <p>
                                 <strong>{isEn ? "Organized Transport:" : "ტრანსპორტის უზრუნველყოფა:"}</strong>{" "}
                                 {isEn
-                                    ? "25 November, 15:30: Free comfortable buses will be provided by the organizing committee to transport all registered delegates from Tbilisi to Telavi."
-                                    : "25 ნოემბერს 15:30 საათზე თბილისიდან თელავში მონაწილეთა ტრანსპორტირებას კომფორტული ავტობუსებით სრულად უზრუნველყოფს საორგანიზაციო კომიტეტი."}
+                                    ? "25 November, 16:00: Free comfortable buses will be provided by the organizing committee to transport all registered delegates from Tbilisi to Telavi."
+                                    : "25 ნოემბერს 16:00 საათზე თბილისიდან თელავში მონაწილეთა ტრანსპორტირებას კომფორტული ავტობუსებით სრულად უზრუნველყოფს საორგანიზაციო კომიტეტი."}
                             </p>
                         </div>
                     </div>
                 )}
             </div>
 
-            {/* Institutional Partners & Sponsors Section (Moved down) */}
+            {/* Institutional Partners & Sponsors Section (Bottom Banner with Official Logos) */}
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-14 pt-8 border-t border-purple-100">
                 <div className="text-center mb-6">
                     <h3 className="text-base sm:text-lg font-black text-slate-900">
-                        {isEn ? "Partners & Supporting Organizations" : "მხარდამჭერი ორგანიზაციები და დონორები"}
+                        {isEn ? "Organizing Partners & Supporting Organizations" : "საორგანიზაციო პარტნიორები და მხარდამჭერები"}
                     </h3>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+                    {/* TSU */}
+                    <a
+                        href="https://www.tsu.ge"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md hover:border-purple-300 transition-all group cursor-pointer"
+                    >
+                        <div className="w-14 h-14 rounded-xl bg-blue-50/50 p-1.5 flex items-center justify-center mb-2">
+                            <img src="/conference-2026/tsu-logo.png" alt="TSU" className="w-full h-full object-contain" />
+                        </div>
+                        <span className="text-[10px] font-extrabold text-blue-700 uppercase">TSU • თსუ</span>
+                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2 group-hover:text-[#60318e] transition-colors">
+                            {isEn ? "Tbilisi State University" : "თბილისის სახელმწიფო უნივერსიტეტი"}
+                        </p>
+                    </a>
+
                     {/* IICE */}
-                    <div className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md transition-shadow">
-                        <div className="w-12 h-12 rounded-xl bg-purple-50 p-1.5 flex items-center justify-center mb-2">
+                    <Link
+                        href="/"
+                        className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md hover:border-purple-300 transition-all group cursor-pointer"
+                    >
+                        <div className="w-14 h-14 rounded-xl bg-purple-50 p-1.5 flex items-center justify-center mb-2">
                             <img src="/logo.png" alt="IICE" className="w-full h-full object-contain" />
                         </div>
                         <span className="text-[10px] font-extrabold text-[#60318e] uppercase">IICE • 70 წელი</span>
-                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2">
+                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2 group-hover:text-[#60318e] transition-colors">
                             {isEn ? "R. Agladze Institute" : "რ. აგლაძის ინსტიტუტი"}
                         </p>
-                    </div>
+                    </Link>
 
-                    {/* TSU */}
-                    <div className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md transition-shadow">
-                        <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mb-2 text-blue-700">
-                            <Landmark className="w-6 h-6" />
+                    {/* TESAU */}
+                    <a
+                        href="https://tesau.edu.ge"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md hover:border-purple-300 transition-all group cursor-pointer"
+                    >
+                        <div className="w-14 h-14 rounded-xl bg-emerald-50/50 p-1.5 flex items-center justify-center mb-2">
+                            <img src="/conference-2026/tesau-logo.png" alt="TESAU" className="w-full h-full object-contain" />
                         </div>
-                        <span className="text-[10px] font-extrabold text-blue-700 uppercase">TSU • თსუ</span>
-                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2">
-                            {isEn ? "Tbilisi State University" : "თბილისის სახელმწიფო უნივერსიტეტი"}
-                        </p>
-                    </div>
-
-                    {/* TeSaU */}
-                    <div className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md transition-shadow">
-                        <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center mb-2 text-emerald-700">
-                            <GraduationCap className="w-6 h-6" />
-                        </div>
-                        <span className="text-[10px] font-extrabold text-emerald-700 uppercase">TeSaU • თელავი</span>
-                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2">
+                        <span className="text-[10px] font-extrabold text-emerald-700 uppercase">TESAU • თესაუ</span>
+                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2 group-hover:text-[#60318e] transition-colors">
                             {isEn ? "Telavi State University" : "თელავის სახელმწიფო უნივერსიტეტი"}
                         </p>
-                    </div>
+                    </a>
 
                     {/* SRNSFG */}
-                    <div className="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md transition-shadow">
-                        <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center mb-2 text-amber-600">
-                            <Award className="w-6 h-6" />
+                    <a
+                        href="https://rustaveli.org.ge"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md hover:border-amber-400 transition-all group cursor-pointer"
+                    >
+                        <div className="w-14 h-14 rounded-xl bg-amber-50/50 p-1 flex items-center justify-center mb-2">
+                            <img src="/conference-2026/rustaveli-logo.png" alt="SRNSFG" className="w-full h-full object-contain" />
                         </div>
-                        <span className="text-[10px] font-extrabold text-amber-800 uppercase">გრანტის დონორი</span>
-                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2">
+                        <span className="text-[10px] font-extrabold text-amber-800 uppercase">გრანტი ISE-26-286</span>
+                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2 group-hover:text-[#60318e] transition-colors">
                             {isEn ? "Rustaveli Foundation" : "რუსთაველის ეროვნული ფონდი"}
                         </p>
-                    </div>
+                    </a>
                 </div>
             </div>
 

@@ -102,8 +102,12 @@ export default function Header() {
                                 <img src="/logo.png" alt="IICE Logo" className="w-full h-full object-contain" />
                             </div>
                             <div className="hidden sm:block lg:hidden xl:block transition-all duration-300 transform group-hover:translate-x-1">
-                                <h1 className="font-bold text-xs lg:text-[10px] xl:text-sm text-white leading-tight" style={{ color: '#ffffff' }}>TSU R.Agladze Institute</h1>
-                                <p className="text-[9px] lg:text-[8px] xl:text-[10px] text-white truncate whitespace-normal" style={{ color: '#ffffff', opacity: 0.9 }}>of Inorganic Chemistry and Electrochemistry</p>
+                                <h1 className="font-bold text-xs lg:text-[10px] xl:text-sm text-white leading-tight" style={{ color: '#ffffff' }}>
+                                    {language === 'ka' ? 'თსუ რ. აგლაძის სახელობის' : 'TSU R. Agladze Institute'}
+                                </h1>
+                                <p className="text-[9px] lg:text-[8px] xl:text-[10px] text-white truncate whitespace-normal" style={{ color: '#ffffff', opacity: 0.9 }}>
+                                    {language === 'ka' ? 'არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი' : 'of Inorganic Chemistry and Electrochemistry'}
+                                </p>
                             </div>
                         </Link>
                     </div>
@@ -238,8 +242,8 @@ export default function Header() {
                                     <img src="/logo.png" alt="IICE" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                    <h2 className="font-bold text-xs text-white">TSU IICE</h2>
-                                    <p className="text-[9px] text-purple-200/80">Agladze Institute</p>
+                                    <h2 className="font-bold text-xs text-white">{language === 'ka' ? 'თსუ რ. აგლაძის ინსტიტუტი' : 'TSU IICE'}</h2>
+                                    <p className="text-[9px] text-purple-200/80">{language === 'ka' ? 'არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი' : 'Agladze Institute'}</p>
                                 </div>
                             </div>
                             <button

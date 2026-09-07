@@ -117,14 +117,21 @@ export default function Home() {
             </div>
           </ScrollReveal>
 
-          {/* Image Content - More Compact */}
-          <ScrollReveal direction="right" duration={800} delay={200} className="w-full md:w-5/12 relative hidden md:block">
-            <div className="aspect-w-16 aspect-h-7 lg:aspect-w-16 lg:aspect-h-9 rounded-2xl overflow-hidden shadow-xl border-4 border-white transform rotate-1 hover:rotate-0 transition-transform duration-500">
-              <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=80" alt="IICE Laboratory" className="w-full h-full object-cover" />
+          {/* Image Content - 70th Anniversary Visual */}
+          <ScrollReveal direction="right" duration={800} delay={200} className="w-full md:w-5/12 relative hidden md:flex items-center justify-center">
+            <div className="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-white/95 via-purple-50/70 to-indigo-50/90 shadow-xl border-2 border-purple-200/80 backdrop-blur-sm transform hover:scale-105 transition-all duration-500 flex flex-col items-center justify-center group">
+              <img 
+                src="/conference-2026/anniversary-70.png" 
+                alt="70th Anniversary Rafael Agladze Institute" 
+                className="w-full max-w-[320px] h-auto object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105" 
+              />
+              <div className="mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-100/90 border border-purple-200 text-[#60318e] text-xs font-black tracking-wider uppercase shadow-xs">
+                <span>{language === 'en' ? '70 Years of Scientific Excellence' : 'მეცნიერების სამსახურში 70 წელი'}</span>
+              </div>
             </div>
             {/* Decorative elements */}
-            <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-purple-200 rounded-full z-[-1] opacity-60 blur-xl animate-float-blob"></div>
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-indigo-100 rounded-full z-[-1] opacity-60 blur-xl animate-float-blob-reverse"></div>
+            <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-purple-200/50 rounded-full z-[-1] blur-xl animate-float-blob"></div>
+            <div className="absolute -top-4 -right-4 w-28 h-28 bg-indigo-100/60 rounded-full z-[-1] blur-xl animate-float-blob-reverse"></div>
           </ScrollReveal>
         </div>
       </section>
@@ -156,20 +163,21 @@ export default function Home() {
                     : 'მე-3 საერთაშორისო სამეცნიერო კონფერენცია: „თანამედროვე ტენდენციები ქიმიაში, ქიმიურ ტექნოლოგიებსა და მომიჯნავე დარგებში: მწვანე ენერგეტიკის პერსპექტივები, ეკოლოგიური მდგრადობა, სურსათის უვნებელობა. 2026“'}
                 </h2>
 
-                {/* 70th Anniversary Commemorative Card */}
-                <div className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-50 to-amber-100/30 border-l-4 border-amber-500 rounded-r-2xl py-2.5 px-4 shadow-xs border-y border-r border-amber-200/60">
+                {/* 70th Anniversary Commemorative Card - Emphasized without years */}
+                <div className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-100/90 via-amber-50 to-purple-50/50 border-l-4 border-amber-500 rounded-2xl py-3 px-4 shadow-sm border border-amber-300/70 ring-1 ring-amber-400/20">
                   <Award className="w-5 h-5 text-amber-600 flex-shrink-0" />
-                  <span className="text-xs sm:text-sm font-bold text-amber-950 leading-snug">
+                  <span className="text-xs sm:text-sm md:text-[15px] font-black text-amber-950 leading-snug tracking-tight">
                     {language === 'en'
-                      ? 'Dedicated to the 70th anniversary of the founding of Rafael Agladze Institute of Inorganic Chemistry and Electrochemistry (1956–2026)'
-                      : 'ეძღვნება რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის დაარსების 70 წლისთავს (1956–2026)'}
+                      ? 'Dedicated to the 70th anniversary of the founding of Rafael Agladze Institute of Inorganic Chemistry and Electrochemistry'
+                      : 'ეძღვნება რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის დაარსების 70 წლისთავს'}
                   </span>
                 </div>
 
                 {/* Key Metrics & Details Chips */}
                 <div className="flex flex-wrap items-center gap-2.5 pt-1 text-xs font-semibold text-slate-700">
-                  <div className="flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-xl border border-purple-200 shadow-xs">
-                    <Calendar className="w-4 h-4 text-[#60318e] flex-shrink-0" />
+                  {/* Highlighted Dates */}
+                  <div className="flex items-center gap-2 bg-gradient-to-r from-[#60318e] to-[#7A1CAC] text-white px-4 py-2 rounded-xl shadow-sm font-bold text-xs sm:text-sm">
+                    <Calendar className="w-4 h-4 text-amber-300 flex-shrink-0" />
                     <span>
                       {language === 'en'
                         ? 'November 25–27, 2026'
@@ -181,7 +189,7 @@ export default function Home() {
                     <MapPin className="w-4 h-4 text-[#60318e] flex-shrink-0" />
                     <span>
                       {language === 'en'
-                        ? 'Tbilisi (TSU) & Telavi (Telavi State University)'
+                        ? 'Tbilisi (TSU) & Telavi (TESAU)'
                         : 'თბილისი (თსუ) & თელავი (თესაუ)'}
                     </span>
                   </div>
@@ -196,7 +204,7 @@ export default function Home() {
                   <div className="flex items-center gap-2 bg-white text-purple-900 px-3.5 py-1.5 rounded-xl border border-purple-200 shadow-xs">
                     <Landmark className="w-4 h-4 text-[#7A1CAC] flex-shrink-0" />
                     <span>
-                      {language === 'en' ? 'Rustaveli Foundation ISE-26-286' : 'შოთა რუსთაველის ფონდი [ISE-26-286]'}
+                      {language === 'en' ? 'Rustaveli Foundation [ISE-26-286]' : 'შოთა რუსთაველის ფონდი [ISE-26-286]'}
                     </span>
                   </div>
                 </div>
@@ -213,7 +221,7 @@ export default function Home() {
                       {language === 'en' ? 'Call for Abstracts' : 'მიღება აქტიურია'}
                     </span>
                     <span className="text-[10px] font-bold text-[#60318e] bg-purple-100 px-2.5 py-1 rounded-full border border-purple-200">
-                      6 {language === 'en' ? 'Sections' : 'სექცია'}
+                      {language === 'en' ? '6 Topics' : '6 მიმართულება'}
                     </span>
                   </div>
 
@@ -223,7 +231,7 @@ export default function Home() {
                       <span>{language === 'en' ? 'Submission Deadline' : 'აბსტრაქტის მიღების ბოლო ვადა'}</span>
                     </div>
                     <p className="text-xl font-black text-slate-900 tracking-tight">
-                      {language === 'en' ? 'October 10, 2026' : '10 ოქტომბერი, 2026'}
+                      {language === 'en' ? 'October 15, 2026' : '15 ოქტომბერი, 2026'}
                     </p>
                   </div>
                 </div>
