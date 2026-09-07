@@ -57,48 +57,37 @@ export default function InteractiveLogoCanvas({ variantId = 1, theme = 'dark', l
         const buildingTex = textureLoader.load('/conference-2026/building-clean.png');
         buildingTex.colorSpace = THREE.SRGBColorSpace;
 
+        const geoEmblemTex = textureLoader.load('/conference-2026/iice-70-emblem-geo.png');
+        geoEmblemTex.colorSpace = THREE.SRGBColorSpace;
+        const engEmblemTex = textureLoader.load('/conference-2026/iice-70-emblem-eng.png');
+        engEmblemTex.colorSpace = THREE.SRGBColorSpace;
+        const darkEmblemTex = textureLoader.load('/conference-2026/iice-70-emblem-dark.jpg');
+        darkEmblemTex.colorSpace = THREE.SRGBColorSpace;
+        const classicEmblemTex = textureLoader.load('/conference-2026/iice-70-emblem-classic.jpg');
+        classicEmblemTex.colorSpace = THREE.SRGBColorSpace;
+
         // Dynamic elements for animation
         const animators = [];
 
-        // Helper: Create Laurel Wreath Canvas Texture
-        const createLaurelTexture = () => {
-            const c = document.createElement('canvas');
-            c.width = 512;
-            c.height = 512;
-            const ctx = c.getContext('2d');
-            ctx.clearRect(0, 0, 512, 512);
-
-            // Draw circular laurel branch wreath
-            ctx.save();
-            ctx.translate(256, 256);
-            ctx.strokeStyle = '#f59e0b';
-            ctx.fillStyle = '#fbbf24';
-            ctx.lineWidth = 4;
-
-            for (let side = -1; side <= 1; side += 2) {
-                ctx.save();
-                ctx.scale(side, 1);
-                ctx.beginPath();
-                ctx.arc(0, 0, 190, Math.PI * 0.25, Math.PI * 0.85);
-                ctx.stroke();
-
-                // Draw leaves along the arc
-                for (let a = Math.PI * 0.25; a <= Math.PI * 0.85; a += 0.08) {
-                    const lx = Math.cos(a) * 190;
-                    const ly = Math.sin(a) * 190;
-                    ctx.save();
-                    ctx.translate(lx, ly);
-                    ctx.rotate(a + Math.PI / 2 + 0.3);
-                    ctx.beginPath();
-                    ctx.ellipse(0, 0, 16, 7, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.stroke();
-                    ctx.restore();
-                }
-                ctx.restore();
+        // Helper: Create Golden Particle Ring
+        const createGoldenParticles = (count = 40, radius = 2.4) => {
+            const pGeo = new THREE.BufferGeometry();
+            const pos = new Float32Array(count * 3);
+            for (let i = 0; i < count; i++) {
+                const angle = (i / count) * Math.PI * 2;
+                pos[i * 3] = Math.cos(angle) * (radius + (Math.random() - 0.5) * 0.4);
+                pos[i * 3 + 1] = Math.sin(angle) * (radius + (Math.random() - 0.5) * 0.4);
+                pos[i * 3 + 2] = (Math.random() - 0.5) * 0.5;
             }
-            ctx.restore();
-            return new THREE.CanvasTexture(c);
+            pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            const pMat = new THREE.PointsMaterial({
+                color: 0xf59e0b,
+                size: 0.04,
+                transparent: true,
+                opacity: 0.75,
+                blending: THREE.AdditiveBlending
+            });
+            return new THREE.Points(pGeo, pMat);
         };
 
         // ==========================================
@@ -106,131 +95,129 @@ export default function InteractiveLogoCanvas({ variantId = 1, theme = 'dark', l
         // ==========================================
         switch (variantId) {
             // ----------------------------------------------------
-            // VARIANT 1: Academic Jubilee Medal & Laurel Wreath (User's Exact Motif)
+            // VARIANT 1: Official Georgian TSU IICE Jubilee Emblem (Realistic Building & Trees, No Wheat)
             // ----------------------------------------------------
             case 1: {
-                // Gold Embossed Medal Disc
-                const discGeo = new THREE.CylinderGeometry(2.1, 2.1, 0.12, 64);
-                discGeo.rotateX(Math.PI / 2);
-                const discMat = new THREE.MeshStandardMaterial({
-                    color: theme === 'dark' ? 0x2e0d42 : 0xffffff,
-                    metalness: 0.8,
-                    roughness: 0.2
+                // High-Res Official Georgian Emblem Plane
+                const emblemGeo = new THREE.PlaneGeometry(5.0, 5.0);
+                const emblemMat = new THREE.MeshStandardMaterial({
+                    map: geoEmblemTex,
+                    transparent: true,
+                    roughness: 0.25,
+                    metalness: 0.25
                 });
-                const disc = new THREE.Mesh(discGeo, discMat);
-                rootGroup.add(disc);
+                const emblemMesh = new THREE.Mesh(emblemGeo, emblemMat);
+                emblemMesh.position.set(0, 0, 0);
+                rootGroup.add(emblemMesh);
 
-                // Golden Beveled Outer Rim
-                const rimGeo = new THREE.TorusGeometry(2.12, 0.06, 16, 64);
-                const rimMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.9, roughness: 0.2 });
-                const rim = new THREE.Mesh(rimGeo, rimMat);
-                rootGroup.add(rim);
+                // Subtle 3D Depth Golden Halo Ring in Background
+                const haloGeo = new THREE.TorusGeometry(2.25, 0.02, 16, 64);
+                const haloMat = new THREE.MeshStandardMaterial({
+                    color: 0xf59e0b,
+                    metalness: 0.9,
+                    roughness: 0.2,
+                    transparent: true,
+                    opacity: 0.6
+                });
+                const halo = new THREE.Mesh(haloGeo, haloMat);
+                halo.position.set(0.65, 0.1, -0.08);
+                rootGroup.add(halo);
 
-                // Golden Laurel Wreath Plane
-                const laurelTex = createLaurelTexture();
-                const laurelGeo = new THREE.PlaneGeometry(3.9, 3.9);
-                const laurelMat = new THREE.MeshBasicMaterial({ map: laurelTex, transparent: true, opacity: 0.95 });
-                const laurel = new THREE.Mesh(laurelGeo, laurelMat);
-                laurel.position.z = 0.07;
-                rootGroup.add(laurel);
-
-                // Central Official Institute Logo
-                const logoGeo = new THREE.CircleGeometry(0.95, 48);
-                const logoMat = new THREE.MeshBasicMaterial({ map: logoTex, transparent: true });
-                const logoMesh = new THREE.Mesh(logoGeo, logoMat);
-                logoMesh.position.z = 0.09;
-                rootGroup.add(logoMesh);
-
-                // "70" Monogram at Top of Wreath
-                const top70Canvas = document.createElement('canvas');
-                top70Canvas.width = 256;
-                top70Canvas.height = 128;
-                const tCtx = top70Canvas.getContext('2d');
-                tCtx.fillStyle = '#f59e0b';
-                tCtx.font = '900 52px "Segoe UI", sans-serif';
-                tCtx.textAlign = 'center';
-                tCtx.fillText('70', 128, 60);
-                tCtx.font = 'bold 20px "Segoe UI", sans-serif';
-                tCtx.fillStyle = theme === 'dark' ? '#EBD3F8' : '#7A1CAC';
-                tCtx.fillText(lang === 'en' ? 'ANNIVERSARY' : 'საიუბილეო', 128, 95);
-
-                const top70Tex = new THREE.CanvasTexture(top70Canvas);
-                const top70Geo = new THREE.PlaneGeometry(1.6, 0.8);
-                const top70Mat = new THREE.MeshBasicMaterial({ map: top70Tex, transparent: true });
-                const top70Mesh = new THREE.Mesh(top70Geo, top70Mat);
-                top70Mesh.position.set(0, 1.45, 0.1);
-                rootGroup.add(top70Mesh);
+                // Orbiting Golden Sparkle Points
+                const particles = createGoldenParticles(50, 2.3);
+                particles.position.set(0.65, 0.1, -0.05);
+                rootGroup.add(particles);
 
                 animators.push((elapsed) => {
-                    disc.rotation.z = Math.sin(elapsed * 0.5) * 0.03;
-                    rim.material.opacity = 0.85 + Math.sin(elapsed * 2) * 0.15;
+                    halo.rotation.z = elapsed * 0.15;
+                    particles.rotation.z = -elapsed * 0.08;
+                    emblemMesh.position.y = Math.sin(elapsed * 1.5) * 0.04;
                 });
                 break;
             }
 
             // ----------------------------------------------------
-            // VARIANT 2: Architectural Elevation & Golden Seal
+            // VARIANT 2: Official English TSU IICE Jubilee Emblem (International Edition)
             // ----------------------------------------------------
             case 2: {
-                // The Clean Institute Building as Centerpiece
-                const bWidth = 4.2;
-                const bHeight = bWidth / (552 / 327);
-                const bGeo = new THREE.PlaneGeometry(bWidth, bHeight);
-                const bMat = new THREE.MeshStandardMaterial({
-                    map: buildingTex,
+                const emblemGeo = new THREE.PlaneGeometry(5.0, 5.0);
+                const emblemMat = new THREE.MeshStandardMaterial({
+                    map: engEmblemTex,
                     transparent: true,
                     roughness: 0.25,
-                    metalness: 0.1
+                    metalness: 0.25
                 });
-                const bMesh = new THREE.Mesh(bGeo, bMat);
-                bMesh.position.set(0, -0.2, 0);
-                rootGroup.add(bMesh);
+                const emblemMesh = new THREE.Mesh(emblemGeo, emblemMat);
+                emblemMesh.position.set(0, 0, 0);
+                rootGroup.add(emblemMesh);
 
-                // Golden Laurel Seal (Top Right corner)
-                const sealGroup = new THREE.Group();
-                sealGroup.position.set(1.9, 1.25, 0.3);
-                rootGroup.add(sealGroup);
+                // Elegant Atomic Orbital Ring
+                const ringGeo = new THREE.TorusGeometry(2.35, 0.02, 16, 80);
+                const ringMat = new THREE.MeshStandardMaterial({
+                    color: 0xAD49E1,
+                    metalness: 0.8,
+                    roughness: 0.3,
+                    transparent: true,
+                    opacity: 0.7
+                });
+                const ring = new THREE.Mesh(ringGeo, ringMat);
+                ring.rotation.x = Math.PI / 4;
+                ring.position.set(0.65, 0.1, -0.08);
+                rootGroup.add(ring);
 
-                const laurelTex = createLaurelTexture();
-                const sealLaurelGeo = new THREE.PlaneGeometry(1.5, 1.5);
-                const sealLaurelMat = new THREE.MeshBasicMaterial({ map: laurelTex, transparent: true });
-                const sealLaurel = new THREE.Mesh(sealLaurelGeo, sealLaurelMat);
-                sealGroup.add(sealLaurel);
-
-                const sLogoGeo = new THREE.CircleGeometry(0.48, 36);
-                const sLogoMat = new THREE.MeshBasicMaterial({ map: logoTex, transparent: true });
-                const sLogo = new THREE.Mesh(sLogoGeo, sLogoMat);
-                sLogo.position.z = 0.02;
-                sealGroup.add(sLogo);
-
-                // Elegant Base 70 Bar
-                const baseCanvas = document.createElement('canvas');
-                baseCanvas.width = 512;
-                baseCanvas.height = 96;
-                const bctx = baseCanvas.getContext('2d');
-                bctx.fillStyle = theme === 'dark' ? '#2e0d42' : '#ffffff';
-                bctx.strokeStyle = '#f59e0b';
-                bctx.lineWidth = 3;
-                bctx.beginPath();
-                bctx.roundRect(8, 8, 496, 80, 20);
-                bctx.fill();
-                bctx.stroke();
-
-                bctx.fillStyle = '#f59e0b';
-                bctx.font = '900 36px "Segoe UI", sans-serif';
-                bctx.textAlign = 'center';
-                bctx.fillText(lang === 'en' ? '70 YEARS • 1956 — 2026' : '70 წელი • 1956 — 2026', 256, 58);
-
-                const baseTex = new THREE.CanvasTexture(baseCanvas);
-                const baseGeo = new THREE.PlaneGeometry(3.0, 0.58);
-                const baseMat = new THREE.MeshBasicMaterial({ map: baseTex, transparent: true });
-                const baseMesh = new THREE.Mesh(baseGeo, baseMat);
-                baseMesh.position.set(0, -1.35, 0.15);
-                rootGroup.add(baseMesh);
+                const particles = createGoldenParticles(40, 2.35);
+                particles.position.set(0.65, 0.1, -0.05);
+                rootGroup.add(particles);
 
                 animators.push((elapsed) => {
-                    sealGroup.position.y = 1.25 + Math.sin(elapsed * 1.5) * 0.06;
-                    sealGroup.rotation.y = Math.sin(elapsed * 1.0) * 0.15;
+                    ring.rotation.z = elapsed * 0.2;
+                    particles.rotation.z = -elapsed * 0.1;
+                    emblemMesh.position.y = Math.sin(elapsed * 1.5) * 0.04;
+                });
+                break;
+            }
+
+            // ----------------------------------------------------
+            // VARIANT 3: Dark Mode Luxury Keynote Edition (Luminescent 3D)
+            // ----------------------------------------------------
+            case 3: {
+                const emblemGeo = new THREE.PlaneGeometry(5.0, 5.0);
+                const emblemMat = new THREE.MeshStandardMaterial({
+                    map: darkEmblemTex,
+                    roughness: 0.2,
+                    metalness: 0.4
+                });
+                const emblemMesh = new THREE.Mesh(emblemGeo, emblemMat);
+                emblemMesh.position.set(0, 0, 0);
+                rootGroup.add(emblemMesh);
+
+                const particles = createGoldenParticles(60, 2.4);
+                particles.position.set(0, 0, 0.05);
+                rootGroup.add(particles);
+
+                animators.push((elapsed) => {
+                    particles.rotation.z = elapsed * 0.06;
+                    emblemMesh.position.y = Math.sin(elapsed * 1.2) * 0.03;
+                });
+                break;
+            }
+
+            // ----------------------------------------------------
+            // VARIANT 4: Classic Gold Academic Jubilee Ring
+            // ----------------------------------------------------
+            case 4: {
+                const emblemGeo = new THREE.PlaneGeometry(5.0, 5.0);
+                const emblemMat = new THREE.MeshStandardMaterial({
+                    map: classicEmblemTex,
+                    roughness: 0.3,
+                    metalness: 0.2
+                });
+                const emblemMesh = new THREE.Mesh(emblemGeo, emblemMat);
+                emblemMesh.position.set(0, 0, 0);
+                rootGroup.add(emblemMesh);
+
+                animators.push((elapsed) => {
+                    emblemMesh.position.y = Math.sin(elapsed * 1.2) * 0.03;
                 });
                 break;
             }
