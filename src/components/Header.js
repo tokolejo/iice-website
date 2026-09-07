@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
 import en from '../locales/en';
 import ka from '../locales/ka';
+import { Menu, X, ChevronDown } from 'lucide-react';
 
 import { usePathname } from 'next/navigation';
 
@@ -21,25 +22,53 @@ export default function Header() {
 
     const getLinkClass = (path) => {
         const active = path === '/' ? pathname === '/' : pathname.startsWith(path);
-        return `text-white px-0.5 xl:px-1 2xl:px-2 py-2 rounded-md text-[11px] xl:text-[12px] 2xl:text-[14px] font-bold transition-all whitespace-nowrap ${
-            active ? 'bg-white/20 text-[#EBD3F8]' : 'hover:text-white/80 hover:bg-white/10'
+        return `px-2 py-1.5 rounded-lg text-xs xl:text-[13px] 2xl:text-sm font-semibold transition-all duration-200 whitespace-nowrap interactive-tap ${
+            active ? 'bg-white/20 text-[#EBD3F8] shadow-xs' : 'text-white/90 hover:text-white hover:bg-white/10'
         }`;
     };
 
     const getDropdownBtnClass = (isActive) => {
-        return `text-white px-0.5 xl:px-1 2xl:px-2 py-2 rounded-md text-[11px] xl:text-[12px] 2xl:text-[14px] font-bold transition-all inline-flex items-center whitespace-nowrap ${
-            isActive ? 'bg-white/20 text-[#EBD3F8]' : 'hover:text-white/80 hover:bg-white/10'
+        return `px-2 py-1.5 rounded-lg text-xs xl:text-[13px] 2xl:text-sm font-semibold transition-all duration-200 inline-flex items-center gap-1 whitespace-nowrap interactive-tap ${
+            isActive ? 'bg-white/20 text-[#EBD3F8] shadow-xs' : 'text-white/90 hover:text-white hover:bg-white/10'
         }`;
     };
 
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 10);
+            setIsScrolled(window.scrollY > 15);
         };
         window.addEventListener('scroll', handleScroll, { passive: true });
-        handleScroll(); // Check initial state
+        handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // Lock body scroll when mobile menu is open
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isMobileMenuOpen]);
+
+    // Handle Escape key
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape' && isMobileMenuOpen) {
+                setIsMobileMenuOpen(false);
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isMobileMenuOpen]);
+
+    // Close mobile drawer on route change
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [pathname]);
 
     const toggleMobileDropdown = (menu) => {
         setOpenMobileDropdowns(prev => ({
@@ -53,7 +82,11 @@ export default function Header() {
     }
 
     return (
-        <header className="bg-[#2e0d42] shadow-lg sticky top-0 z-50">
+        <header className={`sticky top-0 z-50 transition-all duration-300 ${
+            isScrolled 
+                ? 'bg-[#2e0d42]/95 backdrop-blur-md shadow-lg py-0.5' 
+                : 'bg-[#2e0d42] py-1.5 shadow-md'
+        }`}>
             <div className="max-w-[96%] xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-4 xl:px-8">
                 {/* 
                    ზომის აწევა/დაწევა (სიმაღლე): h-20 
@@ -140,124 +173,241 @@ export default function Header() {
                     </nav>
 
                     {/* Utils (Lang Switcher & Mobile Menu Toggle) */}
-                    <div className="flex-shrink-0 flex items-center justify-end gap-2 xl:gap-4 animate-fade-in-up">
-                        {/* Language Switcher - visible on both mobile and desktop inline with the header */}
-                        <div className="flex items-center border border-white/20 bg-white/10 rounded-full p-1 shadow-inner justify-between flex-shrink-0 mr-1 lg:mr-0 lg:ml-1">
+                    <div className="flex-shrink-0 flex items-center justify-end gap-2 xl:gap-3">
+                        {/* Language Switcher */}
+                        <div className="flex items-center border border-white/20 bg-white/10 rounded-full p-0.5 shadow-inner">
                             <button
                                 onClick={() => toggleLanguage('ka')}
-                                className={`w-7 h-7 xl:w-8 xl:h-8 flex items-center justify-center rounded-full text-[10px] xl:text-xs font-bold transition-all duration-300 ${language === 'ka' ? 'bg-white text-[#60318e] shadow-md' : 'text-white/60 hover:text-white'}`}
+                                aria-label="ქართული ენა"
+                                className={`w-7 h-7 xl:w-8 xl:h-8 flex items-center justify-center rounded-full text-[10px] xl:text-xs font-bold transition-all duration-200 interactive-tap ${
+                                    language === 'ka' 
+                                        ? 'bg-white text-[#60318e] shadow-sm font-black' 
+                                        : 'text-white/70 hover:text-white'
+                                }`}
                             >
                                 GE
                             </button>
                             <button
                                 onClick={() => toggleLanguage('en')}
-                                className={`w-7 h-7 xl:w-8 xl:h-8 flex items-center justify-center rounded-full text-[10px] xl:text-xs font-bold transition-all duration-300 ${language === 'en' ? 'bg-white text-[#60318e] shadow-md' : 'text-white/60 hover:text-white'}`}
+                                aria-label="English Language"
+                                className={`w-7 h-7 xl:w-8 xl:h-8 flex items-center justify-center rounded-full text-[10px] xl:text-xs font-bold transition-all duration-200 interactive-tap ${
+                                    language === 'en' 
+                                        ? 'bg-white text-[#60318e] shadow-sm font-black' 
+                                        : 'text-white/70 hover:text-white'
+                                }`}
                             >
                                 EN
                             </button>
                         </div>
 
-                        {/* Mobile menu button */}
-                        <div className="lg:hidden flex items-center">
-                            <button
-                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                                className="text-white hover:text-white/80 focus:outline-none p-2 rounded-md hover:bg-white/5 transition-colors"
-                            >
-                                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    {isMobileMenuOpen ? (
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    ) : (
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                                    )}
-                                </svg>
-                            </button>
-                        </div>
+                        {/* Mobile Hamburger Button */}
+                        <button
+                            onClick={() => setIsMobileMenuOpen(true)}
+                            aria-label="მენიუს გახსნა"
+                            aria-expanded={isMobileMenuOpen}
+                            className="lg:hidden text-white hover:text-purple-200 p-2 rounded-xl bg-white/10 hover:bg-white/15 transition-all interactive-tap"
+                        >
+                            <Menu className="w-5 h-5" />
+                        </button>
                     </div>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {/* ===== Modern Off-Canvas Mobile Drawer ===== */}
             {isMobileMenuOpen && (
-                <div className="lg:hidden bg-white border-t border-purple-100 px-4 pt-2 pb-6 shadow-inner animate-fade-in-up overflow-y-auto max-h-[75vh]">
-                    <div className="space-y-1">
-                        <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-sm font-medium text-text-body hover:text-primary hover:bg-slate-50">
-                            {t.nav.home}
-                        </Link>
-                    </div>
+                <div className="fixed inset-0 z-[100] lg:hidden flex justify-end">
+                    {/* Backdrop */}
+                    <div 
+                        className="fixed inset-0 bg-black/60 backdrop-blur-xs drawer-backdrop-enter"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        aria-hidden="true"
+                    />
 
-                    <div className="mt-2 pt-2 border-t border-gray-100">
-                        <button onClick={() => toggleMobileDropdown('about')} className="w-full flex justify-between items-center px-3 py-3 font-medium text-primary focus:outline-none hover:bg-slate-50 rounded-md">
-                            <span>{t.nav.about}</span>
-                            <svg className={`h-5 w-5 transition-transform duration-200 ${openMobileDropdowns['about'] ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div className={`overflow-hidden transition-all duration-300 ${openMobileDropdowns['about'] ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                            <div className="pl-6 space-y-1 pb-2 mt-1">
-                                <Link href="/history" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.history}</Link>
-                                <Link href="/mission" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.mission}</Link>
+                    {/* Drawer Sheet */}
+                    <div 
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="მობილური ნავიგაციის მენიუ"
+                        className="relative w-[85%] max-w-sm h-full bg-white shadow-2xl flex flex-col z-10 drawer-enter border-l border-purple-100"
+                    >
+                        {/* Drawer Header */}
+                        <div className="flex items-center justify-between px-5 py-4 bg-[#2e0d42] text-white border-b border-purple-900/30">
+                            <div className="flex items-center gap-2.5">
+                                <div className="w-8 h-8 rounded-lg bg-white/10 p-1 flex items-center justify-center">
+                                    <img src="/logo.png" alt="IICE" className="w-full h-full object-contain" />
+                                </div>
+                                <div>
+                                    <h2 className="font-bold text-xs text-white">TSU IICE</h2>
+                                    <p className="text-[9px] text-purple-200/80">Agladze Institute</p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                aria-label="მენიუს დახურვა"
+                                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors interactive-tap"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
 
-                                <button onClick={() => toggleMobileDropdown('structure')} className="w-full flex justify-between items-center px-3 py-2 mt-1 rounded-md text-sm font-bold text-text-body hover:text-primary hover:bg-slate-50 focus:outline-none">
-                                    <span>{t.nav.structure}</span>
-                                    <svg className={`h-4 w-4 transition-transform duration-200 ${openMobileDropdowns['structure'] ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                    </svg>
+                        {/* Drawer Navigation Links */}
+                        <div className="flex-grow overflow-y-auto px-4 py-4 space-y-1 text-sm">
+                            <Link 
+                                href="/" 
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition-colors ${
+                                    pathname === '/' ? 'bg-purple-100/80 text-[#60318e] font-bold' : 'text-slate-700 hover:bg-slate-50'
+                                }`}
+                            >
+                                <span>{t.nav.home}</span>
+                            </Link>
+
+                            {/* About Us Accordion */}
+                            <div className="rounded-xl overflow-hidden border border-slate-100">
+                                <button
+                                    onClick={() => toggleMobileDropdown('about')}
+                                    className="w-full flex items-center justify-between px-3.5 py-2.5 font-medium text-slate-800 hover:bg-purple-50/50 transition-colors text-left"
+                                >
+                                    <span className={isAboutActive ? 'text-[#60318e] font-bold' : ''}>{t.nav.about}</span>
+                                    <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${openMobileDropdowns['about'] ? 'rotate-180 text-[#7A1CAC]' : ''}`} />
                                 </button>
-                                <div className={`overflow-hidden transition-all duration-300 ${openMobileDropdowns['structure'] ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                                    <div className="pl-4 space-y-1 border-l-2 border-purple-100 ml-3 mb-2 mt-1">
-                                        <Link href="/administration" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.administration}</Link>
-                                        <Link href="/scientific-council" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.scientificCouncil}</Link>
+                                {openMobileDropdowns['about'] && (
+                                    <div className="bg-slate-50/70 px-3 py-2 space-y-1 border-t border-slate-100">
+                                        <Link href="/history" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-xs rounded-lg text-slate-600 hover:bg-purple-100 hover:text-[#60318e]">
+                                            {t.nav.history}
+                                        </Link>
+                                        <Link href="/mission" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-xs rounded-lg text-slate-600 hover:bg-purple-100 hover:text-[#60318e]">
+                                            {t.nav.mission}
+                                        </Link>
+                                        
+                                        <div className="pt-1.5 pb-1 px-3 text-[11px] font-bold text-[#60318e] uppercase tracking-wider">
+                                            {t.nav.structure}
+                                        </div>
+                                        <Link href="/administration" onClick={() => setIsMobileMenuOpen(false)} className="block px-4 py-1.5 text-xs rounded-lg text-slate-600 hover:bg-purple-100 hover:text-[#60318e] border-l-2 border-purple-200 ml-2">
+                                            {t.nav.administration}
+                                        </Link>
+                                        <Link href="/scientific-council" onClick={() => setIsMobileMenuOpen(false)} className="block px-4 py-1.5 text-xs rounded-lg text-slate-600 hover:bg-purple-100 hover:text-[#60318e] border-l-2 border-purple-200 ml-2">
+                                            {t.nav.scientificCouncil}
+                                        </Link>
+                                        
+                                        <div className="h-px bg-slate-200/50 my-1"></div>
+                                        <Link href="/statute" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-xs rounded-lg text-slate-600 hover:bg-purple-100 hover:text-[#60318e]">
+                                            {t.nav.statute}
+                                        </Link>
+                                        <Link href="/reports" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-xs rounded-lg text-slate-600 hover:bg-purple-100 hover:text-[#60318e]">
+                                            {t.nav.scientificReports}
+                                        </Link>
+                                        <Link href="/studies-internships" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-xs rounded-lg text-slate-600 hover:bg-purple-100 hover:text-[#60318e]">
+                                            {t.nav.studiesInternships}
+                                        </Link>
+                                        <Link href="/important-projects" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-xs rounded-lg text-slate-600 hover:bg-purple-100 hover:text-[#60318e]">
+                                            {t.nav.importantProjects}
+                                        </Link>
+                                        <Link href="/collaboration" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-xs rounded-lg text-slate-600 hover:bg-purple-100 hover:text-[#60318e]">
+                                            {t.nav.collaboration}
+                                        </Link>
                                     </div>
-                                </div>
+                                )}
+                            </div>
 
-                                <Link href="/statute" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.statute}</Link>
-                                <Link href="/reports" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.scientificReports}</Link>
-                                <Link href="/studies-internships" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.studiesInternships}</Link>
-                                <Link href="/important-projects" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.importantProjects}</Link>
-                                <Link href="/collaboration" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.collaboration}</Link>
+                            <Link 
+                                href="/departments" 
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition-colors ${
+                                    pathname === '/departments' ? 'bg-purple-100/80 text-[#60318e] font-bold' : 'text-slate-700 hover:bg-slate-50'
+                                }`}
+                            >
+                                <span>{t.nav.departments}</span>
+                            </Link>
+
+                            {/* Events Accordion */}
+                            <div className="rounded-xl overflow-hidden border border-slate-100">
+                                <button
+                                    onClick={() => toggleMobileDropdown('events')}
+                                    className="w-full flex items-center justify-between px-3.5 py-2.5 font-medium text-slate-800 hover:bg-purple-50/50 transition-colors text-left"
+                                >
+                                    <span className={isEventsActive ? 'text-[#60318e] font-bold' : ''}>{t.nav.events}</span>
+                                    <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${openMobileDropdowns['events'] ? 'rotate-180 text-[#7A1CAC]' : ''}`} />
+                                </button>
+                                {openMobileDropdowns['events'] && (
+                                    <div className="bg-slate-50/70 px-3 py-2 space-y-1 border-t border-slate-100">
+                                        <Link href="/news?category=seminars" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-xs rounded-lg text-slate-600 hover:bg-purple-100 hover:text-[#60318e]">
+                                            {t.nav.seminars}
+                                        </Link>
+                                        <div className="pt-1.5 pb-1 px-3 text-[11px] font-bold text-[#60318e] uppercase tracking-wider">
+                                            {t.nav.conference}
+                                        </div>
+                                        <Link href="/conference-2026" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-between px-3 py-2 text-xs rounded-lg bg-purple-100/60 font-bold text-[#7A1CAC] ml-2">
+                                            <span>2026</span>
+                                            <span className="bg-amber-400 text-slate-900 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">NEW</span>
+                                        </Link>
+                                        <Link href="/events/conference-2023" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-1.5 text-xs rounded-lg text-slate-600 hover:bg-purple-100 ml-2">
+                                            2023
+                                        </Link>
+                                        <Link href="/events/conference-2016" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-1.5 text-xs rounded-lg text-slate-600 hover:bg-purple-100 ml-2">
+                                            2016
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
+
+                            <Link 
+                                href="/infrastructure" 
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition-colors ${
+                                    pathname === '/infrastructure' ? 'bg-purple-100/80 text-[#60318e] font-bold' : 'text-slate-700 hover:bg-slate-50'
+                                }`}
+                            >
+                                <span>{t.nav.infrastructure}</span>
+                            </Link>
+
+                            <Link 
+                                href="/news" 
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition-colors ${
+                                    pathname === '/news' ? 'bg-purple-100/80 text-[#60318e] font-bold' : 'text-slate-700 hover:bg-slate-50'
+                                }`}
+                            >
+                                <span>{t.nav.news}</span>
+                            </Link>
+
+                            <Link 
+                                href="/contact" 
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium transition-colors ${
+                                    pathname === '/contact' ? 'bg-purple-100/80 text-[#60318e] font-bold' : 'text-slate-700 hover:bg-slate-50'
+                                }`}
+                            >
+                                <span>{t.nav.contact}</span>
+                            </Link>
+                        </div>
+
+                        {/* Drawer Bottom Actions */}
+                        <div className="p-4 border-t border-slate-100 bg-slate-50/80">
+                            <div className="flex items-center justify-between">
+                                <div className="text-xs font-semibold text-slate-500">
+                                    {language === 'en' ? 'Language' : 'ენა'}:
+                                </div>
+                                <div className="flex items-center border border-purple-200 bg-white rounded-full p-0.5 shadow-xs">
+                                    <button
+                                        onClick={() => toggleLanguage('ka')}
+                                        className={`px-3 py-1 rounded-full text-xs font-bold transition-all interactive-tap ${
+                                            language === 'ka' ? 'bg-[#60318e] text-white shadow-xs' : 'text-slate-600 hover:text-purple-900'
+                                        }`}
+                                    >
+                                        ქართული
+                                    </button>
+                                    <button
+                                        onClick={() => toggleLanguage('en')}
+                                        className={`px-3 py-1 rounded-full text-xs font-bold transition-all interactive-tap ${
+                                            language === 'en' ? 'bg-[#60318e] text-white shadow-xs' : 'text-slate-600 hover:text-purple-900'
+                                        }`}
+                                    >
+                                        English
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div className="space-y-1 mt-2 pt-2 border-t border-gray-100">
-                        <Link href="/departments" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-sm font-medium text-text-body hover:text-primary hover:bg-slate-50">
-                            {t.nav.departments}
-                        </Link>
-                    </div>
-
-                    <div className="mt-2 pt-2 border-t border-gray-100">
-                        <button onClick={() => toggleMobileDropdown('events')} className="w-full flex justify-between items-center px-3 py-3 font-medium text-primary focus:outline-none hover:bg-slate-50 rounded-md">
-                            <span>{t.nav.events}</span>
-                            <svg className={`h-5 w-5 transition-transform duration-200 ${openMobileDropdowns['events'] ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div className={`overflow-hidden transition-all duration-300 ${openMobileDropdowns['events'] ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                            <div className="pl-6 space-y-1 pb-2 mt-1">
-                                <Link href="/news?category=seminars" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-sm text-text-body hover:text-primary hover:bg-slate-50">{t.nav.seminars}</Link>
-                                <div className="px-3 py-2 text-sm font-bold text-text-body border-t border-gray-100 mt-1">{t.nav.conference}</div>
-                                <div className="pl-4 border-l-2 border-purple-100 ml-3 mb-2 space-y-1">
-                                    <Link href="/conference-2026" onClick={() => setIsMobileMenuOpen(false)} className="px-3 py-1.5 text-sm font-bold text-[#AD49E1] hover:bg-slate-50 flex items-center justify-between">
-                                        <span>2026</span>
-                                        <span className="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase shadow-xs">NEW</span>
-                                    </Link>
-                                    <Link href="/events/conference-2023" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-1.5 text-sm text-text-body hover:text-primary hover:bg-slate-50">2023</Link>
-                                    <Link href="/events/conference-2016" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-1.5 text-sm text-text-body hover:text-primary hover:bg-slate-50">2016</Link>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="space-y-1 mt-2 pt-2 border-t border-gray-100">
-                        <Link href="/infrastructure" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-sm font-medium text-text-body hover:text-primary hover:bg-slate-50">
-                            {t.nav.infrastructure}
-                        </Link>
-                        <Link href="/news" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-sm font-medium text-text-body hover:text-primary hover:bg-slate-50">
-                            {t.nav.news}
-                        </Link>
-                        <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-3 rounded-md text-sm font-medium text-text-body hover:text-primary hover:bg-slate-50">
-                            {t.nav.contact}
-                        </Link>
                     </div>
                 </div>
             )}

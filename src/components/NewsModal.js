@@ -60,11 +60,11 @@ export default function NewsModal({ item, onClose }) {
 
     return createPortal(
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-[#60318e]/90 backdrop-blur-md animate-fade-in"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-[#2e0d42]/80 backdrop-blur-md animate-fade-in"
             onClick={onClose}
         >
             <div
-                className="bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col relative animate-scale-in"
+                className="bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col relative animate-scale-in border border-purple-100/50"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Close button - Glassmorphic high contrast */}

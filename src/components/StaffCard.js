@@ -17,8 +17,17 @@ export default function StaffCard({ member }) {
 
     return (
         <div
-            className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl cursor-pointer flex flex-col h-full animate-fade-in-up"
+            className="bg-white rounded-2xl shadow-xs overflow-hidden border border-slate-100/90 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:border-purple-200/70 cursor-pointer flex flex-col h-full animate-fade-in-up interactive-tap card-hover-glow"
             onClick={() => member.onOpenModal(member)}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    member.onOpenModal(member);
+                }
+            }}
+            tabIndex={0}
+            role="button"
+            aria-label={`${displayName}, ${displayRole}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >

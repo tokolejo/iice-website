@@ -90,13 +90,33 @@ export default function Home() {
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row items-center justify-between gap-8 w-full relative z-10">
           {/* Text Content */}
           <ScrollReveal direction="left" duration={800} className="w-full md:w-1/2 text-center md:text-left">
-            <h1 className="text-lg md:text-xl lg:text-2xl xl:text-3xl tracking-tight font-extrabold text-[#60318e] drop-shadow-sm">
-              <span className="block xl:inline leading-tight text-[#60318e]">{t.home.heroTitle}</span>{' '}
-              <span className="block text-[#7A1CAC] xl:inline leading-tight mt-1">{t.home.heroTitleHighlight}</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide bg-purple-100/80 text-[#60318e] mb-4 border border-purple-200/60 shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#AD49E1]" />
+              <span>{language === 'en' ? 'Scientific Research Institute' : 'სამეცნიერო-კვლევითი ინსტიტუტი'}</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl tracking-tight font-extrabold text-[#60318e] drop-shadow-xs leading-[1.15]">
+              <span className="block text-[#60318e]">{t.home.heroTitle}</span>{' '}
+              <span className="block text-[#7A1CAC] mt-1">{t.home.heroTitleHighlight}</span>
             </h1>
-            <p className="mt-4 text-xs md:text-sm lg:text-sm text-text-body font-medium leading-relaxed max-w-lg mx-auto md:mx-0">
+            <p className="mt-4 text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-xl mx-auto md:mx-0">
               {t.home.heroSubtitle}
             </p>
+            {/* Action CTA Buttons */}
+            <div className="mt-6 flex flex-wrap items-center justify-center md:justify-start gap-3">
+              <Link 
+                href="/conference-2026"
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#60318e] to-[#7A1CAC] hover:from-[#7A1CAC] hover:to-[#AD49E1] text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all interactive-tap flex items-center gap-2"
+              >
+                <span>{language === 'en' ? 'Conference 2026' : 'კონფერენცია 2026'}</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link 
+                href="/departments"
+                className="px-5 py-2.5 rounded-xl bg-white/80 hover:bg-white text-[#60318e] font-bold text-xs sm:text-sm border border-purple-200 shadow-xs hover:shadow-sm transition-all interactive-tap"
+              >
+                {language === 'en' ? 'Departments' : 'განყოფილებები'}
+              </Link>
+            </div>
           </ScrollReveal>
 
           {/* Image Content - More Compact */}

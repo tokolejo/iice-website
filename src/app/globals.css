@@ -18,6 +18,28 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: #AD49E1 #f1f5f9;
+  }
+
+  /* WebKit Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f8fafc;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+    border: 2px solid #f8fafc;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #AD49E1;
   }
 
   body {
@@ -26,6 +48,7 @@
     font-family: var(--font-google-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   h1,
@@ -36,6 +59,14 @@
   h6 {
     color: inherit;
     font-weight: 700;
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+  }
+
+  /* Accessible and aesthetic focus rings */
+  :focus-visible {
+    outline: 2px solid #AD49E1;
+    outline-offset: 2px;
   }
 
   input,
@@ -43,6 +74,15 @@
   select {
     color: #0f172a;
     background-color: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: none;
+    border-color: #AD49E1;
+    box-shadow: 0 0 0 3px rgba(173, 73, 225, 0.2);
   }
 
   input::placeholder,
@@ -262,4 +302,62 @@
 
 .animate-scale-in {
   animation: scaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ===== Mobile Drawer Animations ===== */
+@keyframes drawerSlideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes drawerSlideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes backdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.drawer-enter {
+  animation: drawerSlideIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.drawer-backdrop-enter {
+  animation: backdropFadeIn 0.25s ease-out forwards;
+}
+
+/* ===== Micro-Interactions ===== */
+.interactive-tap {
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.interactive-tap:active {
+  transform: scale(0.97);
+}
+
+.glow-pill {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glow-pill:hover {
+  box-shadow: 0 4px 14px -2px rgba(173, 73, 225, 0.35);
+  transform: translateY(-1px);
 }
