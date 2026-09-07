@@ -31,12 +31,13 @@ import {
 
 const CATEGORIES = [
     { id: 'ALL', label: 'ყველა მოვლენა', icon: History },
-    { id: 'AUTH', label: 'ავტორიზაცია & სესიები', icon: LogIn },
-    { id: 'CONFERENCE', label: 'კონფერენცია 2026', icon: GraduationCap },
     { id: 'STAFF', label: 'თანამშრომლები', icon: Users },
-    { id: 'NEWS', label: 'სიახლეები', icon: Newspaper },
+    { id: 'NEWS', label: 'სიახლეები & კატეგორიები', icon: Newspaper },
     { id: 'DEPARTMENTS', label: 'განყოფილებები', icon: Building2 },
+    { id: 'CONFERENCE', label: 'კონფერენცია 2026', icon: GraduationCap },
     { id: 'USERS', label: 'როლები & RBAC', icon: ShieldCheck },
+    { id: 'AUTH', label: 'ავტორიზაცია & სესიები', icon: LogIn },
+    { id: 'BACKUP', label: 'ბაზის ბექაფი', icon: Download },
 ];
 
 const TIME_RANGES = [
@@ -64,11 +65,11 @@ function getActionBadge(action = '') {
             icon: LogOut
         };
     }
-    if (act.includes('REGISTER') || act.includes('CREATE')) {
+    if (act.includes('REGISTER') || act.includes('CREATE') || act.includes('INSERT')) {
         return {
             bg: 'bg-blue-50 text-blue-700 border-blue-200',
             dot: 'bg-blue-500',
-            label: 'რეგისტრაცია / შექმნა',
+            label: 'შექმნა / დამატება',
             icon: UserPlus
         };
     }
@@ -80,7 +81,7 @@ function getActionBadge(action = '') {
             icon: AlertCircle
         };
     }
-    if (act.includes('UPDATE') || act.includes('EDIT')) {
+    if (act.includes('UPDATE') || act.includes('EDIT') || act.includes('STATUS')) {
         return {
             bg: 'bg-purple-50 text-[#60318e] border-purple-200',
             dot: 'bg-[#60318e]',
@@ -88,9 +89,17 @@ function getActionBadge(action = '') {
             icon: RefreshCw
         };
     }
+    if (act.includes('BACKUP') || act.includes('EXPORT') || act.includes('ZIP')) {
+        return {
+            bg: 'bg-amber-50 text-amber-700 border-amber-200',
+            dot: 'bg-amber-500',
+            label: 'ექსპორტი / ბექაფი',
+            icon: Download
+        };
+    }
     return {
-        bg: 'bg-amber-50 text-amber-700 border-amber-200',
-        dot: 'bg-amber-500',
+        bg: 'bg-gray-50 text-gray-700 border-gray-200',
+        dot: 'bg-gray-500',
         label: act,
         icon: FileText
     };
@@ -127,7 +136,7 @@ export default function AdminAuditPage() {
                     .eq('id', user.id)
                     .maybeSingle();
                 const roles = profile?.roles || (profile?.role ? [profile.role] : []);
-                setIsSuperAdmin(roles.includes('super_admin'));
+                setIsSuperAdmin(roles.includes('super_admin') || roles.includes('admin'));
             }
             setAccessChecked(true);
         }
@@ -137,82 +146,78 @@ export default function AdminAuditPage() {
     const loadAuditLogs = async () => {
         setIsLoading(true);
         try {
-            // First try internal API endpoint which queries audit_logs with admin credentials
-            const res = await fetch(`/api/audit?category=${selectedCategory}&limit=200`, {
-                cache: 'no-store'
-            });
-            if (res.ok) {
-                const data = await res.json();
-                if (data.logs && data.logs.length > 0) {
-                    setLogs(data.logs);
-                    setIsLoading(false);
-                    return;
+            const supabase = getSupabaseBrowserClient();
+            let token = null;
+            if (supabase) {
+                try {
+                    const { data: { session } } = await supabase.auth.getSession();
+                    token = session?.access_token;
+                } catch (e) {
+                    console.warn('[AUDIT] Session read warning:', e);
                 }
             }
 
-            // Fallback to direct client query
-            const supabase = getSupabaseBrowserClient();
-            if (supabase) {
+            const headers = {};
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            // 1. Try internal API endpoint with user credentials
+            let apiLoaded = false;
+            try {
+                const res = await fetch(`/api/audit?category=${selectedCategory}&limit=300`, {
+                    headers,
+                    cache: 'no-store'
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.logs && Array.isArray(data.logs) && data.logs.length > 0) {
+                        setLogs(data.logs);
+                        apiLoaded = true;
+                        setIsLoading(false);
+                        return;
+                    }
+                }
+            } catch (apiErr) {
+                console.warn('[AUDIT] API query failed, trying direct:', apiErr);
+            }
+
+            // 2. Direct browser query via authenticated client
+            if (!apiLoaded && supabase) {
                 let q = supabase
                     .from('audit_logs')
                     .select('*')
                     .order('created_at', { ascending: false })
-                    .limit(200);
+                    .limit(300);
 
                 if (selectedCategory === 'AUTH') {
-                    q = q.ilike('action', 'AUTH_%');
+                    q = q.or('action.ilike.AUTH_%,action.ilike.SIGN_%,action.ilike.LOGIN_%,action.ilike.LOGOUT_%');
                 } else if (selectedCategory === 'CONFERENCE') {
                     q = q.or('action.ilike.CONFERENCE_%,table_name.ilike.%conference%');
                 } else if (selectedCategory === 'STAFF') {
                     q = q.or('action.ilike.STAFF_%,table_name.ilike.%staff%');
                 } else if (selectedCategory === 'NEWS') {
-                    q = q.or('action.ilike.NEWS_%,table_name.ilike.%news%');
+                    q = q.or('action.ilike.NEWS_%,action.ilike.CATEGORY_%,table_name.ilike.%news%');
                 } else if (selectedCategory === 'DEPARTMENTS') {
                     q = q.or('action.ilike.DEPT_%,table_name.ilike.%department%');
                 } else if (selectedCategory === 'USERS') {
                     q = q.or('action.ilike.USER_%,action.ilike.RBAC_%,table_name.ilike.%user%');
+                } else if (selectedCategory === 'BACKUP') {
+                    q = q.or('action.ilike.DB_%,action.ilike.BACKUP_%,table_name.ilike.%backup%');
                 }
 
-                const { data } = await q;
-                if (data) {
+                const { data, error } = await q;
+                if (!error && Array.isArray(data)) {
                     setLogs(data);
                     setIsLoading(false);
                     return;
                 }
             }
 
-            // Default mock logs for local preview
-            setLogs([
-                {
-                    id: 'log-mock-1',
-                    user_email: 'tokolejo@gmail.com',
-                    action: 'AUTH_SIGN_IN',
-                    table_name: 'auth_sessions',
-                    record_id: 'usr-1',
-                    details: { provider: 'google', ip: '127.0.0.1', userAgent: 'Mozilla/5.0 Chrome/128.0' },
-                    created_at: new Date().toISOString(),
-                },
-                {
-                    id: 'log-mock-2',
-                    user_email: 'anonymous / applicant',
-                    action: 'CONFERENCE_REGISTER',
-                    table_name: 'conference_registrations',
-                    record_id: 'reg-mock-1',
-                    details: { applicant: 'გიორგი მაისურაძე', topic: 'ნანოპროცესები და ნანოტექნოლოგიები', ip: '178.134.45.12' },
-                    created_at: new Date(Date.now() - 1800000).toISOString(),
-                },
-                {
-                    id: 'log-mock-3',
-                    user_email: 'tokolejo@gmail.com',
-                    action: 'STAFF_UPDATE',
-                    table_name: 'staff_members',
-                    record_id: 'staff-1',
-                    details: { name_ka: 'ნიკოლოზ ნიორაძე', academic_degree_ka: 'ქიმიის დოქტორი' },
-                    created_at: new Date(Date.now() - 7200000).toISOString(),
-                }
-            ]);
+            setLogs([]);
         } catch (err) {
             console.warn('Load audit logs error:', err);
+            setLogs([]);
         } finally {
             setIsLoading(false);
         }
@@ -543,11 +548,16 @@ export default function AdminAuditPage() {
                                             <td className="py-3 px-4 text-gray-500 text-[11px] max-w-xs truncate">
                                                 {log.details ? (
                                                     typeof log.details === 'object' ? (
+                                                        log.details.name ||
+                                                        log.details.title ||
+                                                        log.details.target_name ||
+                                                        log.details.target_email ||
                                                         log.details.recordTitle ||
                                                         log.details.applicant ||
                                                         log.details.email ||
                                                         log.details.name_ka ||
                                                         log.details.title_ka ||
+                                                        log.details.abstract_number ||
                                                         JSON.stringify(log.details).slice(0, 50) + '...'
                                                     ) : (
                                                         String(log.details)
