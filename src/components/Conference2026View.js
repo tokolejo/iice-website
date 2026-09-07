@@ -129,8 +129,8 @@ export default function Conference2026View() {
             coAuthor: isEn ? "Co-Author (თანაავტორი)" : "თანაავტორი",
             topic: isEn ? "Thematic topic (თემატური სექცია)" : "თემატური სექცია",
             uploadAbstract: isEn ? "Upload Abstract (აბსტრაქტის ატვირთვა)" : "აბსტრაქტის ატვირთვა",
-            geoNotice: isEn ? "* GEO only for Georgian citizens (.doc, .docx, .pdf)" : "* GEO მხოლოდ საქართველოს მოქალაქეებისათვის (.doc, .docx, .pdf)",
-            engNotice: isEn ? "ENG Abstract (.doc, .docx, .pdf)" : "ინგლისური აბსტრაქტი (.doc, .docx, .pdf)",
+            geoNotice: isEn ? "* GEO only for Georgian citizens (.doc, .docx)" : "* GEO მხოლოდ საქართველოს მოქალაქეებისათვის (.doc, .docx)",
+            engNotice: isEn ? "ENG Abstract (.doc, .docx)" : "ინგლისური აბსტრაქტი (.doc, .docx)",
             footnote: isEn
                 ? "Note: After registration, you can still work on your registration form (edit it or upload Abstract), when logged in through Account."
                 : "შენიშვნა: რეგისტრაციის შემდეგ, თქვენ კვლავ შეგიძლიათ იმუშაოთ თქვენს რეგისტრაციის ფორმაზე (შეცვალოთ იგი ან ატვირთოთ აბსტრაქტი), თუ შეხვალთ სისტემაში საკუთარი პროფილიდან.",
@@ -357,20 +357,6 @@ export default function Conference2026View() {
                 </div>
             </div>
 
-            {/* Grant Support & Free Participation Strip */}
-            <div className="bg-[#240638] text-white py-2.5 px-4 text-xs border-b border-purple-900/40">
-                <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3 text-center sm:text-left">
-                    <div className="flex items-center justify-center sm:justify-start gap-2 font-medium text-purple-100/90 text-[11px] sm:text-xs">
-                        <Landmark className="w-4 h-4 text-amber-300 flex-shrink-0" />
-                        <span>{t.grantNotice}</span>
-                    </div>
-                    <div className="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 font-extrabold px-3 py-1 rounded-full border border-emerald-400/30 text-[11px] mx-auto sm:mx-0">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>{t.freeNotice}</span>
-                    </div>
-                </div>
-            </div>
-
             {/* Sticky Navigation Tabs with Chevron Scroll and Zero Native Scrollbar */}
             <div id="tabs-navigation" className="sticky top-20 z-40 bg-white/95 backdrop-blur-md border-b border-purple-100 shadow-xs">
                 <div className="max-w-6xl mx-auto px-2 sm:px-6 lg:px-8 flex items-center relative py-2">
@@ -427,36 +413,36 @@ export default function Conference2026View() {
             {/* Tab Contents Area */}
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
 
-                {/* 1. REGISTRATION FORM TAB (Compact & Elegant) */}
+                {/* 1. REGISTRATION FORM TAB (Compact, Sleek & Fully Visible) */}
                 {activeTab === 'registration' && (
-                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-5 sm:p-7 md:p-8 animate-fade-in">
-                        <div className="text-center max-w-2xl mx-auto mb-6">
-                            <h2 className="text-lg sm:text-xl font-black text-[#60318e] mb-1">
+                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-4 sm:p-6 md:p-7 animate-fade-in">
+                        <div className="text-center max-w-xl mx-auto mb-4">
+                            <h2 className="text-base sm:text-lg font-black text-[#60318e] mb-1">
                                 {t.form.heading}
                             </h2>
-                            <p className="text-xs text-slate-500 font-medium">
+                            <p className="text-[11px] text-slate-500 font-medium">
                                 {t.form.subheading}
                             </p>
                         </div>
 
                         {submitError && (
-                            <div className="mb-5 p-3 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+                            <div className="mb-4 p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
                                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
                                 <span>{submitError}</span>
                             </div>
                         )}
 
-                        <form onSubmit={handleSubmit} className="space-y-5 text-xs">
+                        <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
                             {/* 1. Personal Info */}
-                            <div className="space-y-3 bg-purple-50/20 p-4 sm:p-5 rounded-2xl border border-purple-100/70">
-                                <h3 className="text-xs sm:text-sm font-bold text-[#60318e] pb-1.5 border-b border-purple-100 flex items-center gap-2">
-                                    <Users className="w-4 h-4 text-[#AD49E1]" />
+                            <div className="space-y-2.5 bg-purple-50/20 p-3 sm:p-4 rounded-2xl border border-purple-100/70">
+                                <h3 className="text-xs font-bold text-[#60318e] pb-1 border-b border-purple-100 flex items-center gap-2">
+                                    <Users className="w-3.5 h-3.5 text-[#AD49E1]" />
                                     <span>{isEn ? "1. Personal Information" : "1. პერსონალური მონაცემები"}</span>
                                 </h3>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                     <div>
-                                        <label className="block font-bold text-slate-700 mb-1">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.firstName} <span className="text-red-500">*</span>
                                         </label>
                                         <input
@@ -466,12 +452,12 @@ export default function Conference2026View() {
                                             value={formData.firstName}
                                             onChange={handleInputChange}
                                             placeholder={isEn ? "First name" : "სახელი"}
-                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
+                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block font-bold text-slate-700 mb-1">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.lastName} <span className="text-red-500">*</span>
                                         </label>
                                         <input
@@ -481,14 +467,14 @@ export default function Conference2026View() {
                                             value={formData.lastName}
                                             onChange={handleInputChange}
                                             placeholder={isEn ? "Last name" : "გვარი"}
-                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
+                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
                                         />
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                                     <div>
-                                        <label className="block font-bold text-slate-700 mb-1">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.birthDate}
                                         </label>
                                         <input
@@ -496,12 +482,12 @@ export default function Conference2026View() {
                                             name="birthDate"
                                             value={formData.birthDate}
                                             onChange={handleInputChange}
-                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
+                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block font-bold text-slate-700 mb-1">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.citizenship} <span className="text-red-500">*</span>
                                         </label>
                                         <input
@@ -511,12 +497,12 @@ export default function Conference2026View() {
                                             value={formData.citizenship}
                                             onChange={handleInputChange}
                                             placeholder={isEn ? "e.g., Georgia" : "მაგ: საქართველო"}
-                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
+                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block font-bold text-slate-700 mb-1">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.affiliation} <span className="text-red-500">*</span>
                                         </label>
                                         <input
@@ -526,40 +512,50 @@ export default function Conference2026View() {
                                             value={formData.affiliation}
                                             onChange={handleInputChange}
                                             placeholder={isEn ? "Institution / University" : "ინსტიტუტი / უნივერსიტეტი"}
-                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
+                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
                                         />
                                     </div>
                                 </div>
 
-                                {/* Titulation Pills */}
+                                {/* Titulation Wrap Pills - Never Cut Off */}
                                 <div>
-                                    <label className="block font-bold text-slate-700 mb-1">
+                                    <label className="block font-bold text-slate-700 text-xs mb-1">
                                         {t.form.titulation}
                                     </label>
-                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 bg-white p-2 rounded-xl border border-purple-100">
-                                        {titulationOptions.map(opt => (
-                                            <label key={opt.value} className="flex items-center gap-1.5 cursor-pointer font-medium text-slate-700 text-xs py-1 px-1.5 rounded-lg hover:bg-purple-50 transition-colors">
-                                                <input
-                                                    type="radio"
-                                                    name="titulation"
-                                                    value={opt.value}
-                                                    checked={formData.titulation === opt.value}
-                                                    onChange={handleInputChange}
-                                                    className="text-[#60318e] focus:ring-[#AD49E1]"
-                                                />
-                                                <span className="truncate">{isEn ? opt.labelEn : opt.labelKa}</span>
-                                            </label>
-                                        ))}
+                                    <div className="flex flex-wrap gap-1.5 bg-white p-2 rounded-xl border border-purple-100/90">
+                                        {titulationOptions.map(opt => {
+                                            const isChecked = formData.titulation === opt.value;
+                                            return (
+                                                <label
+                                                    key={opt.value}
+                                                    className={`inline-flex items-center gap-1.5 cursor-pointer text-xs py-1 px-2.5 rounded-lg border transition-all select-none ${
+                                                        isChecked
+                                                            ? 'bg-purple-100/80 border-[#60318e] text-[#60318e] font-extrabold shadow-2xs'
+                                                            : 'bg-white border-slate-200/80 text-slate-700 hover:bg-purple-50/50 hover:border-purple-200'
+                                                    }`}
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="titulation"
+                                                        value={opt.value}
+                                                        checked={isChecked}
+                                                        onChange={handleInputChange}
+                                                        className="text-[#60318e] focus:ring-[#AD49E1] h-3.5 w-3.5"
+                                                    />
+                                                    <span className="leading-snug">{isEn ? opt.labelEn : opt.labelKa}</span>
+                                                </label>
+                                            );
+                                        })}
                                     </div>
                                 </div>
 
                                 {/* Gender & Email & Attendance */}
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-0.5">
                                     <div>
-                                        <label className="block font-bold text-slate-700 mb-1">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.gender}
                                         </label>
-                                        <div className="flex gap-4 pt-1 bg-white px-3 py-2 rounded-xl border border-slate-200">
+                                        <div className="flex items-center gap-3 bg-white px-3 py-1.5 rounded-xl border border-slate-200 h-[36px]">
                                             <label className="inline-flex items-center gap-1.5 cursor-pointer font-semibold text-slate-700 text-xs">
                                                 <input
                                                     type="radio"
@@ -567,9 +563,9 @@ export default function Conference2026View() {
                                                     value="female"
                                                     checked={formData.gender === 'female'}
                                                     onChange={handleInputChange}
-                                                    className="text-[#60318e] focus:ring-[#AD49E1]"
+                                                    className="text-[#60318e] focus:ring-[#AD49E1] h-3.5 w-3.5"
                                                 />
-                                                {t.form.female}
+                                                <span>{t.form.female}</span>
                                             </label>
                                             <label className="inline-flex items-center gap-1.5 cursor-pointer font-semibold text-slate-700 text-xs">
                                                 <input
@@ -578,15 +574,15 @@ export default function Conference2026View() {
                                                     value="male"
                                                     checked={formData.gender === 'male'}
                                                     onChange={handleInputChange}
-                                                    className="text-[#60318e] focus:ring-[#AD49E1]"
+                                                    className="text-[#60318e] focus:ring-[#AD49E1] h-3.5 w-3.5"
                                                 />
-                                                {t.form.male}
+                                                <span>{t.form.male}</span>
                                             </label>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label className="block font-bold text-slate-700 mb-1">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.email} <span className="text-red-500">*</span>
                                         </label>
                                         <input
@@ -596,24 +592,24 @@ export default function Conference2026View() {
                                             value={formData.email}
                                             onChange={handleInputChange}
                                             placeholder="researcher@domain.com"
-                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
+                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block font-bold text-slate-700 mb-1">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.attendance}
                                         </label>
-                                        <div className="flex gap-4 pt-1 bg-white px-3 py-2 rounded-xl border border-slate-200">
+                                        <div className="flex items-center gap-3 bg-white px-3 py-1.5 rounded-xl border border-slate-200 h-[36px]">
                                             <label className="inline-flex items-center gap-1.5 cursor-pointer font-semibold text-slate-700 text-xs">
                                                 <input
                                                     type="radio"
                                                     name="isAttendingInPerson"
                                                     checked={formData.isAttendingInPerson === true}
                                                     onChange={() => setFormData(p => ({ ...p, isAttendingInPerson: true }))}
-                                                    className="text-[#60318e] focus:ring-[#AD49E1]"
+                                                    className="text-[#60318e] focus:ring-[#AD49E1] h-3.5 w-3.5"
                                                 />
-                                                {t.form.yes}
+                                                <span>{t.form.yes}</span>
                                             </label>
                                             <label className="inline-flex items-center gap-1.5 cursor-pointer font-semibold text-slate-700 text-xs">
                                                 <input
@@ -621,9 +617,9 @@ export default function Conference2026View() {
                                                     name="isAttendingInPerson"
                                                     checked={formData.isAttendingInPerson === false}
                                                     onChange={() => setFormData(p => ({ ...p, isAttendingInPerson: false }))}
-                                                    className="text-[#60318e] focus:ring-[#AD49E1]"
+                                                    className="text-[#60318e] focus:ring-[#AD49E1] h-3.5 w-3.5"
                                                 />
-                                                {t.form.no}
+                                                <span>{t.form.no}</span>
                                             </label>
                                         </div>
                                     </div>
@@ -631,14 +627,14 @@ export default function Conference2026View() {
                             </div>
 
                             {/* 2. Presentation Details */}
-                            <div className="space-y-3 bg-purple-50/20 p-4 sm:p-5 rounded-2xl border border-purple-100/70">
-                                <h3 className="text-xs sm:text-sm font-bold text-[#60318e] pb-1.5 border-b border-purple-100 flex items-center gap-2">
-                                    <FileText className="w-4 h-4 text-[#AD49E1]" />
+                            <div className="space-y-2.5 bg-purple-50/20 p-3 sm:p-4 rounded-2xl border border-purple-100/70">
+                                <h3 className="text-xs font-bold text-[#60318e] pb-1 border-b border-purple-100 flex items-center gap-2">
+                                    <FileText className="w-3.5 h-3.5 text-[#AD49E1]" />
                                     <span>{isEn ? "2. Presentation & Abstract Details" : "2. მოხსენებისა და აბსტრაქტის დეტალები"}</span>
                                 </h3>
 
                                 <div>
-                                    <label className="block font-bold text-slate-700 mb-1">
+                                    <label className="block font-bold text-slate-700 text-xs mb-1">
                                         {t.form.presTitle} <span className="text-red-500">*</span>
                                     </label>
                                     <textarea
@@ -648,13 +644,13 @@ export default function Conference2026View() {
                                         value={formData.presentationTitle}
                                         onChange={handleInputChange}
                                         placeholder={isEn ? "Title of your presentation..." : "თქვენი სამეცნიერო მოხსენების სათაური..."}
-                                        className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
+                                        className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white resize-none"
                                     />
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                     <div>
-                                        <label className="block font-bold text-slate-700 mb-1">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.coAuthors}
                                         </label>
                                         <input
@@ -663,19 +659,19 @@ export default function Conference2026View() {
                                             value={formData.coAuthors}
                                             onChange={handleInputChange}
                                             placeholder={isEn ? "e.g., G. Tatishvili, T. Lezhava" : "მაგ: გ. ტატიშვილი, თ. ლეჟავა"}
-                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
+                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block font-bold text-slate-700 mb-1">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.topic}
                                         </label>
                                         <select
                                             name="thematicTopic"
                                             value={formData.thematicTopic}
                                             onChange={handleInputChange}
-                                            className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white font-medium truncate"
+                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white font-medium truncate h-[36px]"
                                         >
                                             {thematicTopics.map(top => (
                                                 <option key={top.id} value={top.titleKa}>
@@ -687,50 +683,68 @@ export default function Conference2026View() {
                                 </div>
 
                                 {/* Presentation Type & Role */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-0.5">
                                     <div>
-                                        <label className="block font-bold text-slate-700 mb-1">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.presType}
                                         </label>
-                                        <div className="grid grid-cols-2 gap-1.5 bg-white p-2 rounded-xl border border-purple-100">
-                                            {presentationTypeOptions.map(opt => (
-                                                <label key={opt.value} className="flex items-center gap-1.5 cursor-pointer font-medium text-slate-700 text-xs py-0.5">
-                                                    <input
-                                                        type="radio"
-                                                        name="presentationType"
-                                                        value={opt.value}
-                                                        checked={formData.presentationType === opt.value}
-                                                        onChange={handleInputChange}
-                                                        className="text-[#60318e] focus:ring-[#AD49E1]"
-                                                    />
-                                                    <span className="truncate">{isEn ? opt.labelEn : opt.labelKa}</span>
-                                                </label>
-                                            ))}
+                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 bg-white p-1.5 rounded-xl border border-purple-100">
+                                            {presentationTypeOptions.map(opt => {
+                                                const isChecked = formData.presentationType === opt.value;
+                                                return (
+                                                    <label
+                                                        key={opt.value}
+                                                        className={`inline-flex items-center gap-1 cursor-pointer text-xs py-1 px-1.5 rounded-lg border transition-all ${
+                                                            isChecked
+                                                                ? 'bg-purple-100/90 border-[#60318e] text-[#60318e] font-extrabold'
+                                                                : 'bg-white border-transparent text-slate-700 hover:bg-purple-50/50'
+                                                        }`}
+                                                    >
+                                                        <input
+                                                            type="radio"
+                                                            name="presentationType"
+                                                            value={opt.value}
+                                                            checked={isChecked}
+                                                            onChange={handleInputChange}
+                                                            className="text-[#60318e] focus:ring-[#AD49E1] h-3.5 w-3.5"
+                                                        />
+                                                        <span className="truncate">{isEn ? opt.labelEn : opt.labelKa}</span>
+                                                    </label>
+                                                );
+                                            })}
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label className="block font-bold text-slate-700 mb-1">
+                                        <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.role}
                                         </label>
-                                        <div className="flex flex-wrap gap-4 bg-white p-2 rounded-xl border border-purple-100 h-[46px] items-center px-3">
-                                            <label className="inline-flex items-center gap-1.5 cursor-pointer font-bold text-slate-800 text-xs">
+                                        <div className="flex flex-wrap gap-2 bg-white p-1.5 rounded-xl border border-purple-100 h-[36px] items-center px-2.5">
+                                            <label className={`inline-flex items-center gap-1.5 cursor-pointer text-xs py-0.5 px-2 rounded-md transition-all ${
+                                                formData.rolePresentingAuthor
+                                                    ? 'bg-purple-100/90 text-[#60318e] font-bold'
+                                                    : 'text-slate-700 hover:text-[#60318e]'
+                                            }`}>
                                                 <input
                                                     type="checkbox"
                                                     name="rolePresentingAuthor"
                                                     checked={formData.rolePresentingAuthor}
                                                     onChange={handleInputChange}
-                                                    className="text-[#60318e] rounded"
+                                                    className="text-[#60318e] rounded h-3.5 w-3.5"
                                                 />
                                                 <span>{t.form.presentingAuthor}</span>
                                             </label>
-                                            <label className="inline-flex items-center gap-1.5 cursor-pointer font-bold text-slate-800 text-xs">
+                                            <label className={`inline-flex items-center gap-1.5 cursor-pointer text-xs py-0.5 px-2 rounded-md transition-all ${
+                                                formData.roleCoAuthor
+                                                    ? 'bg-purple-100/90 text-[#60318e] font-bold'
+                                                    : 'text-slate-700 hover:text-[#60318e]'
+                                            }`}>
                                                 <input
                                                     type="checkbox"
                                                     name="roleCoAuthor"
                                                     checked={formData.roleCoAuthor}
                                                     onChange={handleInputChange}
-                                                    className="text-[#60318e] rounded"
+                                                    className="text-[#60318e] rounded h-3.5 w-3.5"
                                                 />
                                                 <span>{t.form.coAuthor}</span>
                                             </label>
@@ -739,30 +753,30 @@ export default function Conference2026View() {
                                 </div>
                             </div>
 
-                            {/* 3. File Uploads */}
-                            <div className="space-y-3 bg-purple-50/20 p-4 sm:p-5 rounded-2xl border border-purple-100/70">
-                                <h3 className="text-xs sm:text-sm font-bold text-[#60318e] pb-1.5 border-b border-purple-100 flex items-center gap-2">
-                                    <UploadCloud className="w-4 h-4 text-[#AD49E1]" />
+                            {/* 3. File Uploads (Strictly .doc, .docx - NO PDF) */}
+                            <div className="space-y-2.5 bg-purple-50/20 p-3 sm:p-4 rounded-2xl border border-purple-100/70">
+                                <h3 className="text-xs font-bold text-[#60318e] pb-1 border-b border-purple-100 flex items-center gap-2">
+                                    <UploadCloud className="w-3.5 h-3.5 text-[#AD49E1]" />
                                     <span>{t.form.uploadAbstract}</span>
                                 </h3>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <div className="border-2 border-dashed border-purple-200 rounded-xl p-3 text-center bg-white hover:bg-purple-50/40 transition-colors relative">
-                                        <label className="block font-bold text-slate-700 text-xs mb-0.5 cursor-pointer">
-                                            {isEn ? "Georgian Abstract (.doc, .docx, .pdf)" : "თეზისი ქართულად (.doc, .docx, .pdf)"}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                    <div className="border border-dashed border-purple-200 rounded-xl p-2.5 text-center bg-white hover:bg-purple-50/30 transition-colors relative">
+                                        <label className="block font-bold text-slate-800 text-xs mb-0.5 cursor-pointer">
+                                            {isEn ? "Georgian Abstract (.doc, .docx)" : "თეზისი ქართულად (.doc, .docx)"}
                                         </label>
-                                        <span className="text-[10px] text-purple-700 block mb-2 font-semibold">
+                                        <span className="text-[10px] text-purple-700 block mb-1.5 font-semibold">
                                             {t.form.geoNotice}
                                         </span>
                                         {!geoFile ? (
                                             <input
                                                 type="file"
-                                                accept=".doc,.docx,.pdf"
+                                                accept=".doc,.docx"
                                                 onChange={(e) => setGeoFile(e.target.files?.[0] || null)}
                                                 className="text-[11px] text-slate-600 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-[#60318e] file:text-white cursor-pointer"
                                             />
                                         ) : (
-                                            <div className="flex items-center justify-between bg-purple-50 px-2.5 py-1.5 rounded-lg border border-purple-200 shadow-xs">
+                                            <div className="flex items-center justify-between bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-200 shadow-xs">
                                                 <span className="font-bold text-[#60318e] text-[11px] truncate flex items-center gap-1">
                                                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
                                                     {geoFile.name}
@@ -779,22 +793,22 @@ export default function Conference2026View() {
                                         )}
                                     </div>
 
-                                    <div className="border-2 border-dashed border-purple-200 rounded-xl p-3 text-center bg-white hover:bg-purple-50/40 transition-colors relative">
-                                        <label className="block font-bold text-slate-700 text-xs mb-0.5 cursor-pointer">
-                                            {isEn ? "English Abstract (.doc, .docx, .pdf)" : "თეზისი ინგლისურად (.doc, .docx, .pdf)"}
+                                    <div className="border border-dashed border-purple-200 rounded-xl p-2.5 text-center bg-white hover:bg-purple-50/30 transition-colors relative">
+                                        <label className="block font-bold text-slate-800 text-xs mb-0.5 cursor-pointer">
+                                            {isEn ? "English Abstract (.doc, .docx)" : "თეზისი ინგლისურად (.doc, .docx)"}
                                         </label>
-                                        <span className="text-[10px] text-purple-700 block mb-2 font-semibold">
+                                        <span className="text-[10px] text-purple-700 block mb-1.5 font-semibold">
                                             {t.form.engNotice}
                                         </span>
                                         {!engFile ? (
                                             <input
                                                 type="file"
-                                                accept=".doc,.docx,.pdf"
+                                                accept=".doc,.docx"
                                                 onChange={(e) => setEngFile(e.target.files?.[0] || null)}
                                                 className="text-[11px] text-slate-600 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-[#60318e] file:text-white cursor-pointer"
                                             />
                                         ) : (
-                                            <div className="flex items-center justify-between bg-purple-50 px-2.5 py-1.5 rounded-lg border border-purple-200 shadow-xs">
+                                            <div className="flex items-center justify-between bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-200 shadow-xs">
                                                 <span className="font-bold text-[#60318e] text-[11px] truncate flex items-center gap-1">
                                                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
                                                     {engFile.name}
@@ -813,18 +827,18 @@ export default function Conference2026View() {
                                 </div>
 
                                 {/* Footnote Notice */}
-                                <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-900 text-[11px] leading-relaxed flex items-start gap-2">
-                                    <Info className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                                <div className="p-2.5 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-900 text-[11px] leading-relaxed flex items-start gap-2">
+                                    <Info className="w-3.5 h-3.5 text-amber-600 flex-shrink-0 mt-0.5" />
                                     <span>{t.form.footnote}</span>
                                 </div>
                             </div>
 
                             {/* Submit Button */}
-                            <div className="pt-2 text-center">
+                            <div className="pt-1.5 text-center">
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="inline-flex items-center justify-center gap-2 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-extrabold px-8 py-3 rounded-full text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md hover:shadow-lg hover:scale-[1.02] disabled:opacity-50 cursor-pointer"
+                                    className="inline-flex items-center justify-center gap-2 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-extrabold px-8 py-2.5 rounded-full text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg hover:scale-[1.01] disabled:opacity-50 cursor-pointer"
                                 >
                                     {isSubmitting ? (
                                         <>
