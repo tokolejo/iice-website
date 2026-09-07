@@ -213,7 +213,7 @@ export default function AdminLayout({ children }) {
     return (
         <div className="min-h-screen bg-slate-100 flex flex-col md:flex-row">
             {/* Sidebar Desktop */}
-            <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#2e0d42] text-white flex flex-col transition-transform duration-300 transform md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:static md:inset-auto md:min-h-screen shadow-xl`}>
+            <aside className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#2e0d42] text-white flex flex-col transition-transform duration-300 transform md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:static md:inset-auto md:min-h-screen shadow-xl`}>
                 {/* Brand Header */}
                 <div className="p-5 border-b border-white/10 flex items-center justify-between">
                     <Link href="/admin" className="flex items-center gap-3 group">
@@ -234,15 +234,19 @@ export default function AdminLayout({ children }) {
                 </div>
 
                 {/* User Info Card */}
-                <div className="p-4 mx-3 my-3 rounded-2xl bg-white/5 border border-white/10">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="w-9 h-9 rounded-full bg-[#AD49E1]/30 border border-[#AD49E1]/50 flex items-center justify-center text-white flex-shrink-0">
-                            <UserCircle className="w-5 h-5" />
+                <div className="p-3.5 mx-3 my-3 rounded-2xl bg-white/5 border border-white/10">
+                    <div className="flex items-start gap-2.5 mb-2.5">
+                        <div className="w-8 h-8 rounded-full bg-[#AD49E1]/30 border border-[#AD49E1]/50 flex items-center justify-center text-white flex-shrink-0 mt-0.5">
+                            <UserCircle className="w-4 h-4" />
                         </div>
-                        <div className="overflow-hidden flex-1">
-                            <p className="text-xs font-bold text-white truncate">{user?.email}</p>
+                        <div className="min-w-0 flex-1">
+                            <p className="text-xs font-bold text-white break-all leading-snug" title={user?.email}>
+                                {user?.email}
+                            </p>
                             {deptName && (
-                                <p className="text-[10px] text-[#EBD3F8]/70 truncate font-medium">{deptName}</p>
+                                <p className="text-[10px] text-[#EBD3F8]/80 font-medium leading-tight mt-0.5 break-words" title={deptName}>
+                                    {deptName}
+                                </p>
                             )}
                         </div>
                     </div>

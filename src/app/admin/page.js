@@ -307,25 +307,33 @@ export default function AdminDashboardPage() {
             </div>
 
             {/* Compact KPI Metric Cards (Role-Filtered) */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className={`grid gap-3 ${
+                [isConfManager, isDeptHead, isAdmin, isEditor, isSuperAdmin].filter(Boolean).length >= 5
+                    ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'
+                    : [isConfManager, isDeptHead, isAdmin, isEditor, isSuperAdmin].filter(Boolean).length === 4
+                    ? 'grid-cols-2 lg:grid-cols-4'
+                    : [isConfManager, isDeptHead, isAdmin, isEditor, isSuperAdmin].filter(Boolean).length === 3
+                    ? 'grid-cols-1 sm:grid-cols-3'
+                    : 'grid-cols-1 sm:grid-cols-2'
+            }`}>
                 {isConfManager && (
                     <Link
                         href="/admin/conference"
-                        className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
+                        className="group bg-white rounded-2xl p-3 sm:p-3.5 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
                     >
                         <div className="min-w-0">
-                            <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
+                            <span className="text-[10px] sm:text-[10.5px] font-bold text-gray-400 uppercase tracking-wider block truncate">
                                 კონფერენცია 2026
                             </span>
-                            <div className="flex items-baseline gap-1.5 mt-0.5">
-                                <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
+                            <div className="flex items-baseline gap-1 mt-0.5">
+                                <span className="text-lg sm:text-xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
                                     {stats.conferenceCount}
                                 </span>
                                 <span className="text-[10px] text-gray-400 font-medium truncate">თეზისი</span>
                             </div>
                         </div>
-                        <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
-                            <Calendar className="w-4 h-4" />
+                        <div className="w-8 h-8 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-1.5">
+                            <Calendar className="w-3.5 h-3.5" />
                         </div>
                     </Link>
                 )}
@@ -333,21 +341,21 @@ export default function AdminDashboardPage() {
                 {isDeptHead && (
                     <Link
                         href="/admin/staff"
-                        className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
+                        className="group bg-white rounded-2xl p-3 sm:p-3.5 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
                     >
                         <div className="min-w-0">
-                            <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
+                            <span className="text-[10px] sm:text-[10.5px] font-bold text-gray-400 uppercase tracking-wider block truncate">
                                 თანამშრომლები
                             </span>
-                            <div className="flex items-baseline gap-1.5 mt-0.5">
-                                <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
+                            <div className="flex items-baseline gap-1 mt-0.5">
+                                <span className="text-lg sm:text-xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
                                     {stats.staffCount}
                                 </span>
                                 <span className="text-[10px] text-gray-400 font-medium truncate">მეცნიერი</span>
                             </div>
                         </div>
-                        <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
-                            <Users className="w-4 h-4" />
+                        <div className="w-8 h-8 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-1.5">
+                            <Users className="w-3.5 h-3.5" />
                         </div>
                     </Link>
                 )}
@@ -355,21 +363,21 @@ export default function AdminDashboardPage() {
                 {isAdmin && (
                     <Link
                         href="/admin/departments"
-                        className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
+                        className="group bg-white rounded-2xl p-3 sm:p-3.5 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
                     >
                         <div className="min-w-0">
-                            <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
+                            <span className="text-[10px] sm:text-[10.5px] font-bold text-gray-400 uppercase tracking-wider block truncate">
                                 განყოფილებები
                             </span>
-                            <div className="flex items-baseline gap-1.5 mt-0.5">
-                                <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
+                            <div className="flex items-baseline gap-1 mt-0.5">
+                                <span className="text-lg sm:text-xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
                                     {stats.departmentsCount}
                                 </span>
                                 <span className="text-[10px] text-gray-400 font-medium truncate">მიმართულება</span>
                             </div>
                         </div>
-                        <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
-                            <Building2 className="w-4 h-4" />
+                        <div className="w-8 h-8 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-1.5">
+                            <Building2 className="w-3.5 h-3.5" />
                         </div>
                     </Link>
                 )}
@@ -377,21 +385,21 @@ export default function AdminDashboardPage() {
                 {isEditor && (
                     <Link
                         href="/admin/news"
-                        className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
+                        className="group bg-white rounded-2xl p-3 sm:p-3.5 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
                     >
                         <div className="min-w-0">
-                            <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
+                            <span className="text-[10px] sm:text-[10.5px] font-bold text-gray-400 uppercase tracking-wider block truncate">
                                 სიახლეები
                             </span>
-                            <div className="flex items-baseline gap-1.5 mt-0.5">
-                                <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
+                            <div className="flex items-baseline gap-1 mt-0.5">
+                                <span className="text-lg sm:text-xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
                                     {stats.newsCount}
                                 </span>
                                 <span className="text-[10px] text-gray-400 font-medium truncate">სტატია</span>
                             </div>
                         </div>
-                        <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
-                            <Newspaper className="w-4 h-4" />
+                        <div className="w-8 h-8 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-1.5">
+                            <Newspaper className="w-3.5 h-3.5" />
                         </div>
                     </Link>
                 )}
@@ -399,198 +407,200 @@ export default function AdminDashboardPage() {
                 {isSuperAdmin && (
                     <Link
                         href="/admin/users"
-                        className="group bg-white rounded-2xl p-3.5 sm:p-4 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
+                        className="group bg-white rounded-2xl p-3 sm:p-3.5 border border-purple-100/80 hover:border-[#AD49E1] shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer"
                     >
                         <div className="min-w-0">
-                            <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 uppercase tracking-wider block truncate">
+                            <span className="text-[10px] sm:text-[10.5px] font-bold text-gray-400 uppercase tracking-wider block truncate">
                                 მომხმარებლები
                             </span>
-                            <div className="flex items-baseline gap-1.5 mt-0.5">
-                                <span className="text-xl sm:text-2xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
+                            <div className="flex items-baseline gap-1 mt-0.5">
+                                <span className="text-lg sm:text-xl font-black text-[#60318e] group-hover:text-[#AD49E1] transition-colors">
                                     {stats.usersCount}
                                 </span>
                                 <span className="text-[10px] text-gray-400 font-medium truncate">პროფილი</span>
                             </div>
                         </div>
-                        <div className="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-2">
-                            <ShieldCheck className="w-4 h-4" />
+                        <div className="w-8 h-8 rounded-xl bg-purple-50 group-hover:bg-[#60318e] text-[#60318e] group-hover:text-white flex items-center justify-center transition-all flex-shrink-0 shadow-xs ml-1.5">
+                            <ShieldCheck className="w-3.5 h-3.5" />
                         </div>
                     </Link>
                 )}
             </div>
 
             {/* Analytics & Visual Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* Left: Registration Trend SVG Chart (7 cols) */}
-                <div className="lg:col-span-7 bg-white rounded-3xl p-6 border border-purple-100 shadow-sm flex flex-col justify-between">
-                    <div>
-                        <div className="flex items-center justify-between mb-4">
-                            <div>
-                                <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
-                                    <TrendingUp className="w-5 h-5 text-[#60318e]" />
-                                    რეგისტრაციების დინამიკა (ბოლო 14 დღე)
-                                </h3>
-                                <p className="text-xs text-gray-500 mt-0.5">ყოველდღიური შემოსული თეზისების ნაკადი</p>
-                            </div>
-                            <span className="text-xs font-extrabold text-[#60318e] bg-purple-50 px-2.5 py-1 rounded-xl border border-purple-200">
-                                სულ: {stats.conferenceCount}
-                            </span>
-                        </div>
-
-                        {/* SVG Area Chart */}
-                        <div className="relative h-40 w-full pt-2">
-                            {(() => {
-                                const trend = confAnalytics.trend;
-                                if (!trend || trend.length === 0) return null;
-                                const maxVal = Math.max(...trend.map(t => t.count), 1);
-                                const width = 500;
-                                const height = 110;
-                                const step = width / (trend.length - 1 || 1);
-                                const points = trend.map((t, i) => ({
-                                    x: i * step,
-                                    y: height - (t.count / maxVal) * (height - 20) - 10,
-                                    count: t.count,
-                                    day: t.day
-                                }));
-
-                                return (
-                                    <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${width} ${height + 20}`}>
-                                        <defs>
-                                            <linearGradient id="dashTrendGrad" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="0%" stopColor="#AD49E1" stopOpacity="0.35" />
-                                                <stop offset="100%" stopColor="#60318e" stopOpacity="0.0" />
-                                            </linearGradient>
-                                        </defs>
-
-                                        {/* Area */}
-                                        <polygon
-                                            points={`0,${height + 10} ${points.map(p => `${p.x},${p.y}`).join(' ')} ${width},${height + 10}`}
-                                            fill="url(#dashTrendGrad)"
-                                        />
-
-                                        {/* Line */}
-                                        <polyline
-                                            points={points.map(p => `${p.x},${p.y}`).join(' ')}
-                                            fill="none"
-                                            stroke="#60318e"
-                                            strokeWidth="3"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-
-                                        {/* Points */}
-                                        {points.map((p, idx) => (
-                                            <g key={idx} className="group cursor-pointer">
-                                                <circle
-                                                    cx={p.x}
-                                                    cy={p.y}
-                                                    r="4"
-                                                    className="fill-white stroke-[#60318e] stroke-2 hover:stroke-[#AD49E1] transition-all"
-                                                />
-                                                {p.count > 0 && (
-                                                    <text
-                                                        x={p.x}
-                                                        y={p.y - 8}
-                                                        textAnchor="middle"
-                                                        className="text-[9px] font-bold fill-[#60318e]"
-                                                    >
-                                                        {p.count}
-                                                    </text>
-                                                )}
-                                            </g>
-                                        ))}
-                                    </svg>
-                                );
-                            })()}
-                        </div>
-
-                        {/* Day Labels */}
-                        <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 mt-2 px-1 border-t border-slate-100 pt-2">
-                            {confAnalytics.trend.length > 0 ? (
-                                <>
-                                    <span>{confAnalytics.trend[0]?.day}</span>
-                                    <span>{confAnalytics.trend[Math.floor(confAnalytics.trend.length / 2)]?.day}</span>
-                                    <span>დღეს ({confAnalytics.trend[confAnalytics.trend.length - 1]?.day})</span>
-                                </>
-                            ) : null}
-                        </div>
-                    </div>
-
-                    {/* Quick Metrics Bar */}
-                    <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-slate-100 text-center">
-                        <div className="p-2 rounded-xl bg-purple-50/50">
-                            <span className="text-[10px] text-slate-500 font-bold block">ზეპირი / სასტენდო</span>
-                            <span className="text-xs font-black text-[#60318e]">
-                                {confAnalytics.formats.oral} / {confAnalytics.formats.poster}
-                            </span>
-                        </div>
-                        <div className="p-2 rounded-xl bg-purple-50/50">
-                            <span className="text-[10px] text-slate-500 font-bold block">პირისპირ / ონლაინ</span>
-                            <span className="text-xs font-black text-slate-800">
-                                {confAnalytics.formats.inPerson} / {confAnalytics.formats.online}
-                            </span>
-                        </div>
-                        <div className="p-2 rounded-xl bg-purple-50/50">
-                            <span className="text-[10px] text-slate-500 font-bold block">მიღებული / განსახილველი</span>
-                            <span className="text-xs font-black text-emerald-700">
-                                {confAnalytics.statuses.accepted} / {confAnalytics.statuses.pending}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Right: Thematic Breakdown (5 cols) */}
-                <div className="lg:col-span-5 bg-white rounded-3xl p-6 border border-purple-100 shadow-sm flex flex-col justify-between">
-                    <div>
-                        <div className="flex items-center justify-between mb-4">
-                            <div>
-                                <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
-                                    <PieChart className="w-5 h-5 text-[#60318e]" />
-                                    თემატიკების გადანაწილება
-                                </h3>
-                                <p className="text-xs text-gray-500 mt-0.5">პოპულარული სამეცნიერო სექციები</p>
-                            </div>
-                        </div>
-
-                        <div className="space-y-3.5">
-                            {confAnalytics.topTopics.length > 0 ? (
-                                confAnalytics.topTopics.map((item, idx) => (
-                                    <div key={idx} className="space-y-1">
-                                        <div className="flex items-center justify-between text-xs font-semibold">
-                                            <span className="text-slate-800 truncate max-w-[220px]" title={item.topic}>
-                                                {item.topic}
-                                            </span>
-                                            <span className="text-slate-500 font-mono text-[11px] flex-shrink-0">
-                                                <strong className="text-slate-900">{item.count}</strong> ({item.percentage}%)
-                                            </span>
-                                        </div>
-                                        <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                            <div
-                                                className="bg-gradient-to-r from-[#60318e] to-[#AD49E1] h-full rounded-full transition-all duration-500"
-                                                style={{ width: `${item.percentage}%` }}
-                                            ></div>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="p-8 text-center text-xs text-slate-400">
-                                    მონაცემები არ არის ხელმისაწვდომი
+            {isConfManager && (
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                    {/* Left: Registration Trend SVG Chart (7 cols) */}
+                    <div className="lg:col-span-7 bg-white rounded-2xl p-4 sm:p-5 border border-purple-100 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div className="flex items-center justify-between mb-2">
+                                <div>
+                                    <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                                        <TrendingUp className="w-4 h-4 text-[#60318e]" />
+                                        რეგისტრაციების დინამიკა (ბოლო 14 დღე)
+                                    </h3>
+                                    <p className="text-[11px] text-gray-500 mt-0.5">ყოველდღიური შემოსული თეზისების ნაკადი</p>
                                 </div>
-                            )}
+                                <span className="text-[11px] font-extrabold text-[#60318e] bg-purple-50 px-2.5 py-0.5 rounded-lg border border-purple-200">
+                                    სულ: {stats.conferenceCount}
+                                </span>
+                            </div>
+
+                            {/* SVG Area Chart */}
+                            <div className="relative h-24 w-full pt-1">
+                                {(() => {
+                                    const trend = confAnalytics.trend;
+                                    if (!trend || trend.length === 0) return null;
+                                    const maxVal = Math.max(...trend.map(t => t.count), 1);
+                                    const width = 500;
+                                    const height = 65;
+                                    const step = width / (trend.length - 1 || 1);
+                                    const points = trend.map((t, i) => ({
+                                        x: i * step,
+                                        y: height - (t.count / maxVal) * (height - 16) - 8,
+                                        count: t.count,
+                                        day: t.day
+                                    }));
+
+                                    return (
+                                        <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${width} ${height + 12}`}>
+                                            <defs>
+                                                <linearGradient id="dashTrendGrad" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor="#AD49E1" stopOpacity="0.25" />
+                                                    <stop offset="100%" stopColor="#60318e" stopOpacity="0.0" />
+                                                </linearGradient>
+                                            </defs>
+
+                                            {/* Area */}
+                                            <polygon
+                                                points={`0,${height + 6} ${points.map(p => `${p.x},${p.y}`).join(' ')} ${width},${height + 6}`}
+                                                fill="url(#dashTrendGrad)"
+                                            />
+
+                                            {/* Line */}
+                                            <polyline
+                                                points={points.map(p => `${p.x},${p.y}`).join(' ')}
+                                                fill="none"
+                                                stroke="#60318e"
+                                                strokeWidth="2.5"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+
+                                            {/* Points */}
+                                            {points.map((p, idx) => (
+                                                <g key={idx} className="group cursor-pointer">
+                                                    <circle
+                                                        cx={p.x}
+                                                        cy={p.y}
+                                                        r="3.5"
+                                                        className="fill-white stroke-[#60318e] stroke-2 hover:stroke-[#AD49E1] transition-all"
+                                                    />
+                                                    {p.count > 0 && (
+                                                        <text
+                                                            x={p.x}
+                                                            y={p.y - 6}
+                                                            textAnchor="middle"
+                                                            className="text-[9px] font-bold fill-[#60318e]"
+                                                        >
+                                                            {p.count}
+                                                        </text>
+                                                    )}
+                                                </g>
+                                            ))}
+                                        </svg>
+                                    );
+                                })()}
+                            </div>
+
+                            {/* Day Labels */}
+                            <div className="flex items-center justify-between text-[9px] font-bold text-slate-400 mt-1 px-1 border-t border-slate-100/80 pt-1">
+                                {confAnalytics.trend.length > 0 ? (
+                                    <>
+                                        <span>{confAnalytics.trend[0]?.day}</span>
+                                        <span>{confAnalytics.trend[Math.floor(confAnalytics.trend.length / 2)]?.day}</span>
+                                        <span>დღეს ({confAnalytics.trend[confAnalytics.trend.length - 1]?.day})</span>
+                                    </>
+                                ) : null}
+                            </div>
+                        </div>
+
+                        {/* Quick Metrics Bar */}
+                        <div className="grid grid-cols-3 gap-2 mt-3 pt-2.5 border-t border-slate-100 text-center">
+                            <div className="p-1.5 rounded-lg bg-purple-50/50">
+                                <span className="text-[9px] text-slate-500 font-bold block">ზეპირი / სასტენდო</span>
+                                <span className="text-xs font-black text-[#60318e]">
+                                    {confAnalytics.formats.oral} / {confAnalytics.formats.poster}
+                                </span>
+                            </div>
+                            <div className="p-1.5 rounded-lg bg-purple-50/50">
+                                <span className="text-[9px] text-slate-500 font-bold block">პირისპირ / ონლაინ</span>
+                                <span className="text-xs font-black text-slate-800">
+                                    {confAnalytics.formats.inPerson} / {confAnalytics.formats.online}
+                                </span>
+                            </div>
+                            <div className="p-1.5 rounded-lg bg-purple-50/50">
+                                <span className="text-[9px] text-slate-500 font-bold block">მიღებული / განსახილველი</span>
+                                <span className="text-xs font-black text-emerald-700">
+                                    {confAnalytics.statuses.accepted} / {confAnalytics.statuses.pending}
+                                </span>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
-                        <Link
-                            href="/admin/conference"
-                            className="text-xs font-bold text-[#60318e] hover:underline flex items-center gap-1"
-                        >
-                            <span>სრული რეესტრის ნახვა</span>
-                            <ArrowUpRight className="w-3.5 h-3.5" />
-                        </Link>
+                    {/* Right: Thematic Breakdown (5 cols) */}
+                    <div className="lg:col-span-5 bg-white rounded-2xl p-4 sm:p-5 border border-purple-100 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div className="flex items-center justify-between mb-2.5">
+                                <div>
+                                    <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                                        <PieChart className="w-4 h-4 text-[#60318e]" />
+                                        თემატიკების გადანაწილება
+                                    </h3>
+                                    <p className="text-[11px] text-gray-500 mt-0.5">პოპულარული სამეცნიერო სექციები</p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                {confAnalytics.topTopics.length > 0 ? (
+                                    confAnalytics.topTopics.slice(0, 4).map((item, idx) => (
+                                        <div key={idx} className="space-y-0.5">
+                                            <div className="flex items-center justify-between text-[11px] font-semibold">
+                                                <span className="text-slate-800 truncate max-w-[200px]" title={item.topic}>
+                                                    {item.topic}
+                                                </span>
+                                                <span className="text-slate-500 font-mono text-[10px] flex-shrink-0">
+                                                    <strong className="text-slate-900">{item.count}</strong> ({item.percentage}%)
+                                                </span>
+                                            </div>
+                                            <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                                <div
+                                                    className="bg-gradient-to-r from-[#60318e] to-[#AD49E1] h-full rounded-full transition-all duration-500"
+                                                    style={{ width: `${item.percentage}%` }}
+                                                ></div>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="p-4 text-center text-[11px] text-slate-400">
+                                        მონაცემები არ არის ხელმისაწვდომი
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
+                            <Link
+                                href="/admin/conference"
+                                className="text-[11px] font-bold text-[#60318e] hover:underline flex items-center gap-1"
+                            >
+                                <span>სრული რეესტრის ნახვა</span>
+                                <ArrowUpRight className="w-3.5 h-3.5" />
+                            </Link>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             {/* Quick Actions Bar (Role-Filtered) */}
             <div className="bg-gradient-to-r from-[#2e0d42] to-[#60318e] rounded-3xl p-6 sm:p-8 text-white shadow-lg">
