@@ -1,432 +1,306 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { ArrowLeft, Sparkles, Sun, Moon, Languages, Check, Eye, Download, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Sparkles, Download, ExternalLink, Check } from 'lucide-react';
 
-// Dynamically load master Three.js interactive canvas (no SSR)
-const InteractiveLogoCanvas = dynamic(
-    () => import('../../components/anniversary3d/InteractiveLogoCanvas'),
-    { ssr: false }
-);
-
-const VARIANTS = [
+const VERSIONS = [
     {
-        id: 1,
-        titleKa: 'ვარიანტი 1: თსუ IICE ქართული ოფიციალური საიუბილეო ემბლემა (რეალური შენობა + ხეები)',
-        titleEn: 'Variant 1: Official Georgian TSU IICE Jubilee Emblem (Real Building & Trees)',
-        badgeKa: 'სურათის მიხედვით • ტოპ არჩევანი #1',
-        badgeEn: 'EXACT PHOTO MOTIF • TOP CHOICE #1',
-        shortDescKa: 'თქვენ მიერ გამოგზავნილი სურათის ზუსტი სტილი თავთავის გარეშე: "0"-ში რეალური შენობა და ხეები, "თსუ IICE", "1956—2026" და ოქროსფერი ლენტი "70 წლის იუბილე".',
-        shortDescEn: 'Directly matching your reference without the wheat ear: Real building with pine trees inside the "0", official logo ring, and Georgian ribbon.',
-        scientificFocusKa: 'ოფიციალური ქართული საიუბილეო ემბლემა',
-        previewImg: '/conference-2026/iice-70-emblem-geo.png',
-        downloadName: 'iice-70-emblem-geo.png',
-        isNewDesign: true
+        id: 'v1-geo',
+        titleKa: 'ვერსია 1A: სუფთა აკადემიური მედალიონი — ქართული („იიცე“)',
+        titleEn: 'Version 1A: Clean Academic Ring — Georgian ("იიცე")',
+        badgeKa: 'რეკომენდებული #1 • სუფთა წრე',
+        badgeEn: 'RECOMMENDED #1 • CLEAN CIRCLE',
+        descKa: 'სრულიად თავისუფალი ყოველგვარი გადამფარავი ორბიტებისა და თავთავებისგან. "0"-ის შიგნით ინსტიტუტის რეალური შენობა და ნაძვები, ზემოთ "იიცე", ქვემოთ "1956 — 2026", ლენტზე "70 წლის იუბილე".',
+        descEn: 'Completely free of overlapping orbits and wheat. Authentic building with pine trees inside the "0", "იიცე" at top, "1956 — 2026" at bottom, and Georgian ribbon.',
+        imgSrc: '/conference-2026/iice-70-clean-geo.png',
+        downloadName: 'iice-70-clean-geo.png',
+        lang: 'ka'
     },
     {
-        id: 2,
-        titleKa: 'ვარიანტი 2: TSU IICE საერთაშორისო ინგლისური საიუბილეო ემბლემა',
-        titleEn: 'Variant 2: TSU IICE International English Jubilee Emblem',
-        badgeKa: 'საერთაშორისო ვერსია • ინგლისური',
-        badgeEn: 'INTERNATIONAL EDITION • ENGLISH',
-        shortDescKa: 'საერთაშორისო სამეცნიერო კონფერენციისთვის: "TSU IICE 1956—2026", ოქროსფერი ორბიტალები თავთავის ნაცვლად და "70 YEARS ANNIVERSARY" ლენტი.',
-        shortDescEn: 'Ideal for international conferences: "TSU IICE 1956—2026", fine atomic orbitals replacing wheat, and "70 YEARS ANNIVERSARY" banner.',
-        scientificFocusKa: 'საერთაშორისო კონფერენციის ფორმატი',
-        previewImg: '/conference-2026/iice-70-emblem-eng.png',
-        downloadName: 'iice-70-emblem-eng.png',
-        isNewDesign: true
+        id: 'v1-eng',
+        titleKa: 'ვერსია 1B: სუფთა აკადემიური მედალიონი — ინგლისური („IICE“)',
+        titleEn: 'Version 1B: Clean Academic Ring — English ("IICE")',
+        badgeKa: 'საერთაშორისო ვერსია • სუფთა წრე',
+        badgeEn: 'INTERNATIONAL • CLEAN CIRCLE',
+        descKa: 'ინგლისურენოვანი ოფიციალური საიუბილეო ემბლემა: ზემოთ "IICE" (თსუ-ს გარეშე), ქვემოთ "1956 — 2026", ლენტზე "70 YEARS ANNIVERSARY". სუფთა, სიმეტრიული და დახვეწილი.',
+        descEn: 'Official international jubilee emblem: "IICE" at top (no TSU), "1956 — 2026" at bottom, and "70 YEARS ANNIVERSARY" ribbon. Symmetrical and pristine.',
+        imgSrc: '/conference-2026/iice-70-clean-eng.png',
+        downloadName: 'iice-70-clean-eng.png',
+        lang: 'en'
     },
     {
-        id: 3,
-        titleKa: 'ვარიანტი 3: Dark Mode Luxury Keynote Edition (მანათობელი 3D)',
-        titleEn: 'Variant 3: Dark Mode Luxury Keynote Edition (Luminescent 3D)',
-        badgeKa: 'მუქი ფონი • ლაქშერი 3D',
-        badgeEn: 'DARK MODE • KEYNOTE 3D',
-        shortDescKa: 'მუქი იისფერი ფონი, საღამოს განათებით განათებული შენობა, ნეონის მანათობელი ატომური ორბიტალები და ოქროსფერი აკადემიური ბეჭედი.',
-        shortDescEn: 'Dark background keynote aesthetic with evening building illumination, luminescent atomic orbits, and gold rims.',
-        scientificFocusKa: 'თანამედროვე ციფრული 3D პრეზენტაცია',
-        previewImg: '/conference-2026/iice-70-emblem-dark.jpg',
-        downloadName: 'iice-70-emblem-dark.jpg',
-        isNewDesign: true
+        id: 'v2-curve',
+        titleKa: 'ვერსია 2: ინსტიტუტის ელექტროქიმიური ვოლტამპეროგრამით',
+        titleEn: 'Version 2: Electrochemical Voltammetry Curve Edition',
+        badgeKa: 'სამეცნიერო იდენტობა • აგლაძის სკოლა',
+        badgeEn: 'SCIENTIFIC IDENTITY • VOLTAMMETRY',
+        descKa: 'იგივე სუფთა წრიული სილუეტი, სადაც შენობის თავზე ცაში ნაზად არის ინტეგრირებული ინსტიტუტის ოფიციალური ლოგოს ციკლური ვოლტამპეროგრამა (გადამფარავი ორბიტების გარეშე).',
+        descEn: 'Clean circular silhouette subtly integrating the official cyclic voltammetry curve in the sky above the building, with zero overlapping orbits.',
+        imgSrc: '/conference-2026/iice-70-clean-curve.png',
+        downloadName: 'iice-70-clean-curve.png',
+        lang: 'en'
     },
     {
-        id: 4,
-        titleKa: 'ვარიანტი 4: Classic Gold Academic Jubilee Ring (კლასიკური ოქროს ბეჭედი)',
-        titleEn: 'Variant 4: Classic Gold Academic Jubilee Ring (Medallion)',
-        badgeKa: 'კლასიკური ოქრო • მედლის სტილი',
-        badgeEn: 'CLASSIC GOLD • MEDALLION',
-        shortDescKa: 'კლასიკური ორმაგი ოქროსფერი კანტი, რეალური შენობა და ოფიციალური იუბილეს აღმნიშვნელი წარწერა.',
-        shortDescEn: 'Classic dual gold bezel encircling the building with trees and the official commemorative dedication.',
-        scientificFocusKa: 'კლასიკური აკადემიური მედალიონი',
-        previewImg: '/conference-2026/iice-70-emblem-classic.jpg',
-        downloadName: 'iice-70-emblem-classic.jpg',
-        isNewDesign: true
-    },
-    {
-        id: 5,
-        titleKa: 'ვარიანტი 5: ატომური ორბიტალები & კვანტური იონები (Three.js 3D)',
-        titleEn: 'Variant 5: Atomic Orbitals & Quantum Dynamics (Interactive 3D)',
-        badgeKa: 'ქიმია & ატომები • დინამიკური 3D',
-        badgeEn: 'CHEMISTRY & ORBITALS • DYNAMIC',
-        shortDescKa: 'მრავალღერძიანი მბრუნავი 3D ორბიტალები მოძრავი მანათობელი იონებითა და ცენტრალური ემბლემით.',
-        shortDescEn: 'Multi-axis rotating 3D atomic orbital rings with orbiting glowing ions encircling the core logo.',
-        scientificFocusKa: 'არაორგანული ქიმია & ატომური სტრუქტურა'
-    },
-    {
-        id: 6,
-        titleKa: 'ვარიანტი 6: ელექტროქიმიური უჯრედი & იონური ნაკადი',
-        titleEn: 'Variant 6: Electrochemical Cell & Ionic Flow',
-        badgeKa: 'ელექტროქიმია • აგლაძის სკოლა',
-        badgeEn: 'ELECTROCHEMISTRY • AGLADZE LEGACY',
-        shortDescKa: 'კათოდ-ანოდის მანათობელი 3D რკალები და წყალბადის ამომავალი ბუშტუკები (აგლაძის ელექტროქიმიის მემკვიდრეობა).',
-        shortDescEn: 'Glowing cathode-anode energy arcs and rising effervescent bubbles representing electrolytic science.',
-        scientificFocusKa: 'ელექტროქიმია, ელექტროლიზი & ბატარეები'
-    },
-    {
-        id: 7,
-        titleKa: 'ვარიანტი 7: კოორდინაციული პოლიედრი & კრისტალური მესერი',
-        titleEn: 'Variant 7: Coordination Polyhedron & Crystal Lattice',
-        badgeKa: 'კრისტალოგრაფია • კომპლექსნაერთები',
-        badgeEn: 'CRYSTALLOGRAPHY • COORDINATION',
-        shortDescKa: 'არაორგანული ქიმიის ოქტაედრული კრისტალური მესერი 3D სივრცეში ოქროსფერი და იისფერი წიბოებით.',
-        shortDescEn: 'Rotating 3D octahedral coordination complex lattice wireframe surrounding the central seal.',
-        scientificFocusKa: 'კოორდინაციული ნაერთები & მინერალები'
-    },
-    {
-        id: 8,
-        titleKa: 'ვარიანტი 8: მწვანე წყალბადი & ეკოლოგიური ენერგია',
-        titleEn: 'Variant 8: Green Hydrogen & Clean Energy Wave',
-        badgeKa: 'მწვანე ენერგეტიკა • წყალბადი',
-        badgeEn: 'GREEN ENERGY • HYDROGEN WAVE',
-        shortDescKa: 'H2 მოლეკულური ბმები და ზურმუხტისფერ-იისფერი ენერგეტიკული ტალღები სუფთა მომავლისთვის.',
-        shortDescEn: 'Fluid emerald and cyan energy waves with hydrogen bonds representing renewable energy.',
-        scientificFocusKa: 'მწვანე წყალბადის ტექნოლოგიები'
-    },
-    {
-        id: 9,
-        titleKa: 'ვარიანტი 9: მინის კრისტალური მონოლითი & ოპტიკური პრიზმა',
-        titleEn: 'Variant 9: Glass Prism Monolith & Caustic Glint',
-        badgeKa: 'მინის კრისტალი • ლაქშერი',
-        badgeEn: 'GLASS CRYSTAL • LUXURY',
-        shortDescKa: 'არქიტექტურული მინის პრიზმა შიგნით ინტეგრირებული შენობით, ლოგოთი და სინათლის ბზინვარებით.',
-        shortDescEn: 'Refractive optical glass prism with the building and seal embedded inside, reflecting dynamic light.',
-        scientificFocusKa: 'ოპტიკური ქიმია & ფიზიკური ანალიზი'
-    },
-    {
-        id: 10,
-        titleKa: 'ვარიანტი 10: საიუბილეო ქრონომეტრი 1956 — 2026',
-        titleEn: 'Variant 10: Jubilee Chronometer Dial (1956 — 2026)',
-        badgeKa: '70-წლიანი გზა • ქრონომეტრი',
-        badgeEn: '70-YEAR TIMELINE • PRECISION',
-        shortDescKa: 'მეცნიერების 70-წლიანი დიადი გზის აღმნიშვნელი კონცენტრული მბრუნავი ოქროსფერი ციფერბლატები.',
-        shortDescEn: 'Precision concentric rotating scientific dials marking the 70-year anniversary milestone.',
-        scientificFocusKa: '70-წლიანი აკადემიური მემკვიდრეობა'
+        id: 'v1-stars',
+        titleKa: 'ვერსია 1C: აკადემიური რკალი ოქროს საიუბილეო ვარსკვლავებით',
+        titleEn: 'Version 1C: Academic Ring with Jubilee Stars',
+        badgeKa: 'აკადემიური პრესტიჟი • ვარსკვლავები',
+        badgeEn: 'ACADEMIC PRESTIGE • STARS',
+        descKa: 'რკალის გასწვრივ ჩამწკრივებული ნაზი ოქროსფერი ვარსკვლავები, რაც ხაზს უსვამს ინსტიტუტის 70-წლიან უწყვეტ სამეცნიერო წარმატებას.',
+        descEn: 'Delicate gold stars aligned along the inner rim celebrating 70 years of continuous scientific excellence.',
+        imgSrc: '/conference-2026/iice-70-clean-stars.png',
+        downloadName: 'iice-70-clean-stars.png',
+        lang: 'en'
     }
 ];
 
 export default function LogoPreviewPage() {
-    const [selectedVariant, setSelectedVariant] = useState(1);
-    const [theme, setTheme] = useState('dark'); // 'dark' | 'light'
-    const [lang, setLang] = useState('ka');     // 'ka' | 'en'
+    const [selectedId, setSelectedId] = useState('v1-geo');
+    const [bgPreview, setBgPreview] = useState('white');
 
-    const active = VARIANTS.find(v => v.id === selectedVariant) || VARIANTS[0];
+    const active = VERSIONS.find(v => v.id === selectedId) || VERSIONS[0];
 
     return (
-        <div className={`min-h-screen transition-colors duration-500 font-sans ${
-            theme === 'dark' ? 'bg-[#150422] text-white' : 'bg-slate-50 text-slate-900'
-        }`}>
-            {/* Header Sticky Control Bar */}
-            <header className={`sticky top-0 z-50 border-b backdrop-blur-md transition-colors ${
-                theme === 'dark' ? 'bg-[#240838]/90 border-purple-900/40 text-white' : 'bg-white/90 border-purple-100 text-slate-800'
-            }`}>
+        <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
+            {/* Top Navigation Bar */}
+            <header className="sticky top-0 z-50 bg-white/95 border-b border-purple-100 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <Link 
                             href="/" 
-                            className={`p-2 rounded-xl flex items-center gap-2 text-xs font-bold transition-all ${
-                                theme === 'dark' ? 'hover:bg-white/10 text-purple-200' : 'hover:bg-purple-50 text-[#60318e]'
-                            }`}
+                            className="p-2 rounded-xl flex items-center gap-2 text-xs font-bold text-[#60318e] hover:bg-purple-50 transition-all"
                         >
                             <ArrowLeft className="w-4 h-4" />
-                            <span>მთავარზე</span>
+                            <span>მთავარზე დაბრუნება</span>
                         </Link>
-                        <div className="h-4 w-px bg-purple-200/30 hidden sm:block"></div>
-                        <span className="text-xs font-black uppercase tracking-wider text-amber-400">
-                            10 Anniversary Logo Concepts
+                        <div className="h-4 w-px bg-purple-200 hidden sm:block"></div>
+                        <span className="text-xs font-black uppercase tracking-wider text-[#AD49E1] hidden sm:inline">
+                            IICE 70th Anniversary Logo Options
                         </span>
                     </div>
 
-                    {/* Toggles: Language & Theme */}
-                    <div className="flex items-center gap-2 sm:gap-3">
-                        {/* Language Switcher */}
-                        <div className="flex items-center border border-purple-200/40 bg-white/10 rounded-full p-0.5">
+                    {/* Background Surface Preview Toggles */}
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-slate-500 hidden md:inline">ფონი:</span>
+                        <div className="flex items-center border border-purple-200 bg-purple-50/50 rounded-xl p-0.5">
                             <button
-                                onClick={() => setLang('ka')}
-                                className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${
-                                    lang === 'ka' ? 'bg-amber-400 text-slate-950 font-black shadow-xs' : 'text-purple-200 hover:text-white'
+                                onClick={() => setBgPreview('white')}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                                    bgPreview === 'white' ? 'bg-white text-[#60318e] shadow-xs' : 'text-slate-600 hover:text-slate-900'
                                 }`}
                             >
-                                GE
+                                თეთრი
                             </button>
                             <button
-                                onClick={() => setLang('en')}
-                                className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${
-                                    lang === 'en' ? 'bg-amber-400 text-slate-950 font-black shadow-xs' : 'text-purple-200 hover:text-white'
+                                onClick={() => setBgPreview('slate')}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                                    bgPreview === 'slate' ? 'bg-white text-[#60318e] shadow-xs' : 'text-slate-600 hover:text-slate-900'
                                 }`}
                             >
-                                EN
+                                ნაცრისფერი
+                            </button>
+                            <button
+                                onClick={() => setBgPreview('pattern')}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                                    bgPreview === 'pattern' ? 'bg-white text-[#60318e] shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                                }`}
+                            >
+                                ბადე
                             </button>
                         </div>
-
-                        {/* Theme Switcher */}
-                        <button
-                            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all border shadow-xs ${
-                                theme === 'dark' 
-                                    ? 'bg-purple-900/50 text-amber-300 border-purple-700/50 hover:bg-purple-900/70' 
-                                    : 'bg-white text-[#60318e] border-purple-200 hover:bg-purple-50'
-                            }`}
-                        >
-                            {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
-                            <span className="hidden sm:inline">{theme === 'dark' ? 'ღია ფონი' : 'მუქი ფონი'}</span>
-                        </button>
                     </div>
                 </div>
             </header>
 
             {/* Main Stage */}
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+            <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
                 {/* Intro Title */}
-                <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-400 text-xs font-black uppercase tracking-wider mb-3">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>10 საუკეთესო საიუბილეო კონცეფცია ინსტიტუტისთვის</span>
+                <div className="text-center max-w-2xl mx-auto mb-8">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-100/80 border border-purple-200 text-[#60318e] text-xs font-black uppercase tracking-wider mb-3">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                        <span>ახალი დახვეწილი ვერსიები • ორბიტების გარეშე</span>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
-                        {lang === 'en' ? 'Select Your Preferred 70th Anniversary Emblem' : 'აირჩიეთ საიუბილეო ლოგოს სასურველი ვარიანტი'}
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+                        საიუბილეო ლოგოს ახალი ვარიანტები
                     </h1>
-                    <p className={`mt-2 text-xs sm:text-sm font-medium leading-relaxed ${
-                        theme === 'dark' ? 'text-purple-200/80' : 'text-slate-600'
-                    }`}>
-                        {lang === 'en' 
-                            ? 'Every concept below is paired with the exact official dedication text in Georgian & English.'
-                            : 'თითოეულ ვარიანტს ქვემოთ თან ახლავს თქვენ მიერ გამოგზავნილი ოფიციალური საიუბილეო ტექსტი ქართულ და ინგლისურ ენებზე.'}
+                    <p className="mt-2 text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
+                        გადამფარავი ქიმიური ორბიტებისა და თავთავის გარეშე. სუფთა წრიული აკადემიური მედალიონი, რეალური შენობა და ნაძვები.
                     </p>
                 </div>
 
-                {/* 10-Button Quick Variant Selector Bar */}
-                <div className="flex items-center justify-start sm:justify-center gap-1.5 sm:gap-2 overflow-x-auto pb-3 mb-8 no-scrollbar">
-                    {VARIANTS.map((v) => {
-                        const isSel = v.id === selectedVariant;
+                {/* Quick Switch Buttons */}
+                <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+                    {VERSIONS.map((v) => {
+                        const isSel = v.id === selectedId;
                         return (
                             <button
                                 key={`btn-${v.id}`}
-                                onClick={() => setSelectedVariant(v.id)}
-                                className={`px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all duration-200 border flex items-center gap-1.5 ${
+                                onClick={() => setSelectedId(v.id)}
+                                className={`px-4 py-2.5 rounded-xl text-xs font-extrabold transition-all border flex items-center gap-2 ${
                                     isSel
-                                        ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 border-amber-300 shadow-md scale-105'
-                                        : theme === 'dark'
-                                            ? 'bg-white/5 hover:bg-white/10 text-purple-200 border-white/10'
-                                            : 'bg-white hover:bg-purple-50 text-slate-700 border-purple-200 shadow-xs'
+                                        ? 'bg-[#60318e] text-white border-[#60318e] shadow-lg shadow-purple-900/20 scale-105'
+                                        : 'bg-white hover:bg-purple-50 text-slate-700 border-purple-200 shadow-xs'
                                 }`}
                             >
-                                <span>#{v.id}</span>
-                                <span className="hidden md:inline">{lang === 'en' ? v.titleEn.split(':')[1] : v.titleKa.split(':')[1]}</span>
+                                {isSel && <Check className="w-3.5 h-3.5 text-amber-300" />}
+                                <span>{v.titleKa.split(':')[0]}</span>
                             </button>
                         );
                     })}
                 </div>
 
-                {/* Active Showcase Card */}
-                <div className={`relative rounded-3xl p-6 sm:p-10 border transition-all duration-500 shadow-2xl overflow-hidden mb-16 ${
-                    theme === 'dark' 
-                        ? 'bg-gradient-to-b from-[#220735] via-[#180426] to-[#0f0119] border-purple-800/40 shadow-purple-950/60' 
-                        : 'bg-gradient-to-b from-white via-purple-50/40 to-indigo-50/30 border-purple-200 shadow-purple-200/40'
-                }`}>
-                    {/* Ambient Glows */}
-                    <div className="absolute -top-32 -left-32 w-80 h-80 bg-[#AD49E1]/20 rounded-full blur-3xl pointer-events-none"></div>
-                    <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-amber-500/15 rounded-full blur-3xl pointer-events-none"></div>
-
-                    {/* Badge & Title of Active Variant */}
-                    <div className="flex flex-wrap items-center justify-between gap-3 mb-6 relative z-10">
+                {/* Big Active Showcase Card */}
+                <div className="bg-white rounded-3xl border border-purple-100 shadow-xl overflow-hidden mb-12">
+                    {/* Top Info Bar */}
+                    <div className="p-6 pb-2 sm:px-10 flex flex-wrap items-center justify-between gap-3 border-b border-purple-50">
                         <div>
-                            <span className="inline-block text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider bg-amber-400 text-slate-950 mb-1">
-                                {lang === 'en' ? active.badgeEn : active.badgeKa}
+                            <span className="inline-block text-[11px] font-black px-3 py-1 rounded-full uppercase tracking-wider bg-amber-400 text-slate-950 mb-1">
+                                {active.badgeKa}
                             </span>
-                            <h2 className="text-lg sm:text-2xl font-black">
-                                {lang === 'en' ? active.titleEn : active.titleKa}
+                            <h2 className="text-lg sm:text-2xl font-black text-slate-900">
+                                {active.titleKa}
                             </h2>
-                            <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-purple-200/70' : 'text-slate-500'}`}>
-                                {lang === 'en' ? active.scientificFocusKa : active.scientificFocusKa}
+                            <p className="text-xs text-slate-500 mt-1 max-w-xl">
+                                {active.descKa}
                             </p>
                         </div>
-                        <div className="text-right hidden sm:block">
-                            <span className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-white/10 border border-white/15">
-                                🖱️ ამოძრავეთ მაუსი 3D რეაგირებისთვის
-                            </span>
+                        <div className="flex items-center gap-2">
+                            <a
+                                href={active.imgSrc}
+                                download={active.downloadName}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-xs shadow-md hover:scale-105 transition-all"
+                            >
+                                <Download className="w-3.5 h-3.5" />
+                                <span>გადმოწერა (გამჭვირვალე PNG)</span>
+                            </a>
+                            <a
+                                href={active.imgSrc}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2 rounded-xl border border-purple-200 text-[#60318e] hover:bg-purple-50 transition-all"
+                                title="გახსნა სრული ზომით"
+                            >
+                                <ExternalLink className="w-4 h-4" />
+                            </a>
                         </div>
                     </div>
 
-                    {/* Interactive 3D Canvas */}
-                    <div className="relative w-full h-[380px] sm:h-[440px] md:h-[480px] flex items-center justify-center">
-                        <InteractiveLogoCanvas 
-                            variantId={active.id} 
-                            theme={theme} 
-                            lang={lang} 
-                            key={`canvas-${active.id}-${theme}-${lang}`} 
-                        />
+                    {/* Emblem Showcase Area */}
+                    <div className={`relative w-full min-h-[380px] sm:min-h-[440px] md:min-h-[480px] flex items-center justify-center p-8 transition-colors duration-300 ${
+                        bgPreview === 'white' 
+                            ? 'bg-white' 
+                            : bgPreview === 'slate' 
+                                ? 'bg-slate-100' 
+                                : 'bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] bg-slate-50'
+                    }`}>
+                        <div className="group relative max-w-md sm:max-w-lg w-full flex items-center justify-center transition-transform duration-300 hover:scale-105">
+                            <img
+                                src={active.imgSrc}
+                                alt={active.titleKa}
+                                className="w-full h-auto max-h-[420px] object-contain filter drop-shadow-xl select-none"
+                            />
+                        </div>
                     </div>
 
-                    {/* THE EXACT DEDICATION TEXT DISPLAYED UNDERNEATH THE LOGO (User's Exact Image Content) */}
-                    <div className="mt-8 pt-6 border-t border-purple-300/20 text-center max-w-2xl mx-auto relative z-10">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-400 text-[11px] font-bold uppercase tracking-wider mb-3">
-                            <span>📜 ოფიციალური საიუბილეო მიძღვნა (თქვენ მიერ გამოგზავნილი ტექსტი)</span>
+                    {/* Official Dedication Text */}
+                    <div className="p-6 sm:p-8 bg-purple-50/50 border-t border-purple-100 text-center max-w-3xl mx-auto">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-purple-200 text-[#60318e] text-[11px] font-black uppercase tracking-wider mb-4 shadow-xs">
+                            <span>📜 ოფიციალური საიუბილეო მიძღვნის ტექსტი</span>
                         </div>
 
-                        {lang === 'en' ? (
+                        {active.lang === 'ka' ? (
                             <div className="space-y-1">
-                                <p className="text-base sm:text-lg md:text-xl font-extrabold tracking-tight text-amber-400">
-                                    Dedicated to the 70th Anniversary of
+                                <p className="text-base sm:text-lg md:text-xl font-extrabold tracking-tight text-[#60318e]">
+                                    ეძღვნება რაფიელ აგლაძის სახელობის
                                 </p>
-                                <p className={`text-sm sm:text-base md:text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                                    Rafiel Agladze Institute of
+                                <p className="text-sm sm:text-base md:text-lg font-bold text-slate-800">
+                                    არაორგანული ქიმიისა და ელექტროქიმიის
                                 </p>
-                                <p className={`text-sm sm:text-base md:text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                                    Inorganic Chemistry and Electrochemistry
+                                <p className="text-sm sm:text-base md:text-lg font-bold text-slate-800">
+                                    ინსტიტუტის დაარსების 70 წლისთავს
                                 </p>
                             </div>
                         ) : (
                             <div className="space-y-1">
-                                <p className="text-base sm:text-lg md:text-xl font-extrabold tracking-tight text-amber-400">
-                                    ეძღვნება რაფიელ აგლაძის სახელობის
+                                <p className="text-base sm:text-lg md:text-xl font-extrabold tracking-tight text-[#60318e]">
+                                    Dedicated to the 70th Anniversary of
                                 </p>
-                                <p className={`text-sm sm:text-base md:text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                                    არაორგანული ქიმიისა და ელექტროქიმიის
+                                <p className="text-sm sm:text-base md:text-lg font-bold text-slate-800">
+                                    Rafiel Agladze Institute of
                                 </p>
-                                <p className={`text-sm sm:text-base md:text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                                    ინსტიტუტის დაარსების 70 წლისთავს
+                                <p className="text-sm sm:text-base md:text-lg font-bold text-slate-800">
+                                    Inorganic Chemistry and Electrochemistry
                                 </p>
-                            </div>
-                        )}
-
-                        {/* Direct High-Res Download Action Bar for the active variant */}
-                        {active.previewImg && (
-                            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-                                <a
-                                    href={active.previewImg}
-                                    download={active.downloadName || 'iice-70th-anniversary.png'}
-                                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-lg hover:scale-105 transition-all"
-                                >
-                                    <Download className="w-4 h-4" />
-                                    <span>ჩამოტვირთეთ ორიგინალი ({active.downloadName?.endsWith('.png') ? 'გამჭვირვალე PNG' : 'High-Res'})</span>
-                                </a>
-                                <a
-                                    href={active.previewImg}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold border transition-all ${
-                                        theme === 'dark'
-                                            ? 'bg-white/10 hover:bg-white/15 text-purple-200 border-white/20'
-                                            : 'bg-white hover:bg-purple-50 text-[#60318e] border-purple-200 shadow-xs'
-                                    }`}
-                                >
-                                    <ExternalLink className="w-4 h-4" />
-                                    <span>სრული ზომით გახსნა</span>
-                                </a>
                             </div>
                         )}
                     </div>
                 </div>
 
-                {/* 10-Card Comparison Grid (Compare All 10 in Real-Time) */}
+                {/* Comparison Grid */}
                 <div className="mt-12">
                     <div className="text-center mb-8">
-                        <h2 className="text-xl sm:text-3xl font-black">
-                            10-ვე ვარიანტის შედარებითი გალერეა
+                        <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+                            ყველა ახალი ვერსიის შედარება
                         </h2>
-                        <p className={`text-xs sm:text-sm mt-1 ${theme === 'dark' ? 'text-purple-200/70' : 'text-slate-500'}`}>
-                            დააკლიკეთ ნებისმიერ ბარათს ზედა მთავარ 3D სცენაზე სანახავად
+                        <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                            დააკლიკეთ ნებისმიერ ბარათს ზედა დიდ ეკრანზე სანახავად
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {VARIANTS.map((v) => {
-                            const isSelected = v.id === selectedVariant;
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {VERSIONS.map((v) => {
+                            const isSel = v.id === selectedId;
                             return (
                                 <div
-                                    key={`grid-card-${v.id}`}
+                                    key={`card-${v.id}`}
                                     onClick={() => {
-                                        setSelectedVariant(v.id);
-                                        window.scrollTo({ top: 220, behavior: 'smooth' });
+                                        setSelectedId(v.id);
+                                        window.scrollTo({ top: 180, behavior: 'smooth' });
                                     }}
-                                    className={`rounded-2xl p-5 border cursor-pointer transition-all duration-300 flex flex-col justify-between group ${
-                                        isSelected
-                                            ? 'ring-2 ring-amber-400 border-amber-400 shadow-2xl scale-[1.02]'
-                                            : theme === 'dark'
-                                                ? 'bg-white/5 border-purple-900/40 hover:border-[#AD49E1]/60 hover:bg-white/10'
-                                                : 'bg-white border-purple-100 shadow-md hover:shadow-lg'
+                                    className={`bg-white rounded-2xl p-4 border cursor-pointer transition-all duration-300 flex flex-col justify-between group ${
+                                        isSel
+                                            ? 'ring-2 ring-[#60318e] border-[#60318e] shadow-xl scale-[1.02]'
+                                            : 'border-purple-100 shadow-sm hover:shadow-md hover:border-purple-300'
                                     }`}
                                 >
                                     <div>
                                         <div className="flex items-center justify-between mb-2">
-                                            <span className="text-xs font-black text-amber-400">
-                                                #{v.id}
-                                            </span>
-                                            <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
-                                                isSelected ? 'bg-amber-400 text-slate-950 font-black' : 'bg-white/10 text-purple-200'
+                                            <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
+                                                isSel ? 'bg-[#60318e] text-white' : 'bg-purple-100 text-[#60318e]'
                                             }`}>
-                                                {lang === 'en' ? v.badgeEn : v.badgeKa}
+                                                {v.badgeKa.split('•')[0]}
                                             </span>
+                                            {isSel && <Check className="w-4 h-4 text-[#60318e]" />}
                                         </div>
-                                        <h3 className="font-bold text-sm leading-snug group-hover:text-amber-400 transition-colors">
-                                            {lang === 'en' ? v.titleEn : v.titleKa}
+                                        <h3 className="font-bold text-xs leading-snug group-hover:text-[#60318e] transition-colors">
+                                            {v.titleKa}
                                         </h3>
-                                        <p className={`text-xs mt-1.5 line-clamp-2 ${theme === 'dark' ? 'text-purple-200/70' : 'text-slate-500'}`}>
-                                            {lang === 'en' ? v.shortDescEn : v.shortDescKa}
-                                        </p>
                                     </div>
 
-                                    {/* Card Visual Preview */}
-                                    <div className="relative w-full h-[220px] my-3 rounded-xl overflow-hidden bg-black/20 flex items-center justify-center p-2 border border-white/5">
-                                        {v.previewImg ? (
-                                            <img
-                                                src={v.previewImg}
-                                                alt={v.titleEn}
-                                                className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300"
-                                            />
-                                        ) : (
-                                            <div className="text-center p-4">
-                                                <div className="w-14 h-14 mx-auto mb-2 rounded-2xl bg-[#60318e]/30 border border-purple-400/30 flex items-center justify-center text-amber-300">
-                                                    <Sparkles className="w-7 h-7 animate-pulse" />
-                                                </div>
-                                                <span className="text-xs font-black text-amber-400 uppercase tracking-wider block">
-                                                    ინტერაქტიული 3D
-                                                </span>
-                                                <span className="text-[10px] text-purple-200/60 mt-0.5 block">
-                                                    დააკლიკეთ ზემოთ გასაშვებად
-                                                </span>
-                                            </div>
-                                        )}
+                                    {/* Preview Image */}
+                                    <div className="relative w-full h-[180px] my-3 rounded-xl overflow-hidden bg-slate-50 flex items-center justify-center p-3 border border-slate-100">
+                                        <img
+                                            src={v.imgSrc}
+                                            alt={v.titleKa}
+                                            className="w-full h-full object-contain filter drop-shadow-sm group-hover:scale-105 transition-transform duration-300"
+                                        />
                                     </div>
 
-                                    {/* Card Footer: Dedication snippet & action */}
-                                    <div className="pt-2 border-t border-purple-300/20 flex items-center justify-between">
-                                        <p className="text-[11px] font-bold text-amber-400 line-clamp-1">
-                                            {isSelected ? '✓ აქტიური სცენა' : 'დააჭირეთ სანახავად ↑'}
-                                        </p>
-                                        {v.previewImg && (
-                                            <a
-                                                href={v.previewImg}
-                                                download={v.downloadName || 'emblem.png'}
-                                                onClick={(e) => e.stopPropagation()}
-                                                title="ჩამოტვირთვა"
-                                                className="p-1 rounded-md text-purple-300 hover:text-amber-400 hover:bg-white/10 transition-all"
-                                            >
-                                                <Download className="w-3.5 h-3.5" />
-                                            </a>
-                                        )}
+                                    {/* Card Footer */}
+                                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                                        <span className="text-[11px] font-bold text-[#60318e]">
+                                            {isSel ? '✓ აქტიური' : 'არჩევა ↑'}
+                                        </span>
+                                        <a
+                                            href={v.imgSrc}
+                                            download={v.downloadName}
+                                            onClick={(e) => e.stopPropagation()}
+                                            title="ჩამოტვირთვა"
+                                            className="p-1 rounded-md text-slate-400 hover:text-[#60318e] hover:bg-purple-50 transition-all"
+                                        >
+                                            <Download className="w-3.5 h-3.5" />
+                                        </a>
                                     </div>
                                 </div>
                             );
@@ -434,13 +308,13 @@ export default function LogoPreviewPage() {
                     </div>
                 </div>
 
-                {/* Bottom Decision Banner */}
-                <div className="mt-16 p-8 rounded-3xl text-center bg-gradient-to-r from-[#60318e] via-[#7A1CAC] to-[#AD49E1] text-white shadow-2xl">
+                {/* Decision / Next Steps Box */}
+                <div className="mt-16 p-8 rounded-3xl text-center bg-gradient-to-r from-[#60318e] to-[#7A1CAC] text-white shadow-xl">
                     <h3 className="text-xl sm:text-2xl font-black mb-2">
-                        რომელი ვარიანტი გსურთ, რომ დავაყენოთ საიტზე?
+                        რომელი ვერსია დავაყენოთ საიტზე?
                     </h3>
                     <p className="text-xs sm:text-sm text-purple-100 max-w-xl mx-auto mb-6">
-                        დაასახელეთ სასურველი ვარიანტის ნომერი (#1-დან #10-მდე) და მე მას დაუყოვნებლივ ჩავაშენებ მთავარ გვერდზე და კონფერენციის ჰედერში!
+                        მითხარით სასურველი ვარიანტი (მაგ. ვერსია 1A ქართული თუ 1B ინგლისური) და მე მას დაუყოვნებლივ ჩავაშენებ მთავარ გვერდზე და კონფერენციის ჰედერში!
                     </p>
                     <div className="flex items-center justify-center gap-3">
                         <Link
