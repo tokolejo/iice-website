@@ -14,6 +14,7 @@ import {
 import AdminModal from '../../../components/admin/AdminModal';
 import AcceptanceLetterModal from '../../../components/admin/AcceptanceLetterModal';
 import EmailModal from '../../../components/admin/EmailModal';
+import EmailTemplateManagerModal from '../../../components/admin/EmailTemplateManagerModal';
 import {
     Calendar,
     Search,
@@ -23,6 +24,7 @@ import {
     Filter,
     FileText,
     CheckCircle2,
+    Settings,
     X,
     ExternalLink,
     FileDown,
@@ -109,6 +111,7 @@ export default function AdminConferencePage() {
     const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
     const [emailRecipients, setEmailRecipients] = useState([]);
     const [emailPreset, setEmailPreset] = useState('custom');
+    const [isTemplateManagerOpen, setIsTemplateManagerOpen] = useState(false);
 
     // Status update state
     const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
@@ -629,6 +632,16 @@ export default function AdminConferencePage() {
                     >
                         <RefreshCw className={`w-3.5 h-3.5 text-[#60318e] ${isLoading ? 'animate-spin' : ''}`} />
                         <span>განახლება</span>
+                    </button>
+
+                    {/* Email Templates Manager Button */}
+                    <button
+                        onClick={() => setIsTemplateManagerOpen(true)}
+                        className="px-3.5 py-2 rounded-xl border border-purple-200 bg-white hover:bg-purple-50 text-[#60318e] text-xs font-bold shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+                        title="მეილის შაბლონების რედაქტირება და მართვა"
+                    >
+                        <Settings className="w-3.5 h-3.5 text-[#60318e]" />
+                        <span>შაბლონების მართვა</span>
                     </button>
 
                     {/* Bulk ZIP Download Button for All Filtered */}
@@ -1474,6 +1487,12 @@ export default function AdminConferencePage() {
                 onClose={() => setIsEmailModalOpen(false)}
                 recipients={emailRecipients}
                 initialTemplate={emailPreset}
+            />
+
+            {/* Email Templates Manager Modal */}
+            <EmailTemplateManagerModal
+                isOpen={isTemplateManagerOpen}
+                onClose={() => setIsTemplateManagerOpen(false)}
             />
 
             {/* Delete Confirmation Modal */}

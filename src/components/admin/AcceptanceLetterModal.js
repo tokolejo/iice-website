@@ -51,7 +51,7 @@ We look forward to welcoming you to Tbilisi.
 Sincerely,
 Organizing Committee
 TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry
-Email: iice@tsu.ge | Web: https://iice.tsu.ge/events/conference-2026`
+Email: info@iice.ge | Web: https://iice.ge`
         : `ოფიციალური მიღებისა და მოწვევის წერილი
 რეგისტრაციის №: ${reg.abstract_number || 'IICE-2026-PENDING'}
 თარიღი: ${todayFormatted}
@@ -76,7 +76,7 @@ Email: iice@tsu.ge | Web: https://iice.tsu.ge/events/conference-2026`
 პატივისცემით,
 საორგანიზაციო კომიტეტი
 თსუ რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი
-ელ-ფოსტა: iice@tsu.ge | ვებგვერდი: https://iice.tsu.ge/events/conference-2026`;
+ელ-ფოსტა: info@iice.ge | ვებგვერდი: https://iice.ge`;
 
     const handleCopy = async () => {
         try {
@@ -252,7 +252,7 @@ Email: iice@tsu.ge | Web: https://iice.tsu.ge/events/conference-2026`
                             <p className="text-[11px] text-slate-500">
                                 {isEn ? 'TSU R. Agladze Institute, Tbilisi, Georgia' : 'თსუ რ. აგლაძის ინსტიტუტი, თბილისი'}
                             </p>
-                            <p className="text-[11px] text-[#60318e] font-medium mt-0.5">iice@tsu.ge | www.iice.tsu.ge</p>
+                            <p className="text-[11px] text-[#60318e] font-medium mt-0.5">info@iice.ge | www.iice.ge</p>
                         </div>
                         <div className="w-24 h-24 border border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center text-[10px] text-slate-400 text-center p-2">
                             <span>IICE</span>

@@ -8,7 +8,8 @@
  */
 
 import { Resend } from 'resend';
-import { getRegistrationConfirmationTemplate } from './emailTemplates.js';
+import { getRegistrationConfirmationTemplate, renderTemplateWithData } from './emailTemplates.js';
+import { getTemplateByKey } from './emailTemplateService.js';
 
 let resendInstance = null;
 
@@ -96,13 +97,29 @@ export async function sendRegistrationConfirmationEmail(registration) {
     }
 
     try {
-        const { subject, html, text } = getRegistrationConfirmationTemplate(registration);
+        let rendered;
+        try {
+            const activeTmpl = await getTemplateByKey('registration_confirmation');
+            if (activeTmpl && activeTmpl.subject && activeTmpl.body_text) {
+                rendered = renderTemplateWithData({
+                    subject: activeTmpl.subject,
+                    bodyText: activeTmpl.body_text,
+                    data: registration
+                });
+            }
+        } catch (e) {
+            console.warn('Fallback to static registration template:', e.message);
+        }
+
+        if (!rendered) {
+            rendered = getRegistrationConfirmationTemplate(registration);
+        }
 
         const result = await sendEmail({
             to: registration.email,
-            subject,
-            html,
-            text,
+            subject: rendered.subject,
+            html: rendered.html,
+            text: rendered.text,
         });
 
         return result;

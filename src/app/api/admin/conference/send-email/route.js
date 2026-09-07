@@ -36,7 +36,7 @@ export async function POST(request) {
             recipients,
             subject,
             bodyText,
-            adminEmail = 'admin@iice.tsu.ge',
+            adminEmail = 'admin@iice.ge',
             templateType = 'custom'
         } = body;
 

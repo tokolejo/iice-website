@@ -51,6 +51,7 @@ export default function EmailModal({
     const [subject, setSubject] = useState(initialSubject);
     const [bodyText, setBodyText] = useState(initialBody);
     const [isSending, setIsSending] = useState(false);
+    const [fetchedTemplates, setFetchedTemplates] = useState({});
 
     const textareaRef = useRef(null);
 
@@ -62,6 +63,18 @@ export default function EmailModal({
     useEffect(() => {
         if (!isOpen) return;
 
+        fetch('/api/admin/conference/templates')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.templates) {
+                    setFetchedTemplates(data.templates);
+                    if (!initialSubject && !initialBody) {
+                        applyPreset(selectedPreset, data.templates);
+                    }
+                }
+            })
+            .catch(() => {});
+
         if (initialSubject || initialBody) {
             setSubject(initialSubject);
             setBodyText(initialBody);
@@ -71,8 +84,15 @@ export default function EmailModal({
         applyPreset(selectedPreset);
     }, [isOpen, initialTemplate, initialSubject, initialBody]);
 
-    const applyPreset = (presetKey) => {
+    const applyPreset = (presetKey, templatesMap = fetchedTemplates) => {
         setSelectedPreset(presetKey);
+
+        const custom = templatesMap[presetKey];
+        if (custom && custom.subject && custom.body_text) {
+            setSubject(replacePlaceholders(custom.subject, sampleRecipient));
+            setBodyText(replacePlaceholders(custom.body_text, sampleRecipient));
+            return;
+        }
 
         if (presetKey === 'acceptance_ka') {
             const tmpl = getAcceptanceLetterGeorgianTemplate(sampleRecipient);
@@ -95,7 +115,7 @@ export default function EmailModal({
 
 პატივისცემით,
 IICE 2026 საორგანიზაციო კომიტეტი
-ელ-ფოსტა: iice@tsu.ge | ვებგვერდი: https://iice.tsu.ge`);
+ელ-ფოსტა: info@iice.ge | ვებგვერდი: https://iice.ge`);
         }
     };
 
@@ -386,7 +406,7 @@ IICE 2026 საორგანიზაციო კომიტეტი
                         {/* Simulated Email Client Preview Frame */}
                         <div className="rounded-2xl border-2 border-slate-200 overflow-hidden shadow-inner bg-slate-100 p-3 sm:p-4">
                             <div className="bg-white rounded-xl p-3 border border-slate-200 mb-3 text-xs space-y-1">
-                                <p><span className="text-slate-400 font-bold">გამგზავნი:</span> <span className="font-bold text-slate-800">TSU IICE 2026 Conference &lt;conference@iice.tsu.ge&gt;</span></p>
+                                <p><span className="text-slate-400 font-bold">გამგზავნი:</span> <span className="font-bold text-slate-800">TSU IICE 2026 Conference &lt;info@iice.ge&gt;</span></p>
                                 <p><span className="text-slate-400 font-bold">ადრესატი:</span> <span className="font-mono text-purple-700">{sampleRecipient.email || 'recipient@example.com'}</span></p>
                                 <p><span className="text-slate-400 font-bold">თემა:</span> <span className="font-bold text-slate-900">{previewSubject}</span></p>
                             </div>

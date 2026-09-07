@@ -11,6 +11,9 @@
 
 import { getTopicLabel, getTitulationLabel } from './conferenceConstants.js';
 
+export const SITE_URL = 'https://iice.ge';
+export const CONTACT_EMAIL = 'info@iice.ge';
+
 /**
  * Replaces placeholders like {first_name}, {abstract_number}, etc. in a text/html string
  */
@@ -31,7 +34,9 @@ export function replacePlaceholders(content, vars = {}) {
         '{presentation_type}': (vars.presentation_type === 'oral' || vars.presentationType === 'oral') ? 'ზეპირი (Oral)' : 'სასტენდო (Poster)',
         '{attendance_type}': (vars.is_attending_in_person || vars.isAttendingInPerson) ? 'პირისპირ (In-Person)' : 'ონლაინ (Online)',
         '{co_authors}': vars.co_authors || vars.coAuthors || '—',
-        '{date}': new Date().toLocaleDateString('ka-GE', { year: 'numeric', month: 'long', day: 'numeric' })
+        '{date}': new Date().toLocaleDateString('ka-GE', { year: 'numeric', month: 'long', day: 'numeric' }),
+        '{site_url}': SITE_URL,
+        '{contact_email}': CONTACT_EMAIL
     };
 
     for (const [key, val] of Object.entries(map)) {
@@ -135,8 +140,8 @@ export function wrapInEmailLayout({ title, contentHtml, previewText = '' }) {
                                     Tbilisi, Georgia • September 24-26, 2026
                                 </p>
                                 <p style="margin: 0 0 6px 0;">
-                                    ელ-ფოსტა: <a href="mailto:iice@tsu.ge" style="color: #60318e;">iice@tsu.ge</a> &nbsp;|&nbsp; 
-                                    ვებგვერდი: <a href="https://iice.tsu.ge" target="_blank" style="color: #60318e;">iice.tsu.ge</a>
+                                    ელ-ფოსტა: <a href="mailto:${CONTACT_EMAIL}" style="color: #60318e;">${CONTACT_EMAIL}</a> &nbsp;|&nbsp; 
+                                    ვებგვერდი: <a href="${SITE_URL}" target="_blank" style="color: #60318e;">iice.ge</a>
                                 </p>
                                 <p style="margin: 12px 0 0 0; font-size: 11px; color: #94a3b8;">
                                     © ${currentYear} თსუ რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი. ყველა უფლება დაცულია.
@@ -150,225 +155,6 @@ export function wrapInEmailLayout({ title, contentHtml, previewText = '' }) {
     </table>
 </body>
 </html>`;
-}
-
-/**
- * 1. Default Registration Confirmation Template (Bilingual Georgian / English)
- * Note: Can easily be replaced or customized by editing this function.
- */
-export function getRegistrationConfirmationTemplate(data) {
-    const fullName = `${data.first_name || ''} ${data.last_name || ''}`.trim() || 'მონაწილე / Participant';
-    const code = data.abstract_number || data.abstractNumber || 'IICE-2026';
-    const title = data.presentation_title || data.presentationTitle || 'N/A';
-    const topic = getTopicLabel(data.thematic_topic || data.thematicTopic || '');
-    const presType = (data.presentation_type === 'oral' || data.presentationType === 'oral') ? 'ზეპირი მოხსენება (Oral)' : 'სასტენდო მოხსენება (Poster)';
-    const attendance = (data.is_attending_in_person || data.isAttendingInPerson) ? 'პირისპირ (In-Person)' : 'ონლაინ (Online)';
-    const affiliation = data.affiliation || 'N/A';
-    const coAuthors = data.co_authors || data.coAuthors || null;
-
-    const subject = `თსუ IICE 2026: რეგისტრაციის დადასტურება / Registration Confirmation (${code})`;
-
-    const contentHtml = `
-        <div style="text-align: center; margin-bottom: 24px;">
-            <span class="badge">${code}</span>
-            <h2 style="color: #1e293b; font-size: 18px; font-weight: 800; margin: 12px 0 4px 0;">
-                თქვენი რეგისტრაცია წარმატებით მიღებულია!
-            </h2>
-            <p style="color: #64748b; font-size: 13px; margin: 0;">
-                Your conference registration has been successfully received.
-            </p>
-        </div>
-
-        <p style="font-size: 14px; margin: 0 0 16px 0;">
-            <strong>პატივცემულო ${fullName},</strong>
-        </p>
-        <p style="font-size: 13px; color: #334155; margin: 0 0 16px 0; line-height: 1.6;">
-            გმადლობთ თსუ რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის 70 წლის იუბილესადმი მიძღვნილ საერთაშორისო სამეცნიერო კონფერენციაში (<strong>IICE 2026</strong>) რეგისტრაციისთვის.
-        </p>
-
-        <!-- Details Card -->
-        <div class="info-card">
-            <h3 style="color: #60318e; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; margin: 0 0 12px 0;">
-                განაცხადის დეტალები / Submission Summary
-            </h3>
-            <table width="100%" border="0" cellspacing="0" cellpadding="4" style="font-size: 13px; color: #1e293b;">
-                <tr>
-                    <td width="35%" style="color: #64748b; font-weight: 600; padding: 4px 0;">თეზისის ნომერი:</td>
-                    <td style="font-weight: 800; color: #60318e; font-family: monospace;">${code}</td>
-                </tr>
-                <tr>
-                    <td style="color: #64748b; font-weight: 600; padding: 4px 0;">მოხსენების სათაური:</td>
-                    <td style="font-weight: 700; color: #0f172a;">„${title}“</td>
-                </tr>
-                <tr>
-                    <td style="color: #64748b; font-weight: 600; padding: 4px 0;">სამეცნიერო სექცია:</td>
-                    <td style="font-weight: 600; color: #334155;">${topic}</td>
-                </tr>
-                <tr>
-                    <td style="color: #64748b; font-weight: 600; padding: 4px 0;">ფორმატი:</td>
-                    <td style="font-weight: 600; color: #334155;">${presType} • ${attendance}</td>
-                </tr>
-                <tr>
-                    <td style="color: #64748b; font-weight: 600; padding: 4px 0;">ორგანიზაცია:</td>
-                    <td style="color: #334155;">${affiliation}</td>
-                </tr>
-                ${coAuthors ? `<tr>
-                    <td style="color: #64748b; font-weight: 600; padding: 4px 0;">თანაავტორები:</td>
-                    <td style="color: #334155;">${coAuthors}</td>
-                </tr>` : ''}
-            </table>
-        </div>
-
-        <h4 style="color: #0f172a; font-size: 13px; font-weight: 800; margin: 20px 0 8px 0;">
-            შემდეგი ნაბიჯები / Next Steps:
-        </h4>
-        <ul style="margin: 0 0 20px 0; padding-left: 20px; font-size: 13px; color: #475569; line-height: 1.6;">
-            <li>საორგანიზაციო კომიტეტი და ექსპერტთა საბჭო განიხილავს თქვენ მიერ წარმოდგენილ თეზისს.</li>
-            <li>თეზისის მიღების ოფიციალური შეტყობინება (Acceptance Letter) და პროგრამის განრიგი გამოგეგზავნებათ ამავე ელ-ფოსტის მისამართზე.</li>
-            <li>კითხვების შემთხვევაში შეგიძლიათ დაგვიკავშირდეთ: <a href="mailto:iice@tsu.ge">iice@tsu.ge</a>.</li>
-        </ul>
-
-        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 24px 0;">
-
-        <!-- English Section -->
-        <p style="font-size: 13px; color: #334155; margin: 0 0 12px 0; line-height: 1.6;">
-            <strong>Dear ${fullName},</strong><br>
-            Thank you for registering for the International Scientific Conference dedicated to the 70th Anniversary of TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry (<strong>IICE 2026</strong>), held in Tbilisi, Georgia on September 24-26, 2026.
-        </p>
-        <p style="font-size: 12px; color: #64748b; margin: 0; line-height: 1.5;">
-            Your abstract is currently under peer-review by the Scientific Committee. You will receive an official notification and acceptance letter shortly. Please keep your Abstract Reference Code (<strong>${code}</strong>) for any future correspondence.
-        </p>
-    `;
-
-    const previewText = `თქვენი რეგისტრაცია წარმატებით მიღებულია (კოდი: ${code}). მოხსენება: ${title}`;
-
-    return {
-        subject,
-        html: wrapInEmailLayout({
-            title: subject,
-            contentHtml,
-            previewText
-        }),
-        text: `IICE 2026 - რეგისტრაციის დადასტურება\n\nპატივცემულო ${fullName},\nთქვენი რეგისტრაცია წარმატებით მიღებულია.\n\nთეზისის ნომერი: ${code}\nმოხსენების სათაური: ${title}\nსექცია: ${topic}\nფორმატი: ${presType} (${attendance})\nორგანიზაცია: ${affiliation}\n\nსაორგანიზაციო კომიტეტი განიხილავს თქვენს თეზისს და შედეგებს გაცნობებთ ამავე მეილზე.\n\nსაორგანიზაციო კომიტეტი IICE 2026\niice@tsu.ge | https://iice.tsu.ge`
-    };
-}
-
-/**
- * 2. Official Acceptance Letter Template Preset (Georgian)
- */
-export function getAcceptanceLetterGeorgianTemplate(data = {}) {
-    const fullName = `${data.first_name || ''} ${data.last_name || ''}`.trim() || '{name}';
-    const code = data.abstract_number || '{abstract_number}';
-    const title = data.presentation_title || '{presentation_title}';
-    const topic = data.thematic_topic ? getTopicLabel(data.thematic_topic) : '{thematic_topic}';
-    const presType = (data.presentation_type === 'oral') ? 'ზეპირი მოხსენება (Oral Presentation)' : 'სასტენდო მოხსენება (Poster Presentation)';
-    const todayFormatted = new Date().toLocaleDateString('ka-GE', { year: 'numeric', month: 'long', day: 'numeric' });
-
-    const subject = `IICE 2026: ოფიციალური მიღებისა და მოწვევის წერილი (${code})`;
-
-    const bodyText = `ოფიციალური მიღებისა და მოწვევის წერილი
-რეგისტრაციის №: ${code}
-თარიღი: ${todayFormatted}
-
-ადრესატი: ${fullName}
-დაწესებულება: ${data.affiliation || '{affiliation}'}
-ქვეყანა: ${data.citizenship || 'საქართველო'}
-
-პატივცემულო კოლეგა,
-
-თსუ რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის დაარსების 70 წლის იუბილესადმი მიძღვნილი საერთაშორისო სამეცნიერო კონფერენციის (IICE 2026) საორგანიზაციო კომიტეტის სახელით გაცნობებთ, რომ თქვენ მიერ წარმოდგენილი თეზისი:
-
-„${title}“
-
-ოფიციალურად განხილულ და მიღებულ იქნა კონფერენციის სამეცნიერო პროგრამაში:
->> ${presType} <<
-სექცია: „${topic}“
-
-კონფერენცია გაიმართება ქ. თბილისში, 2026 წლის 24-26 სექტემბერს.
-მოხარული ვიქნებით თქვენი მობრძანებით და კონფერენციის მუშაობაში მონაწილეობის მიღებით.
-
-წინამდებარე ოფიციალური წერილი ადასტურებს თქვენი თეზისის ჩართვას IICE 2026 საერთაშორისო კონფერენციის სამეცნიერო შრომათა კრებულში.
-
-პატივისცემით,
-საორგანიზაციო კომიტეტი
-თსუ რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი
-ელ-ფოსტა: iice@tsu.ge | ვებგვერდი: https://iice.tsu.ge`;
-
-    return { subject, bodyText };
-}
-
-/**
- * 3. Official Acceptance Letter Template Preset (English)
- */
-export function getAcceptanceLetterEnglishTemplate(data = {}) {
-    const fullName = `${data.titulation ? data.titulation.toUpperCase() + '. ' : ''}${data.first_name || ''} ${data.last_name || ''}`.trim() || '{name}';
-    const code = data.abstract_number || '{abstract_number}';
-    const title = data.presentation_title || '{presentation_title}';
-    const topic = data.thematic_topic ? getTopicLabel(data.thematic_topic, 'en') : '{thematic_topic}';
-    const presType = (data.presentation_type === 'oral') ? 'Oral Presentation' : 'Poster Presentation';
-    const todayFormatted = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-
-    const subject = `IICE 2026: Official Acceptance & Invitation Letter (${code})`;
-
-    const bodyText = `OFFICIAL ACCEPTANCE & INVITATION LETTER
-Reference No: ${code}
-Date: ${todayFormatted}
-
-To: ${fullName}
-Affiliation: ${data.affiliation || '{affiliation}'}
-Country: ${data.citizenship || 'Georgia'}
-
-Dear Colleague,
-
-On behalf of the Scientific and Organizing Committee of the International Scientific Conference dedicated to the 70th Anniversary of TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry (IICE 2026), we are pleased to inform you that your abstract entitled:
-
-"${title}"
-
-has been officially reviewed and ACCEPTED for inclusion in the conference program as an:
->> ${presType} <<
-Under the thematic topic: "${topic}"
-
-The conference will take place in Tbilisi, Georgia, on September 24-26, 2026.
-You are cordially invited to present your research findings and participate in the academic sessions.
-
-This official acceptance letter confirms the inclusion of your abstract into the registered proceedings of the IICE 2026 Conference.
-
-We look forward to welcoming you to Tbilisi.
-
-Sincerely,
-Organizing Committee
-TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry
-Email: iice@tsu.ge | Web: https://iice.tsu.ge`;
-
-    return { subject, bodyText };
-}
-
-/**
- * 4. Revision Needed Template Preset
- */
-export function getRevisionNeededTemplate(data = {}) {
-    const fullName = `${data.first_name || ''} ${data.last_name || ''}`.trim() || '{name}';
-    const code = data.abstract_number || '{abstract_number}';
-    const title = data.presentation_title || '{presentation_title}';
-
-    const subject = `IICE 2026: თეზისის გადამუშავების მოთხოვნა (${code})`;
-
-    const bodyText = `პატივცემულო ${fullName},
-
-გაცნობებთ, რომ IICE 2026 საერთაშორისო კონფერენციაზე თქვენ მიერ წარმოდგენილი თეზისი:
-„${title}“ (კოდი: ${code})
-განიხილა სარედაქციო კოლეგიამ და საჭიროებს გარკვეულ გადამუშავებას/დაზუსტებას.
-
-გთხოვთ, გაითვალისწინოთ შემდეგი შენიშვნები:
-- [აქ ჩაწერეთ კონკრეტული შენიშვნა ან მოთხოვნა]
-
-შესწორებული ფაილის გადმოგზავნა შეგიძლიათ საპასუხო მეილით ან კონფერენციის ვებგვერდიდან.
-
-პატივისცემით,
-IICE 2026 საორგანიზაციო კომიტეტი
-ელ-ფოსტა: iice@tsu.ge`;
-
-    return { subject, bodyText };
 }
 
 /**
@@ -397,4 +183,200 @@ export function formatCustomEmailHtml(bodyText) {
     }).join('');
 
     return paragraphs;
+}
+
+/**
+ * Standard System Default Templates
+ */
+export const DEFAULT_TEMPLATES = {
+    registration_confirmation: {
+        key: 'registration_confirmation',
+        title: 'რეგისტრაციის დადასტურება (ავტომატური მეილი)',
+        description: 'იგზავნება ავტომატურად მომხსენებლის რეგისტრაციისთანავე',
+        subject: 'თსუ IICE 2026: რეგისტრაციის დადასტურება / Registration Confirmation ({abstract_number})',
+        body_text: `თქვენი რეგისტრაცია წარმატებით მიღებულია! (Your conference registration has been successfully received).
+
+პატივცემულო {name},
+
+გმადლობთ თსუ რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის 70 წლის იუბილესადმი მიძღვნილ საერთაშორისო სამეცნიერო კონფერენციაში (IICE 2026) რეგისტრაციისთვის.
+
+განაცხადის დეტალები / Submission Summary:
+- თეზისის ნომერი: {abstract_number}
+- მოხსენების სათაური: „{presentation_title}“
+- სამეცნიერო სექცია: {thematic_topic}
+- ფორმატი: {presentation_type} • {attendance_type}
+- ორგანიზაცია: {affiliation}
+- თანაავტორები: {co_authors}
+
+შემდეგი ნაბიჯები / Next Steps:
+- საორგანიზაციო კომიტეტი და ექსპერტთა საბჭო განიხილავს თქვენ მიერ წარმოდგენილ თეზისს.
+- თეზისის მიღების ოფიციალური შეტყობინება (Acceptance Letter) და პროგრამის განრიგი გამოგეგზავნებათ ამავე ელ-ფოსტის მისამართზე.
+- კითხვების შემთხვევაში შეგიძლიათ დაგვიკავშირდეთ: info@iice.ge
+
+Dear {name},
+Thank you for registering for the International Scientific Conference dedicated to the 70th Anniversary of TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry (IICE 2026), held in Tbilisi, Georgia on September 24-26, 2026.
+
+Your abstract is currently under peer-review by the Scientific Committee. You will receive an official notification and acceptance letter shortly. Please keep your Abstract Reference Code ({abstract_number}) for any future correspondence.
+
+საორგანიზაციო კომიტეტი / Organizing Committee IICE 2026
+info@iice.ge | https://iice.ge`
+    },
+
+    acceptance_ka: {
+        key: 'acceptance_ka',
+        title: 'ოფიციალური მიღების წერილი (ქართული)',
+        description: 'ოფიციალური მიწვევისა და მიღების წერილი ქართულ ენაზე',
+        subject: 'IICE 2026: ოფიციალური მიღებისა და მოწვევის წერილი ({abstract_number})',
+        body_text: `ოფიციალური მიღებისა და მოწვევის წერილი
+რეგისტრაციის №: {abstract_number}
+თარიღი: {date}
+
+ადრესატი: {name}
+დაწესებულება: {affiliation}
+ქვეყანა: {citizenship}
+
+პატივცემულო კოლეგა,
+
+თსუ რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის დაარსების 70 წლის იუბილესადმი მიძღვნილი საერთაშორისო სამეცნიერო კონფერენციის (IICE 2026) საორგანიზაციო კომიტეტის სახელით გაცნობებთ, რომ თქვენ მიერ წარმოდგენილი თეზისი:
+
+„{presentation_title}“
+
+ოფიციალურად განხილულ და მიღებულ იქნა კონფერენციის სამეცნიერო პროგრამაში:
+>> {presentation_type} <<
+სექცია: „{thematic_topic}“
+
+კონფერენცია გაიმართება ქ. თბილისში, 2026 წლის 24-26 სექტემბერს.
+მოხარული ვიქნებით თქვენი მობრძანებით და კონფერენციის მუშაობაში მონაწილეობის მიღებით.
+
+წინამდებარე ოფიციალური წერილი ადასტურებს თქვენი თეზისის ჩართვას IICE 2026 საერთაშორისო კონფერენციის სამეცნიერო შრომათა კრებულში.
+
+პატივისცემით,
+საორგანიზაციო კომიტეტი
+თსუ რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი
+ელ-ფოსტა: info@iice.ge | ვებგვერდი: https://iice.ge`
+    },
+
+    acceptance_en: {
+        key: 'acceptance_en',
+        title: 'Official Acceptance Letter (English)',
+        description: 'Official acceptance & invitation letter in English',
+        subject: 'IICE 2026: Official Acceptance & Invitation Letter ({abstract_number})',
+        body_text: `OFFICIAL ACCEPTANCE & INVITATION LETTER
+Reference No: {abstract_number}
+Date: {date}
+
+To: {name}
+Affiliation: {affiliation}
+Country: {citizenship}
+
+Dear Colleague,
+
+On behalf of the Scientific and Organizing Committee of the International Scientific Conference dedicated to the 70th Anniversary of TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry (IICE 2026), we are pleased to inform you that your abstract entitled:
+
+"{presentation_title}"
+
+has been officially reviewed and ACCEPTED for inclusion in the conference program as an:
+>> {presentation_type} <<
+Under the thematic topic: "{thematic_topic}"
+
+The conference will take place in Tbilisi, Georgia, on September 24-26, 2026.
+You are cordially invited to present your research findings and participate in the academic sessions.
+
+This official acceptance letter confirms the inclusion of your abstract into the registered proceedings of the IICE 2026 Conference.
+
+We look forward to welcoming you to Tbilisi.
+
+Sincerely,
+Organizing Committee
+TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry
+Email: info@iice.ge | Web: https://iice.ge`
+    },
+
+    revision_needed: {
+        key: 'revision_needed',
+        title: 'თეზისის გადამუშავების მოთხოვნა',
+        description: 'შეტყობინება თეზისის შესწორების ან დაზუსტების მოთხოვნით',
+        subject: 'IICE 2026: თეზისის გადამუშავების მოთხოვნა ({abstract_number})',
+        body_text: `პატივცემულო {name},
+
+გაცნობებთ, რომ IICE 2026 საერთაშორისო კონფერენციაზე თქვენ მიერ წარმოდგენილი თეზისი:
+„{presentation_title}“ (კოდი: {abstract_number})
+განიხილა სარედაქციო კოლეგიამ და საჭიროებს გარკვეულ გადამუშავებას/დაზუსტებას.
+
+გთხოვთ, გაითვალისწინოთ შემდეგი შენიშვნები:
+- [აქ ჩაწერეთ კონკრეტული შენიშვნა ან მოთხოვნა]
+
+შესწორებული ფაილის გადმოგზავნა შეგიძლიათ საპასუხო მეილით ან კონფერენციის ვებგვერდიდან.
+
+პატივისცემით,
+IICE 2026 საორგანიზაციო კომიტეტი
+ელ-ფოსტა: info@iice.ge | ვებგვერდი: https://iice.ge`
+    }
+};
+
+/**
+ * Renders an email given a template (or custom subject/body) and recipient data
+ */
+export function renderTemplateWithData({ subject, bodyText, data = {} }) {
+    const personalizedSubject = replacePlaceholders(subject, data);
+    const personalizedBody = replacePlaceholders(bodyText, data);
+
+    const contentHtml = formatCustomEmailHtml(personalizedBody);
+    const fullHtml = wrapInEmailLayout({
+        title: personalizedSubject,
+        contentHtml,
+        previewText: personalizedBody.slice(0, 100)
+    });
+
+    return {
+        subject: personalizedSubject,
+        bodyText: personalizedBody,
+        html: fullHtml,
+        text: personalizedBody
+    };
+}
+
+/**
+ * 1. Default Registration Confirmation Template function
+ */
+export function getRegistrationConfirmationTemplate(data) {
+    const tmpl = DEFAULT_TEMPLATES.registration_confirmation;
+    return renderTemplateWithData({
+        subject: tmpl.subject,
+        bodyText: tmpl.body_text,
+        data
+    });
+}
+
+/**
+ * 2. Official Acceptance Letter Template Preset (Georgian)
+ */
+export function getAcceptanceLetterGeorgianTemplate(data = {}) {
+    const tmpl = DEFAULT_TEMPLATES.acceptance_ka;
+    return {
+        subject: replacePlaceholders(tmpl.subject, data),
+        bodyText: replacePlaceholders(tmpl.body_text, data)
+    };
+}
+
+/**
+ * 3. Official Acceptance Letter Template Preset (English)
+ */
+export function getAcceptanceLetterEnglishTemplate(data = {}) {
+    const tmpl = DEFAULT_TEMPLATES.acceptance_en;
+    return {
+        subject: replacePlaceholders(tmpl.subject, data),
+        bodyText: replacePlaceholders(tmpl.body_text, data)
+    };
+}
+
+/**
+ * 4. Revision Needed Template Preset
+ */
+export function getRevisionNeededTemplate(data = {}) {
+    const tmpl = DEFAULT_TEMPLATES.revision_needed;
+    return {
+        subject: replacePlaceholders(tmpl.subject, data),
+        bodyText: replacePlaceholders(tmpl.body_text, data)
+    };
 }
