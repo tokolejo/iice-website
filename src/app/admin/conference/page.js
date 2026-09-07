@@ -35,6 +35,8 @@ import {
     CheckSquare,
     Square,
     ArrowUpDown,
+    ChevronUp,
+    ChevronDown,
     FileSpreadsheet,
     FileCode,
     RefreshCw,
@@ -416,6 +418,18 @@ export default function AdminConferencePage() {
             if (sortBy === 'abstract-desc') {
                 return (b.abstract_number || '').localeCompare(a.abstract_number || '');
             }
+            if (sortBy === 'title-asc') {
+                return (a.presentation_title || '').localeCompare(b.presentation_title || '', 'ka');
+            }
+            if (sortBy === 'title-desc') {
+                return (b.presentation_title || '').localeCompare(a.presentation_title || '', 'ka');
+            }
+            if (sortBy === 'status-asc') {
+                return (a.status || 'pending').localeCompare(b.status || 'pending');
+            }
+            if (sortBy === 'status-desc') {
+                return (b.status || 'pending').localeCompare(a.status || 'pending');
+            }
             return 0;
         });
 
@@ -610,6 +624,37 @@ export default function AdminConferencePage() {
         setIsEmailModalOpen(true);
     };
 
+    // Header sort toggle helper
+    const handleHeaderSort = (field) => {
+        setSortBy(prev => {
+            if (prev === `${field}-asc`) return `${field}-desc`;
+            return `${field}-asc`;
+        });
+    };
+
+    const renderSortHeader = (field, label, align = 'left') => {
+        const isActive = sortBy.startsWith(field);
+        return (
+            <button
+                type="button"
+                onClick={() => handleHeaderSort(field)}
+                className={`group inline-flex items-center gap-1.5 font-bold uppercase tracking-wider text-[11px] transition-colors cursor-pointer select-none ${
+                    align === 'right' ? 'justify-end w-full' : align === 'center' ? 'justify-center w-full' : 'justify-start'
+                } ${isActive ? 'text-[#60318e]' : 'text-gray-600 hover:text-[#60318e]'}`}
+                title={`დალაგება: ${label}`}
+            >
+                <span>{label}</span>
+                {sortBy === `${field}-asc` ? (
+                    <ChevronUp className="w-3.5 h-3.5 text-[#60318e] shrink-0" />
+                ) : sortBy === `${field}-desc` ? (
+                    <ChevronDown className="w-3.5 h-3.5 text-[#60318e] shrink-0" />
+                ) : (
+                    <ArrowUpDown className="w-3 h-3 text-slate-300 opacity-60 group-hover:opacity-100 group-hover:text-slate-500 shrink-0 transition-all" />
+                )}
+            </button>
+        );
+    };
+
     return (
         <div className="space-y-6 animate-fade-in">
             {/* Header & Export Actions */}
@@ -786,6 +831,10 @@ export default function AdminConferencePage() {
                             <option value="name-desc">სახელი (ჰ-ა)</option>
                             <option value="abstract-asc">თეზისი # (ზრდადი)</option>
                             <option value="abstract-desc">თეზისი # (კლებადი)</option>
+                            <option value="title-asc">მოხსენება (ა-ჰ)</option>
+                            <option value="title-desc">მოხსენება (ჰ-ა)</option>
+                            <option value="status-asc">სტატუსი (ზრდადი)</option>
+                            <option value="status-desc">სტატუსი (კლებადი)</option>
                         </select>
                     </div>
                 </div>
@@ -864,7 +913,7 @@ export default function AdminConferencePage() {
                     <table className="w-full text-left text-xs">
                         <thead className="bg-slate-50 text-gray-600 font-bold border-b border-slate-200 uppercase tracking-wider">
                             <tr>
-                                <th className="py-3.5 px-4 w-10 text-center">
+                                <th className="py-3 px-3 w-10 text-center">
                                     <input
                                         type="checkbox"
                                         checked={isAllSelected}
@@ -873,21 +922,27 @@ export default function AdminConferencePage() {
                                         title="ყველას მონიშვნა"
                                     />
                                 </th>
-                                <th className="py-3.5 px-4 whitespace-nowrap">თეზისის #</th>
-                                <th className="py-3.5 px-4 whitespace-nowrap">მონაწილე</th>
-                                <th className="py-3.5 px-4 whitespace-nowrap">ორგანიზაცია</th>
-                                <th className="py-3.5 px-4 whitespace-nowrap">თემატიკა</th>
-                                <th className="py-3.5 px-4 whitespace-nowrap">მოხსენების სათაური</th>
-                                <th className="py-3.5 px-4 whitespace-nowrap">ფორმატი</th>
-                                <th className="py-3.5 px-4 whitespace-nowrap">სტატუსი</th>
-                                <th className="py-3.5 px-4 text-center whitespace-nowrap">თეზისის ფაილები</th>
-                                <th className="py-3.5 px-4 text-right whitespace-nowrap">მოქმედება</th>
+                                <th className="py-3 px-3 w-32 whitespace-nowrap">
+                                    {renderSortHeader('abstract', 'თეზისის #')}
+                                </th>
+                                <th className="py-3 px-3 min-w-[190px]">
+                                    {renderSortHeader('name', 'მონაწილე & ორგანიზაცია')}
+                                </th>
+                                <th className="py-3 px-3 min-w-[220px]">
+                                    {renderSortHeader('title', 'მოხსენება & თემატიკა')}
+                                </th>
+                                <th className="py-3 px-3 w-36 whitespace-nowrap">
+                                    {renderSortHeader('status', 'სტატუსი & ფორმატი')}
+                                </th>
+                                <th className="py-3 px-3 w-40 text-right whitespace-nowrap">
+                                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-600">ფაილები & მოქმედება</span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan={10} className="py-14 text-center text-gray-400">
+                                    <td colSpan={6} className="py-14 text-center text-gray-400">
                                         <div className="w-6 h-6 border-2 border-[#60318e] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
                                         იტვირთება მონაწილეები...
                                     </td>
@@ -902,7 +957,7 @@ export default function AdminConferencePage() {
                                                 isSelected ? 'bg-purple-50/70' : 'hover:bg-purple-50/30'
                                             }`}
                                         >
-                                            <td className="py-3.5 px-4 text-center">
+                                            <td className="py-3 px-3 text-center align-top pt-3.5">
                                                 <input
                                                     type="checkbox"
                                                     checked={isSelected}
@@ -911,85 +966,100 @@ export default function AdminConferencePage() {
                                                 />
                                             </td>
 
-                                            <td className="py-3.5 px-4 font-mono font-bold text-[#60318e] whitespace-nowrap">
-                                                {reg.abstract_number}
+                                            {/* Abstract Number & Registration Date */}
+                                            <td className="py-3 px-3 align-top whitespace-nowrap">
+                                                <div className="font-mono font-bold text-[#60318e] text-xs">
+                                                    {reg.abstract_number || '—'}
+                                                </div>
+                                                <div className="text-[10px] text-gray-400 mt-1 flex items-center gap-1 font-sans">
+                                                    <Calendar className="w-2.5 h-2.5 text-gray-400 shrink-0" />
+                                                    <span>{reg.created_at ? new Date(reg.created_at).toLocaleDateString('ka-GE') : '—'}</span>
+                                                </div>
                                             </td>
 
-                                            <td className="py-3.5 px-4 whitespace-nowrap">
-                                                <div className="flex items-center gap-1.5">
-                                                    <span className="font-bold text-gray-900">{reg.first_name} {reg.last_name}</span>
+                                            {/* Participant & Affiliation */}
+                                            <td className="py-3 px-3 align-top">
+                                                <div className="flex items-center gap-1.5 flex-wrap">
+                                                    <span className="font-bold text-gray-900 text-xs">
+                                                        {reg.first_name} {reg.last_name}
+                                                    </span>
                                                     {reg.titulation && (
-                                                        <span className="text-[10px] font-semibold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-100" title="სამეცნიერო ხარისხი">
+                                                        <span className="text-[9px] font-semibold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-100" title="სამეცნიერო ხარისხი">
                                                             {getTitulationLabel(reg.titulation)}
                                                         </span>
                                                     )}
                                                 </div>
-                                                <div className="text-[11px] text-gray-500 font-mono flex items-center gap-1.5 mt-0.5">
-                                                    <span>{reg.email}</span>
+                                                <div className="text-[11px] text-gray-600 mt-0.5 line-clamp-1" title={reg.affiliation}>
+                                                    {reg.affiliation}
                                                     {reg.citizenship && (
-                                                        <span className="text-gray-400 text-[10px] font-sans">({reg.citizenship})</span>
+                                                        <span className="text-gray-400 text-[10px] ml-1">({reg.citizenship})</span>
+                                                    )}
+                                                </div>
+                                                <div className="text-[10px] text-gray-400 font-mono mt-0.5 truncate max-w-[200px]" title={reg.email}>
+                                                    {reg.email}
+                                                </div>
+                                            </td>
+
+                                            {/* Presentation Title & Thematic Section */}
+                                            <td className="py-3 px-3 align-top">
+                                                <div className="font-medium text-gray-800 text-xs line-clamp-2 leading-relaxed" title={reg.presentation_title}>
+                                                    {reg.presentation_title || '—'}
+                                                </div>
+                                                <div className="mt-1 flex items-center gap-1.5 flex-wrap">
+                                                    <span
+                                                        className="inline-block max-w-[280px] truncate font-medium text-purple-900 bg-purple-50 px-2 py-0.5 rounded text-[10px] border border-purple-100"
+                                                        title={getTopicLabel(reg.thematic_topic)}
+                                                    >
+                                                        {getTopicLabel(reg.thematic_topic)}
+                                                    </span>
+                                                    {reg.co_authors && (
+                                                        <span className="text-[10px] text-gray-400 truncate max-w-[160px]" title={`თანაავტორები: ${reg.co_authors}`}>
+                                                            თანაავტ.: {reg.co_authors}
+                                                        </span>
                                                     )}
                                                 </div>
                                             </td>
 
-                                            <td className="py-3.5 px-4 text-gray-700 max-w-[170px] truncate" title={reg.affiliation}>
-                                                {reg.affiliation}
-                                            </td>
-
-                                            <td className="py-3.5 px-4 whitespace-nowrap">
-                                                <span
-                                                    className="inline-block max-w-[200px] truncate font-medium text-purple-900 bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-100 text-[11px]"
-                                                    title={getTopicLabel(reg.thematic_topic)}
-                                                >
-                                                    {getTopicLabel(reg.thematic_topic)}
-                                                </span>
-                                            </td>
-
-                                            <td className="py-3.5 px-4 text-gray-800 max-w-xs truncate font-medium" title={reg.presentation_title}>
-                                                {reg.presentation_title}
-                                            </td>
-
-                                            <td className="py-3.5 px-4 whitespace-nowrap">
-                                                <div className="flex flex-col gap-1 items-start">
-                                                    <div className="flex items-center gap-1">
-                                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                                                            reg.presentation_type === 'oral'
-                                                                ? 'bg-purple-50 text-[#60318e] border border-purple-200'
-                                                                : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
-                                                        }`}>
-                                                            {reg.presentation_type === 'oral' ? 'ზეპირი' : 'სასტენდო'}
-                                                        </span>
-                                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                                                            reg.is_attending_in_person
-                                                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                                                : 'bg-blue-50 text-blue-700 border border-blue-200'
-                                                        }`}>
-                                                            {reg.is_attending_in_person ? 'პირისპირ' : 'ონლაინ'}
-                                                        </span>
-                                                    </div>
+                                            {/* Status & Format */}
+                                            <td className="py-3 px-3 align-top whitespace-nowrap">
+                                                <div className="mb-1.5">
+                                                    {(() => {
+                                                        const st = STATUS_CONFIG[reg.status] || STATUS_CONFIG.pending;
+                                                        return (
+                                                            <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold border ${st.bg}`}>
+                                                                <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`}></span>
+                                                                <span>{st.labelKa}</span>
+                                                            </span>
+                                                        );
+                                                    })()}
+                                                </div>
+                                                <div className="flex items-center gap-1 flex-wrap">
+                                                    <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                                                        reg.presentation_type === 'oral'
+                                                            ? 'bg-purple-50 text-[#60318e] border border-purple-200'
+                                                            : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                                                    }`}>
+                                                        {reg.presentation_type === 'oral' ? 'ზეპირი' : 'სასტენდო'}
+                                                    </span>
+                                                    <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                                                        reg.is_attending_in_person
+                                                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                                            : 'bg-blue-50 text-blue-700 border border-blue-200'
+                                                    }`}>
+                                                        {reg.is_attending_in_person ? 'პირისპირ' : 'ონლაინ'}
+                                                    </span>
                                                     {reg.participation_role && (
-                                                        <span className="text-[10px] text-gray-500 font-medium">
+                                                        <span className="text-[9px] text-gray-500 font-medium ml-0.5" title="მონაწილის როლი">
                                                             {getRoleLabel(reg.participation_role)}
                                                         </span>
                                                     )}
                                                 </div>
                                             </td>
 
-                                            {/* Status Badge */}
-                                            <td className="py-3.5 px-4 whitespace-nowrap">
-                                                {(() => {
-                                                    const st = STATUS_CONFIG[reg.status] || STATUS_CONFIG.pending;
-                                                    return (
-                                                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border ${st.bg}`}>
-                                                            <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`}></span>
-                                                            <span>{st.labelKa}</span>
-                                                        </span>
-                                                    );
-                                                })()}
-                                            </td>
-
-                                            <td className="py-3.5 px-4 text-center whitespace-nowrap">
-                                                <div className="flex items-center justify-center gap-1.5">
+                                            {/* Files & Actions */}
+                                            <td className="py-3 px-3 align-top text-right whitespace-nowrap">
+                                                {/* Abstract download pills */}
+                                                <div className="flex items-center justify-end gap-1 mb-1.5">
                                                     {reg.abstract_file_geo_url ? (
                                                         <button
                                                             type="button"
@@ -998,9 +1068,9 @@ export default function AdminConferencePage() {
                                                                 `${reg.abstract_number}_GEO_${reg.last_name || 'abstract'}.docx`
                                                             )}
                                                             title="ქართული თეზისის გადმოწერა"
-                                                            className="px-2 py-0.5 rounded-md bg-purple-100 text-[#60318e] text-[10px] font-bold hover:bg-[#60318e] hover:text-white transition-colors flex items-center gap-1 cursor-pointer"
+                                                            className="px-1.5 py-0.5 rounded bg-purple-50 text-[#60318e] border border-purple-200 text-[10px] font-bold hover:bg-[#60318e] hover:text-white transition-colors flex items-center gap-0.5 cursor-pointer"
                                                         >
-                                                            <FileDown className="w-3 h-3" />
+                                                            <FileDown className="w-2.5 h-2.5" />
                                                             <span>GEO</span>
                                                         </button>
                                                     ) : null}
@@ -1013,33 +1083,31 @@ export default function AdminConferencePage() {
                                                                 `${reg.abstract_number}_ENG_${reg.last_name || 'abstract'}.docx`
                                                             )}
                                                             title="ინგლისური თეზისის გადმოწერა"
-                                                            className="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700 text-[10px] font-bold hover:bg-indigo-700 hover:text-white transition-colors flex items-center gap-1 cursor-pointer"
+                                                            className="px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 text-[10px] font-bold hover:bg-indigo-700 hover:text-white transition-colors flex items-center gap-0.5 cursor-pointer"
                                                         >
-                                                            <FileDown className="w-3 h-3" />
+                                                            <FileDown className="w-2.5 h-2.5" />
                                                             <span>ENG</span>
                                                         </button>
                                                     ) : null}
 
                                                     {!reg.abstract_file_geo_url && !reg.abstract_file_eng_url && (
-                                                        <span className="text-gray-300 text-[11px]">—</span>
+                                                        <span className="text-gray-300 text-[10px] font-mono">ფაილი არაა</span>
                                                     )}
                                                 </div>
-                                            </td>
 
-                                            <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                                                <div className="flex items-center justify-end gap-1.5">
-                                                    {/* Single Participant Export */}
+                                                {/* Action buttons */}
+                                                <div className="flex items-center justify-end gap-1">
                                                     <button
                                                         onClick={() => exportParticipants([reg], 'csv')}
-                                                        className="p-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-emerald-600 hover:text-white transition-colors cursor-pointer"
-                                                        title="ამ მონაწილის ექსპორტი (CSV)"
+                                                        className="p-1 rounded-md bg-slate-100 text-slate-600 hover:bg-emerald-600 hover:text-white transition-colors cursor-pointer"
+                                                        title="CSV ექსპორტი"
                                                     >
                                                         <Download className="w-3.5 h-3.5" />
                                                     </button>
 
                                                     <button
                                                         onClick={() => handleOpenEmailForRecipient(reg)}
-                                                        className="p-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-purple-600 hover:text-white transition-colors cursor-pointer"
+                                                        className="p-1 rounded-md bg-slate-100 text-slate-600 hover:bg-purple-600 hover:text-white transition-colors cursor-pointer"
                                                         title="მეილის გაგზავნა"
                                                     >
                                                         <Mail className="w-3.5 h-3.5" />
@@ -1047,7 +1115,7 @@ export default function AdminConferencePage() {
 
                                                     <button
                                                         onClick={() => setSelectedReg(reg)}
-                                                        className="p-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-[#60318e] hover:text-white transition-colors cursor-pointer"
+                                                        className="p-1 rounded-md bg-slate-100 text-slate-600 hover:bg-[#60318e] hover:text-white transition-colors cursor-pointer"
                                                         title="სრული დეტალები"
                                                     >
                                                         <Eye className="w-3.5 h-3.5" />
@@ -1058,7 +1126,7 @@ export default function AdminConferencePage() {
                                                             setItemToDelete(reg);
                                                             setIsDeleteModalOpen(true);
                                                         }}
-                                                        className="p-1.5 rounded-lg bg-slate-100 text-red-500 hover:bg-red-500 hover:text-white transition-colors cursor-pointer"
+                                                        className="p-1 rounded-md bg-slate-100 text-red-500 hover:bg-red-500 hover:text-white transition-colors cursor-pointer"
                                                         title="წაშლა"
                                                     >
                                                         <Trash2 className="w-3.5 h-3.5" />
@@ -1070,7 +1138,7 @@ export default function AdminConferencePage() {
                                 })
                             ) : (
                                 <tr>
-                                    <td colSpan={10} className="py-14 text-center text-gray-400">
+                                    <td colSpan={6} className="py-14 text-center text-gray-400">
                                         მოთხოვნილი პარამეტრებით მონაწილეები ვერ მოიძებნა.
                                     </td>
                                 </tr>
