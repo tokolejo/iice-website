@@ -150,7 +150,7 @@ export default function Home() {
                 </div>
 
                 {/* Title */}
-                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-slate-900 leading-snug tracking-tight">
+                <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-black text-slate-900 leading-snug tracking-tight">
                   {language === 'en'
                     ? '3rd International Scientific Conference: "Modern Trends in Chemistry, Chemical Technologies and Related Fields: Green Energy Prospects, Ecological Sustainability, Food Safety. 2026"'
                     : 'მე-3 საერთაშორისო სამეცნიერო კონფერენცია: „თანამედროვე ტენდენციები ქიმიაში, ქიმიურ ტექნოლოგიებსა და მომიჯნავე დარგებში: მწვანე ენერგეტიკის პერსპექტივები, ეკოლოგიური მდგრადობა, სურსათის უვნებელობა. 2026“'}

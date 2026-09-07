@@ -346,64 +346,27 @@ export default function Conference2026View() {
             <title>{isEn ? "3rd International Scientific Conference 2026 | TSU IICE" : "III საერთაშორისო სამეცნიერო კონფერენცია 2026 | TSU IICE"}</title>
             <meta name="description" content={isEn ? "3rd International Scientific Conference 2026 dedicated to the 70th anniversary of IICE." : "მე-3 საერთაშორისო სამეცნიერო კონფერენცია 2026 ეძღვნება რაფიელ აგლაძის ინსტიტუტის 70 წლისთავს."} />
 
-            {/* Hero Header Section - High-Contrast Royal Purple with Ambient Glow (Compact & Refined) */}
-            <div className="relative bg-gradient-to-b from-[#180327] via-[#2f0d46] to-[#1c062c] text-white py-8 sm:py-12 lg:py-14 px-4 sm:px-6 lg:px-8 shadow-xl overflow-hidden">
-                {/* Decorative radial mesh light */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(173,73,225,0.18),transparent_70%)] pointer-events-none"></div>
+            {/* Conference Official Cover Banner */}
+            <div className="w-full bg-white border-b border-purple-100 shadow-xs overflow-hidden">
+                <div className="max-w-[1700px] mx-auto">
+                    <img
+                        src="/conference-2026/conference2026-cover.jpg"
+                        alt={isEn ? "3rd International Scientific Conference 2026" : "III საერთაშორისო სამეცნიერო კონფერენცია 2026"}
+                        className="w-full h-auto block select-none"
+                    />
+                </div>
+            </div>
 
-                <div className="max-w-4xl mx-auto text-center relative z-10">
-                    <div className="inline-flex items-center px-3.5 py-1 rounded-full text-[11px] sm:text-xs font-extrabold bg-gradient-to-r from-purple-500/25 to-amber-500/25 text-amber-200 border border-amber-400/35 mb-3 backdrop-blur-md shadow-xs">
-                        <span>{t.badge}</span>
+            {/* Grant Support & Free Participation Strip */}
+            <div className="bg-[#240638] text-white py-2.5 px-4 text-xs border-b border-purple-900/40">
+                <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3 text-center sm:text-left">
+                    <div className="flex items-center justify-center sm:justify-start gap-2 font-medium text-purple-100/90 text-[11px] sm:text-xs">
+                        <Landmark className="w-4 h-4 text-amber-300 flex-shrink-0" />
+                        <span>{t.grantNotice}</span>
                     </div>
-
-                    <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-black text-white mb-3 leading-snug tracking-tight max-w-2xl mx-auto drop-shadow-xs">
-                        {t.title}
-                    </h1>
-
-                    {/* 70 Years Commemorative Banner */}
-                    <div className="inline-flex items-center gap-2.5 bg-gradient-to-r from-amber-500/15 via-amber-400/20 to-amber-500/15 text-amber-200 py-1.5 px-4 rounded-xl border border-amber-300/30 shadow-xs mb-3.5 max-w-2xl backdrop-blur-md">
-                        <Award className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                        <span className="text-[11px] sm:text-xs font-bold text-amber-100 leading-snug">
-                            {t.anniversary}
-                        </span>
-                    </div>
-
-                    {/* Dates & Venues Pills */}
-                    <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] sm:text-xs font-bold mb-3.5">
-                        <div className="flex items-center gap-1.5 bg-white/10 text-white px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/15 shadow-xs">
-                            <Calendar className="w-3.5 h-3.5 text-amber-300" />
-                            <span>{t.datesText}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 bg-white/10 text-white px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/15 shadow-xs">
-                            <MapPin className="w-3.5 h-3.5 text-amber-300" />
-                            <span>{t.venuesText}</span>
-                        </div>
-                    </div>
-
-                    {/* Mandatory Grant Notice & Free Participation */}
-                    <div className="max-w-2xl mx-auto space-y-2 text-[11px] mb-4">
-                        <div className="bg-white/10 text-purple-100 px-3.5 py-1.5 rounded-xl border border-white/15 backdrop-blur-md shadow-xs leading-relaxed flex items-center justify-center gap-2">
-                            <Landmark className="w-3.5 h-3.5 text-amber-300 flex-shrink-0" />
-                            <span><strong>{t.grantNotice}</strong></span>
-                        </div>
-                        <div className="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-200 font-extrabold px-3 py-1 rounded-full border border-emerald-400/35 shadow-xs">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                            <span>{t.freeNotice}</span>
-                        </div>
-                    </div>
-
-                    {/* Quick Call to Action */}
-                    <div>
-                        <button
-                            onClick={() => {
-                                setActiveTab('registration');
-                                document.getElementById('tabs-navigation')?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#AD49E1] to-[#7A1CAC] hover:from-[#bd5cf0] hover:to-[#8c25c2] text-white font-extrabold px-5 py-2.5 rounded-full text-xs shadow-md hover:shadow-lg hover:scale-102 transition-all cursor-pointer"
-                        >
-                            <Send className="w-3.5 h-3.5" />
-                            <span>{isEn ? "Go to Registration Form ↓" : "რეგისტრაცია & აბსტრაქტის ატვირთვა ↓"}</span>
-                        </button>
+                    <div className="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 font-extrabold px-3 py-1 rounded-full border border-emerald-400/30 text-[11px] mx-auto sm:mx-0">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>{t.freeNotice}</span>
                     </div>
                 </div>
             </div>
