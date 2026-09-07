@@ -22,8 +22,14 @@ import {
     UserCircle,
     Crown,
     Shield,
-    GraduationCap
+    GraduationCap,
+    Search,
+    Database,
+    Loader2
 } from 'lucide-react';
+import CommandPalette from '../../components/admin/CommandPalette';
+import AdminToastContainer, { toast } from '../../components/admin/AdminToast';
+import { exportDatabaseBackup } from '../../lib/backupService';
 
 export default function AdminLayout({ children }) {
     const pathname = usePathname();
@@ -34,9 +40,23 @@ export default function AdminLayout({ children }) {
     const [deptName, setDeptName] = useState('');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+    const [isBackingUp, setIsBackingUp] = useState(false);
 
     const cleanPath = pathname?.replace(/\/+$/, '') || '';
     const isAuthPage = cleanPath === '/admin/login' || cleanPath === '/admin/pending';
+
+    // Global keyboard shortcut for Command Palette (Ctrl+K or Cmd+K)
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                setIsCommandPaletteOpen((prev) => !prev);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
 
     useEffect(() => {
         if (isAuthPage) {
@@ -165,6 +185,30 @@ export default function AdminLayout({ children }) {
         ...(isSuperAdmin ? [{ href: '/admin/users', label: 'მომხმარებლები (RBAC)', icon: ShieldCheck }] : []),
         ...(isSuperAdmin ? [{ href: '/admin/audit', label: 'აუდიტის ჟურნალი', icon: History }] : []),
     ];
+
+    const handleQuickBackup = async () => {
+        setIsBackingUp(true);
+        toast('მონაცემთა ბაზის ექსპორტი დაიწყო...', 'info');
+        try {
+            await exportDatabaseBackup({ format: 'json', userEmail: user?.email || 'admin' });
+            toast('ბაზის სრული JSON Snapshot წარმატებით ჩამოიტვირთა!', 'success');
+        } catch (e) {
+            toast('ბექაფის შეცდომა: ' + e.message, 'error');
+        } finally {
+            setIsBackingUp(false);
+        }
+    };
+
+    const getPageTitle = () => {
+        if (cleanPath === '/admin') return 'მთავარი პანელი';
+        if (cleanPath.startsWith('/admin/conference')) return 'კონფერენცია 2026';
+        if (cleanPath.startsWith('/admin/staff')) return 'თანამშრომლები';
+        if (cleanPath.startsWith('/admin/departments')) return 'განყოფილებები';
+        if (cleanPath.startsWith('/admin/news')) return 'სიახლეები';
+        if (cleanPath.startsWith('/admin/users')) return 'მომხმარებლები (RBAC)';
+        if (cleanPath.startsWith('/admin/audit')) return 'აუდიტის ჟურნალი';
+        return 'ადმინ პორტალი';
+    };
 
     return (
         <div className="min-h-screen bg-slate-100 flex flex-col md:flex-row">
@@ -309,6 +353,46 @@ export default function AdminLayout({ children }) {
 
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col min-w-0">
+                {/* Desktop Top Header */}
+                <header className="hidden md:flex items-center justify-between bg-white border-b border-slate-200 px-6 py-3 sticky top-0 z-30 shadow-2xs">
+                    {/* Breadcrumb / Title */}
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold text-slate-400">პორტალი</span>
+                        <span className="text-xs text-slate-300">/</span>
+                        <span className="text-xs font-bold text-slate-800">{getPageTitle()}</span>
+                    </div>
+
+                    {/* Action Center */}
+                    <div className="flex items-center gap-3">
+                        {/* Quick Command Trigger */}
+                        <button
+                            onClick={() => setIsCommandPaletteOpen(true)}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 text-xs font-medium transition-colors cursor-pointer border border-slate-200/60"
+                        >
+                            <Search className="w-3.5 h-3.5 text-slate-400" />
+                            <span>ძებნა & ბრძანებები...</span>
+                            <kbd className="text-[10px] font-bold bg-white text-slate-600 px-1.5 py-0.5 rounded shadow-xs border border-slate-200">
+                                Ctrl+K
+                            </kbd>
+                        </button>
+
+                        {/* Quick Backup Trigger */}
+                        <button
+                            onClick={handleQuickBackup}
+                            disabled={isBackingUp}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#60318e] text-xs font-bold transition-colors cursor-pointer border border-purple-200 disabled:opacity-50"
+                            title="მონაცემთა ბაზის Snapshot"
+                        >
+                            {isBackingUp ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            ) : (
+                                <Database className="w-3.5 h-3.5 text-[#AD49E1]" />
+                            )}
+                            <span>ბაზის ბექაფი</span>
+                        </button>
+                    </div>
+                </header>
+
                 {/* Mobile Top Navbar */}
                 <header className="md:hidden bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between shadow-sm sticky top-0 z-40">
                     <button
@@ -318,12 +402,21 @@ export default function AdminLayout({ children }) {
                         <Menu className="w-5 h-5" />
                     </button>
                     <span className="text-xs font-black text-[#60318e] uppercase tracking-wider">IICE პორტალი</span>
-                    <button
-                        onClick={handleSignOut}
-                        className="text-red-500 p-1.5 hover:bg-red-50 rounded-lg text-xs font-bold"
-                    >
-                        <LogOut className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-1">
+                        <button
+                            onClick={() => setIsCommandPaletteOpen(true)}
+                            className="text-slate-600 p-1.5 hover:bg-slate-100 rounded-lg text-xs"
+                            title="ძებნა (Ctrl+K)"
+                        >
+                            <Search className="w-4 h-4" />
+                        </button>
+                        <button
+                            onClick={handleSignOut}
+                            className="text-red-500 p-1.5 hover:bg-red-50 rounded-lg text-xs font-bold"
+                        >
+                            <LogOut className="w-4 h-4" />
+                        </button>
+                    </div>
                 </header>
 
                 {/* Main Page Body */}
@@ -331,6 +424,16 @@ export default function AdminLayout({ children }) {
                     {children}
                 </main>
             </div>
+
+            {/* Global Command Palette */}
+            <CommandPalette
+                isOpen={isCommandPaletteOpen}
+                onClose={() => setIsCommandPaletteOpen(false)}
+                userEmail={user?.email || 'admin'}
+            />
+
+            {/* Toast Notifications */}
+            <AdminToastContainer />
         </div>
     );
 }

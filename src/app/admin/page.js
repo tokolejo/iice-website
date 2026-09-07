@@ -22,8 +22,16 @@ import {
     GraduationCap,
     Clock,
     Activity,
-    ExternalLink
+    ExternalLink,
+    Database,
+    FileCode,
+    BarChart3,
+    PieChart,
+    Sparkles,
+    Loader2
 } from 'lucide-react';
+import { exportDatabaseBackup } from '../../lib/backupService';
+import { toast } from '../../components/admin/AdminToast';
 
 export default function AdminDashboardPage() {
     const [stats, setStats] = useState({
@@ -33,10 +41,17 @@ export default function AdminDashboardPage() {
         newsCount: 0,
         usersCount: 0,
     });
+    const [confAnalytics, setConfAnalytics] = useState({
+        trend: [],
+        topTopics: [],
+        formats: { oral: 0, poster: 0, inPerson: 0, online: 0 },
+        statuses: { pending: 0, accepted: 0, revision: 0, rejected: 0 }
+    });
     const [recentRegistrations, setRecentRegistrations] = useState([]);
     const [recentActivity, setRecentActivity] = useState([]);
     const [isConnected, setIsConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [isExportingBackup, setIsExportingBackup] = useState(false);
 
     useEffect(() => {
         async function loadDashboard() {
@@ -46,9 +61,9 @@ export default function AdminDashboardPage() {
                 if (!supabase) {
                     setIsConnected(false);
                     setIsLoading(false);
-                    // Mock recent activity for local preview
+                    // Mock recent activity & analytics for local preview
                     setStats({
-                        conferenceCount: 0,
+                        conferenceCount: 14,
                         staffCount: staffData.length,
                         departmentsCount: departmentsData.length,
                         newsCount: 0,
@@ -59,17 +74,37 @@ export default function AdminDashboardPage() {
                         { id: '2', action: 'CONFERENCE_REGISTER', user_email: 'anonymous', details: { applicant: 'გიორგი მაისურაძე' }, created_at: new Date(Date.now() - 1800000).toISOString() },
                         { id: '3', action: 'STAFF_UPDATE', user_email: 'tokolejo@gmail.com', details: { name_ka: 'ნიკოლოზ ნიორაძე' }, created_at: new Date(Date.now() - 7200000).toISOString() },
                     ]);
+                    // Mock trend
+                    const mockTrend = [];
+                    for (let i = 13; i >= 0; i--) {
+                        const d = new Date();
+                        d.setDate(d.getDate() - i);
+                        mockTrend.push({
+                            day: d.toISOString().slice(5, 10),
+                            count: Math.floor(Math.sin(i) * 2 + 3)
+                        });
+                    }
+                    setConfAnalytics({
+                        trend: mockTrend,
+                        topTopics: [
+                            { topic: 'ნანოპროცესები და ნანოტექნოლოგიები', count: 6, percentage: 43 },
+                            { topic: 'მწვანე ქიმია', count: 4, percentage: 29 },
+                            { topic: 'სურსათის ქიმია და ხარისხი', count: 3, percentage: 21 },
+                            { topic: 'STEM+P', count: 1, percentage: 7 },
+                        ],
+                        formats: { oral: 9, poster: 5, inPerson: 10, online: 4 },
+                        statuses: { pending: 6, accepted: 6, revision: 1, rejected: 1 }
+                    });
                     return;
                 }
 
                 setIsConnected(true);
 
-                // Fetch Conference Registrations count and recent
+                // Fetch Conference Registrations count, recent, and analytics rows
                 const { data: confData, count: confCount } = await supabase
                     .from('conference_registrations_2026')
-                    .select('id, abstract_number, first_name, last_name, presentation_title, thematic_topic, created_at', { count: 'exact' })
-                    .order('created_at', { ascending: false })
-                    .limit(5);
+                    .select('id, abstract_number, first_name, last_name, presentation_title, thematic_topic, created_at, presentation_type, is_attending_in_person, status', { count: 'exact' })
+                    .order('created_at', { ascending: false });
 
                 // Fetch Staff count
                 const { count: sCount } = await supabase
@@ -106,7 +141,66 @@ export default function AdminDashboardPage() {
                     usersCount: typeof uCount === 'number' ? uCount : 0,
                 });
 
-                if (confData) setRecentRegistrations(confData);
+                if (confData) {
+                    setRecentRegistrations(confData.slice(0, 5));
+
+                    // Compute 14-day trend
+                    const daysMap = {};
+                    for (let i = 13; i >= 0; i--) {
+                        const d = new Date();
+                        d.setDate(d.getDate() - i);
+                        const key = d.toISOString().slice(5, 10);
+                        daysMap[key] = 0;
+                    }
+                    confData.forEach(r => {
+                        if (r.created_at) {
+                            const key = new Date(r.created_at).toISOString().slice(5, 10);
+                            if (daysMap[key] !== undefined) daysMap[key]++;
+                        }
+                    });
+                    const trendList = Object.entries(daysMap).map(([day, count]) => ({ day, count }));
+
+                    // Topic distribution
+                    const topicCounts = {};
+                    let totalTopics = 0;
+                    let oral = 0, poster = 0, inPerson = 0, online = 0;
+                    let pending = 0, accepted = 0, revision = 0, rejected = 0;
+
+                    confData.forEach(r => {
+                        const t = r.thematic_topic || 'სხვა';
+                        topicCounts[t] = (topicCounts[t] || 0) + 1;
+                        totalTopics++;
+
+                        if (r.presentation_type === 'oral') oral++;
+                        else poster++;
+
+                        if (r.is_attending_in_person) inPerson++;
+                        else online++;
+
+                        const st = r.status || 'pending';
+                        if (st.includes('accepted')) accepted++;
+                        else if (st === 'revision_needed') revision++;
+                        else if (st === 'rejected') rejected++;
+                        else pending++;
+                    });
+
+                    const topTopics = Object.entries(topicCounts)
+                        .sort((a, b) => b[1] - a[1])
+                        .slice(0, 4)
+                        .map(([topic, count]) => ({
+                            topic,
+                            count,
+                            percentage: totalTopics > 0 ? Math.round((count / totalTopics) * 100) : 0
+                        }));
+
+                    setConfAnalytics({
+                        trend: trendList,
+                        topTopics,
+                        formats: { oral, poster, inPerson, online },
+                        statuses: { pending, accepted, revision, rejected }
+                    });
+                }
+
                 if (auditData) setRecentActivity(auditData);
             } catch (err) {
                 console.warn('Dashboard stats fetch notice:', err);
@@ -117,6 +211,19 @@ export default function AdminDashboardPage() {
 
         loadDashboard();
     }, []);
+
+    const handleQuickBackup = async (format = 'json') => {
+        setIsExportingBackup(true);
+        toast('ბაზის ექსპორტი დაიწყო...', 'info');
+        try {
+            await exportDatabaseBackup({ format });
+            toast(`მონაცემთა ბაზის ${format.toUpperCase()} ექსპორტი წარმატებით დასრულდა!`, 'success');
+        } catch (e) {
+            toast('ბექაფის შეცდომა: ' + e.message, 'error');
+        } finally {
+            setIsExportingBackup(false);
+        }
+    };
 
     const getActivityBadge = (action = '') => {
         const act = action.toUpperCase();
@@ -243,43 +350,236 @@ export default function AdminDashboardPage() {
                 </Link>
             </div>
 
+            {/* Analytics & Visual Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left: Registration Trend SVG Chart (7 cols) */}
+                <div className="lg:col-span-7 bg-white rounded-3xl p-6 border border-purple-100 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div className="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                                    <TrendingUp className="w-5 h-5 text-[#60318e]" />
+                                    რეგისტრაციების დინამიკა (ბოლო 14 დღე)
+                                </h3>
+                                <p className="text-xs text-gray-500 mt-0.5">ყოველდღიური შემოსული თეზისების ნაკადი</p>
+                            </div>
+                            <span className="text-xs font-extrabold text-[#60318e] bg-purple-50 px-2.5 py-1 rounded-xl border border-purple-200">
+                                სულ: {stats.conferenceCount}
+                            </span>
+                        </div>
+
+                        {/* SVG Area Chart */}
+                        <div className="relative h-40 w-full pt-2">
+                            {(() => {
+                                const trend = confAnalytics.trend;
+                                if (!trend || trend.length === 0) return null;
+                                const maxVal = Math.max(...trend.map(t => t.count), 1);
+                                const width = 500;
+                                const height = 110;
+                                const step = width / (trend.length - 1 || 1);
+                                const points = trend.map((t, i) => ({
+                                    x: i * step,
+                                    y: height - (t.count / maxVal) * (height - 20) - 10,
+                                    count: t.count,
+                                    day: t.day
+                                }));
+
+                                return (
+                                    <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${width} ${height + 20}`}>
+                                        <defs>
+                                            <linearGradient id="dashTrendGrad" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stopColor="#AD49E1" stopOpacity="0.35" />
+                                                <stop offset="100%" stopColor="#60318e" stopOpacity="0.0" />
+                                            </linearGradient>
+                                        </defs>
+
+                                        {/* Area */}
+                                        <polygon
+                                            points={`0,${height + 10} ${points.map(p => `${p.x},${p.y}`).join(' ')} ${width},${height + 10}`}
+                                            fill="url(#dashTrendGrad)"
+                                        />
+
+                                        {/* Line */}
+                                        <polyline
+                                            points={points.map(p => `${p.x},${p.y}`).join(' ')}
+                                            fill="none"
+                                            stroke="#60318e"
+                                            strokeWidth="3"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+
+                                        {/* Points */}
+                                        {points.map((p, idx) => (
+                                            <g key={idx} className="group cursor-pointer">
+                                                <circle
+                                                    cx={p.x}
+                                                    cy={p.y}
+                                                    r="4"
+                                                    className="fill-white stroke-[#60318e] stroke-2 hover:stroke-[#AD49E1] transition-all"
+                                                />
+                                                {p.count > 0 && (
+                                                    <text
+                                                        x={p.x}
+                                                        y={p.y - 8}
+                                                        textAnchor="middle"
+                                                        className="text-[9px] font-bold fill-[#60318e]"
+                                                    >
+                                                        {p.count}
+                                                    </text>
+                                                )}
+                                            </g>
+                                        ))}
+                                    </svg>
+                                );
+                            })()}
+                        </div>
+
+                        {/* Day Labels */}
+                        <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 mt-2 px-1 border-t border-slate-100 pt-2">
+                            {confAnalytics.trend.length > 0 ? (
+                                <>
+                                    <span>{confAnalytics.trend[0]?.day}</span>
+                                    <span>{confAnalytics.trend[Math.floor(confAnalytics.trend.length / 2)]?.day}</span>
+                                    <span>დღეს ({confAnalytics.trend[confAnalytics.trend.length - 1]?.day})</span>
+                                </>
+                            ) : null}
+                        </div>
+                    </div>
+
+                    {/* Quick Metrics Bar */}
+                    <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-slate-100 text-center">
+                        <div className="p-2 rounded-xl bg-purple-50/50">
+                            <span className="text-[10px] text-slate-500 font-bold block">ზეპირი / სასტენდო</span>
+                            <span className="text-xs font-black text-[#60318e]">
+                                {confAnalytics.formats.oral} / {confAnalytics.formats.poster}
+                            </span>
+                        </div>
+                        <div className="p-2 rounded-xl bg-purple-50/50">
+                            <span className="text-[10px] text-slate-500 font-bold block">პირისპირ / ონლაინ</span>
+                            <span className="text-xs font-black text-slate-800">
+                                {confAnalytics.formats.inPerson} / {confAnalytics.formats.online}
+                            </span>
+                        </div>
+                        <div className="p-2 rounded-xl bg-purple-50/50">
+                            <span className="text-[10px] text-slate-500 font-bold block">მიღებული / განსახილველი</span>
+                            <span className="text-xs font-black text-emerald-700">
+                                {confAnalytics.statuses.accepted} / {confAnalytics.statuses.pending}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right: Thematic Breakdown (5 cols) */}
+                <div className="lg:col-span-5 bg-white rounded-3xl p-6 border border-purple-100 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div className="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                                    <PieChart className="w-5 h-5 text-[#60318e]" />
+                                    თემატიკების გადანაწილება
+                                </h3>
+                                <p className="text-xs text-gray-500 mt-0.5">პოპულარული სამეცნიერო სექციები</p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-3.5">
+                            {confAnalytics.topTopics.length > 0 ? (
+                                confAnalytics.topTopics.map((item, idx) => (
+                                    <div key={idx} className="space-y-1">
+                                        <div className="flex items-center justify-between text-xs font-semibold">
+                                            <span className="text-slate-800 truncate max-w-[220px]" title={item.topic}>
+                                                {item.topic}
+                                            </span>
+                                            <span className="text-slate-500 font-mono text-[11px] flex-shrink-0">
+                                                <strong className="text-slate-900">{item.count}</strong> ({item.percentage}%)
+                                            </span>
+                                        </div>
+                                        <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                            <div
+                                                className="bg-gradient-to-r from-[#60318e] to-[#AD49E1] h-full rounded-full transition-all duration-500"
+                                                style={{ width: `${item.percentage}%` }}
+                                            ></div>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="p-8 text-center text-xs text-slate-400">
+                                    მონაცემები არ არის ხელმისაწვდომი
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <Link
+                            href="/admin/conference"
+                            className="text-xs font-bold text-[#60318e] hover:underline flex items-center gap-1"
+                        >
+                            <span>სრული რეესტრის ნახვა</span>
+                            <ArrowUpRight className="w-3.5 h-3.5" />
+                        </Link>
+                    </div>
+                </div>
+            </div>
+
             {/* Quick Actions Bar */}
             <div className="bg-gradient-to-r from-[#2e0d42] to-[#60318e] rounded-3xl p-6 sm:p-8 text-white shadow-lg">
                 <h3 className="text-lg font-black mb-1.5">სწრაფი მოქმედებები</h3>
                 <p className="text-xs text-purple-100/80 mb-5">მართეთ ინსტიტუტის მონაცემები, კონფერენციის განაცხადები და წვდომები ერთი ადგილიდან</p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                     <Link
-                        href="/admin/staff?action=new"
-                        className="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-4 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm"
+                        href="/admin/conference"
+                        className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 px-3.5 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm"
                     >
-                        <UserPlus className="w-4 h-4 text-[#EBD3F8]" />
-                        <span>თანამშრომლის დამატება</span>
+                        <Calendar className="w-4 h-4 text-[#EBD3F8]" />
+                        <span>2026-ის თეზისები</span>
                     </Link>
 
                     <Link
-                        href="/admin/conference"
-                        className="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-4 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm"
+                        href="/admin/staff?action=new"
+                        className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 px-3.5 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm"
                     >
-                        <Calendar className="w-4 h-4 text-[#EBD3F8]" />
-                        <span>2026-ის თეზისების სია</span>
+                        <UserPlus className="w-4 h-4 text-[#EBD3F8]" />
+                        <span>თანამშრომელი</span>
                     </Link>
 
                     <Link
                         href="/admin/news"
-                        className="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-4 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm"
+                        className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 px-3.5 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm"
                     >
                         <FileText className="w-4 h-4 text-[#EBD3F8]" />
-                        <span>სიახლის გამოქვეყნება</span>
+                        <span>სიახლის დამატება</span>
                     </Link>
 
                     <Link
                         href="/admin/audit"
-                        className="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-4 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm"
+                        className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 px-3.5 py-3 rounded-2xl border border-white/10 text-xs font-bold transition-all backdrop-blur-sm"
                     >
                         <History className="w-4 h-4 text-[#EBD3F8]" />
                         <span>აუდიტის ჟურნალი</span>
                     </Link>
+
+                    <button
+                        onClick={() => handleQuickBackup('json')}
+                        disabled={isExportingBackup}
+                        className="flex items-center gap-2.5 bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 border border-amber-400/30 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all backdrop-blur-sm cursor-pointer disabled:opacity-50"
+                        title="ბაზის სრული JSON Snapshot"
+                    >
+                        {isExportingBackup ? <Loader2 className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
+                        <span>ბაზის JSON</span>
+                    </button>
+
+                    <button
+                        onClick={() => handleQuickBackup('sql')}
+                        disabled={isExportingBackup}
+                        className="flex items-center gap-2.5 bg-emerald-400/20 hover:bg-emerald-400/30 text-emerald-200 border border-emerald-400/30 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all backdrop-blur-sm cursor-pointer disabled:opacity-50"
+                        title="ბაზის SQL DUMP Script"
+                    >
+                        {isExportingBackup ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileCode className="w-4 h-4" />}
+                        <span>ბაზის SQL</span>
+                    </button>
                 </div>
             </div>
 

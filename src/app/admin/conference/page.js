@@ -29,8 +29,45 @@ import {
     RefreshCw,
     Printer,
     Loader2,
-    UploadCloud
+    UploadCloud,
+    Award,
+    Archive
 } from 'lucide-react';
+import AcceptanceLetterModal from '../../../components/admin/AcceptanceLetterModal';
+import { toast } from '../../../components/admin/AdminToast';
+
+export const STATUS_CONFIG = {
+    pending: {
+        labelKa: 'მოლოდინში',
+        labelEn: 'Pending',
+        bg: 'bg-amber-50 text-amber-700 border-amber-200',
+        dot: 'bg-amber-500'
+    },
+    accepted_oral: {
+        labelKa: 'მიღებულია (ზეპირი)',
+        labelEn: 'Accepted (Oral)',
+        bg: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        dot: 'bg-emerald-500'
+    },
+    accepted_poster: {
+        labelKa: 'მიღებულია (სასტენდო)',
+        labelEn: 'Accepted (Poster)',
+        bg: 'bg-teal-50 text-teal-700 border-teal-200',
+        dot: 'bg-teal-500'
+    },
+    revision_needed: {
+        labelKa: 'გადასამუშავებელი',
+        labelEn: 'Needs Revision',
+        bg: 'bg-orange-50 text-orange-700 border-orange-200',
+        dot: 'bg-orange-500'
+    },
+    rejected: {
+        labelKa: 'უარყოფილია',
+        labelEn: 'Rejected',
+        bg: 'bg-rose-50 text-rose-700 border-rose-200',
+        dot: 'bg-rose-500'
+    }
+};
 
 const TOPICS = [
     'All',
@@ -49,6 +86,7 @@ export default function AdminConferencePage() {
     const [filterTopic, setFilterTopic] = useState('All');
     const [filterType, setFilterType] = useState('All');
     const [filterAttendance, setFilterAttendance] = useState('All');
+    const [filterStatus, setFilterStatus] = useState('All');
     const [sortBy, setSortBy] = useState('date-desc');
 
     // Selection state
@@ -58,10 +96,17 @@ export default function AdminConferencePage() {
     const [selectedReg, setSelectedReg] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
+    const [isAcceptanceLetterOpen, setIsAcceptanceLetterOpen] = useState(false);
+    const [letterReg, setLetterReg] = useState(null);
 
-    // File action state
+    // Status & Note update state
+    const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+    const [editNotes, setEditNotes] = useState('');
+
+    // File & ZIP action state
     const [downloadingFile, setDownloadingFile] = useState(null);
     const [isUploadingFile, setIsUploadingFile] = useState(false);
+    const [isZipping, setIsZipping] = useState(false);
 
     const fetchRegistrations = async () => {
         setIsLoading(true);
@@ -176,13 +221,132 @@ export default function AdminConferencePage() {
             setSelectedReg(prev => ({ ...prev, ...updatePayload }));
             setRegistrations(prev => prev.map(r => r.id === selectedReg.id ? { ...r, ...updatePayload } : r));
 
-            alert(type === 'geo' ? 'ქართული თეზისის ფაილი წარმატებით მიემაგრა!' : 'ინგლისური თეზისის ფაილი წარმატებით მიემაგრა!');
+            toast(type === 'geo' ? 'ქართული თეზისის ფაილი წარმატებით მიემაგრა!' : 'ინგლისური თეზისის ფაილი წარმატებით მიემაგრა!', 'success');
         } catch (err) {
             console.error('Admin file upload error:', err);
-            alert(`ფაილის ატვირთვის შეცდომა: ${err.message}`);
+            toast(`ფაილის ატვირთვის შეცდომა: ${err.message}`, 'error');
         } finally {
             setIsUploadingFile(false);
             e.target.value = '';
+        }
+    };
+
+    // Update status and reviewer notes
+    const handleUpdateStatus = async (regId, newStatus, notes = null) => {
+        setIsUpdatingStatus(true);
+        try {
+            const supabase = getSupabaseBrowserClient();
+            const updatePayload = { status: newStatus };
+            if (notes !== null) {
+                updatePayload.reviewer_notes = notes;
+            }
+
+            if (supabase) {
+                const { error } = await supabase
+                    .from('conference_registrations_2026')
+                    .update(updatePayload)
+                    .eq('id', regId);
+
+                if (error) throw error;
+            }
+
+            setRegistrations(prev => prev.map(r => r.id === regId ? { ...r, ...updatePayload } : r));
+            if (selectedReg && selectedReg.id === regId) {
+                setSelectedReg(prev => ({ ...prev, ...updatePayload }));
+            }
+
+            toast('სტატუსი წარმატებით განახლდა!', 'success');
+
+            try {
+                await recordAuditLog({
+                    action: 'CONFERENCE_STATUS_UPDATE',
+                    tableName: 'conference_registrations_2026',
+                    recordId: regId,
+                    details: updatePayload
+                });
+            } catch (e) {
+                console.warn('Audit error on status update:', e);
+            }
+        } catch (err) {
+            console.error('Status update error:', err);
+            toast('სტატუსის განახლება ვერ მოხერხდა: ' + err.message, 'error');
+        } finally {
+            setIsUpdatingStatus(false);
+        }
+    };
+
+    // Bulk download abstract files into a ZIP archive
+    const handleBulkDownloadZip = async (items) => {
+        if (!items || items.length === 0) {
+            toast('არცერთი მონაწილე არ არის არჩეული', 'info');
+            return;
+        }
+
+        setIsZipping(true);
+        toast('აბსტრაქტების ZIP არქივის მომზადება დაიწყო...', 'info');
+
+        try {
+            const JSZip = (await import('jszip')).default;
+            const zip = new JSZip();
+            let filesCount = 0;
+
+            for (const r of items) {
+                const safeName = `${r.first_name || ''}_${r.last_name || ''}`.replace(/[\/\\?%*:|"<>]/g, '_').trim();
+                const abstractNum = r.abstract_number || 'IICE-2026';
+
+                // Georgian abstract file
+                if (r.abstract_file_geo_url) {
+                    try {
+                        const ext = r.abstract_file_geo_url.split('.').pop()?.split('?')[0] || 'docx';
+                        const resp = await fetch(r.abstract_file_geo_url);
+                        if (resp.ok) {
+                            const blob = await resp.blob();
+                            zip.file(`${abstractNum}_${safeName}_GEO.${ext}`, blob);
+                            filesCount++;
+                        }
+                    } catch (e) {
+                        console.warn(`Failed downloading geo file for ${safeName}:`, e);
+                    }
+                }
+
+                // English abstract file
+                if (r.abstract_file_eng_url) {
+                    try {
+                        const ext = r.abstract_file_eng_url.split('.').pop()?.split('?')[0] || 'docx';
+                        const resp = await fetch(r.abstract_file_eng_url);
+                        if (resp.ok) {
+                            const blob = await resp.blob();
+                            zip.file(`${abstractNum}_${safeName}_ENG.${ext}`, blob);
+                            filesCount++;
+                        }
+                    } catch (e) {
+                        console.warn(`Failed downloading eng file for ${safeName}:`, e);
+                    }
+                }
+            }
+
+            if (filesCount === 0) {
+                toast('შერჩეულ მონაწილეებს არ აქვთ ატვირთული თეზისების ფაილები', 'error');
+                return;
+            }
+
+            const zipBlob = await zip.generateAsync({ type: 'blob' });
+            const dateStamp = new Date().toISOString().slice(0, 10);
+            const zipUrl = URL.createObjectURL(zipBlob);
+            const link = document.createElement('a');
+            link.href = zipUrl;
+            link.download = `IICE_2026_Abstracts_${dateStamp}.zip`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(zipUrl);
+
+            toast(`წარმატებით მომზადდა ZIP არქივი (${filesCount} ფაილი)!`, 'success');
+        } catch (err) {
+            console.error('Error generating bulk ZIP:', err);
+            toast('ZIP არქივის შექმნა ვერ მოხერხდა: ' + err.message, 'error');
+        } finally {
+            setIsZipping(false);
         }
     };
 
@@ -202,8 +366,10 @@ export default function AdminConferencePage() {
             const matchesAttendance = filterAttendance === 'All' ||
                 (filterAttendance === 'in_person' && reg.is_attending_in_person) ||
                 (filterAttendance === 'online' && !reg.is_attending_in_person);
+            const statusKey = reg.status || 'pending';
+            const matchesStatus = filterStatus === 'All' || statusKey === filterStatus;
 
-            return matchesSearch && matchesTopic && matchesType && matchesAttendance;
+            return matchesSearch && matchesTopic && matchesType && matchesAttendance && matchesStatus;
         });
 
         // Sorting
@@ -234,7 +400,7 @@ export default function AdminConferencePage() {
         });
 
         return result;
-    }, [registrations, searchQuery, filterTopic, filterType, filterAttendance, sortBy]);
+    }, [registrations, searchQuery, filterTopic, filterType, filterAttendance, filterStatus, sortBy]);
 
     // Selection helpers
     const isAllSelected = filteredAndSortedList.length > 0 &&
@@ -260,12 +426,14 @@ export default function AdminConferencePage() {
         setSelectedIds(next);
     };
 
-    // Generic Export Handler covering all 17 fields
+    // Generic Export Handler covering all fields
     const exportParticipants = (items, format = 'csv') => {
         if (!items || items.length === 0) return;
 
         const headers = [
             'Abstract Number (თეზისის #)',
+            'Status (სტატუსი)',
+            'Reviewer Notes (შენიშვნა)',
             'Registration Date (რეგისტრაციის თარიღი)',
             'First Name (სახელი)',
             'Last Name (გვარი)',
@@ -285,26 +453,31 @@ export default function AdminConferencePage() {
             'ENG Abstract URL (ინგლისური თეზისის ბმული)'
         ];
 
-        const rows = items.map(r => [
-            r.abstract_number || '',
-            new Date(r.created_at).toLocaleString('ka-GE'),
-            r.first_name || '',
-            r.last_name || '',
-            r.birth_date || '',
-            r.email || '',
-            r.citizenship || '',
-            r.affiliation || '',
-            r.titulation || '',
-            r.gender || '',
-            r.is_attending_in_person ? 'In-Person (პირისპირ)' : 'Online (ონლაინ)',
-            r.presentation_title || '',
-            r.co_authors || '',
-            r.presentation_type || '',
-            r.participation_role || '',
-            r.thematic_topic || '',
-            r.abstract_file_geo_url || '',
-            r.abstract_file_eng_url || ''
-        ]);
+        const rows = items.map(r => {
+            const st = STATUS_CONFIG[r.status] || STATUS_CONFIG.pending;
+            return [
+                r.abstract_number || '',
+                st.labelKa,
+                r.reviewer_notes || '',
+                new Date(r.created_at).toLocaleString('ka-GE'),
+                r.first_name || '',
+                r.last_name || '',
+                r.birth_date || '',
+                r.email || '',
+                r.citizenship || '',
+                r.affiliation || '',
+                r.titulation || '',
+                r.gender || '',
+                r.is_attending_in_person ? 'In-Person (პირისპირ)' : 'Online (ონლაინ)',
+                r.presentation_title || '',
+                r.co_authors || '',
+                r.presentation_type || '',
+                r.participation_role || '',
+                r.thematic_topic || '',
+                r.abstract_file_geo_url || '',
+                r.abstract_file_eng_url || ''
+            ];
+        });
 
         const timestamp = new Date().toISOString().slice(0, 10);
 
@@ -426,6 +599,17 @@ export default function AdminConferencePage() {
                         <span>განახლება</span>
                     </button>
 
+                    {/* Bulk ZIP Download Button for All Filtered */}
+                    <button
+                        onClick={() => handleBulkDownloadZip(filteredAndSortedList)}
+                        disabled={isZipping || filteredAndSortedList.length === 0}
+                        className="px-3.5 py-2 rounded-xl border border-purple-200 bg-purple-50 hover:bg-purple-100 text-[#60318e] text-xs font-bold shadow-xs transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                        title="ყველა გაფილტრული თეზისის ZIP არქივად ჩამოტვირთვა"
+                    >
+                        {isZipping ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Archive className="w-3.5 h-3.5" />}
+                        <span>თეზისების ZIP</span>
+                    </button>
+
                     {/* Export All Dropdown */}
                     <div className="relative group">
                         <button
@@ -466,13 +650,13 @@ export default function AdminConferencePage() {
             <div className="bg-white rounded-2xl p-4 border border-purple-100 shadow-xs space-y-3">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
                     {/* Search */}
-                    <div className="md:col-span-4 relative">
+                    <div className="md:col-span-3 relative">
                         <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="ძიება: სახელი, გვარი, ელ-ფოსტა, ორგანიზაცია, სათაური..."
+                            placeholder="ძიება: სახელი, თეზისი #, ელ-ფოსტა..."
                             className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] transition-all"
                         />
                     </div>
@@ -487,7 +671,7 @@ export default function AdminConferencePage() {
                         >
                             {TOPICS.map(t => (
                                 <option key={t} value={t}>
-                                    {t === 'All' ? 'ყველა თემატური მიმართულება' : t}
+                                    {t === 'All' ? 'ყველა თემატიკა' : t}
                                 </option>
                             ))}
                         </select>
@@ -509,39 +693,62 @@ export default function AdminConferencePage() {
                     </div>
 
                     {/* Filter Attendance */}
-                    <div className="md:col-span-3">
-                        <div className="flex items-center gap-2">
-                            <select
-                                value={filterAttendance}
-                                onChange={(e) => setFilterAttendance(e.target.value)}
-                                className="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
-                            >
-                                <option value="All">ყველა ფორმატი</option>
-                                <option value="in_person">პირისპირ (In-Person)</option>
-                                <option value="online">ონლაინ (Online)</option>
-                            </select>
+                    <div className="md:col-span-2">
+                        <select
+                            value={filterAttendance}
+                            onChange={(e) => setFilterAttendance(e.target.value)}
+                            className="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white"
+                        >
+                            <option value="All">ყველა ფორმატი</option>
+                            <option value="in_person">პირისპირ</option>
+                            <option value="online">ონლაინ</option>
+                        </select>
+                    </div>
 
-                            {/* Sort Selector */}
-                            <select
-                                value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value)}
-                                className="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white font-bold text-gray-700"
-                            >
-                                <option value="date-desc">უახლესი თარიღით</option>
-                                <option value="date-asc">ძველი თარიღით</option>
-                                <option value="name-asc">სახელი (ა-ჰ)</option>
-                                <option value="name-desc">სახელი (ჰ-ა)</option>
-                                <option value="abstract-asc">თეზისი # (ზრდადი)</option>
-                                <option value="abstract-desc">თეზისი # (კლებადი)</option>
-                            </select>
-                        </div>
+                    {/* Filter Status */}
+                    <div className="md:col-span-2">
+                        <select
+                            value={filterStatus}
+                            onChange={(e) => setFilterStatus(e.target.value)}
+                            className="w-full px-3 py-2 rounded-xl border border-purple-200 bg-purple-50/50 text-xs font-bold text-[#60318e] focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                        >
+                            <option value="All">ყველა სტატუსი</option>
+                            <option value="pending">მოლოდინში</option>
+                            <option value="accepted_oral">მიღებულია (Oral)</option>
+                            <option value="accepted_poster">მიღებულია (Poster)</option>
+                            <option value="revision_needed">გადასამუშავებელი</option>
+                            <option value="rejected">უარყოფილია</option>
+                        </select>
+                    </div>
+                </div>
+
+                {/* Sub-bar: Sort & Stats */}
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100 text-xs">
+                    <span className="text-slate-500 font-medium">
+                        ნაჩვენებია <strong className="text-slate-800">{filteredAndSortedList.length}</strong> / {registrations.length} მონაწილე
+                    </span>
+
+                    <div className="flex items-center gap-2">
+                        <span className="text-slate-400 font-medium">დალაგება:</span>
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white font-bold text-gray-700"
+                        >
+                            <option value="date-desc">უახლესი თარიღით</option>
+                            <option value="date-asc">ძველი თარიღით</option>
+                            <option value="name-asc">სახელი (ა-ჰ)</option>
+                            <option value="name-desc">სახელი (ჰ-ა)</option>
+                            <option value="abstract-asc">თეზისი # (ზრდადი)</option>
+                            <option value="abstract-desc">თეზისი # (კლებადი)</option>
+                        </select>
                     </div>
                 </div>
             </div>
 
             {/* Bulk Selection Action Bar */}
             {selectedIds.size > 0 && (
-                <div className="bg-purple-900 text-white rounded-2xl p-3.5 px-5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg animate-fade-in">
+                <div className="bg-[#2e0d42] text-white rounded-2xl p-3.5 px-5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg animate-fade-in border border-purple-500/30">
                     <div className="flex items-center gap-3">
                         <span className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs">
                             {selectedIds.size}
@@ -551,13 +758,23 @@ export default function AdminConferencePage() {
                         </span>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                        {/* Bulk ZIP */}
+                        <button
+                            onClick={() => handleBulkDownloadZip(selectedList)}
+                            disabled={isZipping}
+                            className="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                        >
+                            {isZipping ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Archive className="w-3.5 h-3.5" />}
+                            <span>თეზისების ZIP ({selectedIds.size})</span>
+                        </button>
+
                         <button
                             onClick={() => exportParticipants(selectedList, 'csv')}
                             className="px-3 py-1.5 rounded-xl bg-white text-[#60318e] hover:bg-purple-50 text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
                         >
                             <FileDown className="w-3.5 h-3.5" />
-                            <span>მონიშნულების CSV</span>
+                            <span>CSV</span>
                         </button>
 
                         <button
@@ -578,9 +795,9 @@ export default function AdminConferencePage() {
 
                         <button
                             onClick={() => setSelectedIds(new Set())}
-                            className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-colors cursor-pointer"
+                            className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors cursor-pointer"
                         >
-                            მოხსნა
+                            გაუქმება
                         </button>
                     </div>
                 </div>
@@ -606,6 +823,7 @@ export default function AdminConferencePage() {
                                 <th className="py-3.5 px-4 whitespace-nowrap">ორგანიზაცია</th>
                                 <th className="py-3.5 px-4 whitespace-nowrap">მოხსენების სათაური</th>
                                 <th className="py-3.5 px-4 whitespace-nowrap">ფორმატი</th>
+                                <th className="py-3.5 px-4 whitespace-nowrap">სტატუსი</th>
                                 <th className="py-3.5 px-4 text-center whitespace-nowrap">თეზისის ფაილები</th>
                                 <th className="py-3.5 px-4 text-right whitespace-nowrap">მოქმედება</th>
                             </tr>
@@ -613,7 +831,7 @@ export default function AdminConferencePage() {
                         <tbody className="divide-y divide-slate-100">
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan={8} className="py-14 text-center text-gray-400">
+                                    <td colSpan={9} className="py-14 text-center text-gray-400">
                                         <div className="w-6 h-6 border-2 border-[#60318e] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
                                         იტვირთება მონაწილეები...
                                     </td>
@@ -666,6 +884,19 @@ export default function AdminConferencePage() {
                                                 </span>
                                             </td>
 
+                                            {/* Status Badge */}
+                                            <td className="py-3.5 px-4 whitespace-nowrap">
+                                                {(() => {
+                                                    const st = STATUS_CONFIG[reg.status] || STATUS_CONFIG.pending;
+                                                    return (
+                                                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border ${st.bg}`}>
+                                                            <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`}></span>
+                                                            <span>{st.labelKa}</span>
+                                                        </span>
+                                                    );
+                                                })()}
+                                            </td>
+
                                             <td className="py-3.5 px-4 text-center whitespace-nowrap">
                                                 <div className="flex items-center justify-center gap-1.5">
                                                     {reg.abstract_file_geo_url ? (
@@ -706,6 +937,18 @@ export default function AdminConferencePage() {
 
                                             <td className="py-3.5 px-4 text-right whitespace-nowrap">
                                                 <div className="flex items-center justify-end gap-1.5">
+                                                    {/* Acceptance Letter Modal Trigger */}
+                                                    <button
+                                                        onClick={() => {
+                                                            setLetterReg(reg);
+                                                            setIsAcceptanceLetterOpen(true);
+                                                        }}
+                                                        className="p-1.5 rounded-lg bg-slate-100 text-[#60318e] hover:bg-[#60318e] hover:text-white transition-colors cursor-pointer"
+                                                        title="მოწვევის / მიღების წერილი"
+                                                    >
+                                                        <Award className="w-3.5 h-3.5" />
+                                                    </button>
+
                                                     {/* Single Participant Export */}
                                                     <button
                                                         onClick={() => exportParticipants([reg], 'csv')}
@@ -716,7 +959,10 @@ export default function AdminConferencePage() {
                                                     </button>
 
                                                     <button
-                                                        onClick={() => setSelectedReg(reg)}
+                                                        onClick={() => {
+                                                            setSelectedReg(reg);
+                                                            setEditNotes(reg.reviewer_notes || '');
+                                                        }}
                                                         className="p-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-[#60318e] hover:text-white transition-colors cursor-pointer"
                                                         title="სრული დეტალები"
                                                     >
@@ -740,7 +986,7 @@ export default function AdminConferencePage() {
                                 })
                             ) : (
                                 <tr>
-                                    <td colSpan={8} className="py-14 text-center text-gray-400">
+                                    <td colSpan={9} className="py-14 text-center text-gray-400">
                                         მოთხოვნილი პარამეტრებით მონაწილეები ვერ მოიძებნა.
                                     </td>
                                 </tr>
@@ -762,6 +1008,16 @@ export default function AdminConferencePage() {
                     <div className="flex items-center justify-between w-full">
                         {selectedReg && (
                             <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => {
+                                        setLetterReg(selectedReg);
+                                        setIsAcceptanceLetterOpen(true);
+                                    }}
+                                    className="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#60318e] border border-purple-200 text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
+                                >
+                                    <Award className="w-3.5 h-3.5" />
+                                    <span>მოწვევის წერილი</span>
+                                </button>
                                 <button
                                     onClick={() => exportParticipants([selectedReg], 'csv')}
                                     className="px-3 py-1.5 rounded-xl border border-gray-200 bg-white hover:bg-purple-50 text-xs font-bold text-gray-700 flex items-center gap-1.5 cursor-pointer"
@@ -789,6 +1045,64 @@ export default function AdminConferencePage() {
             >
                 {selectedReg && (
                     <div className="space-y-5 text-xs text-gray-700">
+                        {/* Academic Review & Status Management Card */}
+                        <div className="p-4 rounded-2xl bg-white border-2 border-purple-200 shadow-xs space-y-3">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-extrabold text-[#60318e] uppercase tracking-wider flex items-center gap-1.5">
+                                    <Award className="w-4 h-4" />
+                                    <span>რეცენზირების სტატუსი & გადაწყვეტილება</span>
+                                </span>
+                                <button
+                                    onClick={() => {
+                                        setLetterReg(selectedReg);
+                                        setIsAcceptanceLetterOpen(true);
+                                    }}
+                                    className="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-[#60318e] font-bold text-[11px] flex items-center gap-1 cursor-pointer border border-purple-200 transition-colors"
+                                >
+                                    <Award className="w-3.5 h-3.5" />
+                                    <span>მოწვევის წერილი</span>
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label className="text-[11px] font-bold text-slate-600 block mb-1">სტატუსის შეცვლა:</label>
+                                    <select
+                                        value={selectedReg.status || 'pending'}
+                                        onChange={(e) => handleUpdateStatus(selectedReg.id, e.target.value, editNotes)}
+                                        disabled={isUpdatingStatus}
+                                        className="w-full px-3 py-2 rounded-xl border border-purple-200 bg-purple-50/50 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                    >
+                                        <option value="pending">⏳ მოლოდინში (Pending)</option>
+                                        <option value="accepted_oral">✅ მიღებულია (ზეპირი მოხსენება)</option>
+                                        <option value="accepted_poster">📌 მიღებულია (სასტენდო მოხსენება)</option>
+                                        <option value="revision_needed">⚠️ საჭიროებს გადამუშავებას (Revision)</option>
+                                        <option value="rejected">❌ უარყოფილია (Rejected)</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="text-[11px] font-bold text-slate-600 block mb-1">რეცენზენტის შენიშვნა:</label>
+                                    <div className="flex gap-1.5">
+                                        <input
+                                            type="text"
+                                            value={editNotes}
+                                            onChange={(e) => setEditNotes(e.target.value)}
+                                            placeholder="მაგ. მიღებულია სექციაში #2..."
+                                            className="flex-1 px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                        />
+                                        <button
+                                            onClick={() => handleUpdateStatus(selectedReg.id, selectedReg.status || 'pending', editNotes)}
+                                            disabled={isUpdatingStatus}
+                                            className="px-3 py-1.5 rounded-xl bg-[#60318e] hover:bg-[#4a2470] text-white text-xs font-bold transition-colors cursor-pointer disabled:opacity-50"
+                                        >
+                                            {isUpdatingStatus ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'შენახვა'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         {/* Status & Key Metrics */}
                         <div className="p-4 rounded-2xl bg-purple-50/70 border border-purple-100 flex flex-wrap items-center justify-between gap-3">
                             <div>
@@ -1090,6 +1404,16 @@ export default function AdminConferencePage() {
                     </p>
                 )}
             </AdminModal>
+
+            {/* Acceptance Letter Modal */}
+            <AcceptanceLetterModal
+                isOpen={isAcceptanceLetterOpen}
+                onClose={() => {
+                    setIsAcceptanceLetterOpen(false);
+                    setLetterReg(null);
+                }}
+                registration={letterReg}
+            />
         </div>
     );
 }
