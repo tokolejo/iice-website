@@ -3,8 +3,16 @@
 import { useState, useEffect, useMemo } from 'react';
 import { getSupabaseBrowserClient } from '../../../lib/supabase/client';
 import { recordAuditLog } from '../../../lib/auditLogger';
-import { getTopicLabel } from '../../../lib/conferenceConstants';
+import {
+    getTopicLabel,
+    getTitulationLabel,
+    getRoleLabel,
+    getGenderLabel,
+    getPresentationTypeLabel,
+    getAttendanceLabel
+} from '../../../lib/conferenceConstants';
 import AdminModal from '../../../components/admin/AdminModal';
+import AcceptanceLetterModal from '../../../components/admin/AcceptanceLetterModal';
 import {
     Calendar,
     Search,
@@ -94,6 +102,7 @@ export default function AdminConferencePage() {
     const [selectedReg, setSelectedReg] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
+    const [isLetterModalOpen, setIsLetterModalOpen] = useState(false);
 
     // Status update state
     const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
@@ -356,7 +365,10 @@ export default function AdminConferencePage() {
                 (reg.abstract_number && reg.abstract_number.toLowerCase().includes(searchQuery.toLowerCase())) ||
                 (reg.email && reg.email.toLowerCase().includes(searchQuery.toLowerCase())) ||
                 (reg.affiliation && reg.affiliation.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                (reg.presentation_title && reg.presentation_title.toLowerCase().includes(searchQuery.toLowerCase()));
+                (reg.citizenship && reg.citizenship.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                (reg.co_authors && reg.co_authors.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                (reg.presentation_title && reg.presentation_title.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                getTopicLabel(reg.thematic_topic).toLowerCase().includes(searchQuery.toLowerCase());
 
             const matchesTopic = filterTopic === 'All' ||
                 reg.thematic_topic === filterTopic ||
@@ -463,13 +475,13 @@ export default function AdminConferencePage() {
                 r.email || '',
                 r.citizenship || '',
                 r.affiliation || '',
-                r.titulation || '',
-                r.gender || '',
-                r.is_attending_in_person ? 'In-Person (პირისპირ)' : 'Online (ონლაინ)',
+                getTitulationLabel(r.titulation),
+                getGenderLabel(r.gender),
+                getAttendanceLabel(r.is_attending_in_person),
                 r.presentation_title || '',
                 r.co_authors || '',
-                r.presentation_type || '',
-                r.participation_role || '',
+                getPresentationTypeLabel(r.presentation_type),
+                getRoleLabel(r.participation_role),
                 getTopicLabel(r.thematic_topic),
                 r.abstract_file_geo_url || '',
                 r.abstract_file_eng_url || ''
@@ -858,10 +870,20 @@ export default function AdminConferencePage() {
                                             </td>
 
                                             <td className="py-3.5 px-4 whitespace-nowrap">
-                                                <div className="font-bold text-gray-900">
-                                                    {reg.first_name} {reg.last_name}
+                                                <div className="flex items-center gap-1.5">
+                                                    <span className="font-bold text-gray-900">{reg.first_name} {reg.last_name}</span>
+                                                    {reg.titulation && (
+                                                        <span className="text-[10px] font-semibold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-100" title="სამეცნიერო ხარისხი">
+                                                            {getTitulationLabel(reg.titulation)}
+                                                        </span>
+                                                    )}
                                                 </div>
-                                                <div className="text-[11px] text-gray-400 font-mono">{reg.email}</div>
+                                                <div className="text-[11px] text-gray-500 font-mono flex items-center gap-1.5 mt-0.5">
+                                                    <span>{reg.email}</span>
+                                                    {reg.citizenship && (
+                                                        <span className="text-gray-400 text-[10px] font-sans">({reg.citizenship})</span>
+                                                    )}
+                                                </div>
                                             </td>
 
                                             <td className="py-3.5 px-4 text-gray-700 max-w-[170px] truncate" title={reg.affiliation}>
@@ -882,13 +904,29 @@ export default function AdminConferencePage() {
                                             </td>
 
                                             <td className="py-3.5 px-4 whitespace-nowrap">
-                                                <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                                                    reg.is_attending_in_person
-                                                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                                        : 'bg-blue-50 text-blue-700 border border-blue-200'
-                                                }`}>
-                                                    {reg.is_attending_in_person ? 'In-Person' : 'Online'}
-                                                </span>
+                                                <div className="flex flex-col gap-1 items-start">
+                                                    <div className="flex items-center gap-1">
+                                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                                            reg.presentation_type === 'oral'
+                                                                ? 'bg-purple-50 text-[#60318e] border border-purple-200'
+                                                                : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                                                        }`}>
+                                                            {reg.presentation_type === 'oral' ? 'ზეპირი' : 'სასტენდო'}
+                                                        </span>
+                                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                                            reg.is_attending_in_person
+                                                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                                                : 'bg-blue-50 text-blue-700 border border-blue-200'
+                                                        }`}>
+                                                            {reg.is_attending_in_person ? 'პირისპირ' : 'ონლაინ'}
+                                                        </span>
+                                                    </div>
+                                                    {reg.participation_role && (
+                                                        <span className="text-[10px] text-gray-500 font-medium">
+                                                            {getRoleLabel(reg.participation_role)}
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </td>
 
                                             {/* Status Badge */}
@@ -995,7 +1033,7 @@ export default function AdminConferencePage() {
                 title={selectedReg ? `${selectedReg.first_name} ${selectedReg.last_name}` : 'განაცხადის დეტალები'}
                 subtitle={selectedReg ? `თეზისის ნომერი: ${selectedReg.abstract_number}` : ''}
                 icon={FileText}
-                maxWidth="max-w-2xl"
+                maxWidth="max-w-3xl"
                 footer={
                     <div className="flex items-center justify-between w-full">
                         {selectedReg && (
@@ -1013,6 +1051,14 @@ export default function AdminConferencePage() {
                                 >
                                     <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
                                     <span>Excel</span>
+                                </button>
+                                <button
+                                    onClick={() => setIsLetterModalOpen(true)}
+                                    className="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-[#60318e] text-[#60318e] hover:text-white border border-purple-200 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                                    title="მიღების / მოწვევის ოფიციალური წერილი"
+                                >
+                                    <Printer className="w-3.5 h-3.5" />
+                                    <span>მიღების წერილი</span>
                                 </button>
                             </div>
                         )}
@@ -1252,70 +1298,123 @@ export default function AdminConferencePage() {
                             </div>
                         </div>
 
-                        {/* Personal Information */}
-                        <div>
-                            <h4 className="font-bold text-gray-900 border-b border-gray-100 pb-1.5 mb-2.5 uppercase tracking-wider text-[11px]">
-                                პირადი და საკონტაქტო მონაცემები
-                            </h4>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                <div>
+                        {/* Personal Information (All Form Fields) */}
+                        <div className="p-4 rounded-2xl bg-white border border-purple-100 shadow-xs space-y-3">
+                            <div className="flex items-center gap-2 border-b border-purple-50 pb-2">
+                                <User className="w-4 h-4 text-[#60318e]" />
+                                <h4 className="font-bold text-gray-900 uppercase tracking-wider text-[11px]">
+                                    პირადი და საკონტაქტო მონაცემები
+                                </h4>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                                     <span className="text-gray-400 block text-[10px] uppercase font-bold">სახელი, გვარი</span>
-                                    <span className="font-bold text-gray-900">{selectedReg.first_name} {selectedReg.last_name}</span>
+                                    <span className="font-bold text-gray-900 text-sm block mt-0.5">
+                                        {selectedReg.first_name} {selectedReg.last_name}
+                                    </span>
                                 </div>
-                                <div>
+                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                                     <span className="text-gray-400 block text-[10px] uppercase font-bold">ელ-ფოსტა</span>
-                                    <span className="font-mono text-gray-800 break-all">{selectedReg.email}</span>
+                                    <a
+                                        href={`mailto:${selectedReg.email}`}
+                                        className="font-mono text-purple-700 hover:text-purple-900 font-bold text-xs block mt-0.5 truncate hover:underline"
+                                        title={selectedReg.email}
+                                    >
+                                        {selectedReg.email}
+                                    </a>
                                 </div>
-                                <div>
+                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                                    <span className="text-gray-400 block text-[10px] uppercase font-bold">სამეცნიერო ხარისხი / წოდება</span>
+                                    <span className="font-bold text-gray-800 text-xs block mt-0.5">
+                                        {getTitulationLabel(selectedReg.titulation)}
+                                    </span>
+                                </div>
+                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                                    <span className="text-gray-400 block text-[10px] uppercase font-bold">სქესი / გენდერი</span>
+                                    <span className="font-bold text-gray-800 text-xs block mt-0.5">
+                                        {getGenderLabel(selectedReg.gender)}
+                                    </span>
+                                </div>
+                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                                     <span className="text-gray-400 block text-[10px] uppercase font-bold">დაბადების თარიღი</span>
-                                    <span className="font-medium text-gray-700">{selectedReg.birth_date || '—'}</span>
+                                    <span className="font-bold text-gray-800 text-xs block mt-0.5">
+                                        {selectedReg.birth_date || '—'}
+                                    </span>
                                 </div>
-                                <div>
+                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                                     <span className="text-gray-400 block text-[10px] uppercase font-bold">მოქალაქეობა</span>
-                                    <span className="font-medium text-gray-700">{selectedReg.citizenship || '—'}</span>
+                                    <span className="font-bold text-gray-800 text-xs block mt-0.5">
+                                        {selectedReg.citizenship || '—'}
+                                    </span>
                                 </div>
-                                <div>
-                                    <span className="text-gray-400 block text-[10px] uppercase font-bold">ორგანიზაცია</span>
-                                    <span className="font-medium text-gray-700">{selectedReg.affiliation || '—'}</span>
-                                </div>
-                                <div>
-                                    <span className="text-gray-400 block text-[10px] uppercase font-bold">ხარისხი / წოდება</span>
-                                    <span className="font-medium text-gray-700">{selectedReg.titulation || '—'}</span>
+                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 sm:col-span-2 md:col-span-3">
+                                    <span className="text-gray-400 block text-[10px] uppercase font-bold">სამუშაო ადგილი / ორგანიზაცია / უნივერსიტეტი (აფილაცია)</span>
+                                    <span className="font-bold text-gray-900 text-xs block mt-0.5">
+                                        {selectedReg.affiliation || '—'}
+                                    </span>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Presentation Details */}
-                        <div>
-                            <h4 className="font-bold text-gray-900 border-b border-gray-100 pb-1.5 mb-2.5 uppercase tracking-wider text-[11px]">
-                                მოხსენების მონაცემები
-                            </h4>
-                            <div className="space-y-2.5">
-                                <div>
-                                    <span className="text-gray-400 block text-[10px] uppercase font-bold">მოხსენების სათაური</span>
-                                    <p className="font-bold text-gray-900 leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-                                        {selectedReg.presentation_title}
-                                    </p>
+                        {/* Presentation & Participation Details (All Form Fields) */}
+                        <div className="p-4 rounded-2xl bg-white border border-purple-100 shadow-xs space-y-3">
+                            <div className="flex items-center gap-2 border-b border-purple-50 pb-2">
+                                <FileText className="w-4 h-4 text-[#60318e]" />
+                                <h4 className="font-bold text-gray-900 uppercase tracking-wider text-[11px]">
+                                    საკონფერენციო მოხსენებისა და მონაწილეობის მონაცემები
+                                </h4>
+                            </div>
+
+                            <div>
+                                <span className="text-gray-400 block text-[10px] uppercase font-bold mb-1">მოხსენების სათაური</span>
+                                <p className="font-bold text-gray-900 text-xs sm:text-sm leading-relaxed bg-purple-50/40 p-3 rounded-xl border border-purple-100">
+                                    {selectedReg.presentation_title || '—'}
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 sm:col-span-2 md:col-span-3">
+                                    <span className="text-gray-400 block text-[10px] uppercase font-bold">თემატური სექცია</span>
+                                    <span className="font-bold text-[#60318e] block mt-0.5 text-xs">
+                                        {getTopicLabel(selectedReg.thematic_topic)}
+                                    </span>
                                 </div>
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div>
-                                        <span className="text-gray-400 block text-[10px] uppercase font-bold">თანაავტორები</span>
-                                        <span className="font-medium text-gray-700">{selectedReg.co_authors || '—'}</span>
-                                    </div>
-                                    <div>
-                                        <span className="text-gray-400 block text-[10px] uppercase font-bold">მოხსენების ტიპი</span>
-                                        <span className="font-medium text-gray-700 capitalize">{selectedReg.presentation_type || '—'}</span>
-                                    </div>
+                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                                    <span className="text-gray-400 block text-[10px] uppercase font-bold">მოხსენების ფორმატი / ტიპი</span>
+                                    <span className="font-bold text-slate-800 text-xs block mt-0.5">
+                                        {getPresentationTypeLabel(selectedReg.presentation_type)}
+                                    </span>
                                 </div>
-                                <div>
-                                    <span className="text-gray-400 block text-[10px] uppercase font-bold">თემატური მიმართულება</span>
-                                    <span className="font-semibold text-[#60318e] block mt-0.5">{getTopicLabel(selectedReg.thematic_topic)}</span>
+                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                                    <span className="text-gray-400 block text-[10px] uppercase font-bold">კონფერენციაზე დასწრება</span>
+                                    <span className="font-bold text-slate-800 text-xs block mt-0.5">
+                                        {getAttendanceLabel(selectedReg.is_attending_in_person)}
+                                    </span>
+                                </div>
+                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                                    <span className="text-gray-400 block text-[10px] uppercase font-bold">მონაწილეობის როლი</span>
+                                    <span className="font-bold text-slate-800 text-xs block mt-0.5">
+                                        {getRoleLabel(selectedReg.participation_role)}
+                                    </span>
+                                </div>
+                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 sm:col-span-2 md:col-span-3">
+                                    <span className="text-gray-400 block text-[10px] uppercase font-bold">თანაავტორები</span>
+                                    <span className="font-medium text-gray-800 text-xs block mt-0.5">
+                                        {selectedReg.co_authors ? selectedReg.co_authors : 'თანაავტორები არ არის მითითებული'}
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 )}
             </AdminModal>
+
+            {/* Acceptance Letter Modal */}
+            <AcceptanceLetterModal
+                isOpen={isLetterModalOpen}
+                onClose={() => setIsLetterModalOpen(false)}
+                registration={selectedReg}
+            />
 
             {/* Delete Confirmation Modal */}
             <AdminModal
