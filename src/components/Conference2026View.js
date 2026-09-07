@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '../context/LanguageContext';
 import { getSupabaseBrowserClient } from '../lib/supabase/client';
 import { recordAuditLog } from '../lib/auditLogger';
@@ -76,6 +77,7 @@ export default function Conference2026View() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [uploadStatus, setUploadStatus] = useState('');
     const [submitError, setSubmitError] = useState('');
+    const [fieldErrors, setFieldErrors] = useState({});
     const [successData, setSuccessData] = useState(null);
     const [copied, setCopied] = useState(false);
 
@@ -177,29 +179,72 @@ export default function Conference2026View() {
             ...prev,
             [name]: type === 'checkbox' ? checked : value
         }));
+        if (fieldErrors[name]) {
+            setFieldErrors(prev => {
+                const next = { ...prev };
+                delete next[name];
+                return next;
+            });
+        }
     };
+
+    const handleGeoFileChange = (file) => {
+        setGeoFile(file);
+        if (fieldErrors.files) {
+            setFieldErrors(prev => {
+                const next = { ...prev };
+                delete next.files;
+                return next;
+            });
+        }
+    };
+
+    const handleEngFileChange = (file) => {
+        setEngFile(file);
+        if (fieldErrors.files) {
+            setFieldErrors(prev => {
+                const next = { ...prev };
+                delete next.files;
+                return next;
+            });
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitError('');
 
-        const missingFields = [];
-        if (!formData.firstName?.trim()) missingFields.push(isEn ? "First Name" : "სახელი");
-        if (!formData.lastName?.trim()) missingFields.push(isEn ? "Last Name" : "გვარი");
-        if (!formData.birthDate) missingFields.push(isEn ? "Date of Birth" : "დაბადების თარიღი");
-        if (!formData.citizenship?.trim()) missingFields.push(isEn ? "Citizenship" : "მოქალაქეობა");
-        if (!formData.affiliation?.trim()) missingFields.push(isEn ? "Affiliation" : "აფილაცია");
-        if (!formData.email?.trim()) missingFields.push(isEn ? "Email" : "ელ-ფოსტა");
-        if (!formData.presentationTitle?.trim()) missingFields.push(isEn ? "Presentation Title" : "მოხსენების სათაური");
-        if (!geoFile && !engFile) missingFields.push(isEn ? "Abstract file (.doc, .docx)" : "აბსტრაქტის ფაილი (.doc, .docx)");
+        const errors = {};
+        if (!formData.firstName?.trim()) errors.firstName = isEn ? "First name is required" : "სახელი სავალდებულოა";
+        if (!formData.lastName?.trim()) errors.lastName = isEn ? "Last name is required" : "გვარი სავალდებულოა";
+        if (!formData.birthDate) errors.birthDate = isEn ? "Date of birth is required" : "დაბადების თარიღი სავალდებულოა";
+        if (!formData.citizenship?.trim()) errors.citizenship = isEn ? "Citizenship is required" : "მოქალაქეობა სავალდებულოა";
+        if (!formData.affiliation?.trim()) errors.affiliation = isEn ? "Affiliation is required" : "აფილაცია სავალდებულოა";
+        if (!formData.email?.trim()) errors.email = isEn ? "Email address is required" : "ელ-ფოსტა სავალდებულოა";
+        if (!formData.presentationTitle?.trim()) errors.presentationTitle = isEn ? "Presentation title is required" : "მოხსენების სათაური სავალდებულოა";
+        if (!geoFile && !engFile) errors.files = isEn ? "Please upload at least one abstract file (.doc, .docx)" : "გთხოვთ ატვირთოთ მინიმუმ ერთი თეზისი (.doc, .docx)";
 
-        if (missingFields.length > 0) {
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
             setSubmitError(
                 isEn 
-                    ? `Please complete the following required fields: ${missingFields.join(', ')}.`
-                    : `გთხოვთ შეავსოთ შემდეგი სავალდებულო ველები: ${missingFields.join(', ')}.`
+                    ? "Please complete the highlighted required fields."
+                    : "გთხოვთ შეავსოთ მონიშნული სავალდებულო ველები."
             );
+            
+            // Auto-scroll to the first invalid field
+            const firstKey = Object.keys(errors)[0];
+            const targetEl = document.querySelector(`[name="${firstKey}"]`) || document.getElementById(`field-${firstKey}`);
+            if (targetEl) {
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (targetEl.focus) {
+                    try { targetEl.focus(); } catch (_) {}
+                }
+            }
             return;
         }
+
+        setFieldErrors({});
 
         setIsSubmitting(true);
         setUploadStatus(isEn ? 'Preparing registration...' : 'რეგისტრაციის მომზადება...');
@@ -444,7 +489,13 @@ export default function Conference2026View() {
 
                             {/* Rustaveli Foundation Grant Support Callout with Official Logo */}
                             <div className="flex items-center gap-3 bg-white/10 text-purple-100 p-2.5 rounded-2xl border border-white/15 backdrop-blur-md max-w-2xl text-left text-xs">
-                                <img src="/conference-2026/rustaveli-logo.png" alt="Shota Rustaveli National Science Foundation" className="w-8 h-8 object-contain rounded-lg bg-white p-0.5 flex-shrink-0 shadow-xs" />
+                                <Image 
+                                    src="/conference-2026/rustaveli-logo.png" 
+                                    alt="Shota Rustaveli National Science Foundation" 
+                                    width={32} 
+                                    height={32} 
+                                    className="w-8 h-8 object-contain rounded-lg bg-white p-0.5 flex-shrink-0 shadow-xs" 
+                                />
                                 <span className="text-[11px] sm:text-xs font-medium leading-tight text-white/95">
                                     {t.grantNotice}
                                 </span>
@@ -482,9 +533,12 @@ export default function Conference2026View() {
 
                             <div className="relative group transition-all duration-500 hover:scale-105">
                                 {/* The Clean Cropped 70th Emblem with the Institute Building inside the '0' */}
-                                <img
+                                <Image
                                     src="/conference-2026/anniversary-70.png"
                                     alt="70th Anniversary Emblem - R. Agladze Institute of Inorganic Chemistry and Electrochemistry"
+                                    width={520}
+                                    height={260}
+                                    priority
                                     className="w-full max-w-[420px] sm:max-w-[480px] lg:max-w-[520px] h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.45)] select-none"
                                 />
                             </div>
@@ -518,11 +572,17 @@ export default function Conference2026View() {
                     {/* Scrollable Tabs */}
                     <div
                         ref={tabsContainerRef}
+                        role="tablist"
+                        aria-label={isEn ? "Conference Sections" : "კონფერენციის სექციები"}
                         className="flex space-x-1 sm:space-x-2 py-1 overflow-x-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden scroll-smooth flex-grow"
                     >
                         {Object.entries(t.tabs).map(([key, label]) => (
                             <button
                                 key={key}
+                                role="tab"
+                                aria-selected={activeTab === key}
+                                aria-controls={`tabpanel-${key}`}
+                                id={`tab-${key}`}
                                 onClick={() => setActiveTab(key)}
                                 className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 flex items-center gap-1.5 cursor-pointer whitespace-nowrap flex-shrink-0 ${
                                     activeTab === key
@@ -559,7 +619,7 @@ export default function Conference2026View() {
 
                 {/* 1. REGISTRATION FORM TAB (Compact, Sleek & Fully Visible) */}
                 {activeTab === 'registration' && (
-                    <div className="bg-white rounded-3xl shadow-sm border border-purple-100 p-4 sm:p-6 md:p-7 animate-fade-in">
+                    <div id="tabpanel-registration" role="tabpanel" aria-labelledby="tab-registration" className="bg-white rounded-3xl shadow-sm border border-purple-100 p-4 sm:p-6 md:p-7 animate-fade-in">
                         <div className="text-center max-w-xl mx-auto mb-4">
                             <h2 className="text-base sm:text-lg font-black text-[#60318e] mb-1">
                                 {t.form.heading}
@@ -593,8 +653,13 @@ export default function Conference2026View() {
                                             value={formData.firstName}
                                             onChange={handleInputChange}
                                             placeholder={isEn ? "First name" : "სახელი"}
-                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
+                                            className={`w-full px-3.5 py-2.5 rounded-xl border text-xs focus:outline-none focus:ring-2 bg-white min-h-[44px] transition-all ${
+                                                fieldErrors.firstName ? 'border-red-400 focus:ring-red-200 bg-red-50/20' : 'border-slate-200 focus:ring-[#AD49E1]'
+                                            }`}
                                         />
+                                        {fieldErrors.firstName && (
+                                            <span className="text-[10px] text-red-500 font-semibold mt-1 block">{fieldErrors.firstName}</span>
+                                        )}
                                     </div>
 
                                     <div>
@@ -608,8 +673,13 @@ export default function Conference2026View() {
                                             value={formData.lastName}
                                             onChange={handleInputChange}
                                             placeholder={isEn ? "Last name" : "გვარი"}
-                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
+                                            className={`w-full px-3.5 py-2.5 rounded-xl border text-xs focus:outline-none focus:ring-2 bg-white min-h-[44px] transition-all ${
+                                                fieldErrors.lastName ? 'border-red-400 focus:ring-red-200 bg-red-50/20' : 'border-slate-200 focus:ring-[#AD49E1]'
+                                            }`}
                                         />
+                                        {fieldErrors.lastName && (
+                                            <span className="text-[10px] text-red-500 font-semibold mt-1 block">{fieldErrors.lastName}</span>
+                                        )}
                                     </div>
                                 </div>
 
@@ -624,8 +694,13 @@ export default function Conference2026View() {
                                             required
                                             value={formData.birthDate}
                                             onChange={handleInputChange}
-                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
+                                            className={`w-full px-3.5 py-2.5 rounded-xl border text-xs focus:outline-none focus:ring-2 bg-white min-h-[44px] transition-all ${
+                                                fieldErrors.birthDate ? 'border-red-400 focus:ring-red-200 bg-red-50/20' : 'border-slate-200 focus:ring-[#AD49E1]'
+                                            }`}
                                         />
+                                        {fieldErrors.birthDate && (
+                                            <span className="text-[10px] text-red-500 font-semibold mt-1 block">{fieldErrors.birthDate}</span>
+                                        )}
                                     </div>
 
                                     <div className="flex flex-col">
@@ -639,8 +714,13 @@ export default function Conference2026View() {
                                             value={formData.citizenship}
                                             onChange={handleInputChange}
                                             placeholder={isEn ? "e.g., Georgia" : "მაგ: საქართველო"}
-                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
+                                            className={`w-full px-3.5 py-2.5 rounded-xl border text-xs focus:outline-none focus:ring-2 bg-white min-h-[44px] transition-all ${
+                                                fieldErrors.citizenship ? 'border-red-400 focus:ring-red-200 bg-red-50/20' : 'border-slate-200 focus:ring-[#AD49E1]'
+                                            }`}
                                         />
+                                        {fieldErrors.citizenship && (
+                                            <span className="text-[10px] text-red-500 font-semibold mt-1 block">{fieldErrors.citizenship}</span>
+                                        )}
                                     </div>
 
                                     <div className="flex flex-col">
@@ -654,8 +734,13 @@ export default function Conference2026View() {
                                             value={formData.affiliation}
                                             onChange={handleInputChange}
                                             placeholder={isEn ? "Institute / University / Organization, Country" : "ინსტიტუტი / უნივერსიტეტი / ორგანიზაცია, ქვეყანა"}
-                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
+                                            className={`w-full px-3.5 py-2.5 rounded-xl border text-xs focus:outline-none focus:ring-2 bg-white min-h-[44px] transition-all ${
+                                                fieldErrors.affiliation ? 'border-red-400 focus:ring-red-200 bg-red-50/20' : 'border-slate-200 focus:ring-[#AD49E1]'
+                                            }`}
                                         />
+                                        {fieldErrors.affiliation && (
+                                            <span className="text-[10px] text-red-500 font-semibold mt-1 block">{fieldErrors.affiliation}</span>
+                                        )}
                                     </div>
                                 </div>
 
@@ -697,7 +782,7 @@ export default function Conference2026View() {
                                         <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.gender}
                                         </label>
-                                        <div className="flex items-center gap-3 bg-white px-3 py-1.5 rounded-xl border border-slate-200 h-[36px]">
+                                        <div className="flex items-center gap-3 bg-white px-3 py-1.5 rounded-xl border border-slate-200 min-h-[44px]">
                                             <label className="inline-flex items-center gap-1.5 cursor-pointer font-semibold text-slate-700 text-xs">
                                                 <input
                                                     type="radio"
@@ -734,15 +819,20 @@ export default function Conference2026View() {
                                             value={formData.email}
                                             onChange={handleInputChange}
                                             placeholder="researcher@domain.com"
-                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
+                                            className={`w-full px-3.5 py-2.5 rounded-xl border text-xs focus:outline-none focus:ring-2 bg-white min-h-[44px] transition-all ${
+                                                fieldErrors.email ? 'border-red-400 focus:ring-red-200 bg-red-50/20' : 'border-slate-200 focus:ring-[#AD49E1]'
+                                            }`}
                                         />
+                                        {fieldErrors.email && (
+                                            <span className="text-[10px] text-red-500 font-semibold mt-1 block">{fieldErrors.email}</span>
+                                        )}
                                     </div>
 
                                     <div>
                                         <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.attendance}
                                         </label>
-                                        <div className="flex items-center gap-3 bg-white px-3 py-1.5 rounded-xl border border-slate-200 h-[36px]">
+                                        <div className="flex items-center gap-3 bg-white px-3 py-1.5 rounded-xl border border-slate-200 min-h-[44px]">
                                             <label className="inline-flex items-center gap-1.5 cursor-pointer font-semibold text-slate-700 text-xs">
                                                 <input
                                                     type="radio"
@@ -786,8 +876,13 @@ export default function Conference2026View() {
                                         value={formData.presentationTitle}
                                         onChange={handleInputChange}
                                         placeholder={isEn ? "Title of your presentation..." : "თქვენი სამეცნიერო მოხსენების სათაური..."}
-                                        className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white resize-none"
+                                        className={`w-full px-3.5 py-2.5 rounded-xl border text-xs focus:outline-none focus:ring-2 bg-white min-h-[64px] resize-none transition-all ${
+                                            fieldErrors.presentationTitle ? 'border-red-400 focus:ring-red-200 bg-red-50/20' : 'border-slate-200 focus:ring-[#AD49E1]'
+                                        }`}
                                     />
+                                    {fieldErrors.presentationTitle && (
+                                        <span className="text-[10px] text-red-500 font-semibold mt-1 block">{fieldErrors.presentationTitle}</span>
+                                    )}
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -801,7 +896,7 @@ export default function Conference2026View() {
                                             value={formData.coAuthors}
                                             onChange={handleInputChange}
                                             placeholder={isEn ? "e.g., G. Tatishvili, T. Lezhava" : "მაგ: გ. ტატიშვილი, თ. ლეჟავა"}
-                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white h-[36px]"
+                                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white min-h-[44px]"
                                         />
                                     </div>
 
@@ -813,7 +908,7 @@ export default function Conference2026View() {
                                             name="thematicTopic"
                                             value={formData.thematicTopic}
                                             onChange={handleInputChange}
-                                            className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-1.5 focus:ring-[#AD49E1] bg-white font-medium truncate h-[36px]"
+                                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#AD49E1] bg-white font-medium truncate min-h-[44px]"
                                         >
                                             {thematicTopics.map(top => (
                                                 <option key={top.id} value={top.titleKa}>
@@ -830,13 +925,13 @@ export default function Conference2026View() {
                                         <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.presType}
                                         </label>
-                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 bg-white p-1.5 rounded-xl border border-purple-100">
+                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 bg-white p-1.5 rounded-xl border border-purple-100 min-h-[44px] items-center">
                                             {presentationTypeOptions.map(opt => {
                                                 const isChecked = formData.presentationType === opt.value;
                                                 return (
                                                     <label
                                                         key={opt.value}
-                                                        className={`inline-flex items-center gap-1 cursor-pointer text-xs py-1 px-1.5 rounded-lg border transition-all ${
+                                                        className={`inline-flex items-center gap-1 cursor-pointer text-xs py-1.5 px-1.5 rounded-lg border transition-all ${
                                                             isChecked
                                                                 ? 'bg-purple-100/90 border-[#60318e] text-[#60318e] font-extrabold'
                                                                 : 'bg-white border-transparent text-slate-700 hover:bg-purple-50/50'
@@ -861,8 +956,8 @@ export default function Conference2026View() {
                                         <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.role}
                                         </label>
-                                        <div className="flex flex-wrap gap-2 bg-white p-1.5 rounded-xl border border-purple-100 h-[36px] items-center px-2.5">
-                                            <label className={`inline-flex items-center gap-1.5 cursor-pointer text-xs py-0.5 px-2 rounded-md transition-all ${
+                                        <div className="flex flex-wrap gap-2 bg-white p-1.5 rounded-xl border border-purple-100 min-h-[44px] items-center px-2.5">
+                                            <label className={`inline-flex items-center gap-1.5 cursor-pointer text-xs py-1 px-2 rounded-md transition-all ${
                                                 formData.rolePresentingAuthor
                                                     ? 'bg-purple-100/90 text-[#60318e] font-bold'
                                                     : 'text-slate-700 hover:text-[#60318e]'
@@ -876,7 +971,7 @@ export default function Conference2026View() {
                                                 />
                                                 <span>{t.form.presentingAuthor}</span>
                                             </label>
-                                            <label className={`inline-flex items-center gap-1.5 cursor-pointer text-xs py-0.5 px-2 rounded-md transition-all ${
+                                            <label className={`inline-flex items-center gap-1.5 cursor-pointer text-xs py-1 px-2 rounded-md transition-all ${
                                                 formData.roleCoAuthor
                                                     ? 'bg-purple-100/90 text-[#60318e] font-bold'
                                                     : 'text-slate-700 hover:text-[#60318e]'
@@ -896,7 +991,9 @@ export default function Conference2026View() {
                             </div>
 
                             {/* 3. File Uploads (Strictly .doc, .docx - NO PDF) */}
-                            <div className="space-y-3 bg-purple-50/20 p-3 sm:p-4 rounded-2xl border border-purple-100/70">
+                            <div id="field-files" className={`space-y-3 p-3 sm:p-4 rounded-2xl border transition-all ${
+                                fieldErrors.files ? 'bg-red-50/30 border-red-300 ring-2 ring-red-200' : 'bg-purple-50/20 border-purple-100/70'
+                            }`}>
                                 <div className="pb-1 border-b border-purple-100">
                                     <h3 className="text-xs font-bold text-[#60318e] flex items-center gap-2">
                                         <UploadCloud className="w-3.5 h-3.5 text-[#AD49E1]" />
@@ -907,6 +1004,12 @@ export default function Conference2026View() {
                                             ? "Must be submitted in two languages: Georgian and English" 
                                             : "წარმოდგენილი უნდა იყოს ორ ენაზე: ქართულად და ინგლისურად"}
                                     </p>
+                                    {fieldErrors.files && (
+                                        <p className="text-xs text-red-600 font-bold mt-1 flex items-center gap-1">
+                                            <AlertCircle className="w-3.5 h-3.5" />
+                                            <span>{fieldErrors.files}</span>
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -921,7 +1024,7 @@ export default function Conference2026View() {
                                             <input
                                                 type="file"
                                                 accept=".doc,.docx"
-                                                onChange={(e) => setGeoFile(e.target.files?.[0] || null)}
+                                                onChange={(e) => handleGeoFileChange(e.target.files?.[0] || null)}
                                                 className="text-[11px] text-slate-600 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-[#60318e] file:text-white cursor-pointer"
                                             />
                                         ) : (
@@ -932,7 +1035,7 @@ export default function Conference2026View() {
                                                 </span>
                                                 <button
                                                     type="button"
-                                                    onClick={() => setGeoFile(null)}
+                                                    onClick={() => handleGeoFileChange(null)}
                                                     className="p-1 rounded-md text-red-500 hover:bg-red-50 transition-colors ml-1 flex-shrink-0 cursor-pointer"
                                                     title={isEn ? "Remove file" : "ფაილის წაშლა"}
                                                 >
@@ -953,7 +1056,7 @@ export default function Conference2026View() {
                                             <input
                                                 type="file"
                                                 accept=".doc,.docx"
-                                                onChange={(e) => setEngFile(e.target.files?.[0] || null)}
+                                                onChange={(e) => handleEngFileChange(e.target.files?.[0] || null)}
                                                 className="text-[11px] text-slate-600 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-[#60318e] file:text-white cursor-pointer"
                                             />
                                         ) : (
@@ -964,7 +1067,7 @@ export default function Conference2026View() {
                                                 </span>
                                                 <button
                                                     type="button"
-                                                    onClick={() => setEngFile(null)}
+                                                    onClick={() => handleEngFileChange(null)}
                                                     className="p-1 rounded-md text-red-500 hover:bg-red-50 transition-colors ml-1 flex-shrink-0 cursor-pointer"
                                                     title={isEn ? "Remove file" : "ფაილის წაშლა"}
                                                 >
@@ -1623,8 +1726,8 @@ export default function Conference2026View() {
                         rel="noopener noreferrer"
                         className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md hover:border-purple-300 transition-all group cursor-pointer"
                     >
-                        <div className="w-14 h-14 rounded-xl bg-blue-50/50 p-1.5 flex items-center justify-center mb-2">
-                            <img src="/conference-2026/tsu-logo.png" alt="TSU" className="w-full h-full object-contain" />
+                        <div className="w-14 h-14 rounded-xl bg-blue-50/50 p-1.5 flex items-center justify-center mb-2 relative">
+                            <Image src="/conference-2026/tsu-logo.png" alt="TSU" width={56} height={56} className="w-full h-full object-contain" />
                         </div>
                         <span className="text-[10px] font-extrabold text-blue-700 uppercase">TSU • თსუ</span>
                         <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2 group-hover:text-[#60318e] transition-colors">
@@ -1637,8 +1740,8 @@ export default function Conference2026View() {
                         href="/"
                         className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md hover:border-purple-300 transition-all group cursor-pointer"
                     >
-                        <div className="w-14 h-14 rounded-xl bg-purple-50 p-1.5 flex items-center justify-center mb-2">
-                            <img src="/logo.png" alt="IICE" className="w-full h-full object-contain" />
+                        <div className="w-14 h-14 rounded-xl bg-purple-50 p-1.5 flex items-center justify-center mb-2 relative">
+                            <Image src="/logo.png" alt="IICE" width={56} height={56} className="w-full h-full object-contain" />
                         </div>
                         <span className="text-[10px] font-extrabold text-[#60318e] uppercase">IICE • 70 წელი</span>
                         <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2 group-hover:text-[#60318e] transition-colors">
@@ -1653,8 +1756,8 @@ export default function Conference2026View() {
                         rel="noopener noreferrer"
                         className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md hover:border-purple-300 transition-all group cursor-pointer"
                     >
-                        <div className="w-14 h-14 rounded-xl bg-emerald-50/50 p-1.5 flex items-center justify-center mb-2">
-                            <img src="/conference-2026/tesau-logo.png" alt="TESAU" className="w-full h-full object-contain" />
+                        <div className="w-14 h-14 rounded-xl bg-emerald-50/50 p-1.5 flex items-center justify-center mb-2 relative">
+                            <Image src="/conference-2026/tesau-logo.png" alt="TESAU" width={56} height={56} className="w-full h-full object-contain" />
                         </div>
                         <span className="text-[10px] font-extrabold text-emerald-700 uppercase">TESAU • თესაუ</span>
                         <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2 group-hover:text-[#60318e] transition-colors">
@@ -1669,8 +1772,8 @@ export default function Conference2026View() {
                         rel="noopener noreferrer"
                         className="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md hover:border-amber-400 transition-all group cursor-pointer"
                     >
-                        <div className="w-14 h-14 rounded-xl bg-amber-50/50 p-1 flex items-center justify-center mb-2">
-                            <img src="/conference-2026/rustaveli-logo.png" alt="SRNSFG" className="w-full h-full object-contain" />
+                        <div className="w-14 h-14 rounded-xl bg-amber-50/50 p-1 flex items-center justify-center mb-2 relative">
+                            <Image src="/conference-2026/rustaveli-logo.png" alt="SRNSFG" width={56} height={56} className="w-full h-full object-contain" />
                         </div>
                         <span className="text-[10px] font-extrabold text-amber-800 uppercase">გრანტი ISE-26-286</span>
                         <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2 group-hover:text-[#60318e] transition-colors">

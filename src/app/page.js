@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '../context/LanguageContext';
 import en from '../locales/en';
 import ka from '../locales/ka';
@@ -120,9 +121,12 @@ export default function Home() {
           {/* Image Content - 70th Anniversary Visual */}
           <ScrollReveal direction="right" duration={800} delay={200} className="w-full md:w-5/12 relative hidden md:flex items-center justify-center">
             <div className="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-white/95 via-purple-50/70 to-indigo-50/90 shadow-xl border-2 border-purple-200/80 backdrop-blur-sm transform hover:scale-105 transition-all duration-500 flex flex-col items-center justify-center group">
-              <img 
+              <Image 
                 src="/conference-2026/anniversary-70.png" 
                 alt="70th Anniversary Rafael Agladze Institute" 
+                width={320}
+                height={180}
+                priority
                 className="w-full max-w-[320px] h-auto object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105" 
               />
               <div className="mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-100/90 border border-purple-200 text-[#60318e] text-xs font-black tracking-wider uppercase shadow-xs">

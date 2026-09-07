@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '../context/LanguageContext';
 import en from '../locales/en';
 import ka from '../locales/ka';
@@ -85,24 +86,27 @@ export default function Header() {
     return (
         <header className={`sticky top-0 z-50 transition-all duration-300 ${
             isScrolled 
-                ? 'bg-[#2e0d42]/95 backdrop-blur-md shadow-lg py-0.5' 
-                : 'bg-[#2e0d42] py-1.5 shadow-md'
+                ? 'bg-[#2e0d42]/95 backdrop-blur-md shadow-lg py-0 sm:py-0.5' 
+                : 'bg-[#2e0d42] py-1 shadow-md'
         }`}>
             <div className="max-w-[96%] xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-4 xl:px-8">
-                {/* 
-                   ზომის აწევა/დაწევა (სიმაღლე): h-20 
-                   თუ გსურთ უფრო ვიწრო, ჩაწერეთ h-16, თუ განიერი - h-24  
-                */}
-                <div className="flex justify-between items-center h-22 gap-2 lg:gap-4 xl:gap-8 w-full">
+                <div className={`flex justify-between items-center ${isScrolled ? 'h-16 xl:h-18' : 'h-20 xl:h-22'} gap-2 lg:gap-4 xl:gap-8 w-full transition-all duration-300`}>
                     {/* Logo Segment */}
                     <div className="flex-shrink-0 flex items-center animate-fade-in-up">
                         <Link href="/" className="flex items-center gap-2 xl:gap-3 group">
                             {/* Site Logo */}
-                            <div className="w-10 h-10 xl:w-14 xl:h-14 flex items-center justify-center transition-all duration-300 transform group-hover:scale-105 flex-shrink-0">
-                                <img src="/logo.png" alt="IICE Logo" className="w-full h-full object-contain" />
+                            <div className={`${isScrolled ? 'w-9 h-9 xl:w-11 xl:h-11' : 'w-10 h-10 xl:w-14 xl:h-14'} flex items-center justify-center transition-all duration-300 transform group-hover:scale-105 flex-shrink-0 relative`}>
+                                <Image
+                                    src="/logo.png"
+                                    alt="IICE Logo"
+                                    width={56}
+                                    height={56}
+                                    priority
+                                    className="w-full h-full object-contain"
+                                />
                             </div>
                             <div className="hidden sm:block lg:hidden xl:block transition-all duration-300 transform group-hover:translate-x-1">
-                                <h1 className="font-bold text-xs lg:text-[10px] xl:text-sm text-white leading-tight" style={{ color: '#ffffff' }}>
+                                <h1 className={`font-bold transition-all duration-300 ${isScrolled ? 'text-xs xl:text-xs' : 'text-xs lg:text-[10px] xl:text-sm'} text-white leading-tight`} style={{ color: '#ffffff' }}>
                                     {language === 'ka' ? 'თსუ რ. აგლაძის სახელობის' : 'TSU R. Agladze Institute'}
                                 </h1>
                                 <p className="text-[9px] lg:text-[8px] xl:text-[10px] text-white truncate whitespace-normal" style={{ color: '#ffffff', opacity: 0.9 }}>
@@ -122,7 +126,7 @@ export default function Header() {
                         <div className="relative group">
                             <button className={getDropdownBtnClass(isAboutActive)}>
                                 {t.nav.about}
-                                <svg className="ml-1 h-3 w-3 xl:h-4 xl:w-4 transition-transform group-hover:rotate-180 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg aria-hidden="true" className="ml-1 h-3 w-3 xl:h-4 xl:w-4 transition-transform group-hover:rotate-180 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
@@ -148,7 +152,7 @@ export default function Header() {
                         <div className="relative group">
                             <button className={getDropdownBtnClass(isEventsActive)}>
                                 {t.nav.events}
-                                <svg className="ml-1 h-3 w-3 xl:h-4 xl:w-4 transition-transform group-hover:rotate-180 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg aria-hidden="true" className="ml-1 h-3 w-3 xl:h-4 xl:w-4 transition-transform group-hover:rotate-180 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
@@ -212,7 +216,7 @@ export default function Header() {
                             aria-expanded={isMobileMenuOpen}
                             className="lg:hidden text-white hover:text-purple-200 p-2 rounded-xl bg-white/10 hover:bg-white/15 transition-all interactive-tap"
                         >
-                            <Menu className="w-5 h-5" />
+                            <Menu className="w-5 h-5" aria-hidden="true" />
                         </button>
                     </div>
                 </div>
@@ -238,8 +242,8 @@ export default function Header() {
                         {/* Drawer Header */}
                         <div className="flex items-center justify-between px-5 py-4 bg-[#2e0d42] text-white border-b border-purple-900/30">
                             <div className="flex items-center gap-2.5">
-                                <div className="w-8 h-8 rounded-lg bg-white/10 p-1 flex items-center justify-center">
-                                    <img src="/logo.png" alt="IICE" className="w-full h-full object-contain" />
+                                <div className="w-8 h-8 rounded-lg bg-white/10 p-1 flex items-center justify-center relative">
+                                    <Image src="/logo.png" alt="IICE" width={32} height={32} className="w-full h-full object-contain" />
                                 </div>
                                 <div>
                                     <h2 className="font-bold text-xs text-white">{language === 'ka' ? 'თსუ რ. აგლაძის ინსტიტუტი' : 'TSU IICE'}</h2>
@@ -251,7 +255,7 @@ export default function Header() {
                                 aria-label="მენიუს დახურვა"
                                 className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors interactive-tap"
                             >
-                                <X className="w-4 h-4" />
+                                <X className="w-4 h-4" aria-hidden="true" />
                             </button>
                         </div>
 
@@ -274,7 +278,7 @@ export default function Header() {
                                     className="w-full flex items-center justify-between px-3.5 py-2.5 font-medium text-slate-800 hover:bg-purple-50/50 transition-colors text-left"
                                 >
                                     <span className={isAboutActive ? 'text-[#60318e] font-bold' : ''}>{t.nav.about}</span>
-                                    <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${openMobileDropdowns['about'] ? 'rotate-180 text-[#7A1CAC]' : ''}`} />
+                                    <ChevronDown aria-hidden="true" className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${openMobileDropdowns['about'] ? 'rotate-180 text-[#7A1CAC]' : ''}`} />
                                 </button>
                                 {openMobileDropdowns['about'] && (
                                     <div className="bg-slate-50/70 px-3 py-2 space-y-1 border-t border-slate-100">
@@ -332,7 +336,7 @@ export default function Header() {
                                     className="w-full flex items-center justify-between px-3.5 py-2.5 font-medium text-slate-800 hover:bg-purple-50/50 transition-colors text-left"
                                 >
                                     <span className={isEventsActive ? 'text-[#60318e] font-bold' : ''}>{t.nav.events}</span>
-                                    <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${openMobileDropdowns['events'] ? 'rotate-180 text-[#7A1CAC]' : ''}`} />
+                                    <ChevronDown aria-hidden="true" className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${openMobileDropdowns['events'] ? 'rotate-180 text-[#7A1CAC]' : ''}`} />
                                 </button>
                                 {openMobileDropdowns['events'] && (
                                     <div className="bg-slate-50/70 px-3 py-2 space-y-1 border-t border-slate-100">

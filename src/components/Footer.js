@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '../context/LanguageContext';
 import en from '../locales/en';
@@ -31,8 +32,8 @@ export default function Footer() {
                     {/* Brand & Info Section (Spans 4 columns) */}
                     <ScrollReveal className="lg:col-span-4">
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center transition-all duration-300 transform hover:scale-105 flex-shrink-0 bg-white/10 rounded-2xl p-2 border border-white/20">
-                                <img src="/logo.png" alt="IICE Logo" className="w-full h-full object-contain" />
+                            <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center transition-all duration-300 transform hover:scale-105 flex-shrink-0 bg-white/10 rounded-2xl p-2 border border-white/20 relative">
+                                <Image src="/logo.png" alt="IICE Logo" width={64} height={64} className="w-full h-full object-contain" />
                             </div>
                             <div>
                                 <h2 className="text-lg md:text-xl font-black tracking-tight text-white mb-0.5 md:mb-1">{t.footer.tsuAgladze}</h2>
@@ -78,25 +79,25 @@ export default function Footer() {
                         <ul className="space-y-3 md:space-y-4 mb-6 md:mb-8 text-white font-bold">
                             <li className="flex items-start gap-3 md:gap-4 text-sm md:text-base hover:text-white/80 group">
                                 <span className="w-7 h-7 md:w-8 md:h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white">
-                                    <MapPin className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#EBD3F8]" />
+                                    <MapPin aria-hidden="true" className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#EBD3F8]" />
                                 </span>
                                 <div className="pt-0.5 md:pt-1 leading-relaxed whitespace-pre-line text-xs md:text-sm">{t.footer.address}</div>
                             </li>
                             <li className="flex items-center gap-3 md:gap-4 text-sm md:text-base hover:text-white/80 group">
                                 <span className="w-7 h-7 md:w-8 md:h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white">
-                                    <Phone className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#EBD3F8]" />
+                                    <Phone aria-hidden="true" className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#EBD3F8]" />
                                 </span>
                                 <a href="tel:+995322123456" className="hover:text-white transition-colors font-bold text-xs md:text-sm">+(995 32) 212 34 56</a>
                             </li>
                             <li className="flex items-center gap-3 md:gap-4 text-sm md:text-base hover:text-white/80 group">
                                 <span className="w-7 h-7 md:w-8 md:h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white">
-                                    <Mail className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#EBD3F8]" />
+                                    <Mail aria-hidden="true" className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#EBD3F8]" />
                                 </span>
                                 <a href="mailto:info@iice.ge" className="hover:text-white transition-colors font-bold text-xs md:text-sm">info@iice.ge</a>
                             </li>
                             <li className="flex items-center gap-3 md:gap-4 text-sm md:text-base hover:text-white/80 group">
                                 <span className="w-7 h-7 md:w-8 md:h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white">
-                                    <Lock className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#EBD3F8]" />
+                                    <Lock aria-hidden="true" className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#EBD3F8]" />
                                 </span>
                                 <a href="https://iice.ge/webmail" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors font-bold text-xs md:text-sm">
                                     {language === 'en' ? 'Staff Webmail' : 'კორპორატიული ფოსტა'}
