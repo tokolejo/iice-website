@@ -97,10 +97,10 @@ export default function Conference2026View() {
             : "კონფერენციაში მონაწილეობა უფასოა",
         tabs: {
             registration: isEn ? "Registration & Submission" : "რეგისტრაცია და აბსტრაქტი",
+            downloads: isEn ? "Download Center" : "ფაილების ჩამოტვირთვა",
             topics: isEn ? "Thematic Topics (6)" : "თემატური სექციები (6)",
             schedule: isEn ? "Program Schedule" : "კონფერენციის პროგრამა",
             organizers: isEn ? "Organizers & Partners" : "ორგანიზატორები და პარტნიორები",
-            downloads: isEn ? "Download Center" : "ფაილების ჩამოტვირთვა",
             venues: isEn ? "Venues & Transport" : "ლოკაციები და ტრანსპორტი",
         },
         form: {
@@ -1100,25 +1100,29 @@ export default function Conference2026View() {
                                 {
                                     name: "Abstract-template GEO.doc",
                                     desc: isEn ? "Abstract Template (Georgian language)" : "აბსტრაქტის შაბლონი (ქართულ ენაზე)",
-                                    fileUrl: "/conference-2026/Abstract-template GEO.doc",
+                                    size: "186 KB",
+                                    fileUrl: "/conference-2026/Abstract-template%20GEO.doc",
                                     badge: "GEO DOC",
                                 },
                                 {
                                     name: "Abstract-template_ENG.docx",
                                     desc: isEn ? "Abstract Template (English language)" : "აბსტრაქტის შაბლონი (ინგლისურ ენაზე)",
+                                    size: "311 KB",
                                     fileUrl: "/conference-2026/Abstract-template_ENG.docx",
                                     badge: "ENG DOCX",
                                 },
                                 {
                                     name: "Preliminary Programm 2026 GEO.docx",
                                     desc: isEn ? "Preliminary Program Schedule (GEO)" : "წინასწარი პროგრამა 2026 (ქართულად)",
-                                    fileUrl: "/conference-2026/Preliminary Programm 2026 GEO.docx",
+                                    size: "28 KB",
+                                    fileUrl: "/conference-2026/Preliminary%20Programm%202026%20GEO.docx",
                                     badge: "PROGRAM GEO",
                                 },
                                 {
                                     name: "Preliminary Programm 2026 ENG.docx",
                                     desc: isEn ? "Preliminary Program Schedule (ENG)" : "წინასწარი პროგრამა 2026 (ინგლისურად)",
-                                    fileUrl: "/conference-2026/Preliminary Programm 2026 ENG.docx",
+                                    size: "27 KB",
+                                    fileUrl: "/conference-2026/Preliminary%20Programm%202026%20ENG.docx",
                                     badge: "PROGRAM ENG",
                                 },
                             ].map((doc, idx) => (
@@ -1128,7 +1132,9 @@ export default function Conference2026View() {
                                             <span className="text-[10px] font-mono font-bold bg-[#60318e] text-white px-2 py-0.5 rounded">
                                                 {doc.badge}
                                             </span>
-                                            <FileText className="w-5 h-5 text-[#AD49E1]" />
+                                            <span className="text-[10px] text-gray-500 font-semibold bg-white px-2 py-0.5 rounded-md border border-purple-100">
+                                                {doc.size}
+                                            </span>
                                         </div>
                                         <h4 className="font-extrabold text-xs sm:text-sm text-gray-900 mb-1">
                                             {doc.name}

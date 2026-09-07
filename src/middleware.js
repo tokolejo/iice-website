@@ -14,7 +14,7 @@ export async function middleware(request) {
   const cleanPathname = pathname.replace(/\/+$/, '') || '/';
 
   // Only handle admin routes or auth callback for auth checks
-  const isAdminRoute = cleanPathname.startsWith('/admin');
+  const isAdminRoute = cleanPathname === '/admin' || cleanPathname.startsWith('/admin/');
   const isLoginPage = cleanPathname === '/admin/login';
   const isPendingPage = cleanPathname === '/admin/pending';
 

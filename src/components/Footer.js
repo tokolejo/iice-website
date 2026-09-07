@@ -13,7 +13,8 @@ export default function Footer() {
     const { language } = useLanguage();
     const t = language === 'en' ? en : ka;
 
-    if (pathname?.startsWith('/admin')) {
+    const isAdmin = pathname === '/admin' || pathname?.startsWith('/admin/');
+    if (isAdmin) {
         return null;
     }
 

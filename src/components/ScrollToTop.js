@@ -7,10 +7,6 @@ export default function ScrollToTop() {
     const pathname = usePathname();
     const [isVisible, setIsVisible] = useState(false);
 
-    if (pathname?.startsWith('/admin')) {
-        return null;
-    }
-
     // Show button when page is scrolled down
     const toggleVisibility = () => {
         if (window.pageYOffset > 300) {
@@ -34,6 +30,11 @@ export default function ScrollToTop() {
             window.removeEventListener('scroll', toggleVisibility);
         };
     }, []);
+
+    const isAdmin = pathname === '/admin' || pathname?.startsWith('/admin/');
+    if (isAdmin) {
+        return null;
+    }
 
     return (
         <>

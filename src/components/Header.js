@@ -77,7 +77,8 @@ export default function Header() {
         }));
     };
 
-    if (pathname?.startsWith('/admin')) {
+    const isAdmin = pathname === '/admin' || pathname?.startsWith('/admin/');
+    if (isAdmin) {
         return null;
     }
 
