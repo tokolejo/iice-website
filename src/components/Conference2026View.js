@@ -410,40 +410,28 @@ export default function Conference2026View() {
             <meta name="description" content={isEn ? "3rd International Scientific Conference 2026 dedicated to the 70th anniversary of IICE." : "მე-3 საერთაშორისო სამეცნიერო კონფერენცია 2026 ეძღვნება რაფიელ აგლაძის ინსტიტუტის 70 წლისთავს."} />
 
             {/* Custom Modern Conference Header Banner - Institute Theme & Bilingual */}
-            <div className="relative animated-gradient-bg overflow-hidden border-b border-purple-100/80 py-10 sm:py-12 lg:py-14 px-4 sm:px-6 lg:px-10 shadow-xs">
+            <div className="relative animated-gradient-bg overflow-hidden border-b border-purple-100/80 pt-3 sm:pt-4 lg:pt-5 pb-6 sm:pb-8 lg:pb-8 px-4 sm:px-6 lg:px-10 shadow-xs">
                 {/* Ambient soft background blobs like main page */}
                 <div className="absolute -top-20 -right-20 w-72 h-72 bg-purple-200/40 rounded-full blur-3xl animate-float-blob-slow pointer-events-none"></div>
                 <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-indigo-200/30 rounded-full blur-3xl animate-float-blob-reverse pointer-events-none"></div>
                 <div className="absolute top-1/2 left-1/3 w-40 h-40 bg-pink-100/20 rounded-full blur-3xl animate-float-blob pointer-events-none"></div>
 
                 <div className="max-w-[1600px] mx-auto relative z-10">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
                         
                         {/* Left Column: Academic & Conference Identity (7 cols) */}
-                        <div className="lg:col-span-7 space-y-4 text-center lg:text-left">
+                        <div className="lg:col-span-7 space-y-3 text-center lg:text-left">
                             
                             {/* Top Badge */}
-                            <div className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide bg-purple-100/80 text-[#60318e] border border-purple-200/60 shadow-xs">
+                            <div className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-black tracking-wide bg-purple-100 text-[#60318e] border border-purple-200 shadow-xs">
                                 <span>{t.badge}</span>
                             </div>
 
-                            {/* Main Heading */}
-                            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[30px] font-extrabold text-[#60318e] leading-snug tracking-tight drop-shadow-xs">
-                                {isEn ? (
-                                    <>
-                                        <span className="block text-[#60318e]">3rd International Scientific Conference:</span>
-                                        <span className="block text-[#7A1CAC] mt-1.5">
-                                            “Modern Trends in Chemistry, Chemical Technologies and Related Fields: Green Energy Prospects, Ecological Sustainability, Food Safety. 2026”
-                                        </span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <span className="block text-[#60318e]">მე-3 საერთაშორისო სამეცნიერო კონფერენცია:</span>
-                                        <span className="block text-[#7A1CAC] mt-1.5">
-                                            „თანამედროვე ტენდენციები ქიმიაში, ქიმიურ ტექნოლოგიებსა და მომიჯნავე დარგებში: მწვანე ენერგეტიკის პერსპექტივები, ეკოლოგიური მდგრადობა, სურსათის უვნებელობა. 2026“
-                                        </span>
-                                    </>
-                                )}
+                            {/* Main Heading - Matched exactly to homepage announcement card */}
+                            <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-black text-slate-900 leading-snug tracking-tight">
+                                {isEn
+                                    ? '3rd International Scientific Conference: “Modern Trends in Chemistry, Chemical Technologies and Related Fields: Green Energy Prospects, Ecological Sustainability, Food Safety. 2026”'
+                                    : 'მე-3 საერთაშორისო სამეცნიერო კონფერენცია: „თანამედროვე ტენდენციები ქიმიაში, ქიმიურ ტექნოლოგიებსა და მომიჯნავე დარგებში: მწვანე ენერგეტიკის პერსპექტივები, ეკოლოგიური მდგრადობა, სურსათის უვნებელობა. 2026“'}
                             </h1>
 
                             {/* Key Thematic Focus Badges (Green Energy, Eco, Chem Tech, Food Safety) */}
