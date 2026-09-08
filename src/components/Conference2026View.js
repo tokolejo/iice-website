@@ -911,15 +911,15 @@ export default function Conference2026View() {
                                         <label className="block font-bold text-slate-700 text-xs mb-1">
                                             {t.form.presType}
                                         </label>
-                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 bg-white p-1.5 rounded-xl border border-purple-100 min-h-[44px] items-center">
+                                        <div className="flex flex-wrap gap-1.5 bg-white p-1.5 rounded-xl border border-purple-100 min-h-[44px] items-center">
                                             {presentationTypeOptions.map(opt => {
                                                 const isChecked = formData.presentationType === opt.value;
                                                 return (
                                                     <label
                                                         key={opt.value}
-                                                        className={`inline-flex items-center gap-1 cursor-pointer text-xs py-1.5 px-1.5 rounded-lg border transition-all ${
+                                                        className={`inline-flex items-center gap-1.5 cursor-pointer text-xs py-1.5 px-2.5 rounded-lg border transition-all ${
                                                             isChecked
-                                                                ? 'bg-purple-100/90 border-[#60318e] text-[#60318e] font-extrabold'
+                                                                ? 'bg-purple-100/90 border-[#60318e] text-[#60318e] font-extrabold shadow-2xs'
                                                                 : 'bg-white border-transparent text-slate-700 hover:bg-purple-50/50'
                                                         }`}
                                                     >
@@ -931,7 +931,7 @@ export default function Conference2026View() {
                                                             onChange={handleInputChange}
                                                             className="text-[#60318e] focus:ring-[#AD49E1] h-3.5 w-3.5"
                                                         />
-                                                        <span className="truncate">{isEn ? opt.labelEn : opt.labelKa}</span>
+                                                        <span className="whitespace-nowrap">{isEn ? opt.labelEn : opt.labelKa}</span>
                                                     </label>
                                                 );
                                             })}
