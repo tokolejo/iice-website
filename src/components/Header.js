@@ -87,9 +87,9 @@ export default function Header() {
                 <div className="flex justify-between items-center h-16 xl:h-18 gap-2 lg:gap-4 xl:gap-8 w-full">
                     {/* Logo Segment */}
                     <div className="flex-shrink-0 flex items-center animate-fade-in-up">
-                        <Link href="/" className="flex items-center gap-2 xl:gap-3 group">
+                        <Link href="/" className="flex items-center gap-2 xl:gap-3">
                             {/* Site Logo */}
-                            <div className="w-10 h-10 xl:w-12 xl:h-12 flex items-center justify-center transform group-hover:scale-105 flex-shrink-0 relative">
+                            <div className="w-10 h-10 xl:w-12 xl:h-12 flex items-center justify-center flex-shrink-0 relative">
                                 <Image
                                     src="/logo.png"
                                     alt="IICE Logo"
@@ -99,7 +99,7 @@ export default function Header() {
                                     className="w-full h-full object-contain"
                                 />
                             </div>
-                            <div className="hidden sm:block lg:hidden xl:block transform group-hover:translate-x-1">
+                            <div className="hidden sm:block lg:hidden xl:block">
                                 <h1 className="font-bold text-xs xl:text-sm text-white leading-tight" style={{ color: '#ffffff' }}>
                                     {language === 'ka' ? 'თსუ რ. აგლაძის სახელობის' : 'TSU R. Agladze Institute'}
                                 </h1>
