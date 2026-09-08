@@ -26,7 +26,11 @@ import {
     Clock,
     Filter,
     CheckCircle2,
-    AlertCircle
+    AlertCircle,
+    ShieldAlert,
+    FileSpreadsheet,
+    Copy,
+    Check
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -48,13 +52,24 @@ const TIME_RANGES = [
 ];
 
 function getActionBadge(action = '') {
-    const act = action.toUpperCase();
+    const act = (action || '').toUpperCase();
+    const isCritical =
+        act.includes('DELETE') ||
+        act.includes('REMOVE') ||
+        act.includes('DROP') ||
+        act.includes('ROLE') ||
+        act.includes('RBAC') ||
+        act.includes('BATCH') ||
+        act.includes('PERMISSION') ||
+        act.includes('BACKUP');
+
     if (act.includes('SIGN_IN') || act.includes('LOGIN')) {
         return {
             bg: 'bg-emerald-50 text-emerald-700 border-emerald-200',
             dot: 'bg-emerald-500',
             label: 'ავტორიზაცია',
-            icon: LogIn
+            icon: LogIn,
+            isCritical: false
         };
     }
     if (act.includes('SIGN_OUT') || act.includes('LOGOUT')) {
@@ -62,7 +77,38 @@ function getActionBadge(action = '') {
             bg: 'bg-slate-100 text-slate-700 border-slate-300',
             dot: 'bg-slate-400',
             label: 'გამოსვლა',
-            icon: LogOut
+            icon: LogOut,
+            isCritical: false
+        };
+    }
+    if (act.includes('DELETE') || act.includes('REMOVE')) {
+        return {
+            bg: 'bg-rose-50 text-rose-700 border-rose-300',
+            dot: 'bg-rose-500',
+            label: 'წაშლა',
+            icon: AlertCircle,
+            isCritical: true,
+            criticalLabel: 'მონაცემთა წაშლა'
+        };
+    }
+    if (act.includes('ROLE') || act.includes('RBAC') || act.includes('ADMIN_INVITE')) {
+        return {
+            bg: 'bg-red-50 text-red-700 border-red-300',
+            dot: 'bg-red-600',
+            label: 'როლები / RBAC',
+            icon: ShieldAlert,
+            isCritical: true,
+            criticalLabel: 'სისტემური უფლებები'
+        };
+    }
+    if (act.includes('BATCH')) {
+        return {
+            bg: 'bg-amber-50 text-amber-800 border-amber-300',
+            dot: 'bg-amber-600',
+            label: 'ჯგუფური ცვლილება',
+            icon: RefreshCw,
+            isCritical: true,
+            criticalLabel: 'მასიური ოპერაცია'
         };
     }
     if (act.includes('REGISTER') || act.includes('CREATE') || act.includes('INSERT')) {
@@ -70,23 +116,17 @@ function getActionBadge(action = '') {
             bg: 'bg-blue-50 text-blue-700 border-blue-200',
             dot: 'bg-blue-500',
             label: 'შექმნა / დამატება',
-            icon: UserPlus
+            icon: UserPlus,
+            isCritical: false
         };
     }
-    if (act.includes('DELETE') || act.includes('REMOVE')) {
-        return {
-            bg: 'bg-rose-50 text-rose-700 border-rose-200',
-            dot: 'bg-rose-500',
-            label: 'წაშლა',
-            icon: AlertCircle
-        };
-    }
-    if (act.includes('UPDATE') || act.includes('EDIT') || act.includes('STATUS')) {
+    if (act.includes('UPDATE') || act.includes('EDIT') || act.includes('STATUS') || act.includes('NOTE')) {
         return {
             bg: 'bg-purple-50 text-[#60318e] border-purple-200',
             dot: 'bg-[#60318e]',
             label: 'ცვლილება',
-            icon: RefreshCw
+            icon: RefreshCw,
+            isCritical: false
         };
     }
     if (act.includes('BACKUP') || act.includes('EXPORT') || act.includes('ZIP')) {
@@ -94,15 +134,109 @@ function getActionBadge(action = '') {
             bg: 'bg-amber-50 text-amber-700 border-amber-200',
             dot: 'bg-amber-500',
             label: 'ექსპორტი / ბექაფი',
-            icon: Download
+            icon: Download,
+            isCritical: act.includes('BACKUP'),
+            criticalLabel: act.includes('BACKUP') ? 'მონაცემთა ბაზა' : undefined
         };
     }
     return {
         bg: 'bg-gray-50 text-gray-700 border-gray-200',
         dot: 'bg-gray-500',
         label: act,
-        icon: FileText
+        icon: FileText,
+        isCritical,
+        criticalLabel: isCritical ? 'მაღალი რისკი' : undefined
     };
+}
+
+function LogDiffViewer({ details }) {
+    if (!details || typeof details !== 'object' || Object.keys(details).length === 0) {
+        return (
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center text-xs text-gray-500">
+                დამატებითი დეტალები არ არის ჩაწერილი
+            </div>
+        );
+    }
+
+    // Check if details contain previous/next style diff
+    const hasDiff =
+        ('old' in details && 'new' in details) ||
+        ('before' in details && 'after' in details) ||
+        ('previous' in details && 'current' in details);
+
+    if (hasDiff) {
+        const beforeData = details.old || details.before || details.previous || {};
+        const afterData = details.new || details.after || details.current || {};
+        const allKeys = Array.from(new Set([...Object.keys(beforeData), ...Object.keys(afterData)]));
+
+        return (
+            <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs font-bold text-gray-700">
+                    <span>მონაცემთა შედარება (Before / After Diff):</span>
+                    <span className="text-[11px] text-gray-400 font-normal">შეცვლილი ველები</span>
+                </div>
+                <div className="border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-200 text-xs">
+                    <div className="grid grid-cols-12 bg-slate-100 font-bold p-2.5 text-gray-600">
+                        <div className="col-span-3">ველი (Field)</div>
+                        <div className="col-span-4 text-rose-700">მანამდე (Before)</div>
+                        <div className="col-span-5 text-emerald-700">შემდეგ (After)</div>
+                    </div>
+                    {allKeys.map(k => {
+                        const bVal = beforeData[k];
+                        const aVal = afterData[k];
+                        const isChanged = JSON.stringify(bVal) !== JSON.stringify(aVal);
+                        return (
+                            <div key={k} className={`grid grid-cols-12 p-2.5 gap-2 items-start transition-colors ${isChanged ? 'bg-amber-50/40' : 'bg-white'}`}>
+                                <div className="col-span-3 font-mono font-bold text-gray-700 break-all">{k}</div>
+                                <div className="col-span-4 font-mono text-[11px] text-rose-800 bg-rose-50/70 p-1.5 rounded-lg break-all line-through">
+                                    {bVal === undefined ? '—' : typeof bVal === 'object' ? JSON.stringify(bVal) : String(bVal)}
+                                </div>
+                                <div className="col-span-5 font-mono text-[11px] text-emerald-800 bg-emerald-50/70 p-1.5 rounded-lg break-all font-semibold">
+                                    {aVal === undefined ? '—' : typeof aVal === 'object' ? JSON.stringify(aVal) : String(aVal)}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    }
+
+    // Standard object key-value visual inspector
+    const entries = Object.entries(details).filter(([k]) => k !== 'ip' && k !== 'userAgent');
+
+    return (
+        <div className="space-y-3">
+            <span className="text-xs font-bold text-gray-700 block">
+                ცვლილებებისა და პარამეტრების სტრუქტურული ხედი:
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {entries.map(([key, val]) => {
+                    const isObj = typeof val === 'object' && val !== null;
+                    return (
+                        <div key={key} className="p-3 rounded-xl bg-slate-50 border border-slate-200/90 text-xs">
+                            <span className="text-[10px] font-mono font-bold text-purple-700 uppercase tracking-wider block mb-1">
+                                {key}
+                            </span>
+                            {isObj ? (
+                                <pre className="font-mono text-[10px] text-gray-800 bg-white p-2 rounded-lg border border-slate-100 overflow-x-auto max-h-32">
+                                    {JSON.stringify(val, null, 2)}
+                                </pre>
+                            ) : typeof val === 'boolean' ? (
+                                <span className={`inline-flex px-2 py-0.5 rounded text-[11px] font-bold ${val ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                                    {val ? 'TRUE' : 'FALSE'}
+                                </span>
+                            ) : (
+                                <span className="font-semibold text-gray-900 break-all text-xs">
+                                    {String(val)}
+                                </span>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
 }
 
 export default function AdminAuditPage() {
@@ -116,6 +250,8 @@ export default function AdminAuditPage() {
     const [selectedLog, setSelectedLog] = useState(null);
     const [pageSize, setPageSize] = useState(25);
     const [currentPage, setCurrentPage] = useState(1);
+    const [detailViewMode, setDetailViewMode] = useState('diff');
+    const [copiedJson, setCopiedJson] = useState(false);
 
     // Super admin access check
     useEffect(() => {
@@ -226,6 +362,7 @@ export default function AdminAuditPage() {
     useEffect(() => {
         loadAuditLogs();
         setCurrentPage(1);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedCategory]);
 
     // Time filtering
@@ -268,8 +405,11 @@ export default function AdminAuditPage() {
         let authCount = 0;
         let confCount = 0;
         let updateCount = 0;
+        let criticalCount = 0;
         logs.forEach(l => {
             const a = (l.action || '').toUpperCase();
+            const badge = getActionBadge(l.action);
+            if (badge.isCritical) criticalCount++;
             if (a.includes('SIGN_IN') || a.includes('LOGIN') || a.includes('AUTH')) authCount++;
             if (a.includes('CONFERENCE')) confCount++;
             if (a.includes('UPDATE') || a.includes('CREATE') || a.includes('DELETE')) updateCount++;
@@ -279,6 +419,7 @@ export default function AdminAuditPage() {
             auth: authCount,
             conf: confCount,
             updates: updateCount,
+            critical: criticalCount
         };
     }, [logs]);
 
@@ -306,6 +447,55 @@ export default function AdminAuditPage() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    };
+
+    // Excel (.xls) Export
+    const handleExportExcel = () => {
+        if (!filteredLogs.length) return;
+        const headers = ['ID', 'თარიღი/დრო', 'მომხმარებელი', 'ქმედება', 'კატეგორია / რისკი', 'ცხრილი', 'ჩანაწერის ID', 'IP მისამართი', 'დეტალები'];
+        const rows = filteredLogs.map(l => {
+            const badge = getActionBadge(l.action);
+            return [
+                l.id || '',
+                new Date(l.created_at).toLocaleString('ka-GE'),
+                l.user_email || 'anonymous',
+                l.action || '',
+                badge.isCritical ? '⚠️ კრიტიკული' : badge.label,
+                l.table_name || '',
+                l.record_id || '',
+                l.details?.ip || 'N/A',
+                JSON.stringify(l.details || {})
+            ];
+        });
+
+        const timestamp = new Date().toISOString().slice(0, 10);
+        let tableHtml = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+        tableHtml += '<head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Audit Logs</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head>';
+        tableHtml += '<body><table border="1">';
+        tableHtml += '<tr style="background-color: #60318e; color: #ffffff; font-weight: bold;">';
+        headers.forEach(h => { tableHtml += `<th>${h}</th>`; });
+        tableHtml += '</tr>';
+
+        rows.forEach(row => {
+            tableHtml += '<tr>';
+            row.forEach(cell => {
+                const safe = String(cell || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                tableHtml += `<td>${safe}</td>`;
+            });
+            tableHtml += '</tr>';
+        });
+
+        tableHtml += '</table></body></html>';
+
+        const blob = new Blob([tableHtml], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `iice_audit_logs_${timestamp}.xls`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
 
     // ── Access Gate ──────────────────────────────────────────────────────────
@@ -358,16 +548,27 @@ export default function AdminAuditPage() {
                     <button
                         onClick={handleExportCSV}
                         disabled={filteredLogs.length === 0}
-                        className="px-4 py-2 rounded-xl bg-[#60318e] hover:bg-[#4a2470] text-white text-xs font-bold shadow-sm transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                        className="px-3.5 py-2 rounded-xl border border-gray-200 bg-white hover:bg-purple-50 text-gray-700 text-xs font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                        title="CSV ექსპორტი"
                     >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>ექსპორტი (CSV)</span>
+                        <Download className="w-3.5 h-3.5 text-[#60318e]" />
+                        <span>CSV</span>
+                    </button>
+
+                    <button
+                        onClick={handleExportExcel}
+                        disabled={filteredLogs.length === 0}
+                        className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                        title="Excel ექსპორტი (.xls)"
+                    >
+                        <FileSpreadsheet className="w-3.5 h-3.5" />
+                        <span>Excel</span>
                     </button>
                 </div>
             </div>
 
             {/* Metrics Overview */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
                 <div className="bg-white rounded-2xl p-4 border border-purple-100 shadow-xs flex items-center justify-between">
                     <div>
                         <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">სულ მოვლენა</p>
@@ -405,6 +606,16 @@ export default function AdminAuditPage() {
                     </div>
                     <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
                         <FileText className="w-5 h-5" />
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-2xl p-4 border border-red-100 shadow-xs flex items-center justify-between col-span-2 sm:col-span-1">
+                    <div>
+                        <p className="text-[11px] font-bold uppercase tracking-wider text-red-500">კრიტიკული / რისკი</p>
+                        <p className="text-xl sm:text-2xl font-black text-red-600 mt-0.5">{stats.critical}</p>
+                    </div>
+                    <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-red-600">
+                        <ShieldAlert className="w-5 h-5" />
                     </div>
                 </div>
             </div>
@@ -529,10 +740,18 @@ export default function AdminAuditPage() {
                                             </td>
 
                                             <td className="py-3 px-4 whitespace-nowrap">
-                                                <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md border text-[11px] font-bold ${badge.bg}`}>
-                                                    <span className={`w-1.5 h-1.5 rounded-full ${badge.dot}`}></span>
-                                                    <span>{log.action}</span>
-                                                </span>
+                                                <div className="flex items-center gap-1.5 flex-wrap">
+                                                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md border text-[11px] font-bold ${badge.bg}`}>
+                                                        <span className={`w-1.5 h-1.5 rounded-full ${badge.dot}`}></span>
+                                                        <span>{log.action}</span>
+                                                    </span>
+                                                    {badge.isCritical && (
+                                                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-black bg-red-100 text-red-700 border border-red-200 shadow-2xs" title={badge.criticalLabel || 'კრიტიკული ოპერაცია'}>
+                                                            <ShieldAlert className="w-3 h-3 text-red-600" />
+                                                            <span>{badge.criticalLabel || 'კრიტიკული'}</span>
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </td>
 
                                             <td className="py-3 px-4 whitespace-nowrap font-mono text-[11px] text-gray-600">
@@ -627,7 +846,7 @@ export default function AdminAuditPage() {
                 title="ლოგის დეტალური ინსპექტირება"
                 subtitle={selectedLog ? `${selectedLog.action} • ${new Date(selectedLog.created_at).toLocaleString('ka-GE')}` : ''}
                 icon={FileText}
-                maxWidth="max-w-2xl"
+                maxWidth="max-w-3xl"
                 footer={
                     <div className="flex justify-end w-full">
                         <button
@@ -639,60 +858,121 @@ export default function AdminAuditPage() {
                     </div>
                 }
             >
-                {selectedLog && (
-                    <div className="space-y-4">
-                        {/* Summary Card */}
-                        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 grid grid-cols-2 gap-3 text-xs">
-                            <div>
-                                <span className="text-gray-400 font-bold uppercase text-[10px] block">მომხმარებელი</span>
-                                <span className="font-bold text-gray-900 break-all">{selectedLog.user_email || 'anonymous'}</span>
+                {selectedLog && (() => {
+                    const badge = getActionBadge(selectedLog.action);
+                    return (
+                        <div className="space-y-4">
+                            {/* High Risk / Critical Security Banner */}
+                            {badge.isCritical && (
+                                <div className="p-3.5 rounded-2xl bg-red-50/90 border border-red-200 flex items-start gap-3 shadow-xs">
+                                    <ShieldAlert className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                                    <div className="text-xs">
+                                        <span className="font-bold text-red-900 block uppercase tracking-wider text-[11px]">
+                                            უსაფრთხოების მაღალი პრიორიტეტის მოვლენა ({badge.criticalLabel || 'კრიტიკული მოქმედება'})
+                                        </span>
+                                        <p className="text-red-700 mt-0.5">
+                                            აღნიშნული ოპერაცია ახორციელებს მონაცემთა წაშლას, ადმინისტრატორთა უფლებების/როლების ცვლილებას, ბექაფის ჩამოტვირთვას ან მასიურ სისტემურ მოდიფიკაციას.
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Summary Card */}
+                            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 grid grid-cols-2 gap-3 text-xs">
+                                <div>
+                                    <span className="text-gray-400 font-bold uppercase text-[10px] block">მომხმარებელი</span>
+                                    <span className="font-bold text-gray-900 break-all">{selectedLog.user_email || 'anonymous'}</span>
+                                </div>
+                                <div>
+                                    <span className="text-gray-400 font-bold uppercase text-[10px] block">ქმედება</span>
+                                    <div className="flex items-center gap-1.5 mt-0.5">
+                                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-bold ${badge.bg}`}>
+                                            <span className={`w-1.5 h-1.5 rounded-full ${badge.dot}`}></span>
+                                            <span>{selectedLog.action}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span className="text-gray-400 font-bold uppercase text-[10px] block">ცხრილი (Table)</span>
+                                    <span className="font-mono text-gray-700">{selectedLog.table_name || '—'}</span>
+                                </div>
+                                <div>
+                                    <span className="text-gray-400 font-bold uppercase text-[10px] block">ჩანაწერის ID</span>
+                                    <span className="font-mono text-gray-700">{selectedLog.record_id || '—'}</span>
+                                </div>
+                                <div>
+                                    <span className="text-gray-400 font-bold uppercase text-[10px] block">IP მისამართი</span>
+                                    <span className="font-mono text-gray-700">{selectedLog.details?.ip || 'N/A'}</span>
+                                </div>
+                                <div>
+                                    <span className="text-gray-400 font-bold uppercase text-[10px] block">თარიღი & დრო</span>
+                                    <span className="text-gray-700">{new Date(selectedLog.created_at).toLocaleString('ka-GE')}</span>
+                                </div>
                             </div>
-                            <div>
-                                <span className="text-gray-400 font-bold uppercase text-[10px] block">ქმედება</span>
-                                <span className="font-mono font-bold text-[#60318e]">{selectedLog.action}</span>
-                            </div>
-                            <div>
-                                <span className="text-gray-400 font-bold uppercase text-[10px] block">ცხრილი (Table)</span>
-                                <span className="font-mono text-gray-700">{selectedLog.table_name || '—'}</span>
-                            </div>
-                            <div>
-                                <span className="text-gray-400 font-bold uppercase text-[10px] block">ჩანაწერის ID</span>
-                                <span className="font-mono text-gray-700">{selectedLog.record_id || '—'}</span>
-                            </div>
-                            <div>
-                                <span className="text-gray-400 font-bold uppercase text-[10px] block">IP მისამართი</span>
-                                <span className="font-mono text-gray-700">{selectedLog.details?.ip || 'N/A'}</span>
-                            </div>
-                            <div>
-                                <span className="text-gray-400 font-bold uppercase text-[10px] block">თარიღი & დრო</span>
-                                <span className="text-gray-700">{new Date(selectedLog.created_at).toLocaleString('ka-GE')}</span>
+
+                            {/* Client Environment Info */}
+                            {selectedLog.details?.userAgent && (
+                                <div className="p-3 rounded-xl bg-purple-50/60 border border-purple-100 text-xs">
+                                    <span className="text-purple-900 font-bold text-[10px] uppercase flex items-center gap-1 mb-1">
+                                        <Laptop className="w-3.5 h-3.5" />
+                                        კლიენტის მოწყობილობა & ბრაუზერი (User-Agent):
+                                    </span>
+                                    <p className="font-mono text-[11px] text-gray-600 break-all">
+                                        {selectedLog.details.userAgent}
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Visual Diff / Raw JSON Tabs & Inspector */}
+                            <div className="space-y-2.5 pt-1">
+                                <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                                    <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+                                        <button
+                                            type="button"
+                                            onClick={() => setDetailViewMode('diff')}
+                                            className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                                                detailViewMode === 'diff' ? 'bg-white text-[#60318e] shadow-xs' : 'text-gray-500 hover:text-gray-800'
+                                            }`}
+                                        >
+                                            ვიზუალური ხედი (Visual Diff)
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setDetailViewMode('raw')}
+                                            className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                                                detailViewMode === 'raw' ? 'bg-white text-[#60318e] shadow-xs' : 'text-gray-500 hover:text-gray-800'
+                                            }`}
+                                        >
+                                            ნედლი JSON (Raw JSON)
+                                        </button>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            navigator.clipboard?.writeText(JSON.stringify(selectedLog.details || {}, null, 2));
+                                            setCopiedJson(true);
+                                            setTimeout(() => setCopiedJson(false), 2000);
+                                        }}
+                                        className="px-2.5 py-1 rounded-lg border border-slate-200 bg-white hover:bg-purple-50 text-xs font-bold text-gray-700 flex items-center gap-1.5 transition-colors cursor-pointer"
+                                        title="JSON კოპირება"
+                                    >
+                                        {copiedJson ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-[#60318e]" />}
+                                        <span>{copiedJson ? 'კოპირებულია!' : 'JSON კოპირება'}</span>
+                                    </button>
+                                </div>
+
+                                {detailViewMode === 'diff' ? (
+                                    <LogDiffViewer details={selectedLog.details} />
+                                ) : (
+                                    <div className="bg-slate-900 text-slate-100 rounded-2xl p-4 font-mono text-xs overflow-x-auto max-h-72 border border-slate-800 leading-relaxed">
+                                        <pre>{JSON.stringify(selectedLog.details || {}, null, 2)}</pre>
+                                    </div>
+                                )}
                             </div>
                         </div>
-
-                        {/* Client Environment Info */}
-                        {selectedLog.details?.userAgent && (
-                            <div className="p-3 rounded-xl bg-purple-50/60 border border-purple-100 text-xs">
-                                <span className="text-purple-900 font-bold text-[10px] uppercase flex items-center gap-1 mb-1">
-                                    <Laptop className="w-3.5 h-3.5" />
-                                    კლიენტის მოწყობილობა & ბრაუზერი (User-Agent):
-                                </span>
-                                <p className="font-mono text-[11px] text-gray-600 break-all">
-                                    {selectedLog.details.userAgent}
-                                </p>
-                            </div>
-                        )}
-
-                        {/* Full JSON Payload */}
-                        <div>
-                            <span className="text-gray-700 font-bold text-xs uppercase tracking-wider block mb-1.5">
-                                მონაცემთა სრული პაკეტი (Payload JSON):
-                            </span>
-                            <div className="bg-slate-900 text-slate-100 rounded-2xl p-4 font-mono text-xs overflow-x-auto max-h-72 border border-slate-800 leading-relaxed">
-                                <pre>{JSON.stringify(selectedLog.details || {}, null, 2)}</pre>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                    );
+                })()}
             </AdminModal>
         </div>
     );

@@ -25,6 +25,9 @@ export function mapNewsRowToModel(row) {
             : (row.cover_image_url ? [row.cover_image_url] : ['/images/news-placeholder.jpg']),
         slug: row.slug,
         files: row.attached_files || [],
+        galleryCaptions: Array.isArray(row.attached_files)
+            ? (row.attached_files.find(f => f && f.type === 'gallery_captions')?.captions || {})
+            : {},
     };
 }
 

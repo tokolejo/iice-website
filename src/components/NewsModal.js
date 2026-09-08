@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { useLanguage } from '../context/LanguageContext';
+
+const subscribe = () => () => {};
 
 export default function NewsModal({ item, onClose }) {
     const { language } = useLanguage();
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const [showFullContent, setShowFullContent] = useState(false);
-    const [mounted, setMounted] = useState(false);
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const mounted = useSyncExternalStore(subscribe, () => true, () => false);
 
     // Only include valid images
     const images = item ? (item.images || [item.imageUrl]).filter(img => img && img !== '' && !img.includes('placeholder.jpg')) : [];
@@ -14,12 +17,15 @@ export default function NewsModal({ item, onClose }) {
 
     // Lock body scroll and listen for ESC / Arrow keys when modal is open
     useEffect(() => {
-        setMounted(true);
         document.body.style.overflow = 'hidden';
         
         const handleKeyDown = (e) => {
             if (e.key === 'Escape') {
-                onClose();
+                if (isLightboxOpen) {
+                    setIsLightboxOpen(false);
+                } else {
+                    onClose();
+                }
             } else if (e.key === 'ArrowRight' && images.length > 1) {
                 setActiveImageIndex((prev) => (prev + 1) % images.length);
             } else if (e.key === 'ArrowLeft' && images.length > 1) {
@@ -29,11 +35,10 @@ export default function NewsModal({ item, onClose }) {
         window.addEventListener('keydown', handleKeyDown);
 
         return () => {
-            setMounted(false);
             document.body.style.overflow = 'unset';
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [onClose, images.length]);
+    }, [onClose, images.length, isLightboxOpen]);
 
     if (!item) return null;
     if (!mounted) return null;
@@ -61,6 +66,12 @@ export default function NewsModal({ item, onClose }) {
     // Calculate if content is long enough to need "Read More"
     const isLongContent = content.length > 300;
     const displayContent = showFullContent || !isLongContent ? content : content.slice(0, 300) + '...';
+
+    const activeImageUrl = images[activeImageIndex];
+    const rawCaption = item?.galleryCaptions?.[activeImageUrl];
+    const activeCaption = typeof rawCaption === 'string'
+        ? rawCaption
+        : (rawCaption ? (language === 'en' ? (rawCaption.en || rawCaption.ka) : rawCaption.ka) : null);
 
     return createPortal(
         <div
@@ -95,16 +106,29 @@ export default function NewsModal({ item, onClose }) {
                                 <img
                                     key={activeImageIndex}
                                     src={images[activeImageIndex]?.startsWith('/') ? `${images[activeImageIndex]}` : images[activeImageIndex]}
-                                    alt={title}
-                                    className="w-full h-full object-contain relative z-10 drop-shadow-2xl animate-fade-in"
+                                    alt={activeCaption || title}
+                                    className="w-full h-full object-contain relative z-10 drop-shadow-2xl animate-fade-in cursor-zoom-in"
+                                    onClick={() => setIsLightboxOpen(true)}
                                 />
 
-                                {/* Floating Page Indicator Badge (Glassmorphic) */}
-                                {images.length > 1 && (
-                                    <div className="absolute top-4 left-4 z-20 px-3 py-1 text-[10px] font-black tracking-widest text-white bg-slate-900/60 backdrop-blur-md rounded-full border border-white/10 shadow-md select-none">
-                                        {activeImageIndex + 1} / {images.length}
-                                    </div>
-                                )}
+                                {/* Floating Page Indicator Badge & Lightbox Zoom Button */}
+                                <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
+                                    {images.length > 1 && (
+                                        <div className="px-3 py-1 text-[10px] font-black tracking-widest text-white bg-slate-900/60 backdrop-blur-md rounded-full border border-white/10 shadow-md select-none">
+                                            {activeImageIndex + 1} / {images.length}
+                                        </div>
+                                    )}
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsLightboxOpen(true)}
+                                        className="p-1.5 rounded-full bg-slate-900/60 hover:bg-slate-900 text-white/80 hover:text-white backdrop-blur-md border border-white/10 transition-all shadow-md"
+                                        title={language === 'en' ? 'Fullscreen Preview' : 'სრული ეკრანით ნახვა'}
+                                    >
+                                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                        </svg>
+                                    </button>
+                                </div>
 
                                 {/* Gallery Navigation Arrows */}
                                 {images.length > 1 && (
@@ -126,6 +150,13 @@ export default function NewsModal({ item, onClose }) {
                                             </svg>
                                         </button>
                                     </>
+                                )}
+
+                                {/* Image Caption Overlay */}
+                                {activeCaption && (
+                                    <div className="absolute bottom-3 left-4 right-4 z-20 mx-auto max-w-xl text-center px-4 py-1.5 rounded-xl bg-slate-950/75 backdrop-blur-md border border-white/10 text-white/90 text-xs font-medium shadow-lg animate-fade-in">
+                                        {activeCaption}
+                                    </div>
                                 )}
                             </div>
 
@@ -202,6 +233,75 @@ export default function NewsModal({ item, onClose }) {
                     </div>
                 </div>
             </div>
+
+            {/* Fullscreen Lightbox Overlay */}
+            {isLightboxOpen && (
+                <div
+                    className="fixed inset-0 z-[120] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-4 animate-fade-in select-none"
+                    onClick={() => setIsLightboxOpen(false)}
+                >
+                    {/* Top Controls Bar */}
+                    <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-30 pointer-events-auto">
+                        <div className="text-white/80 text-xs font-bold px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10">
+                            {activeImageIndex + 1} / {images.length}
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setIsLightboxOpen(false)}
+                            className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/10 transition-all hover:scale-105"
+                            title="Close"
+                        >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    {/* Big Image */}
+                    <div
+                        className="relative max-w-[95vw] max-h-[85vh] flex items-center justify-center"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <img
+                            src={images[activeImageIndex]?.startsWith('/') ? `${images[activeImageIndex]}` : images[activeImageIndex]}
+                            alt={activeCaption || title}
+                            className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl drop-shadow-2xl"
+                        />
+                    </div>
+
+                    {/* Caption in Lightbox */}
+                    {activeCaption && (
+                        <div
+                            className="mt-3 px-5 py-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/10 text-white text-xs md:text-sm font-medium max-w-2xl text-center pointer-events-auto"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {activeCaption}
+                        </div>
+                    )}
+
+                    {/* Lightbox Navigation Arrows */}
+                    {images.length > 1 && (
+                        <>
+                            <button
+                                onClick={handlePrevImage}
+                                className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/10 transition-all hover:scale-110"
+                            >
+                                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <button
+                                onClick={handleNextImage}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/10 transition-all hover:scale-110"
+                            >
+                                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </>
+                    )}
+                </div>
+            )}
         </div>,
         document.body
     );

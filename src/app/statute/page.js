@@ -10,8 +10,6 @@ export default function StatutePage() {
 
     return (
         <div className="bg-slate-50 min-h-screen">
-            <title>{isEn ? 'Statute | IICE' : 'დებულება | IICE'}</title>
-
             {/* Hero Section */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">

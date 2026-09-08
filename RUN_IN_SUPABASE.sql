@@ -3,9 +3,10 @@
 -- Direct Link: https://supabase.com/dashboard/project/mvmivfunlszjpcuvnmzw/sql
 -- ==============================================================================
 
--- 1. Add 'status' column to Conference 2026 registrations table
+-- 1. Add 'status' and 'reviewer_notes' columns to Conference 2026 registrations table
 ALTER TABLE public.conference_registrations_2026 
-ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'pending';
+ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'pending',
+ADD COLUMN IF NOT EXISTS reviewer_notes TEXT;
 
 -- 1.1 Ensure 'gallery_urls' column exists in public.news
 ALTER TABLE public.news 

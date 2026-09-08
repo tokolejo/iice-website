@@ -58,10 +58,6 @@ export default function FundamentalResearch() {
 
     return (
         <div className="bg-slate-50 min-h-screen pb-16">
-            <title>{isEn ? `${department?.nameEn} | TSU IICE` : `${department?.name} | TSU IICE`}</title>
-            <meta name="description" content={isEn ? `Discover the ${department?.nameEn} department at the R. Agladze Institute of Inorganic Chemistry and Electrochemistry.` : `გაეცანით ${department?.name}ს განყოფილებას რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტში.`} />
-            <link rel="canonical" href={`https://iice.ge/departments/${departmentId}`} />
-
             {/* Compact Header */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-center">

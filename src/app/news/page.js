@@ -88,12 +88,6 @@ function NewsContent() {
 
     return (
         <div className="bg-[#FAF9FF] min-h-screen pb-16">
-            <title>{language === 'en' ? 'News & Seminars | TSU IICE' : 'სიახლეები და სემინარები | TSU IICE'}</title>
-            <meta name="description" content={language === 'en' ? "Latest news, academic seminars, and announcements from the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის უახლესი ამბები, აკადემიური სემინარები და ანონსები."} />
-            <meta property="og:title" content={language === 'en' ? 'News & Seminars | TSU IICE' : 'სიახლეები და სემინარები | TSU IICE'} />
-            <meta property="og:description" content={language === 'en' ? "Latest news, academic seminars, and announcements from the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის უახლესი ამბები, აკადემიური სემინარები და ანონსები."} />
-            <link rel="canonical" href="https://iice.ge/news" />
-
             <div className="relative bg-gradient-to-b from-[#F8F6FF] to-[#FAF9FF] pt-4 pb-12 overflow-hidden border-b border-[#EBD3F8]/30">
                 <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#AD49E1]/5 to-transparent"></div>
                 <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#AD49E1]/5 rounded-full blur-3xl opacity-50"></div>

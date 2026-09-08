@@ -58,29 +58,54 @@ const googleSans = localFont({
 export const metadata = {
   metadataBase: new URL('https://iice.ge'),
   title: {
-    default: "TSU IICE | Institute of Inorganic Chemistry and Electrochemistry",
+    default: "თსუ რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | TSU IICE",
     template: "%s | TSU IICE"
   },
-  description: "Official Website for R. Agladze Institute of Inorganic Chemistry and Electrochemistry, TSU. Research, innovation, and education in chemistry since 1956.",
-  keywords: ["TSU", "IICE", "Chemistry", "Electrochemistry", "Inorganic Chemistry", "Georgia Science", "Tbilisi State University", "რაფიელ აგლაძე", "არაორგანული ქიმია", "ელექტროქიმია"],
-  authors: [{ name: "TSU IICE" }],
+  description: "თსუ რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის ოფიციალური ვებ-გვერდი. სამეცნიერო კვლევები, ინოვაციები და განათლება ქიმიის დარგში 1956 წლიდან.",
+  keywords: [
+    "თსუ",
+    "აგლაძის ინსტიტუტი",
+    "არაორგანული ქიმია",
+    "ელექტროქიმია",
+    "რაფიელ აგლაძე",
+    "ქიმიის ინსტიტუტი",
+    "საქართველოს მეცნიერება",
+    "თბილისის სახელმწიფო უნივერსიტეტი",
+    "TSU",
+    "IICE",
+    "TSU IICE",
+    "Institute of Inorganic Chemistry and Electrochemistry",
+    "Rafael Agladze Institute",
+    "Inorganic Chemistry Georgia",
+    "Electrochemistry Georgia"
+  ],
+  authors: [{ name: "TSU IICE", url: "https://iice.ge" }],
   creator: "Institute of Inorganic Chemistry and Electrochemistry",
-  publisher: "Tbilisi State University",
+  publisher: "Ivane Javakhishvili Tbilisi State University",
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: "TSU IICE | Institute of Inorganic Chemistry and Electrochemistry",
-    description: "Official Website for R. Agladze Institute of Inorganic Chemistry and Electrochemistry, TSU. Discover our research, history, and scientific departments.",
-    url: "https://iice.ge",
+    title: "თსუ რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | TSU IICE",
+    description: "თსუ რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის ოფიციალური ვებ-გვერდი. სამეცნიერო კვლევები, ინოვაციები და განათლება ქიმიის დარგში 1956 წლიდან.",
+    url: "https://iice.ge/",
     siteName: "TSU IICE",
     locale: "ka_GE",
     type: "website",
+    images: [
+      {
+        url: "/images/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "თსუ რაფიელ აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი - TSU IICE",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "TSU IICE | Institute of Inorganic Chemistry and Electrochemistry",
-    description: "Discover our research, history, and scientific departments at TSU IICE.",
+    title: "თსუ რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | TSU IICE",
+    description: "სამეცნიერო კვლევები, ინოვაციები და განათლება ქიმიის დარგში 1956 წლიდან.",
+    images: ["/images/og-image.png"],
   },
   robots: {
     index: true,
@@ -100,12 +125,75 @@ export const viewport = {
   initialScale: 1,
 };
 
+const jsonLdData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': ['EducationalOrganization', 'ResearchOrganization'],
+      '@id': 'https://iice.ge/#organization',
+      name: 'რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი',
+      alternateName: [
+        'TSU IICE',
+        'R. Agladze Institute of Inorganic Chemistry and Electrochemistry',
+        'თსუ არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი',
+        'აგლაძის ინსტიტუტი'
+      ],
+      url: 'https://iice.ge',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://iice.ge/logo.png',
+        width: 754,
+        height: 764
+      },
+      image: 'https://iice.ge/images/og-image.png',
+      parentOrganization: {
+        '@type': 'CollegeOrUniversity',
+        name: 'ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტი',
+        alternateName: 'Ivane Javakhishvili Tbilisi State University (TSU)',
+        url: 'https://tsu.ge'
+      },
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'ელიზბარ მინდელის ქუჩა #11',
+        addressLocality: 'თბილისი',
+        postalCode: '0186',
+        addressCountry: 'GE'
+      },
+      contactPoint: {
+        '@type': 'ContactPoint',
+        telephone: '+995-32-212-34-56',
+        contactType: 'general',
+        email: 'info@iice.ge',
+        availableLanguage: ['ka', 'en']
+      },
+      sameAs: [
+        'https://tsu.ge'
+      ]
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://iice.ge/#website',
+      url: 'https://iice.ge',
+      name: 'TSU IICE - Institute of Inorganic Chemistry and Electrochemistry',
+      description: 'Official Website of R. Agladze Institute of Inorganic Chemistry and Electrochemistry, TSU.',
+      publisher: {
+        '@id': 'https://iice.ge/#organization'
+      },
+      inLanguage: ['ka', 'en']
+    }
+  ]
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="ka" className="overflow-x-clip" suppressHydrationWarning>
       <body
         className={`${googleSans.variable} antialiased min-h-screen flex flex-col bg-slate-50 overflow-x-clip`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+        />
         <LanguageProvider>
           <Header />
           <main className="flex-grow">

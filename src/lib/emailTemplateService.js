@@ -70,6 +70,8 @@ export async function getAllTemplates() {
                             ...result[row.key],
                             subject: row.subject || result[row.key].subject,
                             body_text: row.body_text || result[row.key].body_text,
+                            subject_en: row.subject_en || result[row.key].subject_en || '',
+                            body_text_en: row.body_text_en || result[row.key].body_text_en || '',
                             updated_at: row.updated_at,
                             updated_by: row.updated_by,
                             is_customized: true
@@ -97,7 +99,7 @@ export async function getTemplateByKey(key) {
 /**
  * Saves or updates an email template
  */
-export async function saveTemplate({ key, subject, body_text, updated_by = 'admin' }) {
+export async function saveTemplate({ key, subject, body_text, subject_en = '', body_text_en = '', updated_by = 'admin' }) {
     if (!key || !subject || !body_text) {
         throw new Error('Key, subject, and body_text are required');
     }
@@ -109,6 +111,8 @@ export async function saveTemplate({ key, subject, body_text, updated_by = 'admi
         description: defaultTmpl.description || '',
         subject: subject.trim(),
         body_text: body_text.trim(),
+        subject_en: subject_en.trim(),
+        body_text_en: body_text_en.trim(),
         updated_at: new Date().toISOString(),
         updated_by
     };

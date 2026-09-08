@@ -10,12 +10,6 @@ export default function StudiesInternshipsPage() {
 
     return (
         <div className="bg-slate-50 min-h-screen pb-20">
-            <title>{isEn ? 'Studies & Internships | TSU IICE' : 'სწავლება და სტაჟირება | TSU IICE'}</title>
-            <meta name="description" content={isEn ? "Educational programs, student internships, and research opportunities at the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის საგანმანათლებლო პროგრამები, სტაჟირება და სტუდენტური შესაძლებლობები."} />
-            <meta property="og:title" content={isEn ? 'Studies & Internships | TSU IICE' : 'სწავლება და სტაჟირება | TSU IICE'} />
-            <meta property="og:description" content={isEn ? "Educational programs, student internships, and research opportunities at the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის საგანმანათლებლო პროგრამები, სტაჟირება და სტუდენტური შესაძლებლობები."} />
-            <link rel="canonical" href="https://iice.ge/studies-internships" />
-
             {/* Page Header */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">

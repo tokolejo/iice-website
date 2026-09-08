@@ -24,7 +24,8 @@ import {
     GraduationCap,
     Search,
     Database,
-    Loader2
+    Loader2,
+    Mail
 } from 'lucide-react';
 import CommandPalette from '../../components/admin/CommandPalette';
 import AdminToastContainer, { toast } from '../../components/admin/AdminToast';
@@ -181,6 +182,7 @@ export default function AdminLayout({ children }) {
         ...(isDeptHead ? [{ href: '/admin/staff', label: 'თანამშრომლები', icon: Users }] : []),
         ...(isAdmin ? [{ href: '/admin/departments', label: 'განყოფილებები', icon: Building2 }] : []),
         ...(isEditor ? [{ href: '/admin/news', label: 'სიახლეები', icon: Newspaper }] : []),
+        ...(isAdmin ? [{ href: '/admin/emails', label: 'ელ-ფოსტის ცენტრი', icon: Mail }] : []),
         ...(isSuperAdmin ? [{ href: '/admin/users', label: 'მომხმარებლები (RBAC)', icon: ShieldCheck }] : []),
         ...(isSuperAdmin ? [{ href: '/admin/audit', label: 'აუდიტის ჟურნალი', icon: History }] : []),
     ];
@@ -204,6 +206,7 @@ export default function AdminLayout({ children }) {
         if (cleanPath.startsWith('/admin/staff')) return 'თანამშრომლები';
         if (cleanPath.startsWith('/admin/departments')) return 'განყოფილებები';
         if (cleanPath.startsWith('/admin/news')) return 'სიახლეები';
+        if (cleanPath.startsWith('/admin/emails')) return 'ელ-ფოსტის ცენტრი';
         if (cleanPath.startsWith('/admin/users')) return 'მომხმარებლები (RBAC)';
         if (cleanPath.startsWith('/admin/audit')) return 'აუდიტის ჟურნალი';
         return 'ადმინ პორტალი';

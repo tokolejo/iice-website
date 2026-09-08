@@ -86,12 +86,6 @@ export default function DepartmentsPage() {
             დაგჭირდებათ, შეცვალეთ `pb-10` სხვა მნიშვნელობით (მაგ. pb-4, pb-16).
         */
         < div className="bg-slate-50 pb-10" >
-            <title>{isEn ? 'Departments | TSU IICE' : 'განყოფილებები | TSU IICE'}</title>
-            <meta name="description" content={isEn ? "Explore the scientific and research departments of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "გაეცანით რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის სამეცნიერო და კვლევით განყოფილებებს."} />
-            <meta property="og:title" content={isEn ? 'Departments | TSU IICE' : 'განყოფილებები | TSU IICE'} />
-            <meta property="og:description" content={isEn ? "Explore the scientific and research departments of the R. Agladze Institute of Inorganic Chemistry and Electrochemistry." : "გაეცანით რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის სამეცნიერო და კვლევით განყოფილებებს."} />
-            <link rel="canonical" href="https://iice.ge/departments" />
-
             {/* Page Header */}
             < div className="bg-white border-b border-slate-100 py-8 md:py-10 mb-3 animate-fade-in-up" >
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">

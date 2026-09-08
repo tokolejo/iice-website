@@ -28,8 +28,12 @@ import {
     Images,
     Star,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    GripVertical,
+    MessageSquare,
+    CheckCircle2
 } from 'lucide-react';
+import { optimizeImage, optimizeImages } from '../../../lib/imageOptimizer';
 
 const INITIAL_CATEGORIES = [
     { id: 'cat-news', name_ka: 'სიახლეები', name_en: 'News', slug: 'news' },
@@ -63,6 +67,9 @@ export default function AdminNewsPage() {
     const [coverFile, setCoverFile] = useState(null);
     const [coverPreviewUrl, setCoverPreviewUrl] = useState('');
     const [galleryItems, setGalleryItems] = useState([]);
+    const [draggedGalleryIndex, setDraggedGalleryIndex] = useState(null);
+    const [activeCaptionItemId, setActiveCaptionItemId] = useState(null);
+    const [isOptimizingImages, setIsOptimizingImages] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState('');
     const [itemToDelete, setItemToDelete] = useState(null);
@@ -226,6 +233,8 @@ export default function AdminNewsPage() {
         });
         setCoverFile(null);
         setGalleryItems([]);
+        setActiveCaptionItemId(null);
+        setDraggedGalleryIndex(null);
         setSaveError('');
         setIsEditModalOpen(true);
     };
@@ -241,6 +250,14 @@ export default function AdminNewsPage() {
             existingGallery = item.images;
         }
 
+        let existingCaptions = {};
+        if (Array.isArray(item.attached_files)) {
+            const foundMeta = item.attached_files.find(f => f && f.type === 'gallery_captions');
+            if (foundMeta && foundMeta.captions) {
+                existingCaptions = foundMeta.captions;
+            }
+        }
+
         setFormData({
             titleKa: item.title_ka || item.title || '',
             titleEn: item.title_en || item.titleEn || '',
@@ -252,11 +269,15 @@ export default function AdminNewsPage() {
             status: item.status || 'published',
         });
         setCoverFile(null);
+        setActiveCaptionItemId(null);
+        setDraggedGalleryIndex(null);
         setGalleryItems(
             existingGallery.map((url, idx) => ({
                 id: `existing-${idx}-${url}`,
                 url,
                 isExisting: true,
+                captionKa: existingCaptions[url]?.ka || '',
+                captionEn: existingCaptions[url]?.en || '',
             }))
         );
         setSaveError('');
@@ -264,30 +285,56 @@ export default function AdminNewsPage() {
     };
 
     // Gallery & Media Handlers
-    const handleGalleryFilesSelected = (e) => {
-        const files = Array.from(e.target.files || []);
-        if (files.length === 0) return;
+    const handleGalleryFilesSelected = async (e) => {
+        const rawFiles = Array.from(e.target.files || []);
+        if (rawFiles.length === 0) return;
 
-        const newItems = files.map((file, idx) => ({
-            id: `new-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 6)}`,
-            url: URL.createObjectURL(file),
-            file,
-            isExisting: false,
-        }));
+        setIsOptimizingImages(true);
+        try {
+            const files = await optimizeImages(rawFiles);
+            const newItems = files.map((file, idx) => ({
+                id: `new-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 6)}`,
+                url: URL.createObjectURL(file),
+                file,
+                isExisting: false,
+                captionKa: '',
+                captionEn: '',
+            }));
 
-        setGalleryItems(prev => {
-            const updated = [...prev, ...newItems];
-            if (!coverFile && !formData.coverImageUrl && updated.length > 0) {
-                if (updated[0].file) {
-                    setCoverFile(updated[0].file);
-                } else if (updated[0].url) {
-                    setFormData(p => ({ ...p, coverImageUrl: updated[0].url }));
+            setGalleryItems(prev => {
+                const updated = [...prev, ...newItems];
+                if (!coverFile && !formData.coverImageUrl && updated.length > 0) {
+                    if (updated[0].file) {
+                        setCoverFile(updated[0].file);
+                    } else if (updated[0].url) {
+                        setFormData(p => ({ ...p, coverImageUrl: updated[0].url }));
+                    }
                 }
-            }
-            return updated;
-        });
+                return updated;
+            });
+        } catch (err) {
+            console.error('Image optimization notice:', err);
+        } finally {
+            setIsOptimizingImages(false);
+            e.target.value = '';
+        }
+    };
 
-        e.target.value = '';
+    const handleCoverSelected = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsOptimizingImages(true);
+        try {
+            const optimized = await optimizeImage(file);
+            setCoverFile(optimized);
+        } catch (err) {
+            console.error('Cover optimization notice:', err);
+            setCoverFile(file);
+        } finally {
+            setIsOptimizingImages(false);
+            e.target.value = '';
+        }
     };
 
     const handleSetAsCover = (item) => {
@@ -313,6 +360,9 @@ export default function AdminNewsPage() {
             }
             return prev.filter(i => i.id !== id);
         });
+        if (activeCaptionItemId === id) {
+            setActiveCaptionItemId(null);
+        }
     };
 
     const handleMoveGalleryItem = (index, direction) => {
@@ -327,6 +377,43 @@ export default function AdminNewsPage() {
         });
     };
 
+    // Drag and Drop Handlers
+    const handleDragStart = (e, index) => {
+        setDraggedGalleryIndex(index);
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', String(index));
+    };
+
+    const handleDragOver = (e, index) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    };
+
+    const handleDrop = (e, targetIndex) => {
+        e.preventDefault();
+        if (draggedGalleryIndex === null || draggedGalleryIndex === targetIndex) return;
+        setGalleryItems(prev => {
+            const copy = [...prev];
+            const [moved] = copy.splice(draggedGalleryIndex, 1);
+            copy.splice(targetIndex, 0, moved);
+            return copy;
+        });
+        setDraggedGalleryIndex(null);
+    };
+
+    const handleDragEnd = () => {
+        setDraggedGalleryIndex(null);
+    };
+
+    const handleUpdateCaption = (id, field, value) => {
+        setGalleryItems(prev => prev.map(item => {
+            if (item.id === id) {
+                return { ...item, [field]: value };
+            }
+            return item;
+        }));
+    };
+
     const handleClearGallery = () => {
         galleryItems.forEach(item => {
             if (!item.isExisting && item.url?.startsWith('blob:')) {
@@ -334,6 +421,7 @@ export default function AdminNewsPage() {
             }
         });
         setGalleryItems([]);
+        setActiveCaptionItemId(null);
     };
 
     const uploadFileToStorage = async (supabase, file, prefix = 'news') => {
@@ -377,18 +465,28 @@ export default function AdminNewsPage() {
                     finalCoverUrl = await uploadFileToStorage(supabase, coverFile, 'cover');
                 }
 
-                // 2. Upload and preserve gallery order
+                // 2. Upload and preserve gallery order + collect captions
                 const finalGalleryUrls = [];
+                const captionsMap = {};
                 for (const item of galleryItems) {
+                    let itemUrl = '';
                     if (item.isExisting && item.url) {
-                        finalGalleryUrls.push(item.url);
+                        itemUrl = item.url;
+                        finalGalleryUrls.push(itemUrl);
                     } else if (item.file) {
                         if (coverFile && item.file === coverFile && finalCoverUrl) {
-                            finalGalleryUrls.push(finalCoverUrl);
+                            itemUrl = finalCoverUrl;
+                            finalGalleryUrls.push(itemUrl);
                         } else {
-                            const uploadedUrl = await uploadFileToStorage(supabase, item.file, 'gallery');
-                            finalGalleryUrls.push(uploadedUrl);
+                            itemUrl = await uploadFileToStorage(supabase, item.file, 'gallery');
+                            finalGalleryUrls.push(itemUrl);
                         }
+                    }
+                    if (itemUrl && (item.captionKa?.trim() || item.captionEn?.trim())) {
+                        captionsMap[itemUrl] = {
+                            ka: item.captionKa?.trim() || '',
+                            en: item.captionEn?.trim() || ''
+                        };
                     }
                 }
 
@@ -402,6 +500,16 @@ export default function AdminNewsPage() {
                     finalGalleryUrls.push(finalCoverUrl);
                 }
 
+                const existingAttached = Array.isArray(editingNews?.attached_files)
+                    ? editingNews.attached_files.filter(f => f && f.type !== 'gallery_captions')
+                    : [];
+                if (Object.keys(captionsMap).length > 0) {
+                    existingAttached.push({
+                        type: 'gallery_captions',
+                        captions: captionsMap
+                    });
+                }
+
                 const generatedSlug = formData.slug || `news-${Date.now()}`;
                 const payload = {
                     title_ka: formData.titleKa,
@@ -412,6 +520,7 @@ export default function AdminNewsPage() {
                     content_en: formData.contentEn || null,
                     cover_image_url: finalCoverUrl || null,
                     gallery_urls: finalGalleryUrls,
+                    attached_files: existingAttached,
                     status: formData.status,
                     updated_at: new Date().toISOString(),
                 };
@@ -1135,11 +1244,7 @@ export default function AdminNewsPage() {
                                                 type="file"
                                                 accept="image/*"
                                                 className="hidden"
-                                                onChange={(e) => {
-                                                    if (e.target.files?.[0]) {
-                                                        setCoverFile(e.target.files[0]);
-                                                    }
-                                                }}
+                                                onChange={handleCoverSelected}
                                             />
                                         </label>
                                     </div>
@@ -1160,9 +1265,14 @@ export default function AdminNewsPage() {
                                         <span className="ml-1 text-[11px] font-normal text-gray-500">
                                             ({galleryItems.length} სურათი)
                                         </span>
+                                        {isOptimizingImages && (
+                                            <span className="ml-2 px-2 py-0.5 rounded-full bg-purple-100 text-[#60318e] text-[10px] font-bold animate-pulse">
+                                                WebP ოპტიმიზაცია...
+                                            </span>
+                                        )}
                                     </label>
                                     <p className="text-[11px] text-gray-500 font-medium">
-                                        ატვირთეთ რამდენიმე სურათი ერთდროულად. ვიზიტორები ამ სურათებს გადასქროლავენ გალერეაში.
+                                        ატვირთეთ რამდენიმე სურათი ერთდროულად. შეგიძლიათ გადაადგილოთ თაგვით (Drag & Drop) და დაურთოთ აღწერები.
                                     </p>
                                 </div>
 
@@ -1198,7 +1308,7 @@ export default function AdminNewsPage() {
                                         დააწკაპუნეთ აქ რამდენიმე სურათის ერთად ასარჩევად
                                     </span>
                                     <span className="text-[11px] text-gray-500 font-medium">
-                                        შეგიძლიათ ერთდროულად მონიშნოთ და ატვირთოთ 1-ზე მეტი ფოტო (JPG, PNG, WebP)
+                                        ფოტოები ავტომატურად ოპტიმიზდება (WebP) სწრაფი ჩატვირთვისთვის
                                     </span>
                                     <input
                                         type="file"
@@ -1210,50 +1320,72 @@ export default function AdminNewsPage() {
                                 </label>
                             ) : (
                                 <div className="space-y-3">
-                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-72 overflow-y-auto p-2 rounded-2xl bg-white border border-gray-200">
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-80 overflow-y-auto p-2 rounded-2xl bg-white border border-gray-200">
                                         {galleryItems.map((item, index) => {
                                             const isCurrentCover = (coverFile && item.file === coverFile) ||
                                                 (!coverFile && formData.coverImageUrl && item.url === formData.coverImageUrl);
+                                            const hasCaption = item.captionKa?.trim() || item.captionEn?.trim();
+                                            const isBeingDragged = draggedGalleryIndex === index;
+                                            const isEditingCaption = activeCaptionItemId === item.id;
+
                                             return (
                                                 <div
                                                     key={item.id}
-                                                    className={`group relative rounded-xl overflow-hidden border-2 transition-all bg-slate-950 aspect-[4/3] flex items-center justify-center ${
-                                                        isCurrentCover
-                                                            ? 'border-amber-400 shadow-md ring-2 ring-amber-400/20'
-                                                            : 'border-slate-200 hover:border-purple-300'
+                                                    draggable
+                                                    onDragStart={(e) => handleDragStart(e, index)}
+                                                    onDragOver={(e) => handleDragOver(e, index)}
+                                                    onDrop={(e) => handleDrop(e, index)}
+                                                    onDragEnd={handleDragEnd}
+                                                    className={`group relative rounded-xl overflow-hidden border-2 transition-all bg-slate-950 aspect-[4/3] flex items-center justify-center cursor-grab active:cursor-grabbing ${
+                                                        isBeingDragged
+                                                            ? 'opacity-40 scale-95 border-dashed border-[#AD49E1]'
+                                                            : isEditingCaption
+                                                                ? 'border-[#AD49E1] ring-2 ring-[#AD49E1]/30 shadow-lg'
+                                                                : isCurrentCover
+                                                                    ? 'border-amber-400 shadow-md ring-2 ring-amber-400/20'
+                                                                    : 'border-slate-200 hover:border-purple-300'
                                                     }`}
                                                 >
                                                     <img
                                                         src={item.url}
                                                         alt={`Gallery ${index + 1}`}
-                                                        className="w-full h-full object-cover"
+                                                        className="w-full h-full object-cover pointer-events-none"
                                                     />
 
-                                                    {/* Index Badge */}
-                                                    <div className="absolute top-1.5 left-1.5 bg-black/70 backdrop-blur-xs text-white text-[10px] font-black px-1.5 py-0.5 rounded-md">
-                                                        #{index + 1}
+                                                    {/* Index & Drag handle Badge */}
+                                                    <div className="absolute top-1.5 left-1.5 bg-black/70 backdrop-blur-xs text-white text-[10px] font-black px-1.5 py-0.5 rounded-md flex items-center gap-0.5 pointer-events-none">
+                                                        <GripVertical className="w-2.5 h-2.5 text-slate-400" />
+                                                        <span>#{index + 1}</span>
                                                     </div>
 
                                                     {/* Cover Star Badge */}
                                                     {isCurrentCover && (
-                                                        <div className="absolute top-1.5 right-1.5 bg-amber-400 text-slate-900 text-[10px] font-black px-1.5 py-0.5 rounded-md flex items-center gap-1 shadow-sm">
+                                                        <div className="absolute top-1.5 right-1.5 bg-amber-400 text-slate-900 text-[10px] font-black px-1.5 py-0.5 rounded-md flex items-center gap-1 shadow-sm pointer-events-none">
                                                             <Star className="w-2.5 h-2.5 fill-slate-900" />
                                                             <span>ქავერი</span>
                                                         </div>
                                                     )}
 
+                                                    {/* Has caption indicator */}
+                                                    {hasCaption && (
+                                                        <div className="absolute bottom-1.5 left-1.5 bg-[#60318e]/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1 pointer-events-none">
+                                                            <MessageSquare className="w-2.5 h-2.5" />
+                                                            <span className="line-clamp-1 max-w-[70px]">{item.captionKa || item.captionEn}</span>
+                                                        </div>
+                                                    )}
+
                                                     {/* Hover Overlay with Actions */}
-                                                    <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
+                                                    <div className="absolute inset-0 bg-slate-900/85 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2 pointer-events-auto">
                                                         <div className="flex items-center justify-between">
                                                             <button
                                                                 type="button"
-                                                                onClick={() => handleSetAsCover(item)}
+                                                                onClick={(e) => { e.stopPropagation(); handleSetAsCover(item); }}
                                                                 className={`text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1 transition-all cursor-pointer ${
                                                                     isCurrentCover
                                                                         ? 'bg-amber-400 text-slate-900'
                                                                         : 'bg-white/20 hover:bg-amber-400 hover:text-slate-900 text-white'
                                                                 }`}
-                                                                title="დააყენეთ ეს სურათი მთავარ ქავერად"
+                                                                title="დააყენეთ მთავარ ქავერად"
                                                             >
                                                                 <Star className="w-3 h-3" />
                                                                 <span>{isCurrentCover ? 'ქავერია' : 'ქავერად'}</span>
@@ -1261,37 +1393,53 @@ export default function AdminNewsPage() {
 
                                                             <button
                                                                 type="button"
-                                                                onClick={() => handleRemoveGalleryItem(item.id)}
+                                                                onClick={(e) => { e.stopPropagation(); handleRemoveGalleryItem(item.id); }}
                                                                 className="p-1 rounded-md bg-red-600/80 hover:bg-red-600 text-white transition-colors cursor-pointer"
-                                                                title="სურათის წაშლა გალერეიდან"
+                                                                title="სურათის წაშლა"
                                                             >
                                                                 <Trash2 className="w-3.5 h-3.5" />
                                                             </button>
                                                         </div>
 
-                                                        {/* Reordering Controls */}
-                                                        <div className="flex items-center justify-center gap-2">
+                                                        {/* Caption & Reordering Controls */}
+                                                        <div className="flex items-center justify-between gap-1 pt-1 border-t border-white/10">
                                                             <button
                                                                 type="button"
-                                                                disabled={index === 0}
-                                                                onClick={() => handleMoveGalleryItem(index, -1)}
-                                                                className="p-1 rounded-md bg-white/20 hover:bg-white/40 disabled:opacity-30 text-white transition-all cursor-pointer"
-                                                                title="მარცხნივ გადაადგილება"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setActiveCaptionItemId(activeCaptionItemId === item.id ? null : item.id);
+                                                                }}
+                                                                className={`px-2 py-1 rounded text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-colors ${
+                                                                    isEditingCaption || hasCaption
+                                                                        ? 'bg-[#AD49E1] text-white'
+                                                                        : 'bg-white/20 hover:bg-white/30 text-white'
+                                                                }`}
+                                                                title="ფოტოს აღწერის დამატება / რედაქტირება"
                                                             >
-                                                                <ChevronLeft className="w-4 h-4" />
+                                                                <MessageSquare className="w-3 h-3" />
+                                                                <span>აღწერა</span>
                                                             </button>
-                                                            <span className="text-[10px] text-white/80 font-bold">
-                                                                {index + 1} / {galleryItems.length}
-                                                            </span>
-                                                            <button
-                                                                type="button"
-                                                                disabled={index === galleryItems.length - 1}
-                                                                onClick={() => handleMoveGalleryItem(index, 1)}
-                                                                className="p-1 rounded-md bg-white/20 hover:bg-white/40 disabled:opacity-30 text-white transition-all cursor-pointer"
-                                                                title="მარჯვნივ გადაადგილება"
-                                                            >
-                                                                <ChevronRight className="w-4 h-4" />
-                                                            </button>
+
+                                                            <div className="flex items-center gap-1">
+                                                                <button
+                                                                    type="button"
+                                                                    disabled={index === 0}
+                                                                    onClick={(e) => { e.stopPropagation(); handleMoveGalleryItem(index, -1); }}
+                                                                    className="p-1 rounded bg-white/20 hover:bg-white/40 disabled:opacity-30 text-white transition-all cursor-pointer"
+                                                                    title="მარცხნივ"
+                                                                >
+                                                                    <ChevronLeft className="w-3.5 h-3.5" />
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    disabled={index === galleryItems.length - 1}
+                                                                    onClick={(e) => { e.stopPropagation(); handleMoveGalleryItem(index, 1); }}
+                                                                    className="p-1 rounded bg-white/20 hover:bg-white/40 disabled:opacity-30 text-white transition-all cursor-pointer"
+                                                                    title="მარჯვნივ"
+                                                                >
+                                                                    <ChevronRight className="w-3.5 h-3.5" />
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1299,8 +1447,62 @@ export default function AdminNewsPage() {
                                         })}
                                     </div>
 
+                                    {/* Active Caption Inline Editor Drawer */}
+                                    {activeCaptionItemId && (() => {
+                                        const activeItem = galleryItems.find(i => i.id === activeCaptionItemId);
+                                        if (!activeItem) return null;
+                                        const activeIndex = galleryItems.findIndex(i => i.id === activeCaptionItemId);
+                                        return (
+                                            <div className="p-3.5 rounded-2xl bg-purple-50 border border-purple-200 animate-fade-in space-y-2.5">
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-2">
+                                                        <MessageSquare className="w-4 h-4 text-[#60318e]" />
+                                                        <span className="text-xs font-bold text-gray-800">
+                                                            სურათის #{activeIndex + 1} აღწერა (Caption)
+                                                        </span>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setActiveCaptionItemId(null)}
+                                                        className="text-[11px] font-bold text-[#60318e] hover:text-purple-900 px-2 py-1 rounded-md bg-white border border-purple-200 cursor-pointer flex items-center gap-1"
+                                                    >
+                                                        <Check className="w-3 h-3" />
+                                                        <span>მზადაა</span>
+                                                    </button>
+                                                </div>
+
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                                    <div>
+                                                        <label className="block text-[10px] font-bold text-gray-600 mb-1">
+                                                            აღწერა ქართულად
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            value={activeItem.captionKa || ''}
+                                                            onChange={(e) => handleUpdateCaption(activeItem.id, 'captionKa', e.target.value)}
+                                                            placeholder="მაგ: კონფერენციის გახსნის ცერემონია..."
+                                                            className="w-full px-3 py-1.5 rounded-xl border border-gray-300 text-xs font-medium text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-[10px] font-bold text-gray-600 mb-1">
+                                                            Description (English)
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            value={activeItem.captionEn || ''}
+                                                            onChange={(e) => handleUpdateCaption(activeItem.id, 'captionEn', e.target.value)}
+                                                            placeholder="e.g. Opening ceremony of the conference..."
+                                                            className="w-full px-3 py-1.5 rounded-xl border border-gray-300 text-xs font-medium text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#AD49E1]"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })()}
+
                                     <div className="flex items-center justify-between text-[11px] text-gray-500 px-1">
-                                        <span>* ისრებით შეგიძლიათ შეცვალოთ სურათების ჩვენების თანმიმდევრობა</span>
+                                        <span>* გადაიტანეთ თაგვით (Drag & Drop) ან გამოიყენეთ ისრები თანმიმდევრობისთვის</span>
                                         <label className="text-[#60318e] hover:text-[#7A1CAC] font-bold cursor-pointer flex items-center gap-1">
                                             <Plus className="w-3 h-3" />
                                             <span>კიდევ დამატება</span>
@@ -1482,7 +1684,7 @@ export default function AdminNewsPage() {
             >
                 {itemToDelete && (
                     <p className="text-xs text-gray-600 leading-relaxed">
-                        დარწმუნებული ხართ, რომ გსურთ წაშალოთ სიახლე: <strong>"{itemToDelete.title_ka}"</strong>?
+                        დარწმუნებული ხართ, რომ გსურთ წაშალოთ სიახლე: <strong>„{itemToDelete.title_ka}“</strong>?
                         ეს მოქმედება შეუქცევადია.
                     </p>
                 )}

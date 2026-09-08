@@ -74,12 +74,6 @@ export default function Contact() {
 
     return (
         <div className="bg-slate-50 min-h-screen">
-            <title>{isEn ? 'Contact | TSU IICE' : 'კონტაქტი | TSU IICE'}</title>
-            <meta name="description" content={isEn ? "Contact the R. Agladze Institute of Inorganic Chemistry and Electrochemistry. Find our address, phone number, and email." : "დაუკავშირდით რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტს. მისამართი, ტელეფონი და ელ-ფოსტა."} />
-            <meta property="og:title" content={isEn ? 'Contact | TSU IICE' : 'კონტაქტი | TSU IICE'} />
-            <meta property="og:description" content={isEn ? "Contact the R. Agladze Institute of Inorganic Chemistry and Electrochemistry. Find our address, phone number, and email." : "დაუკავშირდით რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტს. მისამართი, ტელეფონი და ელ-ფოსტა."} />
-            <link rel="canonical" href="https://iice.ge/contact" />
-            
             {/* Page Header */}
             <div className="bg-white border-b border-slate-100 py-8 md:py-16 mb-8 animate-fade-in-up">
                 <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 text-center uppercase tracking-wider">

@@ -86,8 +86,6 @@ export default function Conference2016() {
 
     return (
         <div className="bg-slate-50 min-h-screen pb-16 w-full overflow-hidden flex flex-col">
-            <title>{isEn ? '1st International Scientific Conference 2016 | IICE' : 'I საერთაშორისო სამეცნიერო კონფერენცია 2016 | IICE'}</title>
-
             {/* Hero Header Section - Matching Royal Purple Gradient & Badges */}
             <div className="relative bg-gradient-to-b from-[#180327] via-[#2f0d46] to-[#1c062c] text-white py-10 sm:py-14 lg:py-16 px-4 sm:px-6 lg:px-8 shadow-xl overflow-hidden w-full flex-shrink-0">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(173,73,225,0.18),transparent_70%)] pointer-events-none"></div>

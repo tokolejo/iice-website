@@ -43,7 +43,9 @@ import {
     Printer,
     Loader2,
     UploadCloud,
-    Archive
+    Archive,
+    Save,
+    MessageSquare
 } from 'lucide-react';
 import { toast } from '../../../components/admin/AdminToast';
 
@@ -117,6 +119,11 @@ export default function AdminConferencePage() {
 
     // Status update state
     const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+
+    // Reviewer Notes & Document Preview state
+    const [previewDoc, setPreviewDoc] = useState(null);
+    const [reviewerNotes, setReviewerNotes] = useState('');
+    const [isSavingNote, setIsSavingNote] = useState(false);
 
     // File & ZIP action state
     const [downloadingFile, setDownloadingFile] = useState(null);
@@ -246,7 +253,55 @@ export default function AdminConferencePage() {
         }
     };
 
-    // Update status
+    // Open Details Modal and sync notes
+    const handleOpenDetails = (reg) => {
+        setSelectedReg(reg);
+        setReviewerNotes(reg?.reviewer_notes || '');
+    };
+
+    // Save reviewer internal notes
+    const handleSaveReviewerNote = async () => {
+        if (!selectedReg) return;
+        setIsSavingNote(true);
+        try {
+            const supabase = getSupabaseBrowserClient();
+            if (supabase) {
+                const { error } = await supabase
+                    .from('conference_registrations_2026')
+                    .update({ reviewer_notes: reviewerNotes })
+                    .eq('id', selectedReg.id);
+
+                if (error) {
+                    if (error.message?.includes("'reviewer_notes' column") || error.code === 'PGRST204') {
+                        throw new Error("Supabase-ის ცხრილში 'reviewer_notes' სვეტი ჯერ არ არის დამატებული. გთხოვთ გაუშვათ: ALTER TABLE public.conference_registrations_2026 ADD COLUMN IF NOT EXISTS reviewer_notes TEXT;");
+                    }
+                    throw error;
+                }
+            }
+
+            setSelectedReg(prev => ({ ...prev, reviewer_notes: reviewerNotes }));
+            setRegistrations(prev => prev.map(r => r.id === selectedReg.id ? { ...r, reviewer_notes: reviewerNotes } : r));
+            toast('რეცენზენტის შენიშვნა წარმატებით შეინახა!', 'success');
+
+            try {
+                await recordAuditLog({
+                    action: 'CONFERENCE_NOTE_UPDATE',
+                    tableName: 'conference_registrations_2026',
+                    recordId: selectedReg.id,
+                    details: { reviewer_notes: reviewerNotes }
+                });
+            } catch (e) {
+                console.warn('Audit error on note update:', e);
+            }
+        } catch (err) {
+            console.error('Reviewer note save error:', err);
+            toast('შენიშვნის შენახვა ვერ მოხერხდა: ' + err.message, 'error');
+        } finally {
+            setIsSavingNote(false);
+        }
+    };
+
+    // Update single registration status
     const handleUpdateStatus = async (regId, newStatus) => {
         setIsUpdatingStatus(true);
         try {
@@ -292,7 +347,53 @@ export default function AdminConferencePage() {
         }
     };
 
-    // Bulk download abstract files into a ZIP archive
+    // Batch update status for all selected participants
+    const handleBatchStatusChange = async (newStatus) => {
+        if (!newStatus || selectedIds.size === 0) return;
+        const ids = Array.from(selectedIds);
+        setIsUpdatingStatus(true);
+        try {
+            const supabase = getSupabaseBrowserClient();
+            if (supabase) {
+                const { error } = await supabase
+                    .from('conference_registrations_2026')
+                    .update({ status: newStatus })
+                    .in('id', ids);
+
+                if (error) {
+                    if (error.message?.includes("'status' column") || error.code === 'PGRST204') {
+                        throw new Error("Supabase-ის ცხრილში 'status' სვეტი ჯერ არ არის დამატებული.");
+                    }
+                    throw error;
+                }
+            }
+
+            setRegistrations(prev => prev.map(r => ids.includes(r.id) ? { ...r, status: newStatus } : r));
+            if (selectedReg && ids.includes(selectedReg.id)) {
+                setSelectedReg(prev => ({ ...prev, status: newStatus }));
+            }
+
+            toast(`სტატუსი წარმატებით განახლდა ${ids.length} მონაწილისთვის!`, 'success');
+
+            try {
+                await recordAuditLog({
+                    action: 'CONFERENCE_BATCH_STATUS_UPDATE',
+                    tableName: 'conference_registrations_2026',
+                    recordId: ids.join(','),
+                    details: { status: newStatus, count: ids.length, ids }
+                });
+            } catch (e) {
+                console.warn('Audit error on batch status update:', e);
+            }
+        } catch (err) {
+            console.error('Batch status update error:', err);
+            toast('სტატუსის ჯგუფური განახლება ვერ მოხერხდა: ' + err.message, 'error');
+        } finally {
+            setIsUpdatingStatus(false);
+        }
+    };
+
+    // Bulk download abstract files into a ZIP archive organized by topic folders + SUMMARY.csv
     const handleBulkDownloadZip = async (items) => {
         if (!items || items.length === 0) {
             toast('არცერთი მონაწილე არ არის არჩეული', 'info');
@@ -310,6 +411,8 @@ export default function AdminConferencePage() {
             for (const r of items) {
                 const safeName = `${r.first_name || ''}_${r.last_name || ''}`.replace(/[\/\\?%*:|"<>]/g, '_').trim();
                 const abstractNum = r.abstract_number || 'IICE-2026';
+                const topicFolder = (r.thematic_topic || 'სხვა_თემები').replace(/[\/\\?%*:|"<>]/g, '_').trim();
+                const folder = zip.folder(topicFolder);
 
                 // Georgian abstract file
                 if (r.abstract_file_geo_url) {
@@ -318,7 +421,7 @@ export default function AdminConferencePage() {
                         const resp = await fetch(r.abstract_file_geo_url);
                         if (resp.ok) {
                             const blob = await resp.blob();
-                            zip.file(`${abstractNum}_${safeName}_GEO.${ext}`, blob);
+                            folder.file(`${abstractNum}_${safeName}_GEO.${ext}`, blob);
                             filesCount++;
                         }
                     } catch (e) {
@@ -333,7 +436,7 @@ export default function AdminConferencePage() {
                         const resp = await fetch(r.abstract_file_eng_url);
                         if (resp.ok) {
                             const blob = await resp.blob();
-                            zip.file(`${abstractNum}_${safeName}_ENG.${ext}`, blob);
+                            folder.file(`${abstractNum}_${safeName}_ENG.${ext}`, blob);
                             filesCount++;
                         }
                     } catch (e) {
@@ -342,9 +445,30 @@ export default function AdminConferencePage() {
                 }
             }
 
+            // Generate SUMMARY.csv with UTF-8 BOM
+            const headers = ['Abstract Number', 'First Name', 'Last Name', 'Email', 'Affiliation', 'Topic', 'Presentation Type', 'Format', 'Status', 'Reviewer Notes'];
+            const csvRows = [headers.join(',')];
+
+            for (const r of items) {
+                const escapeCsv = (val) => `"${String(val || '').replace(/"/g, '""')}"`;
+                csvRows.push([
+                    escapeCsv(r.abstract_number),
+                    escapeCsv(r.first_name),
+                    escapeCsv(r.last_name),
+                    escapeCsv(r.email),
+                    escapeCsv(r.affiliation),
+                    escapeCsv(getTopicLabel(r.thematic_topic)),
+                    escapeCsv(getPresentationTypeLabel(r.presentation_type)),
+                    escapeCsv(r.is_attending_in_person ? 'In-Person' : 'Online'),
+                    escapeCsv(STATUS_CONFIG[r.status]?.labelKa || r.status || 'მოლოდინში'),
+                    escapeCsv(r.reviewer_notes || '')
+                ].join(','));
+            }
+
+            zip.file('SUMMARY.csv', '\uFEFF' + csvRows.join('\r\n'));
+
             if (filesCount === 0) {
-                toast('შერჩეულ მონაწილეებს არ აქვთ ატვირთული თეზისების ფაილები', 'error');
-                return;
+                toast('შერჩეულ მონაწილეებს არ აქვთ ატვირთული თეზისების ფაილები, თუმცა SUMMARY.csv მომზადდა', 'info');
             }
 
             const zipBlob = await zip.generateAsync({ type: 'blob' });
@@ -358,7 +482,7 @@ export default function AdminConferencePage() {
             document.body.removeChild(link);
             URL.revokeObjectURL(zipUrl);
 
-            toast(`წარმატებით მომზადდა ZIP არქივი (${filesCount} ფაილი)!`, 'success');
+            toast(`წარმატებით მომზადდა ZIP არქივი (${filesCount} ფაილი + SUMMARY.csv)!`, 'success');
         } catch (err) {
             console.error('Error generating bulk ZIP:', err);
             toast('ZIP არქივის შექმნა ვერ მოხერხდა: ' + err.message, 'error');
@@ -853,6 +977,29 @@ export default function AdminConferencePage() {
                     </div>
 
                     <div className="flex items-center gap-2 flex-wrap">
+                        {/* Batch Status Selector */}
+                        <div className="flex items-center gap-1.5 bg-white/10 rounded-xl px-2.5 py-1">
+                            <span className="text-[11px] text-purple-200">სტატუსი:</span>
+                            <select
+                                onChange={(e) => {
+                                    if (e.target.value) {
+                                        handleBatchStatusChange(e.target.value);
+                                        e.target.value = '';
+                                    }
+                                }}
+                                disabled={isUpdatingStatus}
+                                className="bg-purple-950/80 border border-purple-400/40 text-white text-xs font-bold rounded-lg px-2 py-1 outline-none cursor-pointer"
+                                defaultValue=""
+                            >
+                                <option value="" disabled>სტატუსის შეცვლა...</option>
+                                <option value="pending">⏳ მოლოდინში</option>
+                                <option value="accepted_oral">✅ მიღებულია (ზეპირი)</option>
+                                <option value="accepted_poster">📌 მიღებულია (სასტენდო)</option>
+                                <option value="revision_needed">⚠️ გადასამუშავებელი</option>
+                                <option value="rejected">❌ უარყოფილია</option>
+                            </select>
+                        </div>
+
                         {/* Bulk Email */}
                         <button
                             onClick={handleOpenEmailForSelected}
@@ -1114,7 +1261,7 @@ export default function AdminConferencePage() {
                                                     </button>
 
                                                     <button
-                                                        onClick={() => setSelectedReg(reg)}
+                                                        onClick={() => handleOpenDetails(reg)}
                                                         className="p-1 rounded-md bg-slate-100 text-slate-600 hover:bg-[#60318e] hover:text-white transition-colors cursor-pointer"
                                                         title="სრული დეტალები"
                                                     >
@@ -1312,6 +1459,20 @@ export default function AdminConferencePage() {
 
                                                 <button
                                                     type="button"
+                                                    onClick={() => setPreviewDoc({
+                                                        url: selectedReg.abstract_file_geo_url,
+                                                        title: `ქართული თეზისი: ${selectedReg.first_name} ${selectedReg.last_name}`,
+                                                        name: `${selectedReg.abstract_number}_GEO_${selectedReg.last_name || 'abstract'}`
+                                                    })}
+                                                    className="px-2.5 py-1.5 rounded-xl bg-purple-100 hover:bg-purple-200 text-[#60318e] font-bold text-[11px] flex items-center gap-1 transition-colors cursor-pointer"
+                                                    title="დოკუმენტის გადახედვა"
+                                                >
+                                                    <Eye className="w-3.5 h-3.5" />
+                                                    <span>გადახედვა</span>
+                                                </button>
+
+                                                <button
+                                                    type="button"
                                                     onClick={() => window.open(selectedReg.abstract_file_geo_url, '_blank')}
                                                     className="px-2.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#60318e] font-bold text-[11px] flex items-center gap-1 transition-colors cursor-pointer border border-purple-200"
                                                     title="გახსნა და ბეჭდვა"
@@ -1391,6 +1552,20 @@ export default function AdminConferencePage() {
 
                                                 <button
                                                     type="button"
+                                                    onClick={() => setPreviewDoc({
+                                                        url: selectedReg.abstract_file_eng_url,
+                                                        title: `ინგლისური თეზისი: ${selectedReg.first_name} ${selectedReg.last_name}`,
+                                                        name: `${selectedReg.abstract_number}_ENG_${selectedReg.last_name || 'abstract'}`
+                                                    })}
+                                                    className="px-2.5 py-1.5 rounded-xl bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-bold text-[11px] flex items-center gap-1 transition-colors cursor-pointer"
+                                                    title="დოკუმენტის გადახედვა"
+                                                >
+                                                    <Eye className="w-3.5 h-3.5" />
+                                                    <span>გადახედვა</span>
+                                                </button>
+
+                                                <button
+                                                    type="button"
                                                     onClick={() => window.open(selectedReg.abstract_file_eng_url, '_blank')}
                                                     className="px-2.5 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-[11px] flex items-center gap-1 transition-colors cursor-pointer border border-indigo-200"
                                                     title="გახსნა და ბეჭდვა"
@@ -1425,6 +1600,40 @@ export default function AdminConferencePage() {
                                         )}
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        {/* Reviewer Internal Notes Section */}
+                        <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200/80 shadow-xs space-y-2.5">
+                            <div className="flex items-center justify-between">
+                                <span className="text-[11px] font-bold uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                                    <MessageSquare className="w-4 h-4 text-amber-600" />
+                                    <span>რეცენზენტის შიდა შენიშვნები (Reviewer Notes)</span>
+                                </span>
+                                <span className="text-[10px] text-amber-700 font-medium">
+                                    🔒 ხილულია მხოლოდ ადმინისტრატორებისთვის
+                                </span>
+                            </div>
+                            <textarea
+                                value={reviewerNotes}
+                                onChange={(e) => setReviewerNotes(e.target.value)}
+                                placeholder="შეიყვანეთ შიდა კომენტარები, შეფასება ან შენიშვნები თეზისთან დაკავშირებით..."
+                                rows={3}
+                                className="w-full p-3 rounded-xl border border-amber-200 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all resize-y"
+                            />
+                            <div className="flex items-center justify-between pt-1">
+                                <p className="text-[10px] text-gray-500">
+                                    {selectedReg.reviewer_notes ? 'შენიშვნა შენახულია ბაზაში' : 'შენიშვნა ცარიელია'}
+                                </p>
+                                <button
+                                    type="button"
+                                    onClick={handleSaveReviewerNote}
+                                    disabled={isSavingNote}
+                                    className="px-4 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+                                >
+                                    {isSavingNote ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                                    <span>შენიშვნის შენახვა</span>
+                                </button>
                             </div>
                         </div>
 
@@ -1535,6 +1744,68 @@ export default function AdminConferencePage() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                )}
+            </AdminModal>
+
+            {/* Inline Document Preview Modal */}
+            <AdminModal
+                isOpen={Boolean(previewDoc)}
+                onClose={() => setPreviewDoc(null)}
+                title={previewDoc?.title || 'დოკუმენტის გადახედვა'}
+                subtitle={previewDoc?.name || ''}
+                icon={FileText}
+                maxWidth="max-w-5xl"
+                footer={
+                    <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center gap-2">
+                            {previewDoc?.url && (
+                                <>
+                                    <a
+                                        href={previewDoc.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="px-3.5 py-2 rounded-xl border border-gray-200 bg-white hover:bg-purple-50 text-xs font-bold text-gray-700 flex items-center gap-1.5 cursor-pointer"
+                                    >
+                                        <ExternalLink className="w-3.5 h-3.5 text-[#60318e]" />
+                                        <span>ახალ ფანჯარაში გახსნა</span>
+                                    </a>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleDownloadFile(previewDoc.url, previewDoc.name)}
+                                        className="px-3.5 py-2 rounded-xl bg-purple-100 hover:bg-purple-200 text-[#60318e] text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                                    >
+                                        <Download className="w-3.5 h-3.5" />
+                                        <span>ჩამოტვირთვა</span>
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setPreviewDoc(null)}
+                            className="px-5 py-2 rounded-xl text-xs font-bold bg-[#60318e] hover:bg-[#4a2470] text-white shadow-xs transition-colors cursor-pointer"
+                        >
+                            დახურვა
+                        </button>
+                    </div>
+                }
+            >
+                {previewDoc && (
+                    <div className="w-full h-[70vh] bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 relative flex flex-col items-center justify-center">
+                        {previewDoc.url?.toLowerCase().includes('.pdf') ? (
+                            <iframe
+                                src={previewDoc.url}
+                                className="w-full h-full border-0"
+                                title={previewDoc.title}
+                            />
+                        ) : (
+                            <iframe
+                                src={`https://docs.google.com/viewer?url=${encodeURIComponent(previewDoc.url)}&embedded=true`}
+                                className="w-full h-full border-0"
+                                title={previewDoc.title}
+                            />
+                        )}
                     </div>
                 )}
             </AdminModal>
