@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { toast } from '../../../components/admin/AdminToast';
 import AdminModal from '../../../components/admin/AdminModal';
+import { getSupabaseBrowserClient } from '../../../lib/supabase/client';
 import {
     replacePlaceholders,
     wrapInEmailLayout,
@@ -119,13 +120,71 @@ export default function AdminEmailsPage() {
     const fetchLogs = async () => {
         setIsLogsLoading(true);
         try {
-            const res = await fetch(`/api/admin/emails/logs?q=${encodeURIComponent(logsSearch)}`);
-            const data = await res.json();
-            if (data.success && Array.isArray(data.logs)) {
-                setLogs(data.logs);
+            const supabase = getSupabaseBrowserClient();
+            let token = null;
+            if (supabase) {
+                try {
+                    const { data: { session } } = await supabase.auth.getSession();
+                    token = session?.access_token;
+                } catch (e) {
+                    console.warn('[EMAILS] Session read warning:', e);
+                }
             }
+
+            const headers = {};
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            // 1. Try API endpoint with token
+            let apiLoaded = false;
+            try {
+                const res = await fetch(`/api/admin/emails/logs?q=${encodeURIComponent(logsSearch)}`, {
+                    headers,
+                    cache: 'no-store'
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success && Array.isArray(data.logs) && data.logs.length > 0) {
+                        setLogs(data.logs);
+                        apiLoaded = true;
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn('[EMAILS] API log fetch failed, trying direct supabase client:', err);
+            }
+
+            // 2. Direct browser Supabase client fallback (with active user session)
+            if (!apiLoaded && supabase) {
+                let q = supabase
+                    .from('audit_logs')
+                    .select('*')
+                    .or('action.ilike.%EMAIL%,action.ilike.%MAIL%,table_name.ilike.%email%,action.eq.CONFERENCE_REGISTRATION_EMAIL')
+                    .order('created_at', { ascending: false })
+                    .limit(100);
+
+                const { data, error } = await q;
+                if (!error && data) {
+                    let filtered = data;
+                    if (logsSearch.trim()) {
+                        const lower = logsSearch.toLowerCase();
+                        filtered = filtered.filter(row => {
+                            const user = (row.user_email || '').toLowerCase();
+                            const record = (row.record_id || '').toLowerCase();
+                            const details = JSON.stringify(row.details || {}).toLowerCase();
+                            return user.includes(lower) || record.includes(lower) || details.includes(lower);
+                        });
+                    }
+                    setLogs(filtered);
+                    return;
+                }
+            }
+
+            setLogs([]);
         } catch (err) {
             console.error('Failed to load email logs:', err);
+            setLogs([]);
         } finally {
             setIsLogsLoading(false);
         }
@@ -276,6 +335,8 @@ export default function AdminEmailsPage() {
             const data = await res.json();
             if (data.success) {
                 toast(data.message || `ტესტური წერილი გაიგზავნა: ${testEmail}`, 'success');
+                // Automatically refresh delivery logs so the new test log appears immediately
+                fetchLogs();
             } else {
                 toast(data.error || 'გაგზავნის შეცდომა', 'error');
             }
@@ -301,50 +362,45 @@ export default function AdminEmailsPage() {
     const currentTemplate = templates[selectedKey] || {};
 
     return (
-        <div className="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto space-y-6">
-            {/* Top Header Card */}
-            <div className="bg-gradient-to-r from-[#2e0d42] via-[#431464] to-[#60318e] rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
-                <div className="absolute right-0 top-0 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
+        <div className="space-y-6 animate-fade-in">
+            {/* Page Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl sm:text-3xl font-black text-gray-900 flex items-center gap-3">
+                        <Mail className="w-7 h-7 text-[#60318e]" />
+                        ელ-ფოსტა & ავტომატური შეტყობინებები
+                    </h1>
+                    <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">
+                        ორენოვანი ოფიციალური შაბლონების რედაქტირება, სატესტო წერილების გაგზავნა და მიწოდების ჟურნალის კონტროლი
+                    </p>
+                </div>
 
-                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div className="space-y-2">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-bold text-[#EBD3F8]">
-                            <Mail className="w-3.5 h-3.5 text-amber-300" />
-                            <span>კომუნიკაციის მართვის ცენტრი</span>
-                        </div>
-                        <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight">
-                            ელ-ფოსტა & ავტომატური შეტყობინებები
-                        </h1>
-                        <p className="text-xs sm:text-sm text-[#EBD3F8]/80 max-w-2xl leading-relaxed">
-                            ორენოვანი ოფიციალური შაბლონების რედაქტირება, სატესტო წერილების გაგზავნა და მიწოდების ჟურნალის რეალურ დროში კონტროლი.
-                        </p>
-                    </div>
-
-                    {/* Tab Navigation */}
-                    <div className="flex items-center gap-1.5 p-1.5 bg-black/25 backdrop-blur-md rounded-2xl border border-white/10 self-start md:self-auto">
-                        <button
-                            onClick={() => setActiveTab('templates')}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                                activeTab === 'templates'
-                                    ? 'bg-white text-[#2e0d42] shadow-md'
-                                    : 'text-white/80 hover:text-white hover:bg-white/10'
-                            }`}
-                        >
-                            <Edit3 className="w-3.5 h-3.5" />
-                            <span>შაბლონები</span>
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('logs')}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                                activeTab === 'logs'
-                                    ? 'bg-white text-[#2e0d42] shadow-md'
-                                    : 'text-white/80 hover:text-white hover:bg-white/10'
-                            }`}
-                        >
-                            <History className="w-3.5 h-3.5" />
-                            <span>გაგზავნის ჟურნალი</span>
-                        </button>
-                    </div>
+                {/* Tab Navigation */}
+                <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl border border-slate-200/80 shadow-xs self-start sm:self-auto">
+                    <button
+                        type="button"
+                        onClick={() => setActiveTab('templates')}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            activeTab === 'templates'
+                                ? 'bg-white text-[#60318e] shadow-xs ring-1 ring-slate-200/80'
+                                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                        }`}
+                    >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>შაბლონები</span>
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setActiveTab('logs')}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            activeTab === 'logs'
+                                ? 'bg-white text-[#60318e] shadow-xs ring-1 ring-slate-200/80'
+                                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                        }`}
+                    >
+                        <History className="w-3.5 h-3.5" />
+                        <span>გაგზავნის ჟურნალი</span>
+                    </button>
                 </div>
             </div>
 

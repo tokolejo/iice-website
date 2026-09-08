@@ -30,7 +30,8 @@ import {
     ShieldAlert,
     FileSpreadsheet,
     Copy,
-    Check
+    Check,
+    X
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -252,6 +253,16 @@ export default function AdminAuditPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [detailViewMode, setDetailViewMode] = useState('diff');
     const [copiedJson, setCopiedJson] = useState(false);
+    const [selectedMetricFilter, setSelectedMetricFilter] = useState('ALL'); // 'ALL' | 'AUTH' | 'CONF' | 'UPDATES' | 'CRITICAL'
+
+    const handleMetricCardClick = (filterKey) => {
+        if (selectedMetricFilter === filterKey) {
+            setSelectedMetricFilter('ALL');
+        } else {
+            setSelectedMetricFilter(filterKey);
+        }
+        setCurrentPage(1);
+    };
 
     // Super admin access check
     useEffect(() => {
@@ -361,14 +372,32 @@ export default function AdminAuditPage() {
 
     useEffect(() => {
         loadAuditLogs();
+        setSelectedMetricFilter('ALL');
         setCurrentPage(1);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedCategory]);
 
-    // Time filtering
+    // Time & Metric filtering
     const filteredLogs = useMemo(() => {
         const now = Date.now();
         return logs.filter((log) => {
+            const a = (log.action || '').toUpperCase();
+            const badge = getActionBadge(log.action);
+
+            // Metric card filter
+            if (selectedMetricFilter === 'AUTH') {
+                const isAuth = a.includes('SIGN_IN') || a.includes('LOGIN') || a.includes('AUTH') || a.includes('LOGOUT') || a.includes('SIGN_OUT');
+                if (!isAuth) return false;
+            } else if (selectedMetricFilter === 'CONF') {
+                const isConf = a.includes('CONFERENCE') || (log.table_name || '').toLowerCase().includes('conference');
+                if (!isConf) return false;
+            } else if (selectedMetricFilter === 'UPDATES') {
+                const isUpdate = a.includes('UPDATE') || a.includes('CREATE') || a.includes('DELETE') || a.includes('EDIT') || a.includes('STATUS') || a.includes('NOTE') || a.includes('INSERT');
+                if (!isUpdate) return false;
+            } else if (selectedMetricFilter === 'CRITICAL') {
+                if (!badge.isCritical) return false;
+            }
+
             // Time range
             if (timeRange === 'today') {
                 const logDate = new Date(log.created_at).toDateString();
@@ -391,7 +420,7 @@ export default function AdminAuditPage() {
 
             return true;
         });
-    }, [logs, timeRange, searchQuery]);
+    }, [logs, timeRange, searchQuery, selectedMetricFilter]);
 
     // Pagination
     const totalPages = Math.ceil(filteredLogs.length / pageSize) || 1;
@@ -410,9 +439,9 @@ export default function AdminAuditPage() {
             const a = (l.action || '').toUpperCase();
             const badge = getActionBadge(l.action);
             if (badge.isCritical) criticalCount++;
-            if (a.includes('SIGN_IN') || a.includes('LOGIN') || a.includes('AUTH')) authCount++;
-            if (a.includes('CONFERENCE')) confCount++;
-            if (a.includes('UPDATE') || a.includes('CREATE') || a.includes('DELETE')) updateCount++;
+            if (a.includes('SIGN_IN') || a.includes('LOGIN') || a.includes('AUTH') || a.includes('LOGOUT') || a.includes('SIGN_OUT')) authCount++;
+            if (a.includes('CONFERENCE') || (l.table_name || '').toLowerCase().includes('conference')) confCount++;
+            if (a.includes('UPDATE') || a.includes('CREATE') || a.includes('DELETE') || a.includes('EDIT') || a.includes('STATUS') || a.includes('NOTE') || a.includes('INSERT')) updateCount++;
         });
         return {
             total: logs.length,
@@ -567,57 +596,147 @@ export default function AdminAuditPage() {
                 </div>
             </div>
 
-            {/* Metrics Overview */}
+            {/* Metrics Overview (Clickable Filters) */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-                <div className="bg-white rounded-2xl p-4 border border-purple-100 shadow-xs flex items-center justify-between">
+                {/* 1. All */}
+                <button
+                    type="button"
+                    onClick={() => handleMetricCardClick('ALL')}
+                    className={`rounded-2xl p-4 transition-all duration-200 text-left flex items-center justify-between cursor-pointer border hover:scale-[1.01] active:scale-[0.99] ${
+                        selectedMetricFilter === 'ALL'
+                            ? 'bg-purple-50/70 border-[#60318e] ring-2 ring-[#60318e]/30 shadow-sm'
+                            : 'bg-white border-purple-100/80 shadow-xs hover:border-purple-300 hover:bg-purple-50/20'
+                    }`}
+                >
                     <div>
-                        <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">სულ მოვლენა</p>
+                        <div className="flex items-center gap-1.5">
+                            <p className="text-[11px] font-bold uppercase tracking-wider text-gray-500">სულ მოვლენა</p>
+                            {selectedMetricFilter === 'ALL' && (
+                                <span className="text-[9px] font-black text-[#60318e] bg-purple-100 px-1.5 py-0.5 rounded-full">
+                                    ყველა
+                                </span>
+                            )}
+                        </div>
                         <p className="text-xl sm:text-2xl font-black text-gray-900 mt-0.5">{stats.total}</p>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-[#60318e]">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+                        selectedMetricFilter === 'ALL' ? 'bg-[#60318e] text-white' : 'bg-purple-50 text-[#60318e]'
+                    }`}>
                         <History className="w-5 h-5" />
                     </div>
-                </div>
+                </button>
 
-                <div className="bg-white rounded-2xl p-4 border border-emerald-100 shadow-xs flex items-center justify-between">
+                {/* 2. Auth */}
+                <button
+                    type="button"
+                    onClick={() => handleMetricCardClick('AUTH')}
+                    className={`rounded-2xl p-4 transition-all duration-200 text-left flex items-center justify-between cursor-pointer border hover:scale-[1.01] active:scale-[0.99] ${
+                        selectedMetricFilter === 'AUTH'
+                            ? 'bg-emerald-50 border-emerald-500 ring-2 ring-emerald-500/30 shadow-sm'
+                            : 'bg-white border-emerald-100/80 shadow-xs hover:border-emerald-300 hover:bg-emerald-50/20'
+                    }`}
+                >
                     <div>
-                        <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">ავტორიზაცია / სესია</p>
+                        <div className="flex items-center gap-1.5">
+                            <p className="text-[11px] font-bold uppercase tracking-wider text-gray-500">ავტორიზაცია / სესია</p>
+                            {selectedMetricFilter === 'AUTH' && (
+                                <span className="text-[9px] font-black text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded-full">
+                                    აქტიური
+                                </span>
+                            )}
+                        </div>
                         <p className="text-xl sm:text-2xl font-black text-emerald-600 mt-0.5">{stats.auth}</p>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+                        selectedMetricFilter === 'AUTH' ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-600'
+                    }`}>
                         <LogIn className="w-5 h-5" />
                     </div>
-                </div>
+                </button>
 
-                <div className="bg-white rounded-2xl p-4 border border-indigo-100 shadow-xs flex items-center justify-between">
+                {/* 3. Conference */}
+                <button
+                    type="button"
+                    onClick={() => handleMetricCardClick('CONF')}
+                    className={`rounded-2xl p-4 transition-all duration-200 text-left flex items-center justify-between cursor-pointer border hover:scale-[1.01] active:scale-[0.99] ${
+                        selectedMetricFilter === 'CONF'
+                            ? 'bg-indigo-50 border-indigo-500 ring-2 ring-indigo-500/30 shadow-sm'
+                            : 'bg-white border-indigo-100/80 shadow-xs hover:border-indigo-300 hover:bg-indigo-50/20'
+                    }`}
+                >
                     <div>
-                        <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">კონფერენციის განაცხადი</p>
+                        <div className="flex items-center gap-1.5">
+                            <p className="text-[11px] font-bold uppercase tracking-wider text-gray-500">კონფერენციის განაცხადი</p>
+                            {selectedMetricFilter === 'CONF' && (
+                                <span className="text-[9px] font-black text-indigo-700 bg-indigo-100 px-1.5 py-0.5 rounded-full">
+                                    აქტიური
+                                </span>
+                            )}
+                        </div>
                         <p className="text-xl sm:text-2xl font-black text-indigo-600 mt-0.5">{stats.conf}</p>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+                        selectedMetricFilter === 'CONF' ? 'bg-indigo-600 text-white' : 'bg-indigo-50 text-indigo-600'
+                    }`}>
                         <GraduationCap className="w-5 h-5" />
                     </div>
-                </div>
+                </button>
 
-                <div className="bg-white rounded-2xl p-4 border border-blue-100 shadow-xs flex items-center justify-between">
+                {/* 4. CRUD */}
+                <button
+                    type="button"
+                    onClick={() => handleMetricCardClick('UPDATES')}
+                    className={`rounded-2xl p-4 transition-all duration-200 text-left flex items-center justify-between cursor-pointer border hover:scale-[1.01] active:scale-[0.99] ${
+                        selectedMetricFilter === 'UPDATES'
+                            ? 'bg-blue-50 border-blue-500 ring-2 ring-blue-500/30 shadow-sm'
+                            : 'bg-white border-blue-100/80 shadow-xs hover:border-blue-300 hover:bg-blue-50/20'
+                    }`}
+                >
                     <div>
-                        <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">რედაქტირება / CRUD</p>
+                        <div className="flex items-center gap-1.5">
+                            <p className="text-[11px] font-bold uppercase tracking-wider text-gray-500">რედაქტირება / CRUD</p>
+                            {selectedMetricFilter === 'UPDATES' && (
+                                <span className="text-[9px] font-black text-blue-700 bg-blue-100 px-1.5 py-0.5 rounded-full">
+                                    აქტიური
+                                </span>
+                            )}
+                        </div>
                         <p className="text-xl sm:text-2xl font-black text-blue-600 mt-0.5">{stats.updates}</p>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+                        selectedMetricFilter === 'UPDATES' ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-600'
+                    }`}>
                         <FileText className="w-5 h-5" />
                     </div>
-                </div>
+                </button>
 
-                <div className="bg-white rounded-2xl p-4 border border-red-100 shadow-xs flex items-center justify-between col-span-2 sm:col-span-1">
+                {/* 5. Critical */}
+                <button
+                    type="button"
+                    onClick={() => handleMetricCardClick('CRITICAL')}
+                    className={`rounded-2xl p-4 transition-all duration-200 text-left flex items-center justify-between cursor-pointer border hover:scale-[1.01] active:scale-[0.99] col-span-2 sm:col-span-1 ${
+                        selectedMetricFilter === 'CRITICAL'
+                            ? 'bg-red-50 border-red-500 ring-2 ring-red-500/30 shadow-sm'
+                            : 'bg-white border-red-100/80 shadow-xs hover:border-red-300 hover:bg-red-50/20'
+                    }`}
+                >
                     <div>
-                        <p className="text-[11px] font-bold uppercase tracking-wider text-red-500">კრიტიკული / რისკი</p>
+                        <div className="flex items-center gap-1.5">
+                            <p className="text-[11px] font-bold uppercase tracking-wider text-red-500">კრიტიკული / რისკი</p>
+                            {selectedMetricFilter === 'CRITICAL' && (
+                                <span className="text-[9px] font-black text-red-700 bg-red-100 px-1.5 py-0.5 rounded-full">
+                                    აქტიური
+                                </span>
+                            )}
+                        </div>
                         <p className="text-xl sm:text-2xl font-black text-red-600 mt-0.5">{stats.critical}</p>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-red-600">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+                        selectedMetricFilter === 'CRITICAL' ? 'bg-red-600 text-white' : 'bg-red-50 text-red-600'
+                    }`}>
                         <ShieldAlert className="w-5 h-5" />
                     </div>
-                </div>
+                </button>
             </div>
 
             {/* Category Filter Pills */}
@@ -686,6 +805,31 @@ export default function AdminAuditPage() {
                     </select>
                 </div>
             </div>
+
+            {/* Active Metric Filter Banner */}
+            {selectedMetricFilter !== 'ALL' && (
+                <div className="flex items-center justify-between px-4 py-2.5 bg-purple-50/90 border border-purple-200 rounded-2xl text-xs animate-fade-in shadow-xs">
+                    <div className="flex items-center gap-2">
+                        <Filter className="w-3.5 h-3.5 text-[#60318e]" />
+                        <span className="text-gray-700">
+                            გაფილტრულია ბარათით: <strong className="text-[#60318e] font-bold">
+                                {selectedMetricFilter === 'AUTH' && 'ავტორიზაცია / სესია'}
+                                {selectedMetricFilter === 'CONF' && 'კონფერენციის განაცხადი'}
+                                {selectedMetricFilter === 'UPDATES' && 'რედაქტირება / CRUD'}
+                                {selectedMetricFilter === 'CRITICAL' && 'კრიტიკული / რისკი'}
+                            </strong> (ნაპოვნია {filteredLogs.length} ჩანაწერი)
+                        </span>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => setSelectedMetricFilter('ALL')}
+                        className="text-xs font-bold text-[#60318e] hover:text-[#431464] hover:underline cursor-pointer flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-purple-200 shadow-2xs"
+                    >
+                        <span>ფილტრის მოხსნა</span>
+                        <X className="w-3.5 h-3.5" />
+                    </button>
+                </div>
+            )}
 
             {/* Logs Table */}
             <div className="bg-white rounded-3xl border border-purple-100 shadow-sm overflow-hidden">
