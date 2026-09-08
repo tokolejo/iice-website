@@ -8,7 +8,11 @@ export default function NewsModal({ item, onClose }) {
     const [showFullContent, setShowFullContent] = useState(false);
     const [mounted, setMounted] = useState(false);
 
-    // Lock body scroll and listen for ESC key when modal is open
+    // Only include valid images
+    const images = item ? (item.images || [item.imageUrl]).filter(img => img && img !== '' && !img.includes('placeholder.jpg')) : [];
+    const hasImages = images.length > 0;
+
+    // Lock body scroll and listen for ESC / Arrow keys when modal is open
     useEffect(() => {
         setMounted(true);
         document.body.style.overflow = 'hidden';
@@ -16,6 +20,10 @@ export default function NewsModal({ item, onClose }) {
         const handleKeyDown = (e) => {
             if (e.key === 'Escape') {
                 onClose();
+            } else if (e.key === 'ArrowRight' && images.length > 1) {
+                setActiveImageIndex((prev) => (prev + 1) % images.length);
+            } else if (e.key === 'ArrowLeft' && images.length > 1) {
+                setActiveImageIndex((prev) => (prev - 1 + images.length) % images.length);
             }
         };
         window.addEventListener('keydown', handleKeyDown);
@@ -25,7 +33,7 @@ export default function NewsModal({ item, onClose }) {
             document.body.style.overflow = 'unset';
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [onClose]);
+    }, [onClose, images.length]);
 
     if (!item) return null;
     if (!mounted) return null;
@@ -39,10 +47,6 @@ export default function NewsModal({ item, onClose }) {
         .replace(/<figure[^>]*>[\s\S]*?<\/figure>/gi, '')
         .replace(/<img[^>]*>/gi, '')
         .replace(/<p>(?:\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, '') : '';
-
-    // Only include valid images
-    const images = (item.images || [item.imageUrl]).filter(img => img && img !== '' && !img.includes('placeholder.jpg'));
-    const hasImages = images.length > 0;
 
     const handleNextImage = (e) => {
         e.stopPropagation();

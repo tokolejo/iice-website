@@ -24,7 +24,11 @@ import {
     ArrowUpDown,
     ArrowUp,
     ArrowDown,
-    Filter
+    Filter,
+    Images,
+    Star,
+    ChevronLeft,
+    ChevronRight
 } from 'lucide-react';
 
 const INITIAL_CATEGORIES = [
@@ -57,6 +61,8 @@ export default function AdminNewsPage() {
         status: 'published',
     });
     const [coverFile, setCoverFile] = useState(null);
+    const [coverPreviewUrl, setCoverPreviewUrl] = useState('');
+    const [galleryItems, setGalleryItems] = useState([]);
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState('');
     const [itemToDelete, setItemToDelete] = useState(null);
@@ -72,6 +78,19 @@ export default function AdminNewsPage() {
     const [isSavingCategory, setIsSavingCategory] = useState(false);
     const [deletingCatId, setDeletingCatId] = useState(null);
 
+    // Sync Cover Preview URL
+    useEffect(() => {
+        if (coverFile) {
+            const url = URL.createObjectURL(coverFile);
+            setCoverPreviewUrl(url);
+            return () => {
+                URL.revokeObjectURL(url);
+            };
+        } else {
+            setCoverPreviewUrl(formData.coverImageUrl || '');
+        }
+    }, [coverFile, formData.coverImageUrl]);
+
     // Load Data
     const loadNewsAndCategories = async () => {
         setIsLoading(true);
@@ -86,7 +105,8 @@ export default function AdminNewsPage() {
                     category_id: n.category === 'seminars' ? 'cat-seminars' : 'cat-news',
                     content_ka: n.content,
                     content_en: n.contentEn,
-                    cover_image_url: n.image,
+                    cover_image_url: n.imageUrl || n.image || '',
+                    gallery_urls: Array.isArray(n.images) && n.images.length > 0 ? n.images : (n.imageUrl ? [n.imageUrl] : []),
                     status: 'published',
                     published_at: n.date,
                 })));
@@ -118,7 +138,8 @@ export default function AdminNewsPage() {
                     category_id: n.category === 'seminars' ? 'cat-seminars' : 'cat-news',
                     content_ka: n.content,
                     content_en: n.contentEn,
-                    cover_image_url: n.image,
+                    cover_image_url: n.imageUrl || n.image || '',
+                    gallery_urls: Array.isArray(n.images) && n.images.length > 0 ? n.images : (n.imageUrl ? [n.imageUrl] : []),
                     status: 'published',
                     published_at: n.date,
                 })));
@@ -204,25 +225,135 @@ export default function AdminNewsPage() {
             status: 'published',
         });
         setCoverFile(null);
+        setGalleryItems([]);
         setSaveError('');
         setIsEditModalOpen(true);
     };
 
     const openEdit = (item) => {
         setEditingNews(item);
+        const cover = item.cover_image_url || item.imageUrl || '';
+
+        let existingGallery = [];
+        if (Array.isArray(item.gallery_urls) && item.gallery_urls.length > 0) {
+            existingGallery = item.gallery_urls;
+        } else if (Array.isArray(item.images) && item.images.length > 0) {
+            existingGallery = item.images;
+        }
+
         setFormData({
-            titleKa: item.title_ka || '',
-            titleEn: item.title_en || '',
+            titleKa: item.title_ka || item.title || '',
+            titleEn: item.title_en || item.titleEn || '',
             slug: item.slug || '',
-            categoryId: item.category_id || item.news_categories?.id || '',
-            contentKa: item.content_ka || '',
-            contentEn: item.content_en || '',
-            coverImageUrl: item.cover_image_url || '',
+            categoryId: item.category_id || item.news_categories?.id || (item.category === 'seminars' ? 'cat-seminars' : 'cat-news'),
+            contentKa: item.content_ka || item.content || '',
+            contentEn: item.content_en || item.contentEn || '',
+            coverImageUrl: cover,
             status: item.status || 'published',
         });
         setCoverFile(null);
+        setGalleryItems(
+            existingGallery.map((url, idx) => ({
+                id: `existing-${idx}-${url}`,
+                url,
+                isExisting: true,
+            }))
+        );
         setSaveError('');
         setIsEditModalOpen(true);
+    };
+
+    // Gallery & Media Handlers
+    const handleGalleryFilesSelected = (e) => {
+        const files = Array.from(e.target.files || []);
+        if (files.length === 0) return;
+
+        const newItems = files.map((file, idx) => ({
+            id: `new-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 6)}`,
+            url: URL.createObjectURL(file),
+            file,
+            isExisting: false,
+        }));
+
+        setGalleryItems(prev => {
+            const updated = [...prev, ...newItems];
+            if (!coverFile && !formData.coverImageUrl && updated.length > 0) {
+                if (updated[0].file) {
+                    setCoverFile(updated[0].file);
+                } else if (updated[0].url) {
+                    setFormData(p => ({ ...p, coverImageUrl: updated[0].url }));
+                }
+            }
+            return updated;
+        });
+
+        e.target.value = '';
+    };
+
+    const handleSetAsCover = (item) => {
+        if (item.file) {
+            setCoverFile(item.file);
+            setFormData(p => ({ ...p, coverImageUrl: '' }));
+        } else if (item.url) {
+            setCoverFile(null);
+            setFormData(p => ({ ...p, coverImageUrl: item.url }));
+        }
+    };
+
+    const handleRemoveCover = () => {
+        setCoverFile(null);
+        setFormData(p => ({ ...p, coverImageUrl: '' }));
+    };
+
+    const handleRemoveGalleryItem = (id) => {
+        setGalleryItems(prev => {
+            const itemToRemove = prev.find(i => i.id === id);
+            if (itemToRemove && !itemToRemove.isExisting && itemToRemove.url?.startsWith('blob:')) {
+                URL.revokeObjectURL(itemToRemove.url);
+            }
+            return prev.filter(i => i.id !== id);
+        });
+    };
+
+    const handleMoveGalleryItem = (index, direction) => {
+        setGalleryItems(prev => {
+            const targetIndex = index + direction;
+            if (targetIndex < 0 || targetIndex >= prev.length) return prev;
+            const copy = [...prev];
+            const temp = copy[index];
+            copy[index] = copy[targetIndex];
+            copy[targetIndex] = temp;
+            return copy;
+        });
+    };
+
+    const handleClearGallery = () => {
+        galleryItems.forEach(item => {
+            if (!item.isExisting && item.url?.startsWith('blob:')) {
+                URL.revokeObjectURL(item.url);
+            }
+        });
+        setGalleryItems([]);
+    };
+
+    const uploadFileToStorage = async (supabase, file, prefix = 'news') => {
+        const ext = file.name.split('.').pop() || 'jpg';
+        const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const filePath = `${prefix}_${Date.now()}_${Math.random().toString(36).substring(2, 7)}_${cleanName}`;
+        const { error: uploadError } = await supabase.storage
+            .from('news-media')
+            .upload(filePath, file);
+
+        if (uploadError) {
+            console.error('Storage upload error:', uploadError);
+            throw new Error(`სურათის ატვირთვის შეცდომა (${file.name}): ${uploadError.message}`);
+        }
+
+        const { data: { publicUrl } } = supabase.storage
+            .from('news-media')
+            .getPublicUrl(filePath);
+
+        return publicUrl;
     };
 
     const handleSave = async (e) => {
@@ -241,19 +372,34 @@ export default function AdminNewsPage() {
             let finalCoverUrl = formData.coverImageUrl;
 
             if (supabase) {
+                // 1. Upload Cover if newly chosen
                 if (coverFile) {
-                    const ext = coverFile.name.split('.').pop();
-                    const filePath = `news_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${ext}`;
-                    const { error: uploadError } = await supabase.storage
-                        .from('news-media')
-                        .upload(filePath, coverFile);
+                    finalCoverUrl = await uploadFileToStorage(supabase, coverFile, 'cover');
+                }
 
-                    if (!uploadError) {
-                        const { data: { publicUrl } } = supabase.storage
-                            .from('news-media')
-                            .getPublicUrl(filePath);
-                        finalCoverUrl = publicUrl;
+                // 2. Upload and preserve gallery order
+                const finalGalleryUrls = [];
+                for (const item of galleryItems) {
+                    if (item.isExisting && item.url) {
+                        finalGalleryUrls.push(item.url);
+                    } else if (item.file) {
+                        if (coverFile && item.file === coverFile && finalCoverUrl) {
+                            finalGalleryUrls.push(finalCoverUrl);
+                        } else {
+                            const uploadedUrl = await uploadFileToStorage(supabase, item.file, 'gallery');
+                            finalGalleryUrls.push(uploadedUrl);
+                        }
                     }
+                }
+
+                // Auto-fill cover from gallery if missing
+                if (!finalCoverUrl && finalGalleryUrls.length > 0) {
+                    finalCoverUrl = finalGalleryUrls[0];
+                }
+
+                // If cover exists but gallery is empty, include cover as sole gallery slide
+                if (finalCoverUrl && finalGalleryUrls.length === 0) {
+                    finalGalleryUrls.push(finalCoverUrl);
                 }
 
                 const generatedSlug = formData.slug || `news-${Date.now()}`;
@@ -265,6 +411,7 @@ export default function AdminNewsPage() {
                     content_ka: formData.contentKa,
                     content_en: formData.contentEn || null,
                     cover_image_url: finalCoverUrl || null,
+                    gallery_urls: finalGalleryUrls,
                     status: formData.status,
                     updated_at: new Date().toISOString(),
                 };
@@ -284,7 +431,8 @@ export default function AdminNewsPage() {
                         details: {
                             title: formData.titleKa,
                             category: getCategoryName(formData.categoryId),
-                            status: formData.status
+                            status: formData.status,
+                            gallery_count: finalGalleryUrls.length,
                         },
                     });
                 } else {
@@ -304,9 +452,35 @@ export default function AdminNewsPage() {
                         details: {
                             title: formData.titleKa,
                             category: getCategoryName(formData.categoryId),
-                            status: formData.status
+                            status: formData.status,
+                            gallery_count: finalGalleryUrls.length,
                         },
                     });
+                }
+            } else {
+                // Local fallback mode
+                const finalGalleryUrls = galleryItems.map(i => i.url).filter(Boolean);
+                if (!finalCoverUrl && finalGalleryUrls.length > 0) finalCoverUrl = finalGalleryUrls[0];
+                if (finalCoverUrl && finalGalleryUrls.length === 0) finalGalleryUrls.push(finalCoverUrl);
+
+                const fallbackItem = {
+                    id: editingNews ? editingNews.id : `news-${Date.now()}`,
+                    title_ka: formData.titleKa,
+                    title_en: formData.titleEn || null,
+                    slug: formData.slug || `news-${Date.now()}`,
+                    category_id: formData.categoryId || 'cat-news',
+                    content_ka: formData.contentKa,
+                    content_en: formData.contentEn || null,
+                    cover_image_url: finalCoverUrl || null,
+                    gallery_urls: finalGalleryUrls,
+                    status: formData.status,
+                    published_at: editingNews?.published_at || new Date().toISOString(),
+                };
+
+                if (editingNews) {
+                    setNewsList(prev => prev.map(n => n.id === editingNews.id ? { ...n, ...fallbackItem } : n));
+                } else {
+                    setNewsList(prev => [fallbackItem, ...prev]);
                 }
             }
 
@@ -660,7 +834,7 @@ export default function AdminNewsPage() {
                                     return (
                                         <tr key={item.id} className="hover:bg-purple-50/40 transition-colors">
                                             <td className="py-3 px-4">
-                                                <div className="w-12 h-10 rounded-xl overflow-hidden bg-purple-50 border border-purple-100 flex items-center justify-center">
+                                                <div className="relative w-12 h-10 rounded-xl overflow-hidden bg-purple-50 border border-purple-100 flex items-center justify-center">
                                                     {item.cover_image_url ? (
                                                         <img
                                                             src={item.cover_image_url}
@@ -669,6 +843,12 @@ export default function AdminNewsPage() {
                                                         />
                                                     ) : (
                                                         <Newspaper className="w-5 h-5 text-[#AD49E1]/50" />
+                                                    )}
+                                                    {Array.isArray(item.gallery_urls) && item.gallery_urls.length > 1 && (
+                                                        <div className="absolute bottom-0 right-0 bg-slate-900/85 backdrop-blur-xs text-[8px] font-black text-white px-1 py-0.5 rounded-tl flex items-center gap-0.5">
+                                                            <Images className="w-2.5 h-2.5" />
+                                                            <span>{item.gallery_urls.length}</span>
+                                                        </div>
                                                     )}
                                                 </div>
                                             </td>
@@ -760,7 +940,7 @@ export default function AdminNewsPage() {
                 title={editingNews ? 'სიახლის რედაქტირება' : 'ახალი სიახლის დამატება'}
                 subtitle="შეიყვანეთ ინფორმაცია, აირჩიეთ კატეგორია და დააფორმატეთ ტექსტი TipTap ედითორით"
                 icon={Newspaper}
-                maxWidth="max-w-3xl"
+                maxWidth="max-w-4xl"
                 footer={
                     <div className="flex items-center justify-end gap-2 w-full">
                         <button
@@ -887,38 +1067,258 @@ export default function AdminNewsPage() {
                         </div>
                     </div>
 
-                    {/* Media & Status */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Media: Cover & Gallery */}
+                    <div className="bg-slate-50/70 p-4 sm:p-5 rounded-2xl border border-slate-200/80 space-y-5">
+                        <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                            <div className="flex items-center gap-2">
+                                <span className="w-2.5 h-2.5 rounded-full bg-[#60318e]"></span>
+                                <h4 className="font-bold text-xs uppercase tracking-wider text-gray-700 flex items-center gap-2">
+                                    <Images className="w-4 h-4 text-[#60318e]" />
+                                    <span>სურათები და მედია</span>
+                                </h4>
+                            </div>
+                            <span className="text-[11px] text-gray-500 font-medium">
+                                ქავერი + გალერეის სლაიდერი
+                            </span>
+                        </div>
+
+                        {/* Cover Image Section */}
                         <div>
-                            <label className="block text-xs font-bold text-gray-700 mb-1.5">
-                                მთავარი სურათი (Cover)
-                            </label>
-                            <div className="flex items-center gap-3">
-                                <label className="flex-1 border-2 border-dashed border-gray-300 hover:border-[#60318e] bg-white rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer transition-colors group">
-                                    <UploadCloud className="w-5 h-5 text-gray-400 group-hover:text-[#60318e] mb-1" />
-                                    <span className="text-[11px] font-bold text-gray-600">
-                                        {coverFile ? coverFile.name : 'სურათის არჩევა'}
-                                    </span>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        className="hidden"
-                                        onChange={(e) => {
-                                            if (e.target.files?.[0]) setCoverFile(e.target.files[0]);
-                                        }}
-                                    />
+                            <div className="flex items-center justify-between mb-1.5">
+                                <label className="block text-xs font-bold text-gray-700">
+                                    მთავარი სურათი (Cover Image)
                                 </label>
-                                {formData.coverImageUrl && !coverFile && (
-                                    <img
-                                        src={formData.coverImageUrl}
-                                        alt="Preview"
-                                        className="w-12 h-12 rounded-xl object-cover border border-purple-200"
-                                    />
+                                {coverPreviewUrl && (
+                                    <button
+                                        type="button"
+                                        onClick={handleRemoveCover}
+                                        className="text-[11px] text-red-600 hover:text-red-800 font-bold flex items-center gap-1 cursor-pointer"
+                                    >
+                                        <Trash2 className="w-3 h-3" />
+                                        <span>ქავერის მოხსნა</span>
+                                    </button>
                                 )}
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                                {/* Preview Box */}
+                                <div className="relative w-28 h-20 sm:w-36 sm:h-24 rounded-2xl overflow-hidden bg-purple-50 border-2 border-purple-200 shadow-sm flex items-center justify-center flex-shrink-0 group">
+                                    {coverPreviewUrl ? (
+                                        <>
+                                            <img
+                                                src={coverPreviewUrl}
+                                                alt="Cover Preview"
+                                                className="w-full h-full object-cover"
+                                            />
+                                            <div className="absolute top-1.5 left-1.5 bg-black/60 backdrop-blur-xs text-amber-300 text-[10px] font-black px-1.5 py-0.5 rounded-md flex items-center gap-1">
+                                                <Star className="w-3 h-3 fill-amber-300" />
+                                                <span>ქავერი</span>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="text-center p-2 text-gray-400">
+                                            <UploadCloud className="w-6 h-6 mx-auto mb-1 text-purple-300" />
+                                            <span className="text-[10px] font-bold block">არ არის არჩეული</span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Upload / Select Controls */}
+                                <div className="flex-1 space-y-2 w-full">
+                                    <div className="flex items-center gap-2">
+                                        <label className="flex-1 border-2 border-dashed border-gray-300 hover:border-[#60318e] bg-white rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer transition-colors group">
+                                            <UploadCloud className="w-4 h-4 text-gray-400 group-hover:text-[#60318e]" />
+                                            <span className="text-[11px] font-bold text-gray-700">
+                                                {coverFile ? coverFile.name : 'ახალი ქავერის არჩევა'}
+                                            </span>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={(e) => {
+                                                    if (e.target.files?.[0]) {
+                                                        setCoverFile(e.target.files[0]);
+                                                    }
+                                                }}
+                                            />
+                                        </label>
+                                    </div>
+                                    <p className="text-[11px] text-gray-500 font-medium">
+                                        მთავარი სურათი ჩანს საიტის ბარათებზე. ასევე შეგიძლიათ ქვემოთ მოცემული გალერეიდან ნებისმიერ სურათზე დააწკაპუნოთ „ქავერად დაყენებას“.
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
-                        <div>
+                        {/* Gallery Section */}
+                        <div className="pt-3 border-t border-slate-200">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                                        <Images className="w-3.5 h-3.5 text-[#60318e]" />
+                                        <span>გალერეის სურათები (სლაიდერი)</span>
+                                        <span className="ml-1 text-[11px] font-normal text-gray-500">
+                                            ({galleryItems.length} სურათი)
+                                        </span>
+                                    </label>
+                                    <p className="text-[11px] text-gray-500 font-medium">
+                                        ატვირთეთ რამდენიმე სურათი ერთდროულად. ვიზიტორები ამ სურათებს გადასქროლავენ გალერეაში.
+                                    </p>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    {galleryItems.length > 0 && (
+                                        <button
+                                            type="button"
+                                            onClick={handleClearGallery}
+                                            className="text-[11px] text-gray-500 hover:text-red-600 font-bold px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-red-50 transition-colors cursor-pointer"
+                                        >
+                                            გასუფთავება
+                                        </button>
+                                    )}
+                                    <label className="inline-flex items-center gap-1.5 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold px-3.5 py-1.5 rounded-xl text-xs shadow-xs hover:shadow transition-all cursor-pointer">
+                                        <Plus className="w-3.5 h-3.5" />
+                                        <span>+ სურათების დამატება</span>
+                                        <input
+                                            type="file"
+                                            multiple
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={handleGalleryFilesSelected}
+                                        />
+                                    </label>
+                                </div>
+                            </div>
+
+                            {/* Gallery Empty / Multi-upload Dropzone */}
+                            {galleryItems.length === 0 ? (
+                                <label className="border-2 border-dashed border-purple-200 hover:border-[#60318e] bg-purple-50/40 hover:bg-purple-50/70 rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all group text-center">
+                                    <Images className="w-8 h-8 text-purple-400 group-hover:text-[#60318e] mb-2 group-hover:scale-110 transition-transform" />
+                                    <span className="text-xs font-bold text-gray-800 mb-1">
+                                        დააწკაპუნეთ აქ რამდენიმე სურათის ერთად ასარჩევად
+                                    </span>
+                                    <span className="text-[11px] text-gray-500 font-medium">
+                                        შეგიძლიათ ერთდროულად მონიშნოთ და ატვირთოთ 1-ზე მეტი ფოტო (JPG, PNG, WebP)
+                                    </span>
+                                    <input
+                                        type="file"
+                                        multiple
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={handleGalleryFilesSelected}
+                                    />
+                                </label>
+                            ) : (
+                                <div className="space-y-3">
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-72 overflow-y-auto p-2 rounded-2xl bg-white border border-gray-200">
+                                        {galleryItems.map((item, index) => {
+                                            const isCurrentCover = (coverFile && item.file === coverFile) ||
+                                                (!coverFile && formData.coverImageUrl && item.url === formData.coverImageUrl);
+                                            return (
+                                                <div
+                                                    key={item.id}
+                                                    className={`group relative rounded-xl overflow-hidden border-2 transition-all bg-slate-950 aspect-[4/3] flex items-center justify-center ${
+                                                        isCurrentCover
+                                                            ? 'border-amber-400 shadow-md ring-2 ring-amber-400/20'
+                                                            : 'border-slate-200 hover:border-purple-300'
+                                                    }`}
+                                                >
+                                                    <img
+                                                        src={item.url}
+                                                        alt={`Gallery ${index + 1}`}
+                                                        className="w-full h-full object-cover"
+                                                    />
+
+                                                    {/* Index Badge */}
+                                                    <div className="absolute top-1.5 left-1.5 bg-black/70 backdrop-blur-xs text-white text-[10px] font-black px-1.5 py-0.5 rounded-md">
+                                                        #{index + 1}
+                                                    </div>
+
+                                                    {/* Cover Star Badge */}
+                                                    {isCurrentCover && (
+                                                        <div className="absolute top-1.5 right-1.5 bg-amber-400 text-slate-900 text-[10px] font-black px-1.5 py-0.5 rounded-md flex items-center gap-1 shadow-sm">
+                                                            <Star className="w-2.5 h-2.5 fill-slate-900" />
+                                                            <span>ქავერი</span>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Hover Overlay with Actions */}
+                                                    <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
+                                                        <div className="flex items-center justify-between">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleSetAsCover(item)}
+                                                                className={`text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1 transition-all cursor-pointer ${
+                                                                    isCurrentCover
+                                                                        ? 'bg-amber-400 text-slate-900'
+                                                                        : 'bg-white/20 hover:bg-amber-400 hover:text-slate-900 text-white'
+                                                                }`}
+                                                                title="დააყენეთ ეს სურათი მთავარ ქავერად"
+                                                            >
+                                                                <Star className="w-3 h-3" />
+                                                                <span>{isCurrentCover ? 'ქავერია' : 'ქავერად'}</span>
+                                                            </button>
+
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleRemoveGalleryItem(item.id)}
+                                                                className="p-1 rounded-md bg-red-600/80 hover:bg-red-600 text-white transition-colors cursor-pointer"
+                                                                title="სურათის წაშლა გალერეიდან"
+                                                            >
+                                                                <Trash2 className="w-3.5 h-3.5" />
+                                                            </button>
+                                                        </div>
+
+                                                        {/* Reordering Controls */}
+                                                        <div className="flex items-center justify-center gap-2">
+                                                            <button
+                                                                type="button"
+                                                                disabled={index === 0}
+                                                                onClick={() => handleMoveGalleryItem(index, -1)}
+                                                                className="p-1 rounded-md bg-white/20 hover:bg-white/40 disabled:opacity-30 text-white transition-all cursor-pointer"
+                                                                title="მარცხნივ გადაადგილება"
+                                                            >
+                                                                <ChevronLeft className="w-4 h-4" />
+                                                            </button>
+                                                            <span className="text-[10px] text-white/80 font-bold">
+                                                                {index + 1} / {galleryItems.length}
+                                                            </span>
+                                                            <button
+                                                                type="button"
+                                                                disabled={index === galleryItems.length - 1}
+                                                                onClick={() => handleMoveGalleryItem(index, 1)}
+                                                                className="p-1 rounded-md bg-white/20 hover:bg-white/40 disabled:opacity-30 text-white transition-all cursor-pointer"
+                                                                title="მარჯვნივ გადაადგილება"
+                                                            >
+                                                                <ChevronRight className="w-4 h-4" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <div className="flex items-center justify-between text-[11px] text-gray-500 px-1">
+                                        <span>* ისრებით შეგიძლიათ შეცვალოთ სურათების ჩვენების თანმიმდევრობა</span>
+                                        <label className="text-[#60318e] hover:text-[#7A1CAC] font-bold cursor-pointer flex items-center gap-1">
+                                            <Plus className="w-3 h-3" />
+                                            <span>კიდევ დამატება</span>
+                                            <input
+                                                type="file"
+                                                multiple
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={handleGalleryFilesSelected}
+                                            />
+                                        </label>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Status */}
+                        <div className="pt-3 border-t border-slate-200">
                             <label className="block text-xs font-bold text-gray-700 mb-1.5">
                                 პუბლიკაციის სტატუსი
                             </label>

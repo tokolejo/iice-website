@@ -7,6 +7,10 @@
 ALTER TABLE public.conference_registrations_2026 
 ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'pending';
 
+-- 1.1 Ensure 'gallery_urls' column exists in public.news
+ALTER TABLE public.news 
+ADD COLUMN IF NOT EXISTS gallery_urls TEXT[] DEFAULT '{}';
+
 -- 2. Ensure audit_logs table exists
 CREATE TABLE IF NOT EXISTS public.audit_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

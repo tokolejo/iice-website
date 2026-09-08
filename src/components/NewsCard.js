@@ -58,6 +58,18 @@ export default function NewsCard({ item, onClick, compact = false }) {
                     </span>
                 </div>
 
+                {/* Gallery Count Badge */}
+                {Array.isArray(item.images) && item.images.length > 1 && (
+                    <div className={`absolute ${compact ? 'top-3 right-3' : 'top-5 right-5'}`}>
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black tracking-wider text-white bg-slate-950/70 backdrop-blur-md shadow-lg border border-white/20">
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>{item.images.length}</span>
+                        </span>
+                    </div>
+                )}
+
                 {/* Date Badge */}
                 <div className={`absolute ${compact ? 'bottom-3 right-3' : 'bottom-5 right-5'} translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500`}>
                     <span className="px-3 py-1 bg-white/90 backdrop-blur-md rounded-lg text-[10px] font-bold text-[#60318e] shadow-xl border border-white/50">
