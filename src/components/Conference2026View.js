@@ -342,6 +342,12 @@ export default function Conference2026View() {
                     abstractNumber: assignedAbstractNumber,
                     name: `${formData.firstName} ${formData.lastName}`,
                 });
+                setTimeout(() => {
+                    const el = document.getElementById('registration-success-banner');
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 100);
             } else {
                 const errData = await res.json().catch(() => ({}));
                 throw new Error(errData.error || 'რეგისტრაცია ვერ მოხერხდა');
@@ -1117,6 +1123,61 @@ export default function Conference2026View() {
                                     )}
                                 </button>
                             </div>
+
+                            {/* Inline Success Registration Card (Shown below form instead of popup) */}
+                            {successData && (
+                                <div
+                                    id="registration-success-banner"
+                                    className="mt-6 p-6 sm:p-8 bg-gradient-to-br from-emerald-50/90 via-purple-50/40 to-white rounded-3xl border-2 border-emerald-300 shadow-lg animate-fade-in text-center max-w-xl mx-auto"
+                                >
+                                    <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3.5 shadow-2xs">
+                                        <CheckCircle2 className="w-8 h-8" />
+                                    </div>
+
+                                    <h3 className="text-xl sm:text-2xl font-black text-[#60318e] mb-2">
+                                        {t.success.title}
+                                    </h3>
+
+                                    <p className="text-xs sm:text-sm text-slate-600 mb-5 leading-relaxed font-medium">
+                                        {t.success.numberText}
+                                    </p>
+
+                                    <div className="bg-purple-50/60 border-2 border-dashed border-[#AD49E1] rounded-2xl p-4 sm:p-5 mb-5 flex flex-col sm:flex-row items-center justify-between gap-3 max-w-md mx-auto shadow-2xs">
+                                        <span className="text-xl sm:text-2xl font-black text-[#60318e] tracking-wider font-mono">
+                                            {successData.abstractNumber}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={copyAbstractCode}
+                                            className="inline-flex items-center gap-1.5 bg-[#60318e] hover:bg-[#7A1CAC] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-xs cursor-pointer interactive-tap"
+                                        >
+                                            {copied ? (
+                                                <>
+                                                    <Check className="w-4 h-4 text-emerald-300" />
+                                                    <span>{t.success.copied}</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Copy className="w-4 h-4" />
+                                                    <span>{t.success.copy}</span>
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+
+                                    <p className="text-xs text-slate-500 max-w-lg mx-auto leading-relaxed mb-5">
+                                        {t.success.advice}
+                                    </p>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setSuccessData(null)}
+                                        className="inline-flex items-center gap-1.5 px-6 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors cursor-pointer"
+                                    >
+                                        <span>{t.success.close}</span>
+                                    </button>
+                                </div>
+                            )}
                         </form>
                     </div>
                 )}
@@ -1762,66 +1823,6 @@ export default function Conference2026View() {
                     </a>
                 </div>
             </div>
-
-            {/* Success Confirmation Modal */}
-            {successData && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-md animate-fade-in"
-                    onClick={(e) => {
-                        if (e.target === e.currentTarget) setSuccessData(null);
-                    }}
-                >
-                    <div
-                        className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 text-center relative border border-purple-100 animate-scale-in"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
-                            <CheckCircle2 className="w-10 h-10" />
-                        </div>
-
-                        <h3 className="text-xl sm:text-2xl font-black text-[#60318e] mb-2">
-                            {t.success.title}
-                        </h3>
-
-                        <p className="text-xs sm:text-sm text-slate-600 mb-6 leading-relaxed">
-                            {t.success.numberText}
-                        </p>
-
-                        <div className="bg-purple-50 border-2 border-dashed border-[#AD49E1] rounded-2xl p-4 mb-6 flex items-center justify-between">
-                            <span className="text-lg sm:text-xl font-black text-[#60318e] tracking-wider font-mono">
-                                {successData.abstractNumber}
-                            </span>
-                            <button
-                                onClick={copyAbstractCode}
-                                className="inline-flex items-center gap-1.5 bg-[#60318e] hover:bg-[#7A1CAC] text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-xs cursor-pointer"
-                            >
-                                {copied ? (
-                                    <>
-                                        <Check className="w-3.5 h-3.5 text-emerald-300" />
-                                        <span>{t.success.copied}</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Copy className="w-3.5 h-3.5" />
-                                        <span>{t.success.copy}</span>
-                                    </>
-                                )}
-                            </button>
-                        </div>
-
-                        <p className="text-[11px] text-slate-400 mb-6">
-                            {t.success.advice}
-                        </p>
-
-                        <button
-                            onClick={() => setSuccessData(null)}
-                            className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 rounded-xl text-xs sm:text-sm transition-colors cursor-pointer"
-                        >
-                            {t.success.close}
-                        </button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

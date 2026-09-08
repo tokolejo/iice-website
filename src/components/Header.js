@@ -16,14 +16,12 @@ export default function Header() {
     const t = language === 'en' ? en : ka;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [openMobileDropdowns, setOpenMobileDropdowns] = useState({});
-    const [isScrolled, setIsScrolled] = useState(false);
     const [mounted, setMounted] = useState(false);
     const pathname = usePathname();
 
     useEffect(() => {
         setMounted(true);
     }, []);
-
 
     const isAboutActive = ['/history', '/mission', '/administration', '/scientific-council', '/statute', '/reports', '/studies-internships', '/important-projects', '/collaboration'].some(p => pathname === p);
     const isEventsActive = ['/events/conference-2023', '/events/conference-2016'].some(p => pathname === p || pathname.startsWith('/events/'));
@@ -40,15 +38,6 @@ export default function Header() {
             isActive ? 'bg-white/20 text-[#EBD3F8] shadow-xs' : 'text-white/90 hover:text-white hover:bg-white/10'
         }`;
     };
-
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 15);
-        };
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        handleScroll();
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
 
     // Lock body scroll when mobile menu is open
     useEffect(() => {
@@ -93,18 +82,14 @@ export default function Header() {
     }
 
     return (
-        <header className={`sticky top-0 z-50 transition-all duration-300 ${
-            isScrolled 
-                ? 'bg-[#2e0d42]/95 backdrop-blur-md shadow-lg py-0 sm:py-0.5' 
-                : 'bg-[#2e0d42] py-1 shadow-md'
-        }`}>
+        <header className="sticky top-0 z-50 bg-[#2e0d42]/95 backdrop-blur-md shadow-md py-0.5">
             <div className="max-w-[96%] xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-4 xl:px-8">
-                <div className={`flex justify-between items-center ${isScrolled ? 'h-16 xl:h-18' : 'h-20 xl:h-22'} gap-2 lg:gap-4 xl:gap-8 w-full transition-all duration-300`}>
+                <div className="flex justify-between items-center h-16 xl:h-18 gap-2 lg:gap-4 xl:gap-8 w-full">
                     {/* Logo Segment */}
                     <div className="flex-shrink-0 flex items-center animate-fade-in-up">
                         <Link href="/" className="flex items-center gap-2 xl:gap-3 group">
                             {/* Site Logo */}
-                            <div className={`${isScrolled ? 'w-9 h-9 xl:w-11 xl:h-11' : 'w-10 h-10 xl:w-14 xl:h-14'} flex items-center justify-center transition-all duration-300 transform group-hover:scale-105 flex-shrink-0 relative`}>
+                            <div className="w-10 h-10 xl:w-12 xl:h-12 flex items-center justify-center transform group-hover:scale-105 flex-shrink-0 relative">
                                 <Image
                                     src="/logo.png"
                                     alt="IICE Logo"
@@ -114,11 +99,11 @@ export default function Header() {
                                     className="w-full h-full object-contain"
                                 />
                             </div>
-                            <div className="hidden sm:block lg:hidden xl:block transition-all duration-300 transform group-hover:translate-x-1">
-                                <h1 className={`font-bold transition-all duration-300 ${isScrolled ? 'text-xs xl:text-xs' : 'text-xs lg:text-[10px] xl:text-sm'} text-white leading-tight`} style={{ color: '#ffffff' }}>
+                            <div className="hidden sm:block lg:hidden xl:block transform group-hover:translate-x-1">
+                                <h1 className="font-bold text-xs xl:text-sm text-white leading-tight" style={{ color: '#ffffff' }}>
                                     {language === 'ka' ? 'თსუ რ. აგლაძის სახელობის' : 'TSU R. Agladze Institute'}
                                 </h1>
-                                <p className="text-[9px] lg:text-[8px] xl:text-[10px] text-white truncate whitespace-normal" style={{ color: '#ffffff', opacity: 0.9 }}>
+                                <p className="text-[9px] xl:text-[10px] text-white truncate whitespace-normal" style={{ color: '#ffffff', opacity: 0.9 }}>
                                     {language === 'ka' ? 'არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი' : 'of Inorganic Chemistry and Electrochemistry'}
                                 </p>
                             </div>
