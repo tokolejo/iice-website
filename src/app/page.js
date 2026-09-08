@@ -95,7 +95,7 @@ export default function Home() {
             </div>
             <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl tracking-tight font-extrabold text-[#60318e] drop-shadow-xs leading-[1.15]">
               <span className="block text-[#60318e]">{t.home.heroTitle}</span>{' '}
-              <span className="block text-[#7A1CAC] mt-1">{t.home.heroTitleHighlight}</span>
+              <span className="block text-[#60318e] mt-1">{t.home.heroTitleHighlight}</span>
             </h1>
             <p className="mt-4 text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-xl mx-auto md:mx-0">
               {t.home.heroSubtitle}
