@@ -152,7 +152,7 @@ export default function Home() {
                 <div className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-black tracking-wide bg-purple-100 text-[#60318e] border border-purple-200 shadow-xs">
                   <span>
                     {language === 'en'
-                      ? '3rd International Scientific Conference 2026'
+                      ? 'International Scientific Conference 2026'
                       : '2026 წლის საერთაშორისო სამეცნიერო კონფერენცია'}
                   </span>
                 </div>

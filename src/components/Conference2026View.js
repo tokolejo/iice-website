@@ -82,7 +82,7 @@ export default function Conference2026View() {
     const [copied, setCopied] = useState(false);
 
     const t = {
-        badge: isEn ? "3rd International Scientific Conference 2026" : "2026 წლის საერთაშორისო სამეცნიერო კონფერენცია",
+        badge: isEn ? "International Scientific Conference 2026" : "2026 წლის საერთაშორისო სამეცნიერო კონფერენცია",
         title: isEn
             ? "3rd International Scientific Conference: “Modern Trends in Chemistry, Chemical Technologies and Related Fields: Green Energy Prospects, Ecological Sustainability, Food Safety. 2026”"
             : "მე-3 საერთაშორისო სამეცნიერო კონფერენცია: „თანამედროვე ტენდენციები ქიმიაში, ქიმიურ ტექნოლოგიებსა და მომიჯნავე დარგებში: მწვანე ენერგეტიკის პერსპექტივები, ეკოლოგიური მდგრადობა, სურსათის უვნებელობა. 2026“",
@@ -412,9 +412,6 @@ export default function Conference2026View() {
 
     return (
         <div className="bg-slate-50 min-h-screen pb-20">
-            <title>{isEn ? "3rd International Scientific Conference 2026 | TSU IICE" : "III საერთაშორისო სამეცნიერო კონფერენცია 2026 | TSU IICE"}</title>
-            <meta name="description" content={isEn ? "3rd International Scientific Conference 2026 dedicated to the 70th anniversary of IICE." : "მე-3 საერთაშორისო სამეცნიერო კონფერენცია 2026 ეძღვნება რაფიელ აგლაძის ინსტიტუტის 70 წლისთავს."} />
-
             {/* Custom Modern Conference Header Banner - Institute Theme & Bilingual */}
             <div className="relative animated-gradient-bg overflow-hidden border-b border-purple-100/80 pt-3 sm:pt-4 lg:pt-5 pb-6 sm:pb-8 lg:pb-8 px-4 sm:px-6 lg:px-10 shadow-xs">
                 {/* Ambient soft background blobs like main page */}
