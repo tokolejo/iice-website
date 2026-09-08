@@ -71,8 +71,8 @@ export function wrapInEmailLayout({ title, contentHtml, previewText = '' }) {
         body { margin: 0; padding: 0; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
         table { border-collapse: collapse; }
         img { border: 0; outline: none; text-decoration: none; }
-        a { color: #60318e; text-decoration: none; font-weight: 600; }
-        a:hover { text-decoration: underline; }
+        .email-container a { color: #60318e; text-decoration: none; font-weight: 600; }
+        .email-container a:hover { text-decoration: underline; }
         .email-container { max-width: 620px; margin: 0 auto; background: #ffffff; border-radius: 20px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
         .badge { display: inline-block; padding: 6px 14px; background: #f3e8ff; color: #60318e; border-radius: 10px; font-weight: 700; font-size: 13px; font-family: monospace; }
         .info-card { background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 14px; padding: 18px; margin: 20px 0; }

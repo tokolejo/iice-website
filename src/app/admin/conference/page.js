@@ -12,7 +12,6 @@ import {
     getAttendanceLabel
 } from '../../../lib/conferenceConstants';
 import AdminModal from '../../../components/admin/AdminModal';
-import AcceptanceLetterModal from '../../../components/admin/AcceptanceLetterModal';
 import EmailModal from '../../../components/admin/EmailModal';
 import EmailTemplateManagerModal from '../../../components/admin/EmailTemplateManagerModal';
 import {
@@ -40,7 +39,6 @@ import {
     FileSpreadsheet,
     FileCode,
     RefreshCw,
-    Printer,
     Loader2,
     UploadCloud,
     Archive,
@@ -109,7 +107,6 @@ export default function AdminConferencePage() {
     const [selectedReg, setSelectedReg] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
-    const [isLetterModalOpen, setIsLetterModalOpen] = useState(false);
 
     // Email Modal state
     const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
@@ -1322,14 +1319,6 @@ export default function AdminConferencePage() {
                                     <span>Excel</span>
                                 </button>
                                 <button
-                                    onClick={() => setIsLetterModalOpen(true)}
-                                    className="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-[#60318e] text-[#60318e] hover:text-white border border-purple-200 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
-                                    title="მიღების / მოწვევის ოფიციალური წერილი"
-                                >
-                                    <Printer className="w-3.5 h-3.5" />
-                                    <span>მიღების წერილი</span>
-                                </button>
-                                <button
                                     onClick={() => handleOpenEmailForRecipient(selectedReg)}
                                     className="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-600 text-[#60318e] hover:text-white border border-purple-200 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
                                     title="მეილის მიწერა"
@@ -1809,16 +1798,6 @@ export default function AdminConferencePage() {
                     </div>
                 )}
             </AdminModal>
-
-            {/* Acceptance Letter Modal */}
-            <AcceptanceLetterModal
-                isOpen={isLetterModalOpen}
-                onClose={() => setIsLetterModalOpen(false)}
-                registration={selectedReg}
-                onSendEmail={(reg, lang) => {
-                    handleOpenEmailForRecipient(reg, lang === 'en' ? 'acceptance_en' : 'acceptance_ka');
-                }}
-            />
 
             {/* Conference Email Dispatcher Modal */}
             <EmailModal

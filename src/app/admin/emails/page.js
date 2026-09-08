@@ -671,9 +671,10 @@ export default function AdminEmailsPage() {
                                             <span className="truncate max-w-[80%]">Subject: {previewSubject}</span>
                                             <span className="text-[10px] text-slate-400 font-mono">HTML Preview</span>
                                         </div>
-                                        <div
-                                            className="p-4 bg-slate-50 overflow-y-auto max-h-[500px]"
-                                            dangerouslySetInnerHTML={{ __html: previewHtml }}
+                                        <iframe
+                                            title="Email HTML Preview"
+                                            srcDoc={previewHtml}
+                                            className="w-full h-[550px] bg-slate-50 border-0"
                                         />
                                     </div>
                                 </div>

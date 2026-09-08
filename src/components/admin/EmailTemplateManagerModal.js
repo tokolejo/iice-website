@@ -483,8 +483,12 @@ export default function EmailTemplateManagerModal({ isOpen, onClose }) {
                                     <p><span className="text-slate-400 font-bold">თემა:</span> <span className="font-bold text-slate-900">{previewSubject}</span></p>
                                 </div>
 
-                                <div className="bg-white rounded-xl shadow-xs overflow-hidden max-h-[500px] overflow-y-auto border border-slate-200">
-                                    <div dangerouslySetInnerHTML={{ __html: previewHtml }} />
+                                <div className="bg-white rounded-xl shadow-xs overflow-hidden h-[520px] border border-slate-200">
+                                    <iframe
+                                        title="Email Preview"
+                                        srcDoc={previewHtml}
+                                        className="w-full h-full border-0"
+                                    />
                                 </div>
                             </div>
                         </div>

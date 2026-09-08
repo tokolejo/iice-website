@@ -307,7 +307,9 @@ export default function AdminLayout({ children }) {
                 <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
                     {navItems.map((item) => {
                         const Icon = item.icon;
-                        const isActive = pathname === item.href;
+                        const isActive = item.href === '/admin'
+                            ? cleanPath === '/admin'
+                            : cleanPath.startsWith(item.href);
                         return (
                             <Link
                                 key={item.href}
@@ -315,16 +317,16 @@ export default function AdminLayout({ children }) {
                                 onClick={() => setIsSidebarOpen(false)}
                                 className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                                     isActive
-                                        ? 'bg-[#60318e] text-white shadow-md'
-                                        : 'text-white/70 hover:text-white hover:bg-white/5'
+                                        ? 'bg-[#60318e] !text-white shadow-md ring-1 ring-white/20'
+                                        : 'text-white/90 hover:!text-white hover:bg-white/10'
                                 }`}
                             >
                                 <div className="flex items-center gap-3">
-                                    <Icon className={`w-4 h-4 ${isActive ? 'text-[#EBD3F8]' : 'text-white/60'}`} />
-                                    <span>{item.label}</span>
+                                    <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-white/70'}`} />
+                                    <span className="!text-white font-medium">{item.label}</span>
                                 </div>
                                 {item.badge && (
-                                    <span className="text-[9px] bg-[#AD49E1] text-white px-2 py-0.5 rounded-full font-bold">
+                                    <span className="text-[9px] bg-[#AD49E1] text-white px-2 py-0.5 rounded-full font-bold shadow-xs">
                                         {item.badge}
                                     </span>
                                 )}
@@ -338,13 +340,13 @@ export default function AdminLayout({ children }) {
                     <Link
                         href="/"
                         target="_blank"
-                        className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+                        className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-white/90 hover:text-white hover:bg-white/10 transition-colors"
                     >
                         <div className="flex items-center gap-2">
-                            <ExternalLink className="w-4 h-4" />
-                            <span>საიტის ნახვა (Public)</span>
+                            <ExternalLink className="w-4 h-4 text-white/70" />
+                            <span className="!text-white">საიტის ნახვა (Public)</span>
                         </div>
-                        <ChevronRight className="w-3.5 h-3.5 opacity-50" />
+                        <ChevronRight className="w-3.5 h-3.5 opacity-50 text-white" />
                     </Link>
 
                     <button
