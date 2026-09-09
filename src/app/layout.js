@@ -58,38 +58,34 @@ const googleSans = localFont({
 export const metadata = {
   metadataBase: new URL('https://iice.ge'),
   title: {
-    default: "თსუ რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | TSU IICE",
-    template: "%s | TSU IICE"
+    default: "რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | IICE",
+    template: "%s | IICE"
   },
-  description: "თსუ რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის ოფიციალური ვებ-გვერდი. სამეცნიერო კვლევები, ინოვაციები და განათლება ქიმიის დარგში 1956 წლიდან.",
+  description: "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის ოფიციალური ვებ-გვერდი. სამეცნიერო კვლევები, ინოვაციები და განათლება ქიმიის დარგში 1956 წლიდან.",
   keywords: [
-    "თსუ",
     "აგლაძის ინსტიტუტი",
     "არაორგანული ქიმია",
     "ელექტროქიმია",
     "რაფიელ აგლაძე",
     "ქიმიის ინსტიტუტი",
     "საქართველოს მეცნიერება",
-    "თბილისის სახელმწიფო უნივერსიტეტი",
-    "TSU",
     "IICE",
-    "TSU IICE",
     "Institute of Inorganic Chemistry and Electrochemistry",
     "Rafael Agladze Institute",
     "Inorganic Chemistry Georgia",
     "Electrochemistry Georgia"
   ],
-  authors: [{ name: "TSU IICE", url: "https://iice.ge" }],
+  authors: [{ name: "IICE", url: "https://iice.ge" }],
   creator: "Institute of Inorganic Chemistry and Electrochemistry",
-  publisher: "Ivane Javakhishvili Tbilisi State University",
+  publisher: "R. Agladze Institute of Inorganic Chemistry and Electrochemistry",
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: "თსუ რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | TSU IICE",
-    description: "თსუ რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის ოფიციალური ვებ-გვერდი. სამეცნიერო კვლევები, ინოვაციები და განათლება ქიმიის დარგში 1956 წლიდან.",
+    title: "რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | IICE",
+    description: "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის ოფიციალური ვებ-გვერდი. სამეცნიერო კვლევები, ინოვაციები და განათლება ქიმიის დარგში 1956 წლიდან.",
     url: "https://iice.ge/",
-    siteName: "TSU IICE",
+    siteName: "IICE",
     locale: "ka_GE",
     type: "website",
     images: [
@@ -97,13 +93,13 @@ export const metadata = {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "თსუ რაფიელ აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი - TSU IICE",
+        alt: "რაფიელ აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი - IICE",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "თსუ რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | TSU IICE",
+    title: "რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | IICE",
     description: "სამეცნიერო კვლევები, ინოვაციები და განათლება ქიმიის დარგში 1956 წლიდან.",
     images: ["/images/og-image.png"],
   },

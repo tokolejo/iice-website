@@ -101,7 +101,7 @@ export default function Header() {
                             </div>
                             <div className="hidden sm:block lg:hidden xl:block">
                                 <h1 className="font-bold text-xs xl:text-sm text-white leading-tight" style={{ color: '#ffffff' }}>
-                                    {language === 'ka' ? 'თსუ რ. აგლაძის სახელობის' : 'TSU R. Agladze Institute'}
+                                    {language === 'ka' ? 'რ. აგლაძის სახელობის' : 'R. Agladze Institute'}
                                 </h1>
                                 <p className="text-[9px] xl:text-[10px] text-white truncate whitespace-normal" style={{ color: '#ffffff', opacity: 0.9 }}>
                                     {language === 'ka' ? 'არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი' : 'of Inorganic Chemistry and Electrochemistry'}
@@ -247,7 +247,7 @@ export default function Header() {
                                     <Image src="/logo.png" alt="IICE" width={32} height={32} className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                    <h2 className="font-bold text-xs text-white leading-tight">{language === 'ka' ? 'თსუ რ. აგლაძის ინსტიტუტი' : 'TSU IICE'}</h2>
+                                    <h2 className="font-bold text-xs text-white leading-tight">{language === 'ka' ? 'რ. აგლაძის ინსტიტუტი' : 'IICE'}</h2>
                                     <p className="text-[9px] text-purple-200/80 leading-tight">{language === 'ka' ? 'არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი' : 'Agladze Institute'}</p>
                                 </div>
                             </div>

@@ -22,7 +22,7 @@ export default {
         staffDirectory: 'Staff Directory'
     },
     home: {
-        heroTitle: 'TSU R. Agladze Institute of',
+        heroTitle: 'R. Agladze Institute of',
         heroTitleHighlight: 'Inorganic Chemistry and Electrochemistry',
         heroSubtitle: 'Dedicated to fundamental and applied research, driving innovation in chemical sciences.',
         btnDepartments: 'Our Departments',
@@ -43,8 +43,13 @@ export default {
         staffCount: 'Staff'
     },
     staff: {
-        viewBio: 'View Biography',
-        viewCv: 'View Curriculum Vitae'
+        title: 'Scientific Staff',
+        subtitle: 'Researchers and scientists of our institute',
+        allDepartments: 'All Departments',
+        searchPlaceholder: 'Search...',
+        close: 'Close',
+        viewProfile: 'View Profile',
+        viewBio: 'View Full Bio'
     },
     common: {
         searchPlaceholder: 'Search...',
@@ -53,14 +58,14 @@ export default {
         viewBio: 'View Full BIO Document'
     },
     footer: {
-        tsuAgladze: 'TSU R. Agladze',
+        tsuAgladze: 'R. Agladze',
         instituteTitleHead: 'Institute of Inorganic Chemistry',
-        instituteDescription: 'Ivane Javakhishvili Tbilisi State University R. Agladze Institute of Inorganic Chemistry and Electrochemistry. Serving the advancement of science since 1956. Our goal is innovative research and the implementation of new technologies.',
+        instituteDescription: 'R. Agladze Institute of Inorganic Chemistry and Electrochemistry. Advancing science and chemical innovation since 1956.',
         instituteMenuTitle: 'Institute',
         academicMenuTitle: 'Academic',
         contactMenuTitle: 'Contact',
-        address: 'Tbilisi 0186, Georgia\nElizbar Mindeli St. #11',
+        address: '0186 Tbilisi, Georgia\n#11 Elizbar Mindeli Street',
         sendMessage: 'Send Message',
-        copyright: 'TSU IICE. All rights reserved.'
+        copyright: 'IICE. All rights reserved.'
     }
 };

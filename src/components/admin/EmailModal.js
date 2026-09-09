@@ -108,7 +108,7 @@ export default function EmailModal({
             setBodyText(tmpl.bodyText);
         } else if (presetKey === 'custom') {
             const defaultName = recipientCount === 1 ? `${sampleRecipient.first_name || ''} ${sampleRecipient.last_name || ''}`.trim() : '{name}';
-            setSubject(`თსუ IICE 2026: შეტყობინება საორგანიზაციო კომიტეტიდან`);
+            setSubject(`IICE 2026: შეტყობინება საორგანიზაციო კომიტეტიდან`);
             setBodyText(`პატივცემულო ${defaultName || 'კოლეგა'},
 
 გაცნობებთ, რომ ...
@@ -345,7 +345,7 @@ IICE 2026 საორგანიზაციო კომიტეტი
                                 type="text"
                                 value={subject}
                                 onChange={(e) => setSubject(e.target.value)}
-                                placeholder="მაგ: თსუ IICE 2026 - ოფიციალური შეტყობინება"
+                                placeholder="მაგ: IICE 2026 - ოფიციალური შეტყობინება"
                                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#AD49E1] transition-all bg-white"
                             />
                         </div>

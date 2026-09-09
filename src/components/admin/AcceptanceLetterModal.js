@@ -35,7 +35,7 @@ Country: ${reg.citizenship || 'Georgia'}
 
 Dear Colleague,
 
-On behalf of the Scientific and Organizing Committee of the International Scientific Conference dedicated to the 70th Anniversary of TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry (IICE 2026), we are pleased to inform you that your abstract entitled:
+On behalf of the Scientific and Organizing Committee of the International Scientific Conference dedicated to the 70th Anniversary of R. Agladze Institute of Inorganic Chemistry and Electrochemistry (IICE 2026), we are pleased to inform you that your abstract entitled:
 
 "${reg.presentation_title || 'N/A'}"
 
@@ -43,14 +43,14 @@ has been officially reviewed and ACCEPTED for inclusion in the conference progra
 >> ${presentationTypeStr} <<
 Under the thematic topic: "${getTopicLabel(reg.thematic_topic, 'en')}"
 
-The conference will take place in Tbilisi, Georgia, on September 24-26, 2026.
+The conference will take place in Tbilisi, Georgia, on November 25-27, 2026.
 You are cordially invited to present your research findings and participate in the academic sessions.
 
 We look forward to welcoming you to Tbilisi.
 
 Sincerely,
 Organizing Committee
-TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry
+R. Agladze Institute of Inorganic Chemistry and Electrochemistry
 Email: info@iice.ge | Web: https://iice.ge`
         : `ოფიციალური მიღებისა და მოწვევის წერილი
 რეგისტრაციის №: ${reg.abstract_number || 'IICE-2026-PENDING'}
@@ -62,7 +62,7 @@ Email: info@iice.ge | Web: https://iice.ge`
 
 პატივცემულო კოლეგა,
 
-თსუ რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის 70 წლის იუბილესადმი მიძღვნილი საერთაშორისო სამეცნიერო კონფერენციის (IICE 2026) საორგანიზაციო კომიტეტის სახელით გაცნობებთ, რომ თქვენი წარმოდგენილი თეზისი:
+რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის 70 წლის იუბილესადმი მიძღვნილი საერთაშორისო სამეცნიერო კონფერენციის (IICE 2026) საორგანიზაციო კომიტეტის სახელით გაცნობებთ, რომ თქვენი წარმოდგენილი თეზისი:
 
 „${reg.presentation_title || 'N/A'}“
 
@@ -70,12 +70,12 @@ Email: info@iice.ge | Web: https://iice.ge`
 >> ${presentationTypeStr} <<
 სექცია: „${getTopicLabel(reg.thematic_topic, 'ka')}“
 
-კონფერენცია გაიმართება ქ. თბილისში, 2026 წლის 24-26 სექტემბერს.
+კონფერენცია გაიმართება ქ. თბილისში, 2026 წლის 25-27 ნოემბერს.
 მოხარული ვიქნებით თქვენი მობრძანებით და კონფერენციის მუშაობაში მონაწილეობის მიღებით.
 
 პატივისცემით,
 საორგანიზაციო კომიტეტი
-თსუ რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი
+რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი
 ელ-ფოსტა: info@iice.ge | ვებგვერდი: https://iice.ge`;
 
     const handleCopy = async () => {
@@ -176,7 +176,7 @@ Email: info@iice.ge | Web: https://iice.ge`
                             </div>
                             <div>
                                 <h1 className="text-base sm:text-lg font-black text-[#2e0d42] leading-tight">
-                                    {isEn ? 'TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry' : 'თსუ რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი'}
+                                    {isEn ? 'R. Agladze Institute of Inorganic Chemistry and Electrochemistry' : 'რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი'}
                                 </h1>
                                 <p className="text-xs text-slate-500 font-medium mt-1">
                                     {isEn ? 'International Scientific Conference IICE 2026' : 'საერთაშორისო სამეცნიერო კონფერენცია IICE 2026'}
@@ -208,8 +208,8 @@ Email: info@iice.ge | Web: https://iice.ge`
 
                         <p>
                             {isEn
-                                ? 'On behalf of the Scientific and Organizing Committee of the International Scientific Conference dedicated to the 70th Anniversary of TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry (IICE 2026), we are pleased to officially inform you that your submitted abstract has been peer-reviewed and ACCEPTED for presentation:'
-                                : 'თსუ რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის დაარსების 70 წლის იუბილესადმი მიძღვნილი საერთაშორისო სამეცნიერო კონფერენციის (IICE 2026) საორგანიზაციო კომიტეტის სახელით გაცნობებთ, რომ თქვენ მიერ წარმოდგენილი თეზისი განხილულ და მიღებულ იქნა სამეცნიერო პროგრამაში:'}
+                                ? 'On behalf of the Scientific and Organizing Committee of the International Scientific Conference dedicated to the 70th Anniversary of R. Agladze Institute of Inorganic Chemistry and Electrochemistry (IICE 2026), we are pleased to officially inform you that your submitted abstract has been peer-reviewed and ACCEPTED for presentation:'
+                                : 'რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის დაარსების 70 წლის იუბილესადმი მიძღვნილი საერთაშორისო სამეცნიერო კონფერენციის (IICE 2026) საორგანიზაციო კომიტეტის სახელით გაცნობებთ, რომ თქვენ მიერ წარმოდგენილი თეზისი განხილულ და მიღებულ იქნა სამეცნიერო პროგრამაში:'}
                         </p>
 
                         {/* Highlighted Paper Box */}
@@ -232,8 +232,8 @@ Email: info@iice.ge | Web: https://iice.ge`
 
                         <p>
                             {isEn
-                                ? 'The conference will take place in Tbilisi, Georgia, on September 24-26, 2026. You are cordially invited to participate in the scientific sessions, keynote lectures, and academic discussions.'
-                                : 'კონფერენცია გაიმართება ქ. თბილისში, 2026 წლის 24-26 სექტემბერს. მოხარული ვიქნებით თქვენი მობრძანებით და კონფერენციის მუშაობაში მონაწილეობით.'}
+                                ? 'The conference will take place in Tbilisi, Georgia, on November 25-27, 2026. You are cordially invited to participate in the scientific sessions, keynote lectures, and academic discussions.'
+                                : 'კონფერენცია გაიმართება ქ. თბილისში, 2026 წლის 25-27 ნოემბერს. მოხარული ვიქნებით თქვენი მობრძანებით და კონფერენციის მუშაობაში მონაწილეობით.'}
                         </p>
 
                         <p className="text-slate-600 text-xs">
@@ -250,7 +250,7 @@ Email: info@iice.ge | Web: https://iice.ge`
                                 {isEn ? 'Organizing Committee IICE 2026' : 'IICE 2026 საორგანიზაციო კომიტეტი'}
                             </p>
                             <p className="text-[11px] text-slate-500">
-                                {isEn ? 'TSU R. Agladze Institute, Tbilisi, Georgia' : 'თსუ რ. აგლაძის ინსტიტუტი, თბილისი'}
+                                {isEn ? 'R. Agladze Institute, Tbilisi, Georgia' : 'რ. აგლაძის ინსტიტუტი, თბილისი'}
                             </p>
                             <p className="text-[11px] text-[#60318e] font-medium mt-0.5">info@iice.ge | www.iice.ge</p>
                         </div>
