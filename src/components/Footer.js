@@ -99,7 +99,7 @@ export default function Footer() {
                                 <span className="w-7 h-7 md:w-8 md:h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#AD49E1] transition-colors text-white">
                                     <Lock aria-hidden="true" className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#EBD3F8]" />
                                 </span>
-                                <a href="https://iice.ge/webmail" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors font-bold text-xs md:text-sm">
+                                <a href="https://mail.iice.ge:2096" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors font-bold text-xs md:text-sm">
                                     {language === 'en' ? 'Staff Webmail' : 'კორპორატიული ფოსტა'}
                                 </a>
                             </li>
