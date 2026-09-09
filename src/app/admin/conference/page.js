@@ -43,7 +43,8 @@ import {
     UploadCloud,
     Archive,
     Save,
-    MessageSquare
+    MessageSquare,
+    Printer
 } from 'lucide-react';
 import { toast } from '../../../components/admin/AdminToast';
 
