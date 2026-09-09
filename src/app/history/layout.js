@@ -5,7 +5,7 @@ export const metadata = {
     canonical: '/history/',
   },
   openGraph: {
-    title: 'ინსტიტუტის ისტორია | TSU IICE',
+    title: 'ინსტიტუტის ისტორია | IICE',
     description: 'რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის დაარსების და განვითარების ისტორია 1956 წლიდან დღემდე.',
     url: 'https://iice.ge/history/',
   },

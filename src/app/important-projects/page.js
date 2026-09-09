@@ -123,7 +123,7 @@ export default function ImportantProjectsPage() {
                                 ) : (
                                     <div className="space-y-8 text-slate-700 text-base leading-relaxed text-justify">
     <p className="text-base font-bold text-slate-900 border-l-4 border-l-[#663191] pl-4">
-        გარემოსდაცვითი და აგრარული მიმართულების პროექტების შესახებ თსუ რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტში
+        გარემოსდაცვითი და აგრარული მიმართულების პროექტების შესახებ რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტში
     </p>
 
     <div>
@@ -196,8 +196,8 @@ export default function ImportantProjectsPage() {
                                     <div className="space-y-8">
                                         <p className="text-base font-bold text-slate-900 border-l-4 border-l-[#663191] pl-4">
                                             {isEn ?
-                                                "About environmental and agricultural projects at TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry" :
-                                                "გარემოსდაცვითი და აგრარული მიმართულების პროექტების შესახებ თსუ რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტში"
+                                                "About environmental and agricultural projects at R. Agladze Institute of Inorganic Chemistry and Electrochemistry" :
+                                                "გარემოსდაცვითი და აგრარული მიმართულების პროექტების შესახებ რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტში"
                                             }
                                         </p>
 

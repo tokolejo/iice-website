@@ -197,7 +197,7 @@ export default function InfrastructurePage() {
                     <p className="text-sm md:text-sm text-[#60318e]/70 max-w-3xl mx-auto font-medium leading-relaxed">
                         {isEn
                             ? 'To implement research projects, our institute offers the following material and technical base, in the form of scientific instruments and technological equipment.'
-                            : 'კვლევითი პროექტების განხორციელებისათვის თსუ რ.აგლაძის სახელობის არაორგანული ქიმიისა და ელექრტროქიმიის ინსტიტუტი თავაზობს შემდეგ მატერიალურ-ტექნიკურ ბაზას, სამეცნიერო ხელსაწყოებისა და ტექნოლოგიური მოწყობილობის სახით.'}
+                            : 'კვლევითი პროექტების განხორციელებისათვის რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი თავაზობს შემდეგ მატერიალურ-ტექნიკურ ბაზას, სამეცნიერო ხელსაწყოებისა და ტექნოლოგიური მოწყობილობის სახით.'}
                     </p>
                 </div>
             </div>

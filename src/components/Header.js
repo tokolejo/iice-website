@@ -247,7 +247,7 @@ export default function Header() {
                                     <Image src="/logo.png" alt="IICE" width={32} height={32} className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                    <h2 className="font-bold text-xs text-white leading-tight">{language === 'ka' ? 'რ. აგლაძის ინსტიტუტი' : 'IICE'}</h2>
+                                    <h2 className="font-bold text-xs text-white leading-tight">{language === 'ka' ? 'რ. აგლაძის სახელობის' : 'IICE'}</h2>
                                     <p className="text-[9px] text-purple-200/80 leading-tight">{language === 'ka' ? 'არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი' : 'Agladze Institute'}</p>
                                 </div>
                             </div>

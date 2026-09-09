@@ -58,7 +58,7 @@ const googleSans = localFont({
 export const metadata = {
   metadataBase: new URL('https://iice.ge'),
   title: {
-    default: "რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | IICE",
+    default: "რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | IICE",
     template: "%s | IICE"
   },
   description: "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის ოფიციალური ვებ-გვერდი. სამეცნიერო კვლევები, ინოვაციები და განათლება ქიმიის დარგში 1956 წლიდან.",
@@ -82,7 +82,7 @@ export const metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: "რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | IICE",
+    title: "რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | IICE",
     description: "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტის ოფიციალური ვებ-გვერდი. სამეცნიერო კვლევები, ინოვაციები და განათლება ქიმიის დარგში 1956 წლიდან.",
     url: "https://iice.ge/",
     siteName: "IICE",
@@ -93,13 +93,13 @@ export const metadata = {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "რაფიელ აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი - IICE",
+        alt: "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი - IICE",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | IICE",
+    title: "რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი | IICE",
     description: "სამეცნიერო კვლევები, ინოვაციები და განათლება ქიმიის დარგში 1956 წლიდან.",
     images: ["/images/og-image.png"],
   },
@@ -129,9 +129,9 @@ const jsonLdData = {
       '@id': 'https://iice.ge/#organization',
       name: 'რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი',
       alternateName: [
-        'TSU IICE',
+        'IICE',
         'R. Agladze Institute of Inorganic Chemistry and Electrochemistry',
-        'თსუ არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი',
+        'რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი',
         'აგლაძის ინსტიტუტი'
       ],
       url: 'https://iice.ge',
@@ -170,8 +170,8 @@ const jsonLdData = {
       '@type': 'WebSite',
       '@id': 'https://iice.ge/#website',
       url: 'https://iice.ge',
-      name: 'TSU IICE - Institute of Inorganic Chemistry and Electrochemistry',
-      description: 'Official Website of R. Agladze Institute of Inorganic Chemistry and Electrochemistry, TSU.',
+      name: 'IICE - R. Agladze Institute of Inorganic Chemistry and Electrochemistry',
+      description: 'Official Website of R. Agladze Institute of Inorganic Chemistry and Electrochemistry.',
       publisher: {
         '@id': 'https://iice.ge/#organization'
       },

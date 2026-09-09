@@ -75,7 +75,7 @@ Email: info@iice.ge | Web: https://iice.ge`
 
 პატივისცემით,
 საორგანიზაციო კომიტეტი
-რ. აგლაძის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი
+რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი
 ელ-ფოსტა: info@iice.ge | ვებგვერდი: https://iice.ge`;
 
     const handleCopy = async () => {
@@ -250,7 +250,7 @@ Email: info@iice.ge | Web: https://iice.ge`
                                 {isEn ? 'Organizing Committee IICE 2026' : 'IICE 2026 საორგანიზაციო კომიტეტი'}
                             </p>
                             <p className="text-[11px] text-slate-500">
-                                {isEn ? 'R. Agladze Institute, Tbilisi, Georgia' : 'რ. აგლაძის ინსტიტუტი, თბილისი'}
+                                {isEn ? 'R. Agladze Institute, Tbilisi, Georgia' : 'რ. აგლაძის სახელობის ინსტიტუტი, თბილისი'}
                             </p>
                             <p className="text-[11px] text-[#60318e] font-medium mt-0.5">info@iice.ge | www.iice.ge</p>
                         </div>

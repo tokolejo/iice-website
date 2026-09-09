@@ -1357,8 +1357,8 @@ export default function Conference2026View() {
                                 <div className="p-3 bg-purple-50/40 rounded-xl">
                                     <strong className="text-[#60318e]">10:30 – 11:00:</strong>{" "}
                                     {isEn
-                                        ? "Grigor Tatishvili, Corresponding Member, Georgian National Academy of Sciences; Director, TSU R. Agladze Institute of Inorganic Chemistry and Electrochemistry"
-                                        : "გრიგორ ტატიშვილი, წევრ-კორესპონდენტი, საქართველოს მეცნიერებათა ეროვნული აკადემია; დირექტორი, თსუ რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
+                                        ? "Grigor Tatishvili, Corresponding Member, Georgian National Academy of Sciences; Director, R. Agladze Institute of Inorganic Chemistry and Electrochemistry"
+                                        : "გრიგორ ტატიშვილი, წევრ-კორესპონდენტი, საქართველოს მეცნიერებათა ეროვნული აკადემია; დირექტორი, რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
                                 </div>
                                 <div className="p-3 bg-purple-50/40 rounded-xl">
                                     <strong className="text-[#60318e]">11:00 – 12:00:</strong>{" "}
@@ -1585,8 +1585,8 @@ export default function Conference2026View() {
                                     <div>
                                         <h4 className="font-extrabold text-sm text-gray-900 leading-snug group-hover:text-[#60318e] transition-colors">
                                             {isEn
-                                                ? "TSU Rafael Agladze Institute of Inorganic Chemistry and Electrochemistry"
-                                                : "თსუ რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
+                                                ? "Rafael Agladze Institute of Inorganic Chemistry and Electrochemistry"
+                                                : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
                                         </h4>
                                         <p className="text-xs text-gray-600 mt-2 leading-relaxed">
                                             {isEn
