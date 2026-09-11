@@ -1524,174 +1524,139 @@ export default function Conference2026View() {
                             </p>
                         </div>
 
-                        {/* 3 Organizing Institutions */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {/* TSU */}
-                            <div className="p-6 rounded-3xl border border-purple-100 bg-slate-50/50 hover:bg-purple-50/30 transition-all flex flex-col justify-between shadow-2xs group">
-                                <div className="space-y-4">
-                                    <div className="flex items-center justify-between">
-                                        <div className="w-16 h-16 rounded-2xl bg-white p-2 border border-purple-100 shadow-xs flex items-center justify-center">
-                                            <img
-                                                src="/conference-2026/tsu-logo.png"
-                                                alt="TSU"
-                                                className="w-full h-full object-contain"
-                                            />
-                                        </div>
-                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 border border-blue-200">
-                                            {isEn ? "Co-Organizer" : "თანაორგანიზატორი"}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <h4 className="font-extrabold text-sm text-gray-900 leading-snug group-hover:text-[#60318e] transition-colors">
-                                            {isEn
-                                                ? "Ivane Javakhishvili Tbilisi State University (TSU)"
-                                                : "ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტი (თსუ)"}
-                                        </h4>
-                                        <p className="text-xs text-gray-600 mt-2 leading-relaxed">
-                                            {isEn
-                                                ? "First national university in the Caucasus, premier center for academic research, higher education, and international partnerships."
-                                                : "პირველი ეროვნული უნივერსიტეტი კავკასიაში, ქართული საუნივერსიტეტო განათლებისა და მეცნიერების მთავარი კერა."}
-                                        </p>
-                                    </div>
+                        {/* Organizing Institutions & Supporters Banner Cards (Reference Photo Style) */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 pt-2">
+                            {/* 1. IICE */}
+                            <div className="flex flex-col group">
+                                <div className="mb-2.5 flex items-center">
+                                    <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full border shadow-2xs bg-amber-100 text-amber-900 border-amber-300">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
+                                        {isEn ? "Main Organizer" : "მთავარი ორგანიზატორი"}
+                                    </span>
                                 </div>
-                                <div className="pt-4 mt-4 border-t border-purple-100">
-                                    <a
-                                        href="https://www.tsu.ge"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1.5 text-xs font-bold text-[#60318e] hover:text-[#7A1CAC] transition-colors"
-                                    >
-                                        <span>{isEn ? "Visit Official Website" : "ოფიციალური ვებ-გვერდი"}</span>
-                                        <ExternalLink className="w-3.5 h-3.5" />
-                                    </a>
-                                </div>
-                            </div>
-
-                            {/* IICE */}
-                            <div className="p-6 rounded-3xl border-2 border-amber-400/40 bg-purple-50/30 hover:bg-purple-50/60 transition-all flex flex-col justify-between shadow-2xs group">
-                                <div className="space-y-4">
-                                    <div className="flex items-center justify-between">
-                                        <div className="w-16 h-16 rounded-2xl bg-white p-2 border border-purple-100 shadow-xs flex items-center justify-center">
+                                <Link
+                                    href="/"
+                                    title={isEn ? "Visit IICE Institute Portal" : "გადასვლა ინსტიტუტის გვერდზე"}
+                                    className="relative flex items-center h-[114px] sm:h-[122px] md:h-[128px] rounded-2xl sm:rounded-3xl shadow-md hover:shadow-2xl transition-all duration-300 hover:scale-[1.015] cursor-pointer overflow-visible bg-[#3b2164] hover:bg-[#462777] border border-purple-900/30"
+                                >
+                                    <div className="flex-shrink-0 flex items-center justify-center -ml-2 sm:-ml-3 md:-ml-4 pl-3 sm:pl-4 py-2">
+                                        <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-26 md:h-26 rounded-full flex items-center justify-center relative drop-shadow-md">
                                             <img
                                                 src="/logo.png"
-                                                alt="IICE"
-                                                className="w-full h-full object-contain"
+                                                alt="TSU IICE"
+                                                className="w-full h-full object-contain rounded-full"
                                             />
                                         </div>
-                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
-                                            {isEn ? "Main Organizer • 70 Years" : "მთავარი ორგანიზატორი • 70 წელი"}
-                                        </span>
                                     </div>
-                                    <div>
-                                        <h4 className="font-extrabold text-sm text-gray-900 leading-snug group-hover:text-[#60318e] transition-colors">
+                                    <div className="flex-1 py-3 px-3 sm:px-5 flex flex-col justify-center min-w-0 select-none">
+                                        <h3 className="font-black text-white text-[12.5px] sm:text-[13.5px] md:text-[14.5px] leading-snug tracking-tight">
                                             {isEn
-                                                ? "Rafael Agladze Institute of Inorganic Chemistry and Electrochemistry"
-                                                : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
-                                        </h4>
-                                        <p className="text-xs text-gray-600 mt-2 leading-relaxed">
-                                            {isEn
-                                                ? "Founded in 1956. Over 70 years of pioneer scientific advancements in applied electrochemistry, materials science, and clean technologies."
-                                                : "დაარსდა 1956 წელს. 7 ათწლეულის განმავლობაში ინსტიტუტი არის მოწინავე სამეცნიერო ცენტრი გამოყენებით ელექტროქიმიასა და ქიმიურ ტექნოლოგიებში."}
-                                        </p>
+                                                ? "R. Agladze Institute of Inorganic Chemistry and Electrochemistry"
+                                                : "რ. აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
+                                        </h3>
                                     </div>
-                                </div>
-                                <div className="pt-4 mt-4 border-t border-purple-100">
-                                    <Link
-                                        href="/"
-                                        className="inline-flex items-center gap-1.5 text-xs font-bold text-[#60318e] hover:text-[#7A1CAC] transition-colors"
-                                    >
-                                        <span>{isEn ? "Institute Portal" : "ინსტიტუტის გვერდი"}</span>
-                                        <ExternalLink className="w-3.5 h-3.5" />
-                                    </Link>
-                                </div>
+                                </Link>
                             </div>
 
-                            {/* TESAU */}
-                            <div className="p-6 rounded-3xl border border-purple-100 bg-slate-50/50 hover:bg-purple-50/30 transition-all flex flex-col justify-between shadow-2xs group">
-                                <div className="space-y-4">
-                                    <div className="flex items-center justify-between">
-                                        <div className="w-16 h-16 rounded-2xl bg-white p-2 border border-purple-100 shadow-xs flex items-center justify-center">
+                            {/* 2. TSU */}
+                            <div className="flex flex-col group">
+                                <div className="mb-2.5 flex items-center">
+                                    <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full border shadow-2xs bg-blue-100 text-blue-900 border-blue-300">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                                        {isEn ? "Co-Organizer" : "თანაორგანიზატორი"}
+                                    </span>
+                                </div>
+                                <a
+                                    href="https://www.tsu.ge"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title={isEn ? "Visit Tbilisi State University Website" : "გადასვლა თბილისის სახელმწიფო უნივერსიტეტის საიტზე"}
+                                    className="relative flex items-center h-[114px] sm:h-[122px] md:h-[128px] rounded-2xl sm:rounded-3xl shadow-md hover:shadow-2xl transition-all duration-300 hover:scale-[1.015] cursor-pointer overflow-visible bg-[#185fa3] hover:bg-[#1d6cb5] border border-blue-900/30"
+                                >
+                                    <div className="flex-shrink-0 flex items-center justify-center -ml-2 sm:-ml-3 md:-ml-4 pl-3 sm:pl-4 py-2">
+                                        <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-26 md:h-26 rounded-full flex items-center justify-center relative drop-shadow-md">
+                                            <img
+                                                src="/conference-2026/tsu-seal.svg"
+                                                alt="TSU"
+                                                className="w-full h-full object-contain rounded-full"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex-1 py-3 px-3 sm:px-5 flex flex-col justify-center min-w-0 select-none">
+                                        <h3 className="font-black text-white text-[12.5px] sm:text-[13.5px] md:text-[14.5px] leading-snug tracking-tight">
+                                            {isEn
+                                                ? "Ivane Javakhishvili Tbilisi State University"
+                                                : "ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტი"}
+                                        </h3>
+                                    </div>
+                                </a>
+                            </div>
+
+                            {/* 3. TESAU */}
+                            <div className="flex flex-col group">
+                                <div className="mb-2.5 flex items-center">
+                                    <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full border shadow-2xs bg-emerald-100 text-emerald-900 border-emerald-300">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                                        {isEn ? "Host University" : "მასპინძელი უნივერსიტეტი"}
+                                    </span>
+                                </div>
+                                <a
+                                    href="https://tesau.edu.ge"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title={isEn ? "Visit Telavi State University Website" : "გადასვლა თელავის სახელმწიფო უნივერსიტეტის საიტზე"}
+                                    className="relative flex items-center h-[114px] sm:h-[122px] md:h-[128px] rounded-2xl sm:rounded-3xl shadow-md hover:shadow-2xl transition-all duration-300 hover:scale-[1.015] cursor-pointer overflow-visible bg-[#0f603c] hover:bg-[#137248] border border-emerald-900/30"
+                                >
+                                    <div className="flex-shrink-0 flex items-center justify-center -ml-2 sm:-ml-3 md:-ml-4 pl-3 sm:pl-4 py-2">
+                                        <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-26 md:h-26 rounded-full flex items-center justify-center relative drop-shadow-md">
                                             <img
                                                 src="/conference-2026/tesau-logo.png"
                                                 alt="TESAU"
-                                                className="w-full h-full object-contain"
+                                                className="w-full h-full object-contain rounded-full"
                                             />
                                         </div>
-                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
-                                            {isEn ? "Host University" : "მასპინძელი უნივერსიტეტი"}
-                                        </span>
                                     </div>
-                                    <div>
-                                        <h4 className="font-extrabold text-sm text-gray-900 leading-snug group-hover:text-[#60318e] transition-colors">
+                                    <div className="flex-1 py-3 px-3 sm:px-5 flex flex-col justify-center min-w-0 select-none">
+                                        <h3 className="font-black text-white text-[12.5px] sm:text-[13.5px] md:text-[14.5px] leading-snug tracking-tight">
                                             {isEn
-                                                ? "Iakob Gogebashvili Telavi State University (TESAU)"
-                                                : "იაკობ გოგებაშვილის სახელობის თელავის სახელმწიფო უნივერსიტეტი (თესაუ)"}
-                                        </h4>
-                                        <p className="text-xs text-gray-600 mt-2 leading-relaxed">
-                                            {isEn
-                                                ? "Leading university in Kakheti region, hosting conference sectional meetings, poster sessions, discussions, and academic exchange."
-                                                : "კახეთის რეგიონის წამყვანი საგანმანათლებლო ცენტრი, რომელიც მასპინძლობს კონფერენციის სექციურ სხდომებს, დისკუსიებსა და საზეიმო ღონისძიებას."}
-                                        </p>
+                                                ? "Iakob Gogebashvili Telavi State University"
+                                                : "იაკობ გოგებაშვილის სახელობის თელავის სახელმწიფო უნივერსიტეტი"}
+                                        </h3>
                                     </div>
-                                </div>
-                                <div className="pt-4 mt-4 border-t border-purple-100">
-                                    <a
-                                        href="https://tesau.edu.ge"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1.5 text-xs font-bold text-[#60318e] hover:text-[#7A1CAC] transition-colors"
-                                    >
-                                        <span>{isEn ? "Visit Official Website" : "ოფიციალური ვებ-გვერდი"}</span>
-                                        <ExternalLink className="w-3.5 h-3.5" />
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Separate Section: Supporters */}
-                        <div className="pt-8 border-t border-purple-100 space-y-4">
-                            <div>
-                                <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#AD49E1] bg-purple-100 px-3 py-1 rounded-full">
-                                    {isEn ? "Grant Donor & Supporter" : "გრანტის დონორი და მხარდამჭერი"}
-                                </span>
-                                <h3 className="text-lg sm:text-xl font-black text-[#60318e] mt-2">
-                                    {isEn ? "Supporters" : "მხარდამჭერები"}
-                                </h3>
+                                </a>
                             </div>
 
-                            <div className="p-6 sm:p-7 rounded-3xl border-2 border-purple-200 bg-gradient-to-r from-purple-50/50 via-white to-amber-50/30 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs">
-                                <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
-                                    <div className="w-24 h-24 rounded-2xl bg-white p-3 border border-purple-100 shadow-xs flex items-center justify-center flex-shrink-0">
-                                        <img
-                                            src="/conference-2026/rustaveli-logo.png"
-                                            alt="Shota Rustaveli National Science Foundation"
-                                            className="w-full h-full object-contain"
-                                        />
-                                    </div>
-                                    <div className="space-y-1.5 max-w-xl">
-                                        <h4 className="font-extrabold text-sm sm:text-base text-gray-900 leading-snug">
-                                            {isEn
-                                                ? "Shota Rustaveli National Science Foundation of Georgia (SRNSFG)"
-                                                : "შოთა რუსთაველის საქართველოს ეროვნული სამეცნიერო ფონდი"}
-                                        </h4>
-                                        <p className="text-xs font-bold text-[#60318e]">
-                                            {isEn ? "Grant Project ISE-26-286" : "საგრანტო პროექტი ISE-26-286"}
-                                        </p>
-                                        <p className="text-xs text-gray-600 leading-relaxed">
-                                            {isEn
-                                                ? "Supporting the promotion and popularization of cutting-edge scientific research, international integration, and active participation of young researchers."
-                                                : "უზრუნველყოფს მოწინავე სამეცნიერო კვლევების პოპულარიზაციას, საერთაშორისო ინტეგრაციასა და ახალგაზრდა მეცნიერთა აქტიურ ჩართულობას."}
-                                        </p>
-                                    </div>
+                            {/* 4. SHOTA RUSTAVELI NATIONAL SCIENCE FOUNDATION */}
+                            <div className="flex flex-col group">
+                                <div className="mb-2.5 flex items-center">
+                                    <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full border shadow-2xs bg-purple-100 text-purple-900 border-purple-300">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>
+                                        {isEn ? "Grant Donor & Supporter" : "გრანტის დონორი და მხარდამჭერი"}
+                                    </span>
                                 </div>
                                 <a
                                     href="https://rustaveli.org.ge"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 bg-[#60318e] hover:bg-[#7A1CAC] text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-xs transition-colors flex-shrink-0 cursor-pointer"
+                                    title={isEn ? "Visit Shota Rustaveli National Science Foundation Website" : "გადასვლა რუსთაველის ეროვნული სამეცნიერო ფონდის საიტზე"}
+                                    className="relative flex items-center h-[114px] sm:h-[122px] md:h-[128px] rounded-2xl sm:rounded-3xl shadow-md hover:shadow-2xl transition-all duration-300 hover:scale-[1.015] cursor-pointer overflow-visible bg-[#1a2d48] hover:bg-[#22395b] border border-slate-700/40"
                                 >
-                                    <span>{isEn ? "Visit SRNSFG Website" : "ფონდის ვებ-გვერდი"}</span>
-                                    <ExternalLink className="w-3.5 h-3.5" />
+                                    <div className="flex-shrink-0 flex items-center justify-center -ml-2 sm:-ml-3 md:-ml-4 pl-3 sm:pl-4 py-2">
+                                        <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-26 md:h-26 rounded-full bg-white p-2 sm:p-2.5 flex items-center justify-center relative drop-shadow-md border border-white/20">
+                                            <img
+                                                src="/conference-2026/rustaveli-official.png"
+                                                alt="Shota Rustaveli National Science Foundation"
+                                                className="w-full h-full object-contain"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex-1 py-3 px-3 sm:px-5 flex flex-col justify-center min-w-0 select-none">
+                                        <h3 className="font-black text-white text-[12.5px] sm:text-[13.5px] md:text-[14.5px] leading-snug tracking-tight">
+                                            {isEn
+                                                ? "Shota Rustaveli National Science Foundation of Georgia"
+                                                : "შოთა რუსთაველის ეროვნული სამეცნიერო ფონდი"}
+                                        </h3>
+                                    </div>
                                 </a>
                             </div>
                         </div>
