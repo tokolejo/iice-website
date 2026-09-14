@@ -106,6 +106,7 @@ export default function Conference2026View() {
             speakers: isEn ? "Invited Speakers" : "მოწვეული მომხსენებლები",
             schedule: isEn ? "Preliminary Program" : "წინასწარი პროგრამა",
             organizers: isEn ? "Organizers" : "ორგანიზატორები",
+            committees: isEn ? "Committees" : "საორგანიზაციო კომიტეტი",
             venues: isEn ? "Venues & Transport" : "ლოკაციები და ტრანსპორტი",
         },
         form: {
@@ -578,6 +579,7 @@ export default function Conference2026View() {
                                 {key === 'speakers' && <Users className="w-3.5 h-3.5" />}
                                 {key === 'schedule' && <Clock className="w-3.5 h-3.5" />}
                                 {key === 'organizers' && <Building2 className="w-3.5 h-3.5" />}
+                                {key === 'committees' && <Award className="w-3.5 h-3.5" />}
                                 {key === 'venues' && <MapPin className="w-3.5 h-3.5" />}
                                 <span>{label}</span>
                             </button>
@@ -624,8 +626,8 @@ export default function Conference2026View() {
                                     </span>
                                 </div>
                             </div>
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300 shadow-2xs">
-                                {isEn ? "Strict Deadline • Free Registration" : "საბოლოო ვადა • უფასო რეგისტრაცია"}
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 shadow-2xs">
+                                {isEn ? "Free Registration" : "უფასო რეგისტრაცია"}
                             </span>
                         </div>
 
@@ -1680,104 +1682,110 @@ export default function Conference2026View() {
                                 </a>
                             </div>
                         </div>
+                    </div>
+                )}
 
-                        {/* Dedicated Committees Section */}
-                        <div className="pt-8 border-t border-purple-100 space-y-6">
-                            <div>
-                                <h3 className="text-lg sm:text-xl font-black text-[#60318e] mb-1">
-                                    {isEn ? "Conference Committees" : "კონფერენციის კომიტეტები"}
-                                </h3>
-                                <p className="text-xs text-gray-500">
-                                    {isEn
-                                        ? "Secretariats of the Organizing and International Scientific Committees."
-                                        : "საორგანიზაციო და საერთაშორისო სამეცნიერო კომიტეტების სამდივნოები."}
-                                </p>
+                {/* 3.2 COMMITTEES TAB */}
+                {activeTab === 'committees' && (
+                    <div id="tabpanel-committees" role="tabpanel" aria-labelledby="tab-committees" className="bg-white rounded-3xl shadow-sm border border-purple-100 p-6 sm:p-10 animate-fade-in space-y-8">
+                        <div>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 text-[#60318e] text-xs font-bold mb-2">
+                                <Award className="w-3.5 h-3.5 text-[#AD49E1]" />
+                                <span>{isEn ? "Committees" : "კომიტეტები"}</span>
                             </div>
+                            <h2 className="text-xl sm:text-2xl font-black text-[#60318e] mb-1">
+                                {isEn ? "Conference Committees" : "კონფერენციის კომიტეტები"}
+                            </h2>
+                            <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">
+                                {isEn
+                                    ? "Secretariats of the Organizing and International Scientific Committees."
+                                    : "საორგანიზაციო და საერთაშორისო სამეცნიერო კომიტეტების სამდივნოები."}
+                            </p>
+                        </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {/* Organizing Committee Secretariat */}
-                                <div className="p-6 rounded-3xl border border-purple-100 bg-purple-50/20 shadow-2xs space-y-4">
-                                    <div className="flex items-center gap-2 pb-3 border-b border-purple-100">
-                                        <div className="w-8 h-8 rounded-xl bg-purple-100 text-[#60318e] flex items-center justify-center font-bold">
-                                            <Users className="w-4 h-4" />
-                                        </div>
-                                        <h4 className="font-black text-sm sm:text-base text-[#60318e]">
-                                            {isEn ? CONFERENCE_COMMITTEES.organizingSecretariat.titleEn : CONFERENCE_COMMITTEES.organizingSecretariat.titleKa}
-                                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Organizing Committee Secretariat */}
+                            <div className="p-6 rounded-3xl border border-purple-100 bg-purple-50/20 shadow-2xs space-y-4">
+                                <div className="flex items-center gap-2 pb-3 border-b border-purple-100">
+                                    <div className="w-8 h-8 rounded-xl bg-purple-100 text-[#60318e] flex items-center justify-center font-bold">
+                                        <Users className="w-4 h-4" />
                                     </div>
-
-                                    {/* Head */}
-                                    <div className="p-3.5 bg-white rounded-2xl border border-purple-100 shadow-2xs flex items-center justify-between">
-                                        <span className="text-xs font-black text-slate-900">
-                                            {isEn ? CONFERENCE_COMMITTEES.organizingSecretariat.head.nameEn : CONFERENCE_COMMITTEES.organizingSecretariat.head.nameKa}
-                                        </span>
-                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200">
-                                            {isEn ? CONFERENCE_COMMITTEES.organizingSecretariat.head.titleEn : CONFERENCE_COMMITTEES.organizingSecretariat.head.titleKa}
-                                        </span>
-                                    </div>
-
-                                    {/* Members */}
-                                    <div className="space-y-2">
-                                        <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider block">
-                                            {isEn ? "Secretariat Members" : "სამდივნოს წევრები"}
-                                        </span>
-                                        <div className="grid grid-cols-1 gap-1.5">
-                                            {CONFERENCE_COMMITTEES.organizingSecretariat.members.map((member, mIdx) => (
-                                                <div key={mIdx} className="px-3.5 py-2 bg-white/90 rounded-xl border border-purple-100/70 text-xs font-semibold text-slate-700 flex items-center gap-2">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-[#AD49E1]"></div>
-                                                    <span>{isEn ? member.nameEn : member.nameKa}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
+                                    <h4 className="font-black text-sm sm:text-base text-[#60318e]">
+                                        {isEn ? CONFERENCE_COMMITTEES.organizingSecretariat.titleEn : CONFERENCE_COMMITTEES.organizingSecretariat.titleKa}
+                                    </h4>
                                 </div>
 
-                                {/* International Scientific Committee Secretariat */}
-                                <div className="p-6 rounded-3xl border border-blue-100 bg-blue-50/20 shadow-2xs space-y-4">
-                                    <div className="flex items-center gap-2 pb-3 border-b border-blue-100">
-                                        <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-bold">
-                                            <Award className="w-4 h-4" />
-                                        </div>
-                                        <h4 className="font-black text-sm sm:text-base text-blue-950">
-                                            {isEn ? CONFERENCE_COMMITTEES.scientificSecretariat.titleEn : CONFERENCE_COMMITTEES.scientificSecretariat.titleKa}
-                                        </h4>
-                                    </div>
+                                {/* Head */}
+                                <div className="p-3.5 bg-white rounded-2xl border border-purple-100 shadow-2xs flex items-center justify-between">
+                                    <span className="text-xs font-black text-slate-900">
+                                        {isEn ? CONFERENCE_COMMITTEES.organizingSecretariat.head.nameEn : CONFERENCE_COMMITTEES.organizingSecretariat.head.nameKa}
+                                    </span>
+                                    <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200">
+                                        {isEn ? CONFERENCE_COMMITTEES.organizingSecretariat.head.titleEn : CONFERENCE_COMMITTEES.organizingSecretariat.head.titleKa}
+                                    </span>
+                                </div>
 
-                                    {/* Head & Deputy Head */}
-                                    <div className="space-y-2">
+                                {/* Members */}
+                                <div className="space-y-2">
+                                    <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider block">
+                                        {isEn ? "Secretariat Members" : "სამდივნოს წევრები"}
+                                    </span>
+                                    <div className="grid grid-cols-1 gap-1.5">
+                                        {CONFERENCE_COMMITTEES.organizingSecretariat.members.map((member, mIdx) => (
+                                            <div key={mIdx} className="px-3.5 py-2 bg-white/90 rounded-xl border border-purple-100/70 text-xs font-semibold text-slate-700 flex items-center gap-2">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-[#AD49E1]"></div>
+                                                <span>{isEn ? member.nameEn : member.nameKa}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* International Scientific Committee Secretariat */}
+                            <div className="p-6 rounded-3xl border border-blue-100 bg-blue-50/20 shadow-2xs space-y-4">
+                                <div className="flex items-center gap-2 pb-3 border-b border-blue-100">
+                                    <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-bold">
+                                        <Award className="w-4 h-4" />
+                                    </div>
+                                    <h4 className="font-black text-sm sm:text-base text-blue-950">
+                                        {isEn ? CONFERENCE_COMMITTEES.scientificSecretariat.titleEn : CONFERENCE_COMMITTEES.scientificSecretariat.titleKa}
+                                    </h4>
+                                </div>
+
+                                {/* Head & Deputy Head */}
+                                <div className="space-y-2">
+                                    <div className="p-3.5 bg-white rounded-2xl border border-blue-100 shadow-2xs flex items-center justify-between">
+                                        <span className="text-xs font-black text-slate-900">
+                                            {isEn ? CONFERENCE_COMMITTEES.scientificSecretariat.head.nameEn : CONFERENCE_COMMITTEES.scientificSecretariat.head.nameKa}
+                                        </span>
+                                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-900 border border-blue-200">
+                                            {isEn ? CONFERENCE_COMMITTEES.scientificSecretariat.head.titleEn : CONFERENCE_COMMITTEES.scientificSecretariat.head.titleKa}
+                                        </span>
+                                    </div>
+                                    {CONFERENCE_COMMITTEES.scientificSecretariat.deputyHead && (
                                         <div className="p-3.5 bg-white rounded-2xl border border-blue-100 shadow-2xs flex items-center justify-between">
                                             <span className="text-xs font-black text-slate-900">
-                                                {isEn ? CONFERENCE_COMMITTEES.scientificSecretariat.head.nameEn : CONFERENCE_COMMITTEES.scientificSecretariat.head.nameKa}
+                                                {isEn ? CONFERENCE_COMMITTEES.scientificSecretariat.deputyHead.nameEn : CONFERENCE_COMMITTEES.scientificSecretariat.deputyHead.nameKa}
                                             </span>
-                                            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-900 border border-blue-200">
-                                                {isEn ? CONFERENCE_COMMITTEES.scientificSecretariat.head.titleEn : CONFERENCE_COMMITTEES.scientificSecretariat.head.titleKa}
+                                            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-800 border border-slate-200">
+                                                {isEn ? CONFERENCE_COMMITTEES.scientificSecretariat.deputyHead.titleEn : CONFERENCE_COMMITTEES.scientificSecretariat.deputyHead.titleKa}
                                             </span>
                                         </div>
-                                        {CONFERENCE_COMMITTEES.scientificSecretariat.deputyHead && (
-                                            <div className="p-3.5 bg-white rounded-2xl border border-blue-100 shadow-2xs flex items-center justify-between">
-                                                <span className="text-xs font-black text-slate-900">
-                                                    {isEn ? CONFERENCE_COMMITTEES.scientificSecretariat.deputyHead.nameEn : CONFERENCE_COMMITTEES.scientificSecretariat.deputyHead.nameKa}
-                                                </span>
-                                                <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-800 border border-slate-200">
-                                                    {isEn ? CONFERENCE_COMMITTEES.scientificSecretariat.deputyHead.titleEn : CONFERENCE_COMMITTEES.scientificSecretariat.deputyHead.titleKa}
-                                                </span>
-                                            </div>
-                                        )}
-                                    </div>
+                                    )}
+                                </div>
 
-                                    {/* Members */}
-                                    <div className="space-y-2">
-                                        <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider block">
-                                            {isEn ? "Secretariat Members" : "სამდივნოს წევრები"}
-                                        </span>
-                                        <div className="grid grid-cols-1 gap-1.5">
-                                            {CONFERENCE_COMMITTEES.scientificSecretariat.members.map((member, mIdx) => (
-                                                <div key={mIdx} className="px-3.5 py-2 bg-white/90 rounded-xl border border-blue-100/70 text-xs font-semibold text-slate-700 flex items-center gap-2">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                                                    <span>{isEn ? member.nameEn : member.nameKa}</span>
-                                                </div>
-                                            ))}
-                                        </div>
+                                {/* Members */}
+                                <div className="space-y-2">
+                                    <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider block">
+                                        {isEn ? "Secretariat Members" : "სამდივნოს წევრები"}
+                                    </span>
+                                    <div className="grid grid-cols-1 gap-1.5">
+                                        {CONFERENCE_COMMITTEES.scientificSecretariat.members.map((member, mIdx) => (
+                                            <div key={mIdx} className="px-3.5 py-2 bg-white/90 rounded-xl border border-blue-100/70 text-xs font-semibold text-slate-700 flex items-center gap-2">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                                <span>{isEn ? member.nameEn : member.nameKa}</span>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -1843,19 +1851,19 @@ export default function Conference2026View() {
                     </h3>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {/* TSU */}
                     <a
                         href="https://www.tsu.ge"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md hover:border-purple-300 transition-all group cursor-pointer"
+                        className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-start hover:shadow-md hover:border-purple-300 transition-all group cursor-pointer h-full"
                     >
-                        <div className="w-14 h-14 rounded-xl bg-blue-50/50 p-1 flex items-center justify-center mb-2 relative">
+                        <div className="w-14 h-14 rounded-xl bg-blue-50/50 p-1 flex items-center justify-center mb-2 relative shrink-0">
                             <Image src="/conference-2026/tsu-seal.svg" alt="TSU" width={56} height={56} className="w-full h-full object-contain" />
                         </div>
-                        <span className="text-[10px] font-extrabold text-blue-700 uppercase">TSU • თსუ</span>
-                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2 group-hover:text-[#60318e] transition-colors">
+                        <span className="text-[10px] font-extrabold text-blue-700 uppercase mb-1">TSU • თსუ</span>
+                        <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-snug group-hover:text-[#60318e] transition-colors">
                             {isEn ? "Ivane Javakhishvili Tbilisi State University" : "ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტი"}
                         </p>
                     </a>
@@ -1863,13 +1871,13 @@ export default function Conference2026View() {
                     {/* IICE */}
                     <Link
                         href="/"
-                        className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md hover:border-purple-300 transition-all group cursor-pointer"
+                        className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-start hover:shadow-md hover:border-purple-300 transition-all group cursor-pointer h-full"
                     >
-                        <div className="w-14 h-14 rounded-xl bg-purple-50 p-1.5 flex items-center justify-center mb-2 relative">
+                        <div className="w-14 h-14 rounded-xl bg-purple-50 p-1.5 flex items-center justify-center mb-2 relative shrink-0">
                             <Image src="/logo.png" alt="IICE" width={56} height={56} className="w-full h-full object-contain" />
                         </div>
-                        <span className="text-[10px] font-extrabold text-[#60318e] uppercase">IICE • 70 წელი</span>
-                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2 group-hover:text-[#60318e] transition-colors">
+                        <span className="text-[10px] font-extrabold text-[#60318e] uppercase mb-1">IICE • 70 წელი</span>
+                        <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-snug group-hover:text-[#60318e] transition-colors">
                             {isEn ? "Raphael Agladze Institute of Inorganic Chemistry and Electrochemistry" : "ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტის რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
                         </p>
                     </Link>
@@ -1879,13 +1887,13 @@ export default function Conference2026View() {
                         href="https://tesau.edu.ge"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md hover:border-purple-300 transition-all group cursor-pointer"
+                        className="bg-white p-4 rounded-2xl border border-purple-100 shadow-xs flex flex-col items-center text-center justify-start hover:shadow-md hover:border-purple-300 transition-all group cursor-pointer h-full"
                     >
-                        <div className="w-14 h-14 rounded-xl bg-emerald-50/50 p-1.5 flex items-center justify-center mb-2 relative">
+                        <div className="w-14 h-14 rounded-xl bg-emerald-50/50 p-1.5 flex items-center justify-center mb-2 relative shrink-0">
                             <Image src="/conference-2026/tesau-logo.png" alt="TESAU" width={56} height={56} className="w-full h-full object-contain" />
                         </div>
-                        <span className="text-[10px] font-extrabold text-emerald-700 uppercase">TESAU • თესაუ</span>
-                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2 group-hover:text-[#60318e] transition-colors">
+                        <span className="text-[10px] font-extrabold text-emerald-700 uppercase mb-1">TESAU • თესაუ</span>
+                        <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-snug group-hover:text-[#60318e] transition-colors">
                             {isEn ? "Iakob Gogebashvili Telavi State University" : "იაკობ გოგებაშვილის სახელობის თელავის სახელმწიფო უნივერსიტეტი"}
                         </p>
                     </a>
@@ -1895,13 +1903,13 @@ export default function Conference2026View() {
                         href="https://rustaveli.org.ge"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-xs flex flex-col items-center text-center justify-center hover:shadow-md hover:border-amber-400 transition-all group cursor-pointer"
+                        className="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-xs flex flex-col items-center text-center justify-start hover:shadow-md hover:border-amber-400 transition-all group cursor-pointer h-full"
                     >
-                        <div className="w-14 h-14 rounded-xl bg-amber-50/50 p-1 flex items-center justify-center mb-2 relative">
+                        <div className="w-14 h-14 rounded-xl bg-amber-50/50 p-1 flex items-center justify-center mb-2 relative shrink-0">
                             <Image src="/conference-2026/rustaveli-logo.png" alt="SRNSFG" width={56} height={56} className="w-full h-full object-contain" />
                         </div>
-                        <span className="text-[10px] font-extrabold text-amber-800 uppercase">გრანტი ISE-26-286</span>
-                        <p className="text-xs font-bold text-slate-800 mt-1 line-clamp-2 group-hover:text-[#60318e] transition-colors">
+                        <span className="text-[10px] font-extrabold text-amber-800 uppercase mb-1">{isEn ? "SRNSFG • Foundation" : "რუსთაველის ფონდი"}</span>
+                        <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-snug group-hover:text-[#60318e] transition-colors">
                             {isEn ? "Shota Rustaveli National Science Foundation of Georgia" : "შოთა რუსთაველის საქართველოს ეროვნული სამეცნიერო ფონდი"}
                         </p>
                     </a>
