@@ -1862,7 +1862,7 @@ export default function Conference2026View() {
                         <div className="w-14 h-14 rounded-xl bg-blue-50/50 p-1 flex items-center justify-center mb-2 relative shrink-0">
                             <Image src="/conference-2026/tsu-seal.svg" alt="TSU" width={56} height={56} className="w-full h-full object-contain" />
                         </div>
-                        <span className="text-[10px] font-extrabold text-blue-700 uppercase mb-1">TSU • თსუ</span>
+                        <span className="text-[10px] font-extrabold text-blue-700 uppercase mb-1">{isEn ? "TSU" : "თსუ"}</span>
                         <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-snug group-hover:text-[#60318e] transition-colors">
                             {isEn ? "Ivane Javakhishvili Tbilisi State University" : "ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტი"}
                         </p>
@@ -1876,9 +1876,9 @@ export default function Conference2026View() {
                         <div className="w-14 h-14 rounded-xl bg-purple-50 p-1.5 flex items-center justify-center mb-2 relative shrink-0">
                             <Image src="/logo.png" alt="IICE" width={56} height={56} className="w-full h-full object-contain" />
                         </div>
-                        <span className="text-[10px] font-extrabold text-[#60318e] uppercase mb-1">IICE • 70 წელი</span>
+                        <span className="text-[10px] font-extrabold text-[#60318e] uppercase mb-1">IICE</span>
                         <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-snug group-hover:text-[#60318e] transition-colors">
-                            {isEn ? "Raphael Agladze Institute of Inorganic Chemistry and Electrochemistry" : "ივანე ჯავახიშვილის სახელობის თბილისის სახელმწიფო უნივერსიტეტის რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
+                            {isEn ? "Raphael Agladze Institute of Inorganic Chemistry and Electrochemistry" : "რაფიელ აგლაძის სახელობის არაორგანული ქიმიისა და ელექტროქიმიის ინსტიტუტი"}
                         </p>
                     </Link>
 
@@ -1892,7 +1892,7 @@ export default function Conference2026View() {
                         <div className="w-14 h-14 rounded-xl bg-emerald-50/50 p-1.5 flex items-center justify-center mb-2 relative shrink-0">
                             <Image src="/conference-2026/tesau-logo.png" alt="TESAU" width={56} height={56} className="w-full h-full object-contain" />
                         </div>
-                        <span className="text-[10px] font-extrabold text-emerald-700 uppercase mb-1">TESAU • თესაუ</span>
+                        <span className="text-[10px] font-extrabold text-emerald-700 uppercase mb-1">{isEn ? "TESAU" : "თესაუ"}</span>
                         <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-snug group-hover:text-[#60318e] transition-colors">
                             {isEn ? "Iakob Gogebashvili Telavi State University" : "იაკობ გოგებაშვილის სახელობის თელავის სახელმწიფო უნივერსიტეტი"}
                         </p>
@@ -1908,7 +1908,7 @@ export default function Conference2026View() {
                         <div className="w-14 h-14 rounded-xl bg-amber-50/50 p-1 flex items-center justify-center mb-2 relative shrink-0">
                             <Image src="/conference-2026/rustaveli-logo.png" alt="SRNSFG" width={56} height={56} className="w-full h-full object-contain" />
                         </div>
-                        <span className="text-[10px] font-extrabold text-amber-800 uppercase mb-1">{isEn ? "SRNSFG • Foundation" : "რუსთაველის ფონდი"}</span>
+                        <span className="text-[10px] font-extrabold text-amber-800 uppercase mb-1">{isEn ? "SRNSFG" : "რუსთაველის ფონდი"}</span>
                         <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-snug group-hover:text-[#60318e] transition-colors">
                             {isEn ? "Shota Rustaveli National Science Foundation of Georgia" : "შოთა რუსთაველის საქართველოს ეროვნული სამეცნიერო ფონდი"}
                         </p>
