@@ -3,7 +3,7 @@ export const CONFERENCE_TOPICS = [
         id: '1',
         num: 'I',
         titleKa: 'I. ნანოპროცესები და ნანოტექნოლოგიები',
-        titleEn: 'I. Nanoprocesses and nanotechnologies',
+        titleEn: 'I. Nanoprocesses and Nanotechnologies',
         subtopicsKa: [
             'ნანოფხვნილები',
             'ნანოდანაფარები',
@@ -19,7 +19,7 @@ export const CONFERENCE_TOPICS = [
         id: '2',
         num: 'II',
         titleKa: 'II. სასარგებლო წიაღისეულისა და მეორადი ნედლეულის გადამუშავების ფუნდამენტური და ტექნოლოგიური ასპექტები',
-        titleEn: 'II. Fundamental and technological aspects of mineral and secondary raw material processing',
+        titleEn: 'II. Fundamental and Technological Aspects of Mineral and Secondary Raw Material Processing',
         subtopicsKa: [
             'ბუნებრივი რესურსების გადამუშავების ფუნდამენტური და ტექნოლოგიური ასპექტები',
             'მეორადი ნედლეულის და საწარმოო ნარჩენების გადამუშავების ფუნდამენტური და ტექნოლოგიური ასპექტები'
@@ -33,7 +33,7 @@ export const CONFERENCE_TOPICS = [
         id: '3',
         num: 'III',
         titleKa: 'III. მწვანე ქიმია',
-        titleEn: 'III. Green chemistry',
+        titleEn: 'III. Green Chemistry',
         subtopicsKa: [
             'ინოვაციური ტექნოლოგიები ახალი მასალების შემუშავებაში',
             'ბუნებრივი და ჩამდინარე წყლების გაწმენდის ახალი მეთოდები',
@@ -49,7 +49,7 @@ export const CONFERENCE_TOPICS = [
         id: '4',
         num: 'IV',
         titleKa: 'IV. სამეცნიერო ინოვაციების პოპულარიზაცია და კომერციალიზაცია',
-        titleEn: 'IV. Popularization and commercialization of scientific innovations',
+        titleEn: 'IV. Popularization and Commercialization of Scientific Innovations',
         subtopicsKa: [
             'კვლევის შედეგების დაცვა და პოპულარიზაცია',
             'ინოვაციური ტექნოლოგიები და საჯარო-კერძო პარტნიორობა',
@@ -169,9 +169,9 @@ export const getPresentationTypeLabel = (val, lang = 'ka') => {
 
 export const getAttendanceLabel = (isAttendingInPerson, lang = 'ka') => {
     if (isAttendingInPerson === true || isAttendingInPerson === 'true' || isAttendingInPerson === 1) {
-        return lang === 'en' ? 'In-Person (პირისპირ)' : 'პირისპირ (დარბაზში)';
+        return lang === 'en' ? 'In-Person' : 'პირისპირ (დარბაზში)';
     }
-    return lang === 'en' ? 'Online (ონლაინ)' : 'ონლაინ (დისტანციური)';
+    return lang === 'en' ? 'Online' : 'ონლაინ (დისტანციური)';
 };
 
 export const INVITED_SPEAKERS = [
@@ -227,34 +227,60 @@ export const INVITED_SPEAKERS = [
         id: 'aliyev',
         nameEn: 'Prof. Dr. Akif Shikhan Aliyev',
         nameKa: 'პროფ. აკიფ ალიევი',
-        affiliationEn: 'Institute of Catalysis and Inorganic Chemistry named after acad. M. Nagiyev, ANAS, Baku, Azerbaijan',
-        affiliationKa: 'აკად. მ. ნაგიევის სახელობის კატალიზისა და არაორგანული ქიმიის ინსტიტუტი, აზერბაიჯანის მეცნიერებათა ეროვნული აკადემია (AMEA)',
-        roleEn: 'Head of Laboratory of Nanoelectrochemistry and Electrocatalysis',
-        roleKa: 'ნანოელექტროქიმიისა და ელექტროკატალიზის ლაბორატორიის ხელმძღვანელი',
+        affiliationEn: 'Head of Laboratory of Nanoelectrochemistry and Electrocatalysis, Institute of Catalysis and Inorganic Chemistry named after acad. M. Nagiyev, Baku, Azerbaijan',
+        affiliationKa: 'ნანოელექტროქიმიისა და ელექტროკატალიზის ლაბორატორიის ხელმძღვანელი, აკად. მ. ნაგიევის სახელობის კატალიზისა და არაორგანული ქიმიის ინსტიტუტი, ბაქო, აზერბაიჯანი',
+        roleEn: 'Doctor of Chemical Sciences, Professor, Head of Laboratory',
+        roleKa: 'ქიმიის მეცნიერებათა დოქტორი, პროფესორი, ლაბორატორიის ხელმძღვანელი',
         topicEn: 'Nanoelectrochemistry and Electrocatalysis: Semiconductor Thin Films and Photoelectrolysis',
         topicKa: 'ნანოელექტროქიმია და ელექტროკატალიზი: ნახევარგამტარული თხელი ფენები და წყლის ფოტოელექტროლიზი',
-        bioEn: 'Doctor of Chemical Sciences, Professor, and leading specialist in nanoelectrochemistry and semiconductor nanostructured materials. His work pioneers the development of GaAs/TiO2 and GaP/TiO2 photoanodic heterosystems for solar water photoelectrolysis and electrochemical thin-film deposition. Founder and Executive Secretary of the SCOPUS-indexed journal "Chemical Problems".',
+        bioEn: 'Doctor of Chemical Sciences, Professor, and leading specialist in nanoelectrochemistry and semiconductor nanostructured materials at the Institute of Catalysis and Inorganic Chemistry. His work pioneers the development of GaAs/TiO2 and GaP/TiO2 photoanodic heterosystems for solar water photoelectrolysis and electrochemical thin-film deposition. Founder and Executive Secretary of the SCOPUS-indexed journal "Chemical Problems".',
         bioKa: 'ქიმიის მეცნიერებათა დოქტორი, პროფესორი და ნანოელექტროქიმიისა და ელექტროკატალიზის ლაბორატორიის ხელმძღვანელი. იკვლევს ნახევარგამტარულ ნანომასალებს, GaAs/TiO2 და GaP/TiO2 ჰეტეროსისტემებს წყლის მზის ფოტოელექტროლიზისთვის და თხელი ფენების ელექტროქიმიურ სინთეზს. არის საერთაშორისო SCOPUS-ინდექსირებული ჟურნალ „Chemical Problems“-ის თანადამფუძნებელი და აღმასრულებელი მდივანი.',
         image: '/conference-2026/speakers/akif-aliyev.jpg',
         countryEn: 'Azerbaijan',
         countryKa: 'აზერბაიჯანი',
     },
-    {
-        id: 'lisdat',
-        nameEn: 'Prof. Dr. Fred Lisdat',
-        nameKa: 'პროფ. ფრედ ლისდატი',
-        affiliationEn: 'Institute of Applied Life Sciences and Biomedical Technologies, Technical University of Applied Sciences Wildau (TH Wildau), Germany',
-        affiliationKa: 'გამოყენებითი ბიომეცნიერებებისა და ბიოსამედიცინო ტექნოლოგიების ინსტიტუტი, ვილდაუს ტექნიკური უნივერსიტეტი (TH Wildau), გერმანია',
-        roleEn: 'Chair of Biosystems Technology, President of the Bioelectrochemical Society (BES)',
-        roleKa: 'ბიოსისტემური ტექნოლოგიების კათედრის ხელმძღვანელი, ბიოელექტროქიმიური საერთაშორისო საზოგადოების (BES) პრეზიდენტი',
-        topicEn: 'Biosystems Engineering: Photo-Active Biomolecules and Electrochemical Sensing Interfaces',
-        topicKa: 'ბიოსისტემური ინჟინერია: ფოტოაქტიური ბიომოლეკულები და ელექტროქიმიური სენსორული ინტერფეისები',
-        bioEn: 'World-renowned scholar in biosensors, direct protein electrochemistry, biofuel cells, and impedance spectroscopy. Chair of Biosystems Technology at TH Wildau and elected President of the International Bioelectrochemical Society (BES). Recipient of the prestigious Bioelectrochemistry Prize for outstanding contributions to bioelectronics and analytical sensor systems.',
-        bioKa: 'მსოფლიოში აღიარებული მეცნიერი ბიოსენსორების, ცილოვანი ელექტროქიმიის, ბიოსათბობი ელემენტებისა და იმპედანს-სპექტროსკოპიის მიმართულებით. ვილდაუს ტექნიკური უნივერსიტეტის პროფესორი და საერთაშორისო ბიოელექტროქიმიური საზოგადოების (BES) პრეზიდენტი. ბიოელექტროქიმიისა და ანალიზური სენსორული სისტემების განვითარებაში შეტანილი განსაკუთრებული წვლილისთვის მინიჭებული აქვს Bioelectrochemistry Prize.',
-        image: '/conference-2026/speakers/fred-lisdat.jpg',
-        countryEn: 'Germany',
-        countryKa: 'გერმანია',
-    },
 ];
+
+export const CONFERENCE_COMMITTEES = {
+    organizingSecretariat: {
+        titleEn: 'Secretariat of Organizing Committee',
+        titleKa: 'საორგანიზაციო კომიტეტის სამდივნო',
+        head: {
+            titleEn: 'Head',
+            titleKa: 'ხელმძღვანელი',
+            nameEn: 'Dr. Tinatin Lezhava',
+            nameKa: 'დოქტ. თინათინ ლეჟავა',
+        },
+        members: [
+            { nameEn: 'Dr. Lela Kvinikadze', nameKa: 'დოქტ. ლელა კვინიკაძე' },
+            { nameEn: 'Dr. Nikoloz Nioradze', nameKa: 'დოქტ. ნიკოლოზ ნიორაძე' },
+            { nameEn: 'Dr. Elizaveta Tskhakaia', nameKa: 'დოქტ. ელიზავეტა ცხაკაია' },
+            { nameEn: 'Dr. Tornike Lezhava', nameKa: 'დოქტ. თორნიკე ლეჟავა' },
+            { nameEn: 'Dr. Marine Matchavariani', nameKa: 'დოქტ. მარინე მაჭავარიანი' },
+            { nameEn: 'Dr. Nino Giorgadze', nameKa: 'დოქტ. ნინო გიორგაძე' },
+            { nameEn: 'Sofo Tskitishvili', nameKa: 'სოფო ცქიტიშვილი' },
+        ]
+    },
+    scientificSecretariat: {
+        titleEn: 'Secretariat of International Scientific Committee',
+        titleKa: 'საერთაშორისო სამეცნიერო კომიტეტის სამდივნო',
+        head: {
+            titleEn: 'Head',
+            titleKa: 'ხელმძღვანელი',
+            nameEn: 'Dr. Grigor Tatishvili',
+            nameKa: 'დოქტ. გრიგორ ტატიშვილი',
+        },
+        deputyHead: {
+            titleEn: 'Deputy Head',
+            titleKa: 'მოადგილე',
+            nameEn: 'Dr. Natela Ananiashvili',
+            nameKa: 'დოქტ. ნათელა ანანიაშვილი',
+        },
+        members: [
+            { nameEn: 'Dr. Tamaz Marsagishvili', nameKa: 'დოქტ. თამაზ მარსაგიშვილი' },
+            { nameEn: 'Dr. Stefano Bellucci', nameKa: 'დოქტ. სტეფანო ბელუჩი' },
+        ]
+    }
+};
 
 
