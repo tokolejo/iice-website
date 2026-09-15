@@ -1732,9 +1732,9 @@ export default function Conference2026View() {
                                     </span>
                                     <div className="grid grid-cols-1 gap-1.5">
                                         {CONFERENCE_COMMITTEES.organizingSecretariat.members.map((member, mIdx) => (
-                                            <div key={mIdx} className="px-3.5 py-2 bg-white/90 rounded-xl border border-purple-100/70 text-xs font-semibold text-slate-700 flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-[#AD49E1]"></div>
-                                                <span>{isEn ? member.nameEn : member.nameKa}</span>
+                                            <div key={mIdx} className="px-3.5 py-2 bg-white/90 rounded-xl border border-purple-100/70 text-xs font-semibold text-slate-700 flex items-start gap-2.5">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-[#AD49E1] flex-shrink-0 mt-1.5"></div>
+                                                <span className="leading-snug">{isEn ? member.nameEn : member.nameKa}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -1781,9 +1781,9 @@ export default function Conference2026View() {
                                     </span>
                                     <div className="grid grid-cols-1 gap-1.5">
                                         {CONFERENCE_COMMITTEES.scientificSecretariat.members.map((member, mIdx) => (
-                                            <div key={mIdx} className="px-3.5 py-2 bg-white/90 rounded-xl border border-blue-100/70 text-xs font-semibold text-slate-700 flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                                                <span>{isEn ? member.nameEn : member.nameKa}</span>
+                                            <div key={mIdx} className="px-3.5 py-2 bg-white/90 rounded-xl border border-blue-100/70 text-xs font-semibold text-slate-700 flex items-start gap-2.5">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0 mt-1.5"></div>
+                                                <span className="leading-snug">{isEn ? member.nameEn : member.nameKa}</span>
                                             </div>
                                         ))}
                                     </div>

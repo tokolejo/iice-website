@@ -259,6 +259,10 @@ export const CONFERENCE_COMMITTEES = {
             { nameEn: 'Dr. Marine Matchavariani', nameKa: 'დოქტ. მარინე მაჭავარიანი' },
             { nameEn: 'Dr. Nino Giorgadze', nameKa: 'დოქტ. ნინო გიორგაძე' },
             { nameEn: 'Sofo Tskitishvili', nameKa: 'სოფო ცქიტიშვილი' },
+            { nameEn: 'Dr. Mzia Ghaghloshvili', nameKa: 'დოქტ. მზია ღაღოლიშვილი' },
+            { nameEn: 'Dr. Nino Vepkhishvili', nameKa: 'დოქტ. ნინო ვეფხიშვილი' },
+            { nameEn: 'Dr. Nino Zavradashvili', nameKa: 'დოქტ. ნინო ზავრადაშვილი' },
+            { nameEn: 'Zurab Samkharadze', nameKa: 'ზურაბ სამხარაძე' },
         ]
     },
     scientificSecretariat: {
@@ -279,6 +283,11 @@ export const CONFERENCE_COMMITTEES = {
         members: [
             { nameEn: 'Dr. Tamaz Marsagishvili', nameKa: 'დოქტ. თამაზ მარსაგიშვილი' },
             { nameEn: 'Dr. Stefano Bellucci', nameKa: 'დოქტ. სტეფანო ბელუჩი' },
+            { nameEn: 'Dr. Corr. member of Azerbaijan National Academy of Sciences, Islam Mustafayev', nameKa: 'დოქტ. წევრ-კორესპონდენტი აზერბაიჯანის ეროვნული სამეცნიერო აკადემია ისლამ მუსტაფაევი' },
+            { nameEn: 'Dr. Levan Shavadze', nameKa: 'დოქტ. ლევან შავაძე' },
+            { nameEn: 'Dr. Venko Beschkov', nameKa: 'დოქტ. ვენკო ბეშკოვი' },
+            { nameEn: 'Dr. Akif Aliyev', nameKa: 'დოქტ. აკიფ ალიევი' },
+            { nameEn: 'Dr. Mariam Tsatsanashvili', nameKa: 'დოქტ. მარიამ ცაცანაშვილი' },
         ]
     }
 };
