@@ -47,58 +47,170 @@ export default function Conference2026TestView() {
     const isEn = language === 'en';
 
     // 70th Jubilee Logo Redesign Test State (Options A, B, C)
-    const [selectedLogoOption, setSelectedLogoOption] = useState('A'); // 'A', 'B', 'C'
+    const [selectedLogoOption, setSelectedLogoOption] = useState('1'); // '1' through '10'
     const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
     const [surfaceBg, setSurfaceBg] = useState('glass'); // 'glass', 'white', 'dark'
 
     const LOGO_OPTIONS = {
-        A: {
-            id: 'A',
-            letter: 'A',
-            titleKa: 'ვარიანტი A: რკალური ტიპოგრაფია (Clean Arc Typography)',
-            titleEn: 'Option A: Clean Arc Typography (No Ribbon)',
-            shortNameKa: 'ვარიანტი A (რკალური ტიპოგრაფია)',
-            shortNameEn: 'Option A (Clean Arc)',
-            badgeKa: 'რკალური ტიპოგრაფია • ლენტის გარეშე',
-            badgeEn: 'Clean Arc • Ribbon-Free',
-            descKa: 'სუფთა ოქროსფერი წარწერა „70 წლის იუბილე“ ელეგანტური რკალით პირდაპირ მიუყვება „0“-ის ზედა გარე კონტურს, ხოლო ქვემოთ მოცემულია „1956 — 2026“. ყოველგვარი მძიმე ლენტის ან ბანერის გარეშე.',
-            descEn: 'Elegant golden typography typeset in a circular arc following the outer crown of "0", with "1956 — 2026" at the base. Completely free of ribbons or heavy banners.',
-            styleKa: 'სუფთა ოქროსფერი & ღრმა მეწამული (#2D1540), მსუბუქი, იდეალურად იკითხება მცირე ზომებშიც.',
-            styleEn: 'Clean gold & deep purple (#2D1540), lightweight, perfectly legible at small scales.',
-            imgSrc: isEn ? '/conference-2026/iice-70-optA-eng.png' : '/conference-2026/iice-70-optA-geo.png',
-            downloadName: isEn ? 'iice-70-optA-eng.png' : 'iice-70-optA-geo.png',
+        '1': {
+            id: '1',
+            number: '1',
+            titleKa: 'ვარიანტი 1: საზეიმო დაფნის გვირგვინი (Royal Golden Laurel Wreath)',
+            titleEn: 'Option 1: Royal Golden Laurel Wreath',
+            shortNameKa: 'ვარიანტი 1 (საზეიმო დაფნა)',
+            shortNameEn: 'Option 1 (Royal Laurel)',
+            badgeKa: 'კლასიკური დაფნა • 1956 — 2026',
+            badgeEn: 'Classic Laurel • 1956 — 2026',
+            descKa: 'პრესტიჟული 3D მოოქროვილი ციფრი „70“ კლასიკურ რომაულ სერიფში, გარშემორტყმული სამეფო დაფნის გვირგვინით და საზეიმო ოქროს ბაფთით „1956 — 2026“. შენობის გარეშე, მონუმენტური აკადემიური ესთეტიკა.',
+            descEn: 'Prestigious 3D sculpted gold "70" in classic Roman serif typography, framed by an open royal golden laurel wreath with a ceremonial plaque "1956 — 2026". Free of inner building, monumental academic prestige.',
+            styleKa: 'კლასიკური საზეიმო აკადემიური პრესტიჟი, უმაღლესი კონტრასტი ნებისმიერ ფონზე.',
+            styleEn: 'Classic ceremonial academic prestige, supreme contrast across light and dark surfaces.',
+            imgSrc: '/conference-2026/v2/v2-opt1-laurel.png',
+            downloadName: 'iice-70-v1-laurel.png',
         },
-        B: {
-            id: 'B',
-            letter: 'B',
-            titleKa: 'ვარიანტი B: სუფთა ქვედა ტიპოგრაფია (Modern Minimalist Baseline)',
-            titleEn: 'Option B: Modern Minimalist Baseline',
-            shortNameKa: 'ვარიანტი B (სუფთა ქვედა ტიპოგრაფია)',
-            shortNameEn: 'Option B (Minimalist Baseline)',
-            badgeKa: 'სუფთა ქვედა ტიპოგრაფია • მინიმალიზმი',
-            badgeEn: 'Minimalist Baseline • Standalone',
-            descKa: 'ციფრი „70“ დგას სრულიად დამოუკიდებლად და სუფთად. „70“-ის ქვემოთ (გადაფარვის გარეშე) ერთიანი ჰორიზონტალური ელეგანტური ხაზი: „1956 — 2026  •  70 წლის იუბილე“.',
-            descEn: 'The "70" digits stand completely standalone and clean. Underneath the digits (not overlapping), a single horizontal line: "1956 — 2026 • 70th Anniversary".',
-            styleKa: 'მინიმალისტური, მკაცრი და ღირსეული აკადემიური ესთეტიკა.',
-            styleEn: 'Minimalist, uncluttered, dignified academic aesthetic.',
-            imgSrc: isEn ? '/conference-2026/iice-70-optB-eng.png' : '/conference-2026/iice-70-optB-geo.png',
-            downloadName: isEn ? 'iice-70-optB-eng.png' : 'iice-70-optB-geo.png',
+        '2': {
+            id: '2',
+            number: '2',
+            titleKa: 'ვარიანტი 2: თანამედროვე გეომეტრიული ოქროს ლენტი (Modern Geometric Ribbon)',
+            titleEn: 'Option 2: Modern Geometric Ribbon',
+            shortNameKa: 'ვარიანტი 2 (გეომეტრიული ლენტი)',
+            shortNameEn: 'Option 2 (Geometric Ribbon)',
+            badgeKa: 'თანამედროვე მინიმალიზმი • პოლირებული ოქრო',
+            badgeEn: 'Modern Minimalist • Polished Gold',
+            descKa: 'ულტრა-თანამედროვე, სუფთა გეომეტრიული გადახლართული ციფრები 7 და 0 პოლირებული ოქროს ფაქტურითა და ჩამონათალი წიბოებით. ქვემოთ სუფთა თანამედროვე ტიპოგრაფია „70 YEARS JUBILEE“ — შვეიცარიული დიზაინის სიზუსტით.',
+            descEn: 'Ultra-modern clean geometric intertwined numerals 7 and 0 with polished gold ribbons and beveled facets. Modern typography "70 YEARS JUBILEE" with Swiss design precision.',
+            styleKa: 'არქიტექტურული მინიმალიზმი, თანამედროვე ევროპული ბრენდინგი.',
+            styleEn: 'Architectural minimalism, contemporary European brand identity.',
+            imgSrc: '/conference-2026/v2/v2-opt2-modern.png',
+            downloadName: 'iice-70-v2-modern.png',
         },
-        C: {
-            id: 'C',
-            letter: 'C',
-            titleKa: 'ვარიანტი C: ინტეგრირებული „0“-ში (ნიკოლოზ ნიორაძის შემოთავაზება)',
-            titleEn: 'Option C: Integrated Inside "0" (Nikoloz Proposal)',
-            shortNameKa: 'ვარიანტი C (ინტეგრირებული „0“-ში)',
-            shortNameEn: 'Option C (Inside "0")',
-            badgeKa: 'სრულიად „0“-ის შიგნით • თავისუფალი „7“',
-            badgeEn: 'All Inside "0" • Pure "7"',
-            descKa: 'საიუბილეო წარწერა სრულად გადატანილია „0“-ის წრეში („იუბილე“ ზედა რკალში, „1956 — 2026“ ქვედა რკალში). ციფრი „7“ რჩება სრულიად სუფთა და შეუზღუდავი. სუპერ-კომპაქტური მედალიონი/გერბი.',
-            descEn: 'All anniversary text is enclosed strictly inside the "0" circle ("JUBILEE" in upper arc, "1956 — 2026" in lower arc). Digit "7" remains completely pure and unencumbered. Super-compact emblem.',
-            styleKa: 'სუპერ-კომპაქტური გერბი-ემბლემა.',
-            styleEn: 'Super-compact badge emblem.',
-            imgSrc: isEn ? '/conference-2026/iice-70-optC-eng.png' : '/conference-2026/iice-70-optC-geo.png',
-            downloadName: isEn ? 'iice-70-optC-eng.png' : 'iice-70-optC-geo.png',
+        '3': {
+            id: '3',
+            number: '3',
+            titleKa: 'ვარიანტი 3: აკადემიური ოფიციალური მედალიონი (Academic Medallion Seal)',
+            titleEn: 'Option 3: Academic Medallion Seal',
+            shortNameKa: 'ვარიანტი 3 (აკადემიური მედალიონი)',
+            shortNameEn: 'Option 3 (Academic Medallion)',
+            badgeKa: 'სამეცნიერო მედალიონი • ოფიციალური ბეჭედი',
+            badgeEn: 'Academic Medallion • Official Seal',
+            descKa: 'მონუმენტური ოქროს მონეტა-მედალიონი დაფნის რკალით, 12 ვარსკვლავით და რელიეფური პერიმეტრული წარწერით. ოფიციალური უნივერსიტეტის პრესტიჟი, იდეალურია საერთაშორისო სერტიფიკატებისთვის.',
+            descEn: 'Monumental gold medallion seal with laurels, 12 stars, and embossed institutional perimeter lettering. Dignified university crest prestige, ideal for certificates.',
+            styleKa: 'ოფიციალური სახელმწიფო/საუნივერსიტეტო ბეჭდის სოლიდურობა.',
+            styleEn: 'Official state & university commemorative medal gravitas.',
+            imgSrc: '/conference-2026/v2/v2-opt3-medal.png',
+            downloadName: 'iice-70-v3-medal.png',
+        },
+        '4': {
+            id: '4',
+            number: '4',
+            titleKa: 'ვარიანტი 4: ქიმიური ბირთვი & მოლეკულური ორბიტალები (Chemical & Orbital Lattice)',
+            titleEn: 'Option 4: Chemical & Orbital Lattice',
+            shortNameKa: 'ვარიანტი 4 (ქიმიური ორბიტალები)',
+            shortNameEn: 'Option 4 (Chemical Orbitals)',
+            badgeKa: 'ქიმიური სპეციფიკა • ატომური ორბიტალები',
+            badgeEn: 'Chemical Science • Atomic Orbitals',
+            descKa: 'ინსტიტუტის უშუალო პროფილის გამოხატულება: მოოქროვილი „70“ ჩასმული ბენზოლის ჰექსაგონალურ ბადესა და ელექტროქიმიური ენერგიის მოლეკულურ ორბიტალურ ტრაექტორიებში. მეცნიერებისა და ტექნოლოგიის შერწყმა.',
+            descEn: 'Direct scientific identity: 3D gold "70" framed by a hexagonal benzene ring lattice and orbital electron energy paths. Fusion of high science and electrochemistry.',
+            styleKa: 'მაღალტექნოლოგიური, ზუსტი საბუნებისმეტყველო მეცნიერების ესთეტიკა.',
+            styleEn: 'High-tech exact scientific chemistry aesthetic.',
+            imgSrc: '/conference-2026/v2/v2-opt4-chemistry.png',
+            downloadName: 'iice-70-v4-chemistry.png',
+        },
+        '5': {
+            id: '5',
+            number: '5',
+            titleKa: 'ვარიანტი 5: ალმასისებრი 3D ოქრო (Faceted Diamond Cut)',
+            titleEn: 'Option 5: Faceted Diamond Cut',
+            shortNameKa: 'ვარიანტი 5 (ალმასისებრი 3D ოქრო)',
+            shortNameEn: 'Option 5 (Diamond Cut)',
+            badgeKa: 'ბრილიანტისებრი წიბოები • Diamond Jubilee',
+            badgeEn: 'Faceted Crystal • Diamond Jubilee',
+            descKa: 'ძვირფასი ქვისებრი, კრისტალური წიბოებით გამოკვეთილი 3D ციფრები „70“, რომელიც ირეკლავს სინათლეს და ხაზს უსვამს 70 წლის სიმტკიცესა და ბრწყინვალებას. ქვემოთ სუფთა წარწერა „DIAMOND JUBILEE“.',
+            descEn: 'Precious gemstone-cut 3D numerals "70" with light-refracting crystal facets emphasizing 70 years of durability and brilliance. Clean "DIAMOND JUBILEE" typography.',
+            styleKa: 'ძვირფასი, კრისტალოგრაფიული და იუველირული ბრწყინვალება.',
+            styleEn: 'Precious crystal faceted jewelry-grade brilliance.',
+            imgSrc: '/conference-2026/v2/v2-opt5-diamond.png',
+            downloadName: 'iice-70-v5-diamond.png',
+        },
+        '6': {
+            id: '6',
+            number: '6',
+            titleKa: 'ვარიანტი 6: ჰერალდიკური მეწამული ფარი და გვირგვინი (Royal Purple Shield)',
+            titleEn: 'Option 6: Royal Purple Heraldic Shield',
+            shortNameKa: 'ვარიანტი 6 (მეწამული ფარი და გერბი)',
+            shortNameEn: 'Option 6 (Royal Purple Shield)',
+            badgeKa: 'სამეფო მეწამული & ოქრო • გერბი',
+            badgeEn: 'Imperial Purple & Gold • Coat of Arms',
+            descKa: 'ინსტიტუტის ბრენდირებული ღრმა მეწამული (#2D1540) ჰერალდიკური ფარი ოქროს ბაროკოს ორნამენტებით, გვირგვინით და მოოქროვილი „70“-ით. უმაღლესი რანგის საზეიმო გერბი.',
+            descEn: 'IICE branded deep imperial purple (#2D1540) heraldic shield with ornate gold filigree, crown crest, and 3D gold "70". High-prestige ceremonial coat of arms.',
+            styleKa: 'ისტორიული სიდიადე, უნივერსიტეტის უმაღლესი ჰერალდიკა.',
+            styleEn: 'Historical grandeur, peak university heraldic gravitas.',
+            imgSrc: '/conference-2026/v2/v2-opt6-shield.png',
+            downloadName: 'iice-70-v6-shield.png',
+        },
+        '7': {
+            id: '7',
+            number: '7',
+            titleKa: 'ვარიანტი 7: მინიმალისტური შამპანური სერიფი (Minimalist Luxury Serif)',
+            titleEn: 'Option 7: Minimalist Luxury Serif',
+            shortNameKa: 'ვარიანტი 7 (მინიმალისტური სერიფი)',
+            shortNameEn: 'Option 7 (Minimalist Serif)',
+            badgeKa: 'მინიმალისტური ფუფუნება • 1956 • 70 • 2026',
+            badgeEn: 'Minimalist Luxury • 1956 • 70 • 2026',
+            descKa: 'მაღალი კლასის მინიმალისტური სარედაქციო დიზაინი (Didot / Bodoni სტილი): შამპანურისფერი ოქროსფერი ციფრი „70“, ჰორიზონტალური სიმეტრიით „• 1956 • 70 • 2026 •“ და „JUBILEE“. ყოველგვარი ზედმეტი დეტალის გარეშე.',
+            descEn: 'High-end editorial luxury aesthetic: brushed champagne gold Didot serif numerals, horizontally flanked by "• 1956 • 70 • 2026 •" and "JUBILEE". Pure timeless sophistication.',
+            styleKa: 'ულტრა-დახვეწილი, აკადემიური ჟურნალების და გლობალური ინსტიტუტების სტილი.',
+            styleEn: 'Ultra-refined, style of top academic journals and world-class institutions.',
+            imgSrc: '/conference-2026/v2/v2-opt7-minimalist.png',
+            downloadName: 'iice-70-v7-minimalist.png',
+        },
+        '8': {
+            id: '8',
+            number: '8',
+            titleKa: 'ვარიანტი 8: არქიტექტურული ფასადი 70-ის თავზე (Architectural Facade Crown)',
+            titleEn: 'Option 8: Architectural Facade Crown',
+            shortNameKa: 'ვარიანტი 8 (შენობის გვირგვინი ზემოთ)',
+            shortNameEn: 'Option 8 (Building Crown Atop)',
+            badgeKa: 'შენობა ცალკე ზემოთ • არქიტექტურული გერბი',
+            badgeEn: 'Building Crown Atop • Architectural Crest',
+            descKa: 'შენობა აღარ ზის „0“-ში — ის ღირსეულად დგას ციფრების თავზე, როგორც მონუმენტური არქიტექტურული გვირგვინი, ხოლო ქვემოთ მოცემულია 3D ოქროს „70“ დაფნის რკალითა და პედესტალით.',
+            descEn: 'The building is completely removed from inside "0" and placed proudly atop the numbers as an architectural crown crest, with 3D gold "70" on a pedestal below.',
+            styleKa: 'ინსტიტუტის ისტორიული შენობისა და საიუბილეო თარიღის მკაფიო გამიჯვნა და ჰარმონია.',
+            styleEn: 'Clear separation and dignified harmony between institute building and jubilee date.',
+            imgSrc: '/conference-2026/v2/v2-opt8-arch-crest.png',
+            downloadName: 'iice-70-v8-arch-crest.png',
+        },
+        '9': {
+            id: '9',
+            number: '9',
+            titleKa: 'ვარიანტი 9: უსასრულობის მარყუჟი 70 (Infinity Mobius Loop)',
+            titleEn: 'Option 9: Infinity Mobius Loop',
+            shortNameKa: 'ვარიანტი 9 (უსასრულობის მარყუჟი)',
+            shortNameEn: 'Option 9 (Infinity Loop)',
+            badgeKa: 'უსასრულობის მარყუჟი • მომავლის მეცნიერება',
+            badgeEn: 'Infinity Loop • Eternal Innovation',
+            descKa: 'ციფრი „0“ გარდაქმნილია უსასრულობის (Mobius loop) მარყუჟად მდნარი ოქროს ფაქტურით, რაც გამოხატავს უწყვეტ სამეცნიერო პროგრესსა და ინსტიტუტის მომავალს 70 წლის მიღმა. წარწერით „70th JUBILEE“.',
+            descEn: 'The numeral "0" flows into an infinity mobius loop in liquid gold, symbolizing eternal scientific progress beyond 70 years. Clean "70th JUBILEE" typography.',
+            styleKa: 'დინამიკური, უსასრულო განვითარებისა და ინოვაციის სიმბოლო.',
+            styleEn: 'Dynamic symbol of perpetual progress, science, and innovation.',
+            imgSrc: '/conference-2026/v2/v2-opt9-infinity.png',
+            downloadName: 'iice-70-v9-infinity.png',
+        },
+        '10': {
+            id: '10',
+            number: '10',
+            titleKa: 'ვარიანტი 10: პლატინისა და ოქროს ჩირაღდანი (Two-Tone Platinum & Gold Torch)',
+            titleEn: 'Option 10: Two-Tone Platinum & Gold Torch',
+            shortNameKa: 'ვარიანტი 10 (პლატინა, ოქრო & ჩირაღდანი)',
+            shortNameEn: 'Option 10 (Platinum, Gold & Torch)',
+            badgeKa: 'ორტონიანი პლატინა & ოქრო • მეცნიერების ჩირაღდანი',
+            badgeEn: 'Two-Tone Platinum & Gold • Torch of Science',
+            descKa: 'ორტონიანი (პლატინა და ოქრო) აკადემიური მედალიონი რომაული დაფნის გვირგვინით, მეცნიერების ჩირაღდნით, ჰორიზონტალური ბაზისით „1956 — 2026“ და საზეიმო ბაფთით „ANNIVERSARY“ — ოლიმპიური და აკადემიური სიდიადე.',
+            descEn: 'Two-tone platinum and gold academic medallion crowned with the torch of knowledge, Roman laurels, horizontal baseline "1956 — 2026", and "ANNIVERSARY" ribbon.',
+            styleKa: 'ორტონიანი მეტალიკა, განმანათლებლობისა და ცოდნის ჩირაღდანი.',
+            styleEn: 'Two-tone metallic luxury, torch of enlightenment and academic discovery.',
+            imgSrc: '/conference-2026/v2/v2-opt10-platinum.png',
+            downloadName: 'iice-70-v10-platinum.png',
         }
     };
 
@@ -500,20 +612,21 @@ export default function Conference2026TestView() {
 
                     {/* Logo Option Switcher */}
                     <div className="flex flex-wrap items-center gap-2">
-                        <div className="flex items-center bg-black/40 p-1 rounded-2xl border border-purple-400/30 shadow-inner">
-                            {['A', 'B', 'C'].map((optKey) => (
+                        <div className="flex items-center bg-black/40 p-1 rounded-2xl border border-purple-400/30 shadow-inner overflow-x-auto max-w-full">
+                            {Object.keys(LOGO_OPTIONS).map((optKey) => (
                                 <button
                                     key={optKey}
                                     type="button"
                                     onClick={() => setSelectedLogoOption(optKey)}
-                                    className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 ${
+                                    className={`px-2 py-1 sm:px-2.5 sm:py-1 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1 ${
                                         selectedLogoOption === optKey
                                             ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-md scale-105'
                                             : 'text-purple-200 hover:text-white hover:bg-white/10'
                                     }`}
+                                    title={isEn ? LOGO_OPTIONS[optKey].shortNameEn : LOGO_OPTIONS[optKey].shortNameKa}
                                 >
-                                    <Sparkles className="w-3.5 h-3.5" />
-                                    <span>{isEn ? `Option ${optKey}` : `ვარიანტი ${optKey}`}</span>
+                                    <Sparkles className="w-3 h-3 text-amber-300" />
+                                    <span>{optKey}</span>
                                 </button>
                             ))}
                         </div>
@@ -524,7 +637,7 @@ export default function Conference2026TestView() {
                             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-white/15 hover:bg-white/25 text-white border border-white/25 shadow-xs transition-all cursor-pointer"
                         >
                             <Layers className="w-3.5 h-3.5 text-amber-300" />
-                            <span>{isEn ? "Compare All 3" : "სამივე ვარიანტის შედარება"}</span>
+                            <span>{isEn ? "Compare All 10" : "10-ვე ვარიანტის შედარება"}</span>
                         </button>
                     </div>
                 </div>
@@ -2106,43 +2219,73 @@ export default function Conference2026TestView() {
             {/* 70th Jubilee Logo Comparison Modal */}
             {isCompareModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm animate-fade-in">
-                    <div className="bg-white rounded-3xl shadow-2xl border border-purple-200 max-w-6xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-6 relative">
+                    <div className="bg-white rounded-3xl shadow-2xl border border-purple-200 max-w-7xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-8 space-y-6 relative">
                         {/* Close button */}
                         <button
                             type="button"
                             onClick={() => setIsCompareModalOpen(false)}
-                            className="absolute top-5 right-5 p-2 rounded-2xl bg-purple-50 hover:bg-purple-100 text-[#60318e] transition-colors cursor-pointer"
+                            className="absolute top-5 right-5 p-2.5 rounded-2xl bg-purple-50 hover:bg-purple-100 text-[#60318e] transition-colors cursor-pointer z-10"
                             aria-label="Close Comparison Modal"
                         >
                             <X className="w-5 h-5" />
                         </button>
 
-                        <div className="text-center max-w-2xl mx-auto space-y-2">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 text-[#60318e] text-xs font-extrabold">
+                        <div className="text-center max-w-3xl mx-auto space-y-2">
+                            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-100 text-[#60318e] text-xs font-extrabold">
                                 <Sparkles className="w-3.5 h-3.5 text-[#AD49E1]" />
-                                <span>{isEn ? "Logo Redesign Evaluation" : "საიუბილეო ლოგოს რედიზაინის შეფასება"}</span>
+                                <span>{isEn ? "10 Jubilee Concepts Evaluation" : "10 საიუბილეო კონცეფციის შეფასება"}</span>
                             </div>
-                            <h2 className="text-xl sm:text-2xl font-black text-[#2D1540]">
+                            <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-[#2D1540]">
                                 {isEn 
-                                    ? "70th Jubilee: 3 Ribbon-Free Academic Variations" 
-                                    : "70 წლის იუბილე: 3 ელეგანტური ვარიანტი (ლენტის გარეშე)"}
+                                    ? "70th Jubilee: 10 Diverse Concepts (Building Separate • New Typography)" 
+                                    : "70 წლის იუბილე: 10 მრავალფეროვანი კონცეფცია (შენობა 70-ის გარეთ)"}
                             </h2>
                             <p className="text-xs sm:text-sm text-slate-600">
                                 {isEn
-                                    ? "Review and select between the 3 clean variations requested by the organizing committee (Dr. Grigor Tatishvili & Dr. Nikoloz Nioradze)."
-                                    : "გაეცანით და შეარჩიეთ საორგანიზაციო კომიტეტის (დოქტ. გრიგორ ტატიშვილი & დოქტ. ნიკოლოზ ნიორაძე) მიერ შემოთავაზებული 3 სუფთა ვარიანტიდან ერთ-ერთი."}
+                                    ? "Select from 10 distinct creative directions: Royal Laurel, Modern Geometric Ribbon, Academic Seal, Chemical Orbitals, Faceted Diamond, Imperial Shield, Minimalist Didot Serif, Building Crown Atop, Infinity Loop, and Platinum Torch."
+                                    : "შეარჩიეთ 10 სრულიად განსხვავებული შემოქმედებითი მიმართულებიდან: სამეფო დაფნა, გეომეტრიული ლენტი, აკადემიური მედალიონი, ქიმიური ორბიტალები, ალმასისებრი 3D, სამეფო გერბი, მინიმალისტური სერიფი, შენობა თავზე, უსასრულობის მარყუჟი და პლატინა-ოქროს ჩირაღდანი."}
                             </p>
+
+                            {/* Modal Background Switcher */}
+                            <div className="pt-2 flex items-center justify-center gap-2">
+                                <span className="text-xs font-bold text-slate-500">
+                                    {isEn ? "Preview surface:" : "ფონის არჩევა:"}
+                                </span>
+                                <div className="inline-flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold text-slate-600">
+                                    <button
+                                        type="button"
+                                        onClick={() => setSurfaceBg('glass')}
+                                        className={`px-3 py-1 rounded-lg transition-all ${surfaceBg === 'glass' ? 'bg-[#60318e] text-white shadow-2xs' : 'hover:text-[#60318e]'}`}
+                                    >
+                                        Glass
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setSurfaceBg('white')}
+                                        className={`px-3 py-1 rounded-lg transition-all ${surfaceBg === 'white' ? 'bg-[#60318e] text-white shadow-2xs' : 'hover:text-[#60318e]'}`}
+                                    >
+                                        White
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setSurfaceBg('dark')}
+                                        className={`px-3 py-1 rounded-lg transition-all ${surfaceBg === 'dark' ? 'bg-[#2D1540] text-amber-300 shadow-2xs' : 'hover:text-[#60318e]'}`}
+                                    >
+                                        Dark
+                                    </button>
+                                </div>
+                            </div>
                         </div>
 
-                        {/* 3 Columns Comparison */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                        {/* 10 Columns Responsive Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
                             {Object.values(LOGO_OPTIONS).map((opt) => (
                                 <div
                                     key={opt.id}
                                     className={`p-5 rounded-3xl border-2 transition-all flex flex-col justify-between space-y-4 ${
                                         selectedLogoOption === opt.id
-                                            ? 'border-[#60318e] bg-purple-50/40 shadow-lg ring-2 ring-purple-400/20'
-                                            : 'border-slate-200 bg-slate-50/50 hover:border-purple-200 hover:bg-white'
+                                            ? 'border-[#60318e] bg-purple-50/50 shadow-lg ring-2 ring-purple-400/30'
+                                            : 'border-slate-200 bg-slate-50/60 hover:border-purple-200 hover:bg-white'
                                     }`}
                                 >
                                     <div className="space-y-3">
@@ -2163,14 +2306,20 @@ export default function Conference2026TestView() {
                                             {isEn ? opt.titleEn : opt.titleKa}
                                         </h3>
 
-                                        {/* Image Display */}
-                                        <div className="p-4 rounded-2xl bg-white border border-purple-100/80 shadow-2xs flex items-center justify-center min-h-[220px]">
+                                        {/* Image Display Container with Active Surface */}
+                                        <div className={`p-4 rounded-2xl border transition-all flex items-center justify-center min-h-[230px] ${
+                                            surfaceBg === 'dark'
+                                                ? 'bg-[#2D1540] border-purple-800'
+                                                : surfaceBg === 'white'
+                                                ? 'bg-white border-slate-200'
+                                                : 'bg-gradient-to-br from-white/95 via-purple-50/80 to-indigo-50/90 border-purple-100'
+                                        }`}>
                                             <Image
                                                 src={opt.imgSrc}
                                                 alt={isEn ? opt.titleEn : opt.titleKa}
-                                                width={300}
-                                                height={220}
-                                                className="w-full h-auto max-h-[190px] object-contain drop-shadow-md"
+                                                width={320}
+                                                height={240}
+                                                className="w-full h-auto max-h-[200px] object-contain drop-shadow-md transition-transform hover:scale-105 duration-300"
                                             />
                                         </div>
 
@@ -2179,7 +2328,7 @@ export default function Conference2026TestView() {
                                         </p>
                                         <div className="text-[11px] font-medium text-purple-900 bg-purple-50/80 p-2.5 rounded-xl border border-purple-100">
                                             <strong className="block mb-0.5 text-[#60318e] font-black">
-                                                {isEn ? "Aesthetic & Readability:" : "ესთეტიკა და აღქმა:"}
+                                                {isEn ? "Aesthetic & Symbolism:" : "ესთეტიკა და სიმბოლიკა:"}
                                             </strong>
                                             {isEn ? opt.styleEn : opt.styleKa}
                                         </div>
@@ -2203,25 +2352,42 @@ export default function Conference2026TestView() {
                                             <span>{isEn ? `Apply Option ${opt.id} to Page` : `გვერდზე ვარიანტი ${opt.id}-ის არჩევა`}</span>
                                         </button>
 
-                                        <a
-                                            href={opt.imgSrc}
-                                            download={opt.downloadName}
-                                            className="w-full py-2 px-3 rounded-xl text-xs font-bold text-slate-700 hover:text-[#60318e] bg-slate-100 hover:bg-purple-50 transition-all flex items-center justify-center gap-1.5 border border-slate-200"
-                                        >
-                                            <Download className="w-3.5 h-3.5 text-[#60318e]" />
-                                            <span>{isEn ? `Download High-Res PNG (${opt.id})` : `მაღალი ხარისხის PNG (${opt.id})`}</span>
-                                        </a>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <a
+                                                href={opt.imgSrc}
+                                                download={opt.downloadName}
+                                                className="py-1.5 px-2 rounded-xl text-[11px] font-bold text-slate-700 hover:text-[#60318e] bg-slate-100 hover:bg-purple-50 transition-all flex items-center justify-center gap-1 border border-slate-200"
+                                                title="Transparent PNG"
+                                            >
+                                                <Download className="w-3 h-3 text-[#60318e]" />
+                                                <span>PNG</span>
+                                            </a>
+                                            <a
+                                                href={opt.imgSrc.replace('.png', '.jpg')}
+                                                download={opt.downloadName.replace('.png', '.jpg')}
+                                                className="py-1.5 px-2 rounded-xl text-[11px] font-bold text-slate-700 hover:text-[#60318e] bg-slate-100 hover:bg-purple-50 transition-all flex items-center justify-center gap-1 border border-slate-200"
+                                                title="High-Res JPG"
+                                            >
+                                                <Download className="w-3 h-3 text-amber-600" />
+                                                <span>JPG 8K</span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
 
                         {/* Modal Footer Note */}
-                        <div className="pt-4 border-t border-purple-100 text-center">
-                            <p className="text-xs text-slate-500">
+                        <div className="pt-4 border-t border-purple-100 text-center space-y-1">
+                            <p className="text-xs font-semibold text-slate-700">
                                 {isEn
-                                    ? "All 3 options feature the official Mindeli 11 building facade vector drawing inside the '0' with no chemical flasks."
-                                    : "სამივე ვარიანტი შეიცავს ინსტიტუტის შენობის (მინდელის 11) ოფიციალურ ვექტორულ ნახატს „0“-ში და სრულიად თავისუფალია კოლბებისგან."}
+                                    ? "All 10 variations eliminate the inner building placement from the digit 0, offering distinct typography, luxury gold styling, and diverse scientific/academic symbolism."
+                                    : "ყველა 10 ვარიანტში შენობა სრულად ამოღებულია ციფრ „0“-ის შიგნიდან. წარმოდგენილია მრავალფეროვანი ტიპოგრაფია, 3D ოქროს ფაქტურა და უნიკალური სიმბოლიკა."}
+                            </p>
+                            <p className="text-[11px] text-slate-400">
+                                {isEn 
+                                    ? "You can click any option button or 'Apply' to instantly preview that logo in the hero header."
+                                    : "შეგიძლიათ დააწკაპუნოთ ნებისმიერ ვარიანტზე და ის მყისიერად აისახება გვერდის მთავარ ჰირო ბლოკში."}
                             </p>
                         </div>
                     </div>
