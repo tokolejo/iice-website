@@ -239,6 +239,22 @@ export const INVITED_SPEAKERS = [
         countryEn: 'Azerbaijan',
         countryKa: 'აზერბაიჯანი',
     },
+    {
+        id: 'kranz',
+        nameEn: 'Assoc. Prof. Christine Kranz',
+        nameKa: 'ასოც. პროფესორი კრისტინე კრანცი',
+        affiliationEn: 'Institute of Analytical and Bioanalytical Chemistry (IABC), Assoc. Professor at Ulm University, Ulm, Germany',
+        affiliationKa: 'ანალიზური და ბიოანალიზური ქიმიის ინსტიტუტის (IABC) ასოცირებული პროფესორი, ულმის უნივერსიტეტი, ულმი, გერმანია',
+        roleEn: 'Invited Speaker (Germany)',
+        roleKa: 'მოწვეული მომხსენებელი (გერმანია)',
+        topicEn: '',
+        topicKa: '',
+        bioEn: 'Dr. Christine Kranz received her Ph.D. in Chemistry from the Technical University of Munich (Germany). After spending a year as a postdoctoral fellow at the Vienna University of Technology, Institute of Analytical Chemistry (Austria), she accepted a position at the School of Chemistry and Biochemistry, Georgia Institute of Technology (USA). In 2008, she returned to Germany and is currently Assoc. Professor at Ulm University, Institute of Analytical and Bioanalytical Chemistry (IABC). Her main research focus is on scanning (electrochemical) probe microscopy for studying interfacial processes at post-Li battery materials and light-driven molecular photocatalysis systems, besides she works on the development of miniaturized electrochemical sensors for bioanalytical applications. She published more than 295 papers in peer-reviewed journals. She is on the editorial boards of ACS Electrochemistry, Electrochemical Science Advances, Analyst, and Electrochimica Acta. Since 2020, she is Editor of Bioelectrochemistry (Elsevier).',
+        bioKa: 'დოქტორმა კრისტინე კრანცმა ქიმიის მიმართულებით სადოქტორო ხარისხი მიუნხენის ტექნიკურ უნივერსიტეტში (გერმანია) მოიპოვა. ვენის ტექნიკურ უნივერსიტეტში (ავსტრია), ანალიზური ქიმიის ინსტიტუტში, პოსტდოქტორანტად ერთი წლის გატარების შემდეგ, მან მუშაობა დაიწყო ჯორჯიის ტექნოლოგიური ინსტიტუტის (აშშ) ქიმიისა და ბიოქიმიის სკოლაში. 2008 წელს იგი გერმანიაში დაბრუნდა და ამჟამად ულმის უნივერსიტეტის ანალიზური და ბიოანალიზური ქიმიის ინსტიტუტის (IABC) ასოცირებული პროფესორია. მისი კვლევითი საქმიანობა ძირითადად ფოკუსირებულია სკანირებად (ელექტროქიმიურ) ზონდურ მიკროსკოპიაზე, რომლის საშუალებითაც შეისწავლება ფაზათა საზღვარზე მიმდინარე პროცესები ლითიუმ-იონურის შემდგომი თაობის (post-Li) ბატარეების მასალებსა და სინათლით აქტივირებულ მოლეკულურ ფოტოკატალიზურ სისტემებში; გარდა ამისა, იგი მუშაობს ბიოანალიზური დანიშნულების მინიატურული ელექტროქიმიური სენსორების შემუშავებაზე. მას გამოქვეყნებული აქვს 295-ზე მეტი სამეცნიერო ნაშრომი რეცენზირებად ჟურნალებში. იგი არის ისეთი ჟურნალების სარედაქციო საბჭოს წევრი, როგორიცაა: ACS Electrochemistry, Electrochemical Science Advances, Analyst და Electrochimica Acta. 2020 წლიდან იგი ჟურნალ Bioelectrochemistry-ის (გამომცემლობა Elsevier) რედაქტორია.',
+        image: '/conference-2026/speakers/christine-kranz.jpg',
+        countryEn: 'Germany',
+        countryKa: 'გერმანია',
+    },
 ];
 
 export const CONFERENCE_COMMITTEES = {
@@ -282,6 +298,7 @@ export const CONFERENCE_COMMITTEES = {
         members: [
             { nameEn: 'Dr. Tamaz Marsagishvili', nameKa: 'დოქტ. თამაზ მარსაგიშვილი' },
             { nameEn: 'Dr. Stefano Bellucci', nameKa: 'დოქტ. სტეფანო ბელუჩი' },
+            { nameEn: 'Academician Ramaz Katsarava, Georgian National Academy of Science', nameKa: 'აკადემიკოსი რამაზ ქაცარავა, საქართველოს მეცნიერებათა ეროვნული აკადემია' },
             { nameEn: 'Dr. Corr. member of Azerbaijan National Academy of Sciences, Islam Mustafayev', nameKa: 'დოქტ. წევრ-კორესპონდენტი აზერბაიჯანის ეროვნული სამეცნიერო აკადემია ისლამ მუსტაფაევი' },
             { nameEn: 'Dr. Levan Shavadze', nameKa: 'დოქტ. ლევან შავაძე' },
             { nameEn: 'Dr. Venko Beschkov', nameKa: 'დოქტ. ვენკო ბეშკოვი' },
