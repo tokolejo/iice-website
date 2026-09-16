@@ -298,7 +298,7 @@ export const CONFERENCE_COMMITTEES = {
         members: [
             { nameEn: 'Dr. Tamaz Marsagishvili', nameKa: 'დოქტ. თამაზ მარსაგიშვილი' },
             { nameEn: 'Dr. Stefano Bellucci', nameKa: 'დოქტ. სტეფანო ბელუჩი' },
-            { nameEn: 'Academician Ramaz Katsarava, Georgian National Academy of Science', nameKa: 'აკადემიკოსი რამაზ ქაცარავა, საქართველოს მეცნიერებათა ეროვნული აკადემია' },
+            { nameEn: 'Academician Ramaz Katsarava, Georgian National Academy of Sciences', nameKa: 'აკადემიკოსი რამაზ ქაცარავა, საქართველოს მეცნიერებათა ეროვნული აკადემია' },
             { nameEn: 'Dr. Corr. member of Azerbaijan National Academy of Sciences, Islam Mustafayev', nameKa: 'დოქტ. წევრ-კორესპონდენტი აზერბაიჯანის ეროვნული სამეცნიერო აკადემია ისლამ მუსტაფაევი' },
             { nameEn: 'Dr. Levan Shavadze', nameKa: 'დოქტ. ლევან შავაძე' },
             { nameEn: 'Dr. Venko Beschkov', nameKa: 'დოქტ. ვენკო ბეშკოვი' },
