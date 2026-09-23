@@ -11,12 +11,12 @@ const nextConfig = {
     return [
       {
         source: '/webmail',
-        destination: 'https://mail.iice.ge:2096',
+        destination: 'https://mail.zoho.com/',
         permanent: false,
       },
       {
         source: '/webmail/:path*',
-        destination: 'https://mail.iice.ge:2096/:path*',
+        destination: 'https://mail.zoho.com/',
         permanent: false,
       },
       {
