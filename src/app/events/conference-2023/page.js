@@ -368,6 +368,7 @@ export default function Conference2023() {
                                         <a 
                                             key={idx}
                                             href={`/conference-2023/${doc.file}`}
+                                            download={doc.file}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="flex items-center gap-4 p-5 bg-slate-50 rounded-xl border border-gray-100 hover:border-purple-200 hover:bg-purple-50 hover:shadow-md transition-all group relative overflow-hidden"

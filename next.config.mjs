@@ -54,6 +54,24 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: '/:path*.doc',
+        headers: [
+          {
+            key: 'Content-Disposition',
+            value: 'attachment',
+          },
+        ],
+      },
+      {
+        source: '/:path*.docx',
+        headers: [
+          {
+            key: 'Content-Disposition',
+            value: 'attachment',
+          },
+        ],
+      },
     ];
   },
 };

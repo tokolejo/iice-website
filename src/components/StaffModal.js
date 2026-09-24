@@ -156,6 +156,7 @@ export default function StaffModal({ isOpen, onClose, member }) {
                                         href={finalCvLink}
                                         target="_blank"
                                         rel="noopener noreferrer"
+                                        download={/\.docx?$/i.test(finalCvLink) ? true : undefined}
                                         className="inline-flex justify-center items-center w-full px-4 py-2 border border-purple-200 text-sm font-medium rounded-full shadow-sm text-primary hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
                                     >
                                         {t.staff?.viewCv || (language === 'en' ? 'View Curriculum Vitae' : 'CV-ს ნახვა')}

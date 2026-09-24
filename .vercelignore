@@ -3,8 +3,5 @@ out
 node_modules
 scratch
 *.zip
-*.docx
-*.doc
-*.pdf
 .git
 .gemini
