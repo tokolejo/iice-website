@@ -1879,6 +1879,66 @@ export default function Conference2026View() {
                 )}
             </div>
 
+            {/* Partner Scientific Journals / Media Partner Section - Visible ONLY on Organizers Tab */}
+            {activeTab === 'organizers' && (
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-purple-100 animate-fade-in">
+                    <div className="text-center mb-6">
+                        <h3 className="text-base sm:text-lg font-black text-slate-900">
+                            {isEn ? "Partner Scientific Journals / Media Partner" : "პარტნიორი სამეცნიერო ჟურნალები / სამეცნიერო პარტნიორი"}
+                        </h3>
+                    </div>
+
+                    <div className="flex justify-center">
+                        <a
+                            href="https://chemprob.org/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full max-w-2xl bg-white p-5 sm:p-6 rounded-2xl border border-purple-100 shadow-xs hover:shadow-md hover:border-[#60318e]/50 hover:bg-purple-50/20 transition-all duration-300 group cursor-pointer flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left"
+                        >
+                            <div className="w-36 sm:w-44 h-24 sm:h-28 rounded-xl bg-slate-50 border border-purple-100/80 p-2 flex items-center justify-center relative shrink-0 overflow-hidden shadow-2xs group-hover:scale-[1.03] transition-transform duration-300">
+                                <Image
+                                    src="/conference-2026/chemical-problems.jpg"
+                                    alt="Chemical Problems Journal"
+                                    width={176}
+                                    height={112}
+                                    className="w-full h-full object-contain"
+                                />
+                            </div>
+
+                            <div className="flex-1 min-w-0">
+                                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-2">
+                                    <span className="text-[10px] sm:text-xs font-bold text-[#60318e] uppercase tracking-wide bg-purple-50 px-2.5 py-0.5 rounded-full border border-purple-100">
+                                        {isEn ? "Scientific Journal" : "სამეცნიერო ჟურნალი"}
+                                    </span>
+                                    <span className="text-[10px] sm:text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200/60">
+                                        SCOPUS / ESCI
+                                    </span>
+                                    <span className="text-[10px] sm:text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+                                        ISSN 2221-8688
+                                    </span>
+                                </div>
+
+                                <h4 className="text-base sm:text-lg font-black text-slate-900 group-hover:text-[#60318e] transition-colors flex items-center justify-center sm:justify-start gap-1.5">
+                                    <span>Chemical Problems</span>
+                                    <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-[#60318e] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
+                                </h4>
+
+                                <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                                    {isEn
+                                        ? "International peer-reviewed scientific journal indexed in Scopus and Web of Science (ESCI), publishing high-quality research in chemistry and chemical technology."
+                                        : "საერთაშორისო რეცენზირებადი სამეცნიერო ჟურნალი (ინდექსირებული Scopus და Web of Science-ში), რომელიც აქვეყნებს მაღალი დონის კვლევებს ქიმიასა და ქიმიურ ტექნოლოგიებში."}
+                                </p>
+
+                                <div className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-[#60318e] group-hover:underline">
+                                    <span>chemprob.org</span>
+                                    <ExternalLink className="w-3.5 h-3.5" />
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            )}
+
             {/* Institutional Partners & Sponsors Section (Bottom Banner with Official Logos) */}
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-14 pt-8 border-t border-purple-100">
                 <div className="text-center mb-6">
@@ -1948,64 +2008,6 @@ export default function Conference2026View() {
                         <p className="text-[11px] sm:text-xs font-bold text-slate-800 leading-snug group-hover:text-[#60318e] transition-colors">
                             {isEn ? "Shota Rustaveli National Science Foundation of Georgia" : "შოთა რუსთაველის საქართველოს ეროვნული სამეცნიერო ფონდი"}
                         </p>
-                    </a>
-                </div>
-            </div>
-
-            {/* Partner Scientific Journals / Media Partner Section */}
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 pt-8 border-t border-purple-100">
-                <div className="text-center mb-6">
-                    <h3 className="text-base sm:text-lg font-black text-slate-900">
-                        {isEn ? "Partner Scientific Journals / Media Partner" : "პარტნიორი სამეცნიერო ჟურნალები / სამეცნიერო პარტნიორი"}
-                    </h3>
-                </div>
-
-                <div className="flex justify-center">
-                    <a
-                        href="https://chemprob.org/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full max-w-2xl bg-white p-5 sm:p-6 rounded-2xl border border-purple-100 shadow-xs hover:shadow-md hover:border-[#60318e]/50 hover:bg-purple-50/20 transition-all duration-300 group cursor-pointer flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left"
-                    >
-                        <div className="w-36 sm:w-44 h-24 sm:h-28 rounded-xl bg-slate-50 border border-purple-100/80 p-2 flex items-center justify-center relative shrink-0 overflow-hidden shadow-2xs group-hover:scale-[1.03] transition-transform duration-300">
-                            <Image
-                                src="/conference-2026/chemical-problems.jpg"
-                                alt="Chemical Problems Journal"
-                                width={176}
-                                height={112}
-                                className="w-full h-full object-contain"
-                            />
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-2">
-                                <span className="text-[10px] sm:text-xs font-bold text-[#60318e] uppercase tracking-wide bg-purple-50 px-2.5 py-0.5 rounded-full border border-purple-100">
-                                    {isEn ? "Scientific Journal" : "სამეცნიერო ჟურნალი"}
-                                </span>
-                                <span className="text-[10px] sm:text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200/60">
-                                    SCOPUS / ESCI
-                                </span>
-                                <span className="text-[10px] sm:text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
-                                    ISSN 2221-8688
-                                </span>
-                            </div>
-
-                            <h4 className="text-base sm:text-lg font-black text-slate-900 group-hover:text-[#60318e] transition-colors flex items-center justify-center sm:justify-start gap-1.5">
-                                <span>Chemical Problems</span>
-                                <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-[#60318e] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
-                            </h4>
-
-                            <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                                {isEn
-                                    ? "International peer-reviewed scientific journal indexed in Scopus and Web of Science (ESCI), publishing high-quality research in chemistry and chemical technology."
-                                    : "საერთაშორისო რეცენზირებადი სამეცნიერო ჟურნალი (ინდექსირებული Scopus და Web of Science-ში), რომელიც აქვეყნებს მაღალი დონის კვლევებს ქიმიასა და ქიმიურ ტექნოლოგიებში."}
-                            </p>
-
-                            <div className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-[#60318e] group-hover:underline">
-                                <span>chemprob.org</span>
-                                <ExternalLink className="w-3.5 h-3.5" />
-                            </div>
-                        </div>
                     </a>
                 </div>
             </div>
