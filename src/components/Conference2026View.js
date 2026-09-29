@@ -1095,16 +1095,16 @@ export default function Conference2026View() {
                                     </div>
                                     <div className="flex flex-wrap items-center gap-2">
                                         <a
-                                            href="/conference-2026/Abstract-template-GEO.doc"
-                                            download="Abstract-template GEO.doc"
+                                            href="/conference-2026/Abstract-Template_GEO.docx"
+                                            download="Abstract-Template_GEO.docx"
                                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#60318e] font-bold text-[11px] border border-purple-200 transition-all shadow-2xs"
                                         >
                                             <Download className="w-3 h-3" />
-                                            <span>{isEn ? "Template GEO (.doc)" : "შაბლონი ქართული (.doc)"}</span>
+                                            <span>{isEn ? "Template GEO (.docx)" : "შაბლონი ქართული (.docx)"}</span>
                                         </a>
                                         <a
-                                            href="/conference-2026/Abstract-template-ENG.docx"
-                                            download="Abstract-template ENG.docx"
+                                            href="/conference-2026/Abstract-Template_ENG.docx"
+                                            download="Abstract-Template_ENG.docx"
                                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#60318e] font-bold text-[11px] border border-purple-200 transition-all shadow-2xs"
                                         >
                                             <Download className="w-3 h-3" />

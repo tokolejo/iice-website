@@ -29,6 +29,16 @@ const nextConfig = {
         destination: 'https://mail.iice.ge:2083/:path*',
         permanent: false,
       },
+      {
+        source: '/conference-2026/Abstract-template-GEO.doc',
+        destination: '/conference-2026/Abstract-Template_GEO.docx',
+        permanent: false,
+      },
+      {
+        source: '/conference-2026/Abstract-template-ENG.docx',
+        destination: '/conference-2026/Abstract-Template_ENG.docx',
+        permanent: false,
+      },
     ];
   },
   async headers() {
