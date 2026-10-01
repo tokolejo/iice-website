@@ -120,8 +120,10 @@ export async function POST(request) {
             }
         }
 
-        // Insert into database
+        // Generate deterministic row UUID beforehand
+        const newRecordId = crypto.randomUUID();
         const insertPayload = {
+            id: newRecordId,
             first_name: firstName,
             last_name: lastName,
             birth_date: birthDate,
@@ -142,9 +144,9 @@ export async function POST(request) {
         };
 
         let assignedCode = fallbackCode;
-        let regId = null;
+        let regId = newRecordId;
 
-        // Try insert with returning select
+        // 1. Primary Attempt: Insert with returning select
         const insertWithSelect = await supabase
             .from('conference_registrations_2026')
             .insert([insertPayload])
@@ -153,7 +155,7 @@ export async function POST(request) {
 
         if (insertWithSelect.error) {
             console.warn('Insert with select failed, trying direct insert:', insertWithSelect.error.message);
-            // Fallback: If RLS blocks SELECT on returning row for anon, execute pure INSERT
+            // Fallback: If select returning failed, execute pure insert
             const pureInsert = await supabase
                 .from('conference_registrations_2026')
                 .insert([insertPayload]);
@@ -165,9 +167,49 @@ export async function POST(request) {
                 }, { status: 500 });
             }
         } else if (insertWithSelect.data) {
-            regId = insertWithSelect.data.id;
+            if (insertWithSelect.data.id) {
+                regId = insertWithSelect.data.id;
+            }
             if (insertWithSelect.data.abstract_number) {
                 assignedCode = insertWithSelect.data.abstract_number;
+            }
+        }
+
+        // 2. Safety Fallback: Ensure assignedCode is 100% synchronized with the database record
+        if (assignedCode === fallbackCode) {
+            try {
+                // Fetch directly by primary key
+                const { data: verifiedRow } = await supabase
+                    .from('conference_registrations_2026')
+                    .select('id, abstract_number')
+                    .eq('id', regId)
+                    .maybeSingle();
+
+                if (verifiedRow?.abstract_number) {
+                    assignedCode = verifiedRow.abstract_number;
+                } else {
+                    // Fallback search by email and timestamp
+                    const { data: emailRow } = await supabase
+                        .from('conference_registrations_2026')
+                        .select('id, abstract_number')
+                        .eq('email', email)
+                        .order('created_at', { ascending: false })
+                        .limit(1)
+                        .maybeSingle();
+
+                    if (emailRow?.abstract_number) {
+                        assignedCode = emailRow.abstract_number;
+                        regId = emailRow.id;
+                    } else if (regId) {
+                        // If DB row has no abstract_number, explicitly sync fallbackCode to DB so they NEVER mismatch
+                        await supabase
+                            .from('conference_registrations_2026')
+                            .update({ abstract_number: fallbackCode })
+                            .eq('id', regId);
+                    }
+                }
+            } catch (syncErr) {
+                console.warn('Safety fallback ID sync notice:', syncErr.message);
             }
         }
 
