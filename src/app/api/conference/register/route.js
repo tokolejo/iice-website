@@ -120,10 +120,44 @@ export async function POST(request) {
             }
         }
 
+        // 1. Calculate the next sequential unique abstract_number
+        let assignedCode = fallbackCode;
+        try {
+            const { data: existingRows } = await supabase
+                .from('conference_registrations_2026')
+                .select('abstract_number');
+
+            const existingCodes = new Set((existingRows || []).map(r => r.abstract_number).filter(Boolean));
+
+            let maxNum = 0;
+            for (const code of existingCodes) {
+                const match = code.match(/^IICE-2026-(\d+)$/i);
+                if (match) {
+                    const num = parseInt(match[1], 10);
+                    // Sequential standard numbers: ignore known single outlier 202 (generated previously by random fallback)
+                    if (num !== 202 && num > maxNum) {
+                        maxNum = num;
+                    }
+                }
+            }
+
+            let candidateNum = Math.max(maxNum + 1, 42);
+            let candidateCode = `IICE-2026-${String(candidateNum).padStart(3, '0')}`;
+            while (existingCodes.has(candidateCode)) {
+                candidateNum++;
+                candidateCode = `IICE-2026-${String(candidateNum).padStart(3, '0')}`;
+            }
+            assignedCode = candidateCode;
+        } catch (calcErr) {
+            console.warn('Error calculating sequential abstract_number:', calcErr.message);
+        }
+
         // Generate deterministic row UUID beforehand
         const newRecordId = crypto.randomUUID();
+        let regId = newRecordId;
         const insertPayload = {
             id: newRecordId,
+            abstract_number: assignedCode,
             first_name: firstName,
             last_name: lastName,
             birth_date: birthDate,
@@ -143,74 +177,66 @@ export async function POST(request) {
             created_at: new Date().toISOString()
         };
 
-        let assignedCode = fallbackCode;
-        let regId = newRecordId;
+        // 2. Perform insert with collision-retry loop (up to 3 attempts)
+        let insertSuccess = false;
+        let lastError = null;
 
-        // 1. Primary Attempt: Insert with returning select
-        const insertWithSelect = await supabase
-            .from('conference_registrations_2026')
-            .insert([insertPayload])
-            .select('id, abstract_number')
-            .maybeSingle();
+        for (let attempt = 0; attempt < 3; attempt++) {
+            insertPayload.abstract_number = assignedCode;
 
-        if (insertWithSelect.error) {
+            const insertWithSelect = await supabase
+                .from('conference_registrations_2026')
+                .insert([insertPayload])
+                .select('id, abstract_number')
+                .maybeSingle();
+
+            if (!insertWithSelect.error) {
+                insertSuccess = true;
+                if (insertWithSelect.data?.id) regId = insertWithSelect.data.id;
+                if (insertWithSelect.data?.abstract_number) assignedCode = insertWithSelect.data.abstract_number;
+                break;
+            }
+
+            lastError = insertWithSelect.error;
+
+            // If duplicate key error on abstract_number, increment code and try again
+            if (insertWithSelect.error.code === '23505' || insertWithSelect.error.message?.includes('abstract_number')) {
+                console.warn(`Collision on ${assignedCode}, advancing to next number (attempt ${attempt + 1})...`);
+                const match = assignedCode.match(/^IICE-2026-(\d+)$/);
+                let nextN = match ? parseInt(match[1], 10) + 1 : Math.floor(100 + Math.random() * 900);
+                if (nextN === 202) nextN = 203;
+                assignedCode = `IICE-2026-${String(nextN).padStart(3, '0')}`;
+                continue;
+            }
+
+            // Fallback: If select returning failed for another reason (e.g. RLS on select), execute pure insert
             console.warn('Insert with select failed, trying direct insert:', insertWithSelect.error.message);
-            // Fallback: If select returning failed, execute pure insert
             const pureInsert = await supabase
                 .from('conference_registrations_2026')
                 .insert([insertPayload]);
 
-            if (pureInsert.error) {
-                console.error('Database registration insert error:', pureInsert.error);
-                return NextResponse.json({
-                    error: `ბაზაში ჩაწერის შეცდომა: ${pureInsert.error.message}`
-                }, { status: 500 });
+            if (!pureInsert.error) {
+                insertSuccess = true;
+                break;
             }
-        } else if (insertWithSelect.data) {
-            if (insertWithSelect.data.id) {
-                regId = insertWithSelect.data.id;
+
+            lastError = pureInsert.error;
+            if (pureInsert.error.code === '23505' || pureInsert.error.message?.includes('abstract_number')) {
+                const match = assignedCode.match(/^IICE-2026-(\d+)$/);
+                let nextN = match ? parseInt(match[1], 10) + 1 : Math.floor(100 + Math.random() * 900);
+                if (nextN === 202) nextN = 203;
+                assignedCode = `IICE-2026-${String(nextN).padStart(3, '0')}`;
+                continue;
             }
-            if (insertWithSelect.data.abstract_number) {
-                assignedCode = insertWithSelect.data.abstract_number;
-            }
+
+            break;
         }
 
-        // 2. Safety Fallback: Ensure assignedCode is 100% synchronized with the database record
-        if (assignedCode === fallbackCode) {
-            try {
-                // Fetch directly by primary key
-                const { data: verifiedRow } = await supabase
-                    .from('conference_registrations_2026')
-                    .select('id, abstract_number')
-                    .eq('id', regId)
-                    .maybeSingle();
-
-                if (verifiedRow?.abstract_number) {
-                    assignedCode = verifiedRow.abstract_number;
-                } else {
-                    // Fallback search by email and timestamp
-                    const { data: emailRow } = await supabase
-                        .from('conference_registrations_2026')
-                        .select('id, abstract_number')
-                        .eq('email', email)
-                        .order('created_at', { ascending: false })
-                        .limit(1)
-                        .maybeSingle();
-
-                    if (emailRow?.abstract_number) {
-                        assignedCode = emailRow.abstract_number;
-                        regId = emailRow.id;
-                    } else if (regId) {
-                        // If DB row has no abstract_number, explicitly sync fallbackCode to DB so they NEVER mismatch
-                        await supabase
-                            .from('conference_registrations_2026')
-                            .update({ abstract_number: fallbackCode })
-                            .eq('id', regId);
-                    }
-                }
-            } catch (syncErr) {
-                console.warn('Safety fallback ID sync notice:', syncErr.message);
-            }
+        if (!insertSuccess && lastError) {
+            console.error('Database registration insert error:', lastError);
+            return NextResponse.json({
+                error: `ბაზაში ჩაწერის შეცდომა: ${lastError.message}`
+            }, { status: 500 });
         }
 
         // Capture client IP and User Agent for audit log
